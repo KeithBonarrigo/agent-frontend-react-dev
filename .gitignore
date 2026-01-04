@@ -1,0 +1,30 @@
+*.back
+*.MOVE.js
+*.MOVE.mjs
+*.REMOVE
+*.todo
+*.test
+
+# Node modules
+node_modules/
+
+# Logs
+logs
+*.log
+npm-debug.log*
+
+# Runtime data
+pids
+*.pid
+*.seed
+
+# Environment variables
+.env
+
+# OS / Editor files
+.DS_Store
+.idea/
+.vscode/
+
+package.json
+package-lock.json
