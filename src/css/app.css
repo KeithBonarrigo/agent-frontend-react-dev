@@ -1,0 +1,253 @@
+/* General responsive layout */
+/* Make the entire app responsive and web-friendly */
+/* Reset & Font */
+
+body {
+    margin: 0;
+    padding: 0;
+    font-family: "Segoe UI", sans-serif;
+}
+
+body, html, #root {
+margin: 0;
+padding: 0;
+height: 100%;
+overflow-x: hidden;
+font-family: 'Segoe UI', sans-serif;
+}
+  
+  
+header, main {
+display: block;
+}
+
+label{ 
+  font-weight: bold;
+  min-width: 6em;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 1em;
+}
+
+#layout_header {
+        width: 100%;
+        padding: 1em 2em;
+        background-color: #0a3d62;
+        color: white;
+        display: flex;
+        /*flexDirection: "column",*/
+        gap: 1em;
+        align-items: center;
+        font-size: 1.2rem;
+        box-sizing: border-box
+}
+
+input.checkout { width: 30px; }
+#accountType { width: 30% }
+/*#name_container, #country_container { display: flex; flex-direction: column;} 
+#name_container .form-group, #country_container .form-group { flex-direction: row; column-gap: 1em; }
+#name_container label { line-height: 4em; }
+*/
+.container { display: flex; flex-direction: column;}
+#login-container #email, #login-container #password { width: 100%;  }
+.container .form-group { flex-direction: row; column-gap: 1em; }
+.container label { line-height: 4em; }
+.field-fill-message { color: red; font-weight: bold; margin-bottom: 1em; margin-left: 1em; }
+#checkout_first_name, #checkout_password, #checkout_password_confirm { width:30% }
+#confirm_pass_label { line-height: 1.5em; }
+#checkout_last_name, #checkout_email { width: 45% }
+.checkout-hr { margin-top: 2em; margin-bottom: 2em; }
+
+#checkout-container { padding: 0 40px 40px 40px; margin: -2em -2em auto -2em; }
+#checkout-upper-header { padding: 0 30px 0px 30px; margin: 0 -2em auto -2em; }
+#checkout-title { background-color: #0a3d62; color: #FFF; margin-left: -1em; margin-right: -1em; letter-spacing: 2px; }
+#payment_title, #payment_description { text-align: center; flex-direction: column; }
+#payment_description { margin-top: -.5em; }
+.payment-headline { display: flex; align-items: center;}
+#login-submit-button-container { text-align: center; }
+
+
+body, html {
+    margin: 0;
+    padding: 0;
+    font-family: 'Segoe UI', Tahoma, sans-serif;
+    background-color: #f4f4f4;
+    height: 100%;
+    width: 100%;
+    box-sizing: border-box;
+  }
+  
+  /* Root container — full height and width */
+  #root {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    width: 100%;
+    box-sizing: border-box;
+    padding: 0; /* Remove padding here */
+  }
+
+  input.left-float {
+    width:30px;
+  }
+  
+  
+  /* Main app container */
+  .app-container {
+    width: 80%;
+    max-width: 900px;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    padding: 2rem;
+    box-sizing: border-box;
+  }
+  
+  /* Mobile adjustments */
+  @media (max-width: 768px) {
+    #root {
+      padding: 1rem;
+    }
+  
+    .app-container {
+      width: 100%;
+      padding: 1rem;
+      border-radius: 0;
+    }
+
+    #layout_header {
+      align-items: baseline;
+    }
+
+    #name_container .form-group { flex-direction: column; }
+  }
+  
+  
+  /* Headings */
+  h1, h2, h3 {
+    color: #0a3d62;
+    text-align: center;
+    margin-top: 0;
+  }
+  
+  /* Forms */
+
+  input,
+  select,
+  textarea {
+    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+  }
+
+  input,
+  select,
+  textarea,
+  button {
+    /*width: 100%; */
+    padding: 0.75em;
+    margin: 0.5em 0;
+    font-size: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+  }
+  
+  /* Buttons */
+  button,
+  input[type="submit"] {
+    background-color: #0a3d62;
+    color: white;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  button:hover,
+  input[type="submit"]:hover {
+    background-color: #063250;
+  }
+  
+  /* Links */
+  a {
+    color: #0a3d62;
+    text-decoration: none;
+  }
+  
+  a:hover {
+    text-decoration: underline;
+  }
+  
+  /* Checkbox group */
+  .checkbox-group {
+    display: flex;
+    align-items: center;
+    gap: 0.5em;
+    font-size: 0.95rem;
+    margin-left: 1em;
+  }
+  
+  /* Table (used in dashboard) */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9rem;
+  }
+  
+  table th,
+  table td {
+    text-align: left;
+    padding: 0.5em;
+    border-bottom: 1px solid #ccc;
+  }
+  
+  /* Responsive tweaks */
+  @media (max-width: 600px) {
+    .container {
+      padding: 1em;
+    }
+  
+    table {
+      font-size: 0.8rem;
+    }
+  
+    .checkbox-group {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+  }
+
+
+.nav-button { 
+  color: white;
+  text-decoration: none;
+  padding: 0.4em 0.8em;
+  border-radius: 4px;
+  border: 1px solid white;
+  background-color: transparent;
+  font-weight: 500;
+  font-size: 0.9rem;
+  line-height: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 2.2em;
+  box-sizing: border-box;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  width: 100px;
+}
+
+.nav-button:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+}
+
+  
+  /* Responsive override for small screens */
+@media (max-width: 768px) {
+    .container {
+      max-width: 100%;
+      padding: 1.2rem;
+    }
+  }

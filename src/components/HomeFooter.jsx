@@ -1,0 +1,63 @@
+function HomeFooter() {
+  const currentYear = new Date().getFullYear();
+
+  return (
+    <footer className="home-footer">
+      <div className="home-container">
+        <div className="home-footer-content">
+          <div>
+            <div className="home-footer-logo">
+              <img src="/img/AI-Bridge-Logo-Med2.png" alt="AI Bridge Logo" />
+            </div>
+            <p className="home-footer-tagline">
+              AI Solutions for Everyday Business
+            </p>
+          </div>
+
+          <div className="home-social-icons">
+            <a
+              href="#"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="home-social-link"
+            >
+              <i className="fab fa-linkedin"></i>
+            </a>
+            <a
+              href="#"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="home-social-link"
+            >
+              <i className="fab fa-twitter"></i>
+            </a>
+          </div>
+        </div>
+
+        <div className="home-copyright">
+          <p>© {currentYear}. All Rights Reserved.</p>
+          <p>
+            <a href="/data-deletion" className="home-footer-link">
+              Our Data Deletion Policy
+            </a>{" "}
+            |{" "}
+            <a href="/cookies" className="home-footer-link">
+              Our Cookie Policy
+            </a>{" "}
+            |{" "}
+            <a href="/terms-and-conditions" className="home-footer-link">
+              Terms and Conditions
+            </a>{" "}
+            |{" "}
+            <a href="/privacy" className="home-footer-link">
+              Privacy
+            </a>
+          </p>
+          <p>AI Bridge - 45 S 3rd St. Pacific Beach, WA 98571-5071</p>
+        </div>
+      </div>
+    </footer>
+  );
+}
+
+export default HomeFooter;
