@@ -570,7 +570,7 @@ body {
 }
 
 .home-form button[type="submit"] {
-  background-color: #310956;
+  /*background-color: #310956; */
   color: white;
   border: none;
   cursor: pointer;
@@ -614,11 +614,15 @@ body {
 
 .home-footer-content {
   display: flex;
-  justify-content: space-between;
+  flex-direction: column;
+  gap: 30px;
   align-items: center;
-  margin-bottom: 2rem;
-  flex-wrap: wrap;
-  gap: 2rem;
+  text-align: center;
+}
+
+.home-footer-left {
+    flex: 1;
+    text-align: center;
 }
 
 .home-footer-logo img {
@@ -634,6 +638,7 @@ body {
 .home-social-icons {
   display: flex;
   gap: 1rem;
+  text-align: center;
 }
 
 .home-social-link {
@@ -648,14 +653,17 @@ body {
 }
 
 .home-copyright {
-  text-align: center;
-  padding-top: 2rem;
-  border-top: 1px solid rgba(255,255,255,0.1);
+    flex: 1;
+    text-align: center;
+  }
+
+.home-copyright p {
+  margin: 5px 0;
   font-size: 0.9rem;
 }
 
-.home-copyright p {
-  margin-bottom: 0.5rem;
+.home-footer-links {
+  margin: 10px 0;
 }
 
 .home-footer-link {
@@ -672,28 +680,27 @@ body {
    RESPONSIVE
    ============================================ */
 
-@media (max-width: 768px) {
-  .home-hero-title {
-    font-size: 2rem;
-    max-width: 100%;
-    width: 100%;
-    padding: 0 10px;
-  }
-  
-  .home-cards-grid {
-    grid-template-columns: 1fr;
-  }
-  
-  .home-services-grid {
-    grid-template-columns: 1fr;
-  }
-  
-  .home-nav-links {
-    display: none;
-  }
-  
+@media (min-width: 768px) {
   .home-footer-content {
-    flex-direction: column;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: flex-start;
+    text-align: left;
+  }
+
+  .home-footer-left {
+    flex: 1;
+  }
+
+  .home-copyright {
+    flex: 1;
+    text-align: center;
+  }
+
+  .home-social-icons {
+    flex: 1;
+    display: flex;
+    justify-content: flex-end;
     text-align: center;
   }
 }

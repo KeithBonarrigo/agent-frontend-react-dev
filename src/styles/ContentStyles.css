@@ -1,0 +1,145 @@
+.policy-page {
+  background-color: #f9f9f9;
+  min-height: 100vh;
+}
+
+.policy-header {
+  background: linear-gradient(135deg, #310956 0%, #5a1a8f 100%);
+  color: white;
+  padding: 60px 20px 40px;
+  text-align: center;
+}
+
+.policy-header h1 {
+  font-size: 2.5rem;
+  margin-bottom: 10px;
+  font-weight: 700;
+  color: #FFF;
+}
+
+.policy-header h4 {
+  font-size: 1.1rem;
+  font-weight: 400;
+  opacity: 0.9;
+  margin: 0;
+}
+
+.policy-content-section {
+  padding: 60px 20px;
+}
+
+.policy-intro {
+  background: white;
+  padding: 30px;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  margin-bottom: 40px;
+}
+
+.policy-intro p {
+  font-size: 1.1rem;
+  line-height: 1.7;
+  color: #333;
+  margin: 0;
+}
+
+.policy-section {
+  background: white;
+  padding: 30px;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  margin-bottom: 15px;
+}
+
+
+
+.policy-section h2 {
+  color: #310956;
+  font-size: 1.8rem;
+  margin-bottom: .25em;
+  font-weight: 600;
+  text-align: left;
+}
+
+.policy-section h3 {
+  color: #5a1a8f;
+  font-size: 1.4rem;
+  margin-bottom: 15px;
+  margin-top: 10px;
+  font-weight: 600;
+}
+
+.policy-section p {
+  font-size: 1rem;
+  line-height: 1.7;
+  color: #555;
+  margin-bottom: 15px;
+  margin-left: 1em;
+}
+
+.policy-section ul {
+  margin: 15px 0;
+  padding-left: 50px;
+}
+
+.policy-section li {
+  font-size: 1rem;
+  line-height: 1;
+  color: #555;
+  margin-bottom: 10px;
+}
+
+.policy-option {
+  margin: 25px 0;
+  padding: 20px;
+  background: #f5f5f5;
+  border-left: 4px solid #310956;
+  border-radius: 4px;
+}
+
+.policy-contact {
+  background: #f5f5f5;
+  padding: 20px;
+  border-radius: 4px;
+  margin-top: 15px;
+}
+
+.policy-contact p {
+  margin: 0;
+  line-height: 1.8;
+}
+
+.policy-section a {
+  color: #310956;
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.3s ease;
+}
+
+.policy-section a:hover {
+  color: #5a1a8f;
+  text-decoration: underline;
+}
+
+@media (max-width: 768px) {
+  .policy-header h1 {
+    font-size: 2rem;
+  }
+
+  .policy-section h2 {
+    font-size: 1.5rem;
+  }
+
+  .policy-section h3 {
+    font-size: 1.2rem;
+  }
+
+  .policy-intro,
+  .policy-section {
+    padding: 20px;
+  }
+  
+  .policy-section ul {
+    padding-left: 30px;
+  }
+}

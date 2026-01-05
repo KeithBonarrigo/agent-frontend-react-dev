@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import "../styles/Home.css";
+import "../styles/Home.css"; // This should be the Home-exact.css file
 
 export default function Home() {
   const [contactForm, setContactForm] = useState({
@@ -14,6 +14,7 @@ export default function Home() {
   const [formSuccess, setFormSuccess] = useState(false);
   const [activeFaqIndex, setActiveFaqIndex] = useState(null);
 
+  // ✅ Mobile detection for responsive inline layout
   const [isMobile, setIsMobile] = useState(window.innerWidth < 640);
   useEffect(() => {
     const onResize = () => setIsMobile(window.innerWidth < 640);
@@ -21,6 +22,8 @@ export default function Home() {
     return () => window.removeEventListener("resize", onResize);
   }, []);
 
+  // ✅ FULL payload shape for createAndCheckUser(pool, userData)
+  // ✅ Added confirm_password + confirm_contact_email (frontend-only)
   const [agentForm, setAgentForm] = useState({
     open_ai_token: "",
     mls_token: "",
@@ -54,10 +57,12 @@ export default function Home() {
   const [agentFormError, setAgentFormError] = useState("");
   const [agentFormSuccess, setAgentFormSuccess] = useState(false);
 
+  // ✅ Collapsible state + refs for smooth transition
   const [isAgentFormOpen, setIsAgentFormOpen] = useState(false);
   const agentFormWrapperRef = useRef(null);
   const agentFormInnerRef = useRef(null);
 
+  // Animate open/close by setting maxHeight to content height
   useEffect(() => {
     const wrapper = agentFormWrapperRef.current;
     const inner = agentFormInnerRef.current;
@@ -72,6 +77,7 @@ export default function Home() {
     }
   }, [isAgentFormOpen]);
 
+  // If the window resizes while open, recompute height so it doesn't clip
   useEffect(() => {
     const wrapper = agentFormWrapperRef.current;
     const inner = agentFormInnerRef.current;
@@ -87,6 +93,7 @@ export default function Home() {
     return () => window.removeEventListener("resize", onResize);
   }, [isAgentFormOpen]);
 
+  // FAQ data matching aibridge.global
   const faqs = [
     {
       question: "How can AI improve customer service in my business?",
@@ -128,6 +135,7 @@ export default function Home() {
     setFormSuccess(false);
 
     try {
+      // ✅ USE VITE_API_URL FOR PORTAL API
       const apiBaseUrl = import.meta.env.VITE_API_URL || 'http://localhost:3000';
       const apiUrl = `${apiBaseUrl}/api/contact`;
       
@@ -174,6 +182,7 @@ export default function Home() {
     setActiveFaqIndex(activeFaqIndex === index ? null : index);
   };
 
+  // ✅ Handles text + checkbox inputs cleanly
   const handleAgentFormChange = (e) => {
     const { name, type, checked, value } = e.target;
     setAgentForm((prev) => ({
@@ -205,21 +214,30 @@ export default function Home() {
       sf_security_token: toNullIfEmpty(raw.sf_security_token),
       sf_user: toNullIfEmpty(raw.sf_user),
       sf_user_pass: toNullIfEmpty(raw.sf_user_pass),
+
+      // NOTE: confirm_contact_email is frontend-only (not sent)
       contact_email: toNullIfEmpty(raw.contact_email),
       contact_phone: toNullIfEmpty(raw.contact_phone),
       contact_phone_wsp: !!raw.contact_phone_wsp,
+
       office_address: toNullIfEmpty(raw.office_address),
+
       level: raw.level?.trim() || "basic",
       office_wsp_phone: toNullIfEmpty(raw.office_wsp_phone),
       item: toNullIfEmpty(raw.item),
+
       date_paid: toNullIfEmpty(raw.date_paid),
+
       current: !!raw.current,
       password: toNullIfEmpty(raw.password),
       first_name: toNullIfEmpty(raw.first_name),
       last_name: toNullIfEmpty(raw.last_name),
+
       office_id: toIntOrNull(raw.office_id),
       easy_broker_key: toNullIfEmpty(raw.easy_broker_key),
+
       domain: typeof raw.domain === "string" ? raw.domain : "",
+
       wsp_phone_number_id: toNullIfEmpty(raw.wsp_phone_number_id),
       messenger_access_token: toNullIfEmpty(raw.messenger_access_token),
     };
@@ -288,6 +306,7 @@ export default function Home() {
 
       const payload = normalizePayload(agentForm);
 
+      // ✅ USE VITE_API_URL FOR PORTAL API
       const apiBaseUrl = import.meta.env.VITE_API_URL || 'http://localhost:3000';
       const apiUrl = `${apiBaseUrl}/api/create_and_check_user`;
       
@@ -375,8 +394,10 @@ export default function Home() {
     }
   };
 
+  // ✅ Used for asterisk styling without requiring CSS changes
   const requiredAsteriskStyle = { color: "#d11", marginLeft: "0px" };
 
+  // ✅ Shared inline responsive row helper (no CSS changes)
   const rowWrapStyle = {
     display: "flex",
     gap: isMobile ? "10px" : "16px",
@@ -407,290 +428,14 @@ export default function Home() {
           <button
             type="button"
             className="home-btn home-btn-green"
-            onClick={() => setIsAgentFormOpen((v) => !v)}
+            onClick={() => {
+              setIsAgentFormOpen(true);
+              setTimeout(() => scrollToSection("agent-form"), 50);
+            }}
             style={{ marginTop: "2em" }}
           >
-            {isAgentFormOpen ? "Close Form" : "Build your Agent Today"}
+            Build your Agent Today
           </button>
-
-          {/* Agent Form - With fade transition */}
-          <div 
-            id="agent-form" 
-            style={{ 
-              marginTop: "2em",
-              opacity: isAgentFormOpen ? 1 : 0,
-              maxHeight: isAgentFormOpen ? "5000px" : "0px",
-              overflow: "hidden",
-              transition: "opacity 0.5s ease-in-out, max-height 0.5s ease-in-out",
-              pointerEvents: isAgentFormOpen ? "auto" : "none"
-            }}
-          >
-            <form 
-              onSubmit={handleAgentFormSubmit} 
-              className="home-form" 
-              style={{ 
-                padding: 0,
-                borderRadius: "8px",
-                boxShadow: "0 2px 10px rgba(0, 0, 0, 0.1)",
-                overflow: "hidden"
-              }}
-            >
-              {/* Blue header section */}
-              <div style={{
-                background: "linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%)",
-                padding: "20px 10px",
-                margin: 0
-              }}>
-                <h2 style={{ margin: 0, color: "white", textAlign: "center" }}>
-                  Build Your Agent in 30 Seconds
-                </h2>
-              </div>
-
-              {/* White description section */}
-              <div style={{
-                background: "white",
-                padding: "20px",
-                margin: 0
-              }}>
-                <p
-                  style={{
-                    marginTop: 0,
-                    marginBottom: "10px",
-                    opacity: 0.85,
-                    textAlign: "center",
-                    color: "#333"
-                  }}
-                >
-                  <strong>Create your account now</strong>, then <strong>log in anytime to complete or change the rest</strong>.
-                 <br />
-                  Only fields marked with an asterisk (<span style={requiredAsteriskStyle}>*</span>) are required.
-                  <p style={{ marginTop: ".5em", marginBottom: "0", color: "#333" }}>
-                    <i>Already have an account?</i> <a href="/login" style={{ color: "#1e3a8a", textDecoration: "underline" }}>Log in</a> and manage your agent.
-                  </p>
-                </p>
-              </div>
-
-              {/* Form fields section */}
-              <div style={{ padding: "30px", background: "white" }}>
-                <div
-                  id="agent-collapsible"
-                  className="agent-collapsible open"
-                  ref={agentFormWrapperRef}
-                >
-                  <div ref={agentFormInnerRef}>
-                    <div style={rowWrapStyle}>
-                      <div className="home-form-group" style={{ flex: 1 }}>
-                        <label htmlFor="first_name" className="home-form-label">
-                          First Name:
-                        </label>
-                        <input
-                          type="text"
-                          id="first_name"
-                          name="first_name"
-                          value={agentForm.first_name}
-                          onChange={handleAgentFormChange}
-                          className="home-form-input"
-                        />
-                      </div>
-
-                      <div className="home-form-group" style={{ flex: 1 }}>
-                        <label htmlFor="last_name" className="home-form-label">
-                          Last Name:
-                        </label>
-                        <input
-                          type="text"
-                          id="last_name"
-                          name="last_name"
-                          value={agentForm.last_name}
-                          onChange={handleAgentFormChange}
-                          className="home-form-input"
-                        />
-                      </div>
-                    </div>
-
-                    <div style={rowWrapStyle}>
-                      <div className="home-form-group" style={{ flex: 1 }}>
-                        <label htmlFor="contact_email" className="home-form-label">
-                          Contact Email: <span style={requiredAsteriskStyle}>*</span>
-                        </label>
-                        <input
-                          type="email"
-                          id="contact_email"
-                          name="contact_email"
-                          required
-                          value={agentForm.contact_email}
-                          onChange={handleAgentFormChange}
-                          className="home-form-input"
-                          autoComplete="email"
-                        />
-                      </div>
-
-                      <div className="home-form-group" style={{ flex: 1 }}>
-                        <label htmlFor="confirm_contact_email" className="home-form-label">
-                          Confirm Email: <span style={requiredAsteriskStyle}>*</span>
-                        </label>
-                        <input
-                          type="email"
-                          id="confirm_contact_email"
-                          name="confirm_contact_email"
-                          required
-                          value={agentForm.confirm_contact_email}
-                          onChange={handleAgentFormChange}
-                          className="home-form-input"
-                          autoComplete="email"
-                        />
-                      </div>
-                    </div>
-
-                    <div style={rowWrapStyle}>
-                      <div className="home-form-group" style={{ flex: 1 }}>
-                        <label htmlFor="password" className="home-form-label">
-                          Password: <span style={requiredAsteriskStyle}>*</span>
-                        </label>
-                        <input
-                          type="password"
-                          id="password"
-                          name="password"
-                          required
-                          value={agentForm.password}
-                          onChange={handleAgentFormChange}
-                          className="home-form-input"
-                          autoComplete="new-password"
-                        />
-                      </div>
-
-                      <div className="home-form-group" style={{ flex: 1 }}>
-                        <label htmlFor="confirm_password" className="home-form-label">
-                          Confirm Password: <span style={requiredAsteriskStyle}>*</span>
-                        </label>
-                        <input
-                          type="password"
-                          id="confirm_password"
-                          name="confirm_password"
-                          required
-                          value={agentForm.confirm_password}
-                          onChange={handleAgentFormChange}
-                          className="home-form-input"
-                          autoComplete="new-password"
-                        />
-                      </div>
-                    </div>
-
-                    <div style={rowWrapStyle}>
-                      <div className="home-form-group" style={{ flex: 1 }}>
-                        <label htmlFor="contact_phone" className="home-form-label">
-                          Contact Phone:
-                        </label>
-                        <input
-                          type="tel"
-                          id="contact_phone"
-                          name="contact_phone"
-                          value={agentForm.contact_phone}
-                          onChange={handleAgentFormChange}
-                          className="home-form-input"
-                        />
-                      </div>
-
-                      <div
-                        className="home-form-group"
-                        style={{
-                          flex: isMobile ? "unset" : "0 0 auto",
-                          display: "flex",
-                          alignItems: "center",
-                          gap: "10px",
-                          marginTop: isMobile ? "0" : "28px",
-                        }}
-                      >
-                        <input
-                          type="checkbox"
-                          id="contact_phone_wsp"
-                          name="contact_phone_wsp"
-                          checked={agentForm.contact_phone_wsp}
-                          onChange={handleAgentFormChange}
-                        />
-                        <label
-                          htmlFor="contact_phone_wsp"
-                          className="home-form-label"
-                          style={{ margin: 0, whiteSpace: "nowrap" }}
-                        >
-                          This phone is WhatsApp-enabled
-                        </label>
-                      </div>
-                    </div>
-
-                    <div className="home-form-group">
-                      <label htmlFor="domain" className="home-form-label">
-                        Domain (or Company):
-                      </label>
-                      <input
-                        type="text"
-                        id="domain"
-                        name="domain"
-                        placeholder="example.com"
-                        value={agentForm.domain}
-                        onChange={handleAgentFormChange}
-                        className="home-form-input"
-                      />
-                    </div>
-
-                    <div className="home-form-group">
-                      <label htmlFor="level" className="home-form-label">
-                        Service Level:<span style={requiredAsteriskStyle}>*</span>
-                      </label>
-                      <div style={{ display: "flex", justifyContent: "center" }}>
-                        <select
-                          id="level"
-                          name="level"
-                          required
-                          value={agentForm.level}
-                          onChange={handleAgentFormChange}
-                          className="home-form-input"
-                          style={{ maxWidth: "300px", width: "100%" }}
-                        >
-                          <option value="free">Trial/Free</option>
-                          <option value="basic">Basic</option>
-                          <option value="pro">Pro</option>
-                          <option value="enterprise">Enterprise</option>
-                        </select>
-                      </div>
-                    </div>
-
-                    {agentFormError && <p className="home-form-error">{agentFormError}</p>}
-                    {agentFormSuccess && (
-                      <p className="home-form-success">
-                            ✅ Account created successfully! 
-                            <a 
-                            href="/login" 
-                            style={{ 
-                                color: '#310956', 
-                                textDecoration: 'underline', 
-                                marginLeft: '8px',
-                                fontWeight: 'bold'
-                            }}
-                            >
-                            Click here to log in
-                            </a>
-                        </p>
-                    )}
-
-                    <div style={{ display: "flex", justifyContent: "center", marginTop: "20px" }}>
-                      <button 
-                        type="submit"
-                        className="home-btn home-btn-green"
-                        style={{ 
-                          maxWidth: "200px", 
-                          width: "100%",
-                          padding: "12px 24px"
-                        }}
-                      >
-                        Let's Go!
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </form>
-          </div>
         </div>
       </section>
 
@@ -747,6 +492,250 @@ export default function Home() {
         </div>
       </section>
 
+      {/* ✅ Agent Form Section */}
+      <section id="agent-form" className="home-contact-section">
+        <div className="home-container">
+          <form onSubmit={handleAgentFormSubmit} className="home-form">
+            <h2 style={{ marginBottom: "6px" }}>Build Your Agent in 30 Seconds</h2>
+
+            <p
+              style={{
+                marginTop: 0,
+                marginBottom: "10px",
+                opacity: 0.85,
+                textAlign: "center",
+              }}
+            >
+              <strong>Create your account now</strong>, then <strong>log in anytime to complete or change the rest</strong>.
+             <br />
+              Only fields marked with an asterisk (<span style={requiredAsteriskStyle}>*</span>) are required.
+              <p style={{ marginTop: ".5em", marginBottom: ".5em" }}>
+                <i>Already have an account?</i> <a href="/login">Log in</a> and manage your agent.
+              </p>
+            </p>
+
+            <div style={{ display: "flex", justifyContent: "center", marginBottom: "12px" }}>
+              <button
+                type="button"
+                className="home-btn home-btn-green"
+                onClick={() => setIsAgentFormOpen((v) => !v)}
+                aria-expanded={isAgentFormOpen}
+                aria-controls="agent-collapsible"
+              >
+                {isAgentFormOpen ? "Close" : "Let's Get Started!"}
+              </button>
+            </div>
+
+            <div
+              id="agent-collapsible"
+              className={`agent-collapsible ${isAgentFormOpen ? "open" : ""}`}
+              ref={agentFormWrapperRef}
+            >
+              <div ref={agentFormInnerRef}>
+                {/* First + Last side-by-side */}
+                <div style={rowWrapStyle}>
+                  <div className="home-form-group" style={{ flex: 1 }}>
+                    <label htmlFor="first_name" className="home-form-label">
+                      First Name:
+                    </label>
+                    <input
+                      type="text"
+                      id="first_name"
+                      name="first_name"
+                      value={agentForm.first_name}
+                      onChange={handleAgentFormChange}
+                      className="home-form-input"
+                    />
+                  </div>
+
+                  <div className="home-form-group" style={{ flex: 1 }}>
+                    <label htmlFor="last_name" className="home-form-label">
+                      Last Name:
+                    </label>
+                    <input
+                      type="text"
+                      id="last_name"
+                      name="last_name"
+                      value={agentForm.last_name}
+                      onChange={handleAgentFormChange}
+                      className="home-form-input"
+                    />
+                  </div>
+                </div>
+
+                {/* ✅ Email + Confirm Email side-by-side on desktop; stacked on mobile */}
+                <div style={rowWrapStyle}>
+                  <div className="home-form-group" style={{ flex: 1 }}>
+                    <label htmlFor="contact_email" className="home-form-label">
+                      Contact Email: <span style={requiredAsteriskStyle}>*</span>
+                    </label>
+                    <input
+                      type="email"
+                      id="contact_email"
+                      name="contact_email"
+                      required
+                      value={agentForm.contact_email}
+                      onChange={handleAgentFormChange}
+                      className="home-form-input"
+                      autoComplete="email"
+                    />
+                  </div>
+
+                  <div className="home-form-group" style={{ flex: 1 }}>
+                    <label htmlFor="confirm_contact_email" className="home-form-label">
+                      Confirm Email: <span style={requiredAsteriskStyle}>*</span>
+                    </label>
+                    <input
+                      type="email"
+                      id="confirm_contact_email"
+                      name="confirm_contact_email"
+                      required
+                      value={agentForm.confirm_contact_email}
+                      onChange={handleAgentFormChange}
+                      className="home-form-input"
+                      autoComplete="email"
+                    />
+                  </div>
+                </div>
+
+                {/* Password + Confirm Password side-by-side */}
+                <div style={rowWrapStyle}>
+                  <div className="home-form-group" style={{ flex: 1 }}>
+                    <label htmlFor="password" className="home-form-label">
+                      Password: <span style={requiredAsteriskStyle}>*</span>
+                    </label>
+                    <input
+                      type="password"
+                      id="password"
+                      name="password"
+                      required
+                      value={agentForm.password}
+                      onChange={handleAgentFormChange}
+                      className="home-form-input"
+                      autoComplete="new-password"
+                    />
+                  </div>
+
+                  <div className="home-form-group" style={{ flex: 1 }}>
+                    <label htmlFor="confirm_password" className="home-form-label">
+                      Confirm Password: <span style={requiredAsteriskStyle}>*</span>
+                    </label>
+                    <input
+                      type="password"
+                      id="confirm_password"
+                      name="confirm_password"
+                      required
+                      value={agentForm.confirm_password}
+                      onChange={handleAgentFormChange}
+                      className="home-form-input"
+                      autoComplete="new-password"
+                    />
+                  </div>
+                </div>
+
+                {/* ✅ Phone + WhatsApp side-by-side on desktop; stacked on mobile */}
+                <div style={rowWrapStyle}>
+                  <div className="home-form-group" style={{ flex: 1 }}>
+                    <label htmlFor="contact_phone" className="home-form-label">
+                      Contact Phone:
+                    </label>
+                    <input
+                      type="tel"
+                      id="contact_phone"
+                      name="contact_phone"
+                      value={agentForm.contact_phone}
+                      onChange={handleAgentFormChange}
+                      className="home-form-input"
+                    />
+                  </div>
+
+                  <div
+                    className="home-form-group"
+                    style={{
+                      flex: isMobile ? "unset" : "0 0 auto",
+                      display: "flex",
+                      alignItems: "center",
+                      gap: "10px",
+                      marginTop: isMobile ? "0" : "28px",
+                    }}
+                  >
+                    <input
+                      type="checkbox"
+                      id="contact_phone_wsp"
+                      name="contact_phone_wsp"
+                      checked={agentForm.contact_phone_wsp}
+                      onChange={handleAgentFormChange}
+                    />
+                    <label
+                      htmlFor="contact_phone_wsp"
+                      className="home-form-label"
+                      style={{ margin: 0, whiteSpace: "nowrap" }}
+                    >
+                      This phone is WhatsApp-enabled
+                    </label>
+                  </div>
+                </div>
+
+                <div className="home-form-group">
+                  <label htmlFor="domain" className="home-form-label">
+                    Domain (or Company):
+                  </label>
+                  <input
+                    type="text"
+                    id="domain"
+                    name="domain"
+                    placeholder="example.com"
+                    value={agentForm.domain}
+                    onChange={handleAgentFormChange}
+                    className="home-form-input"
+                  />
+                </div>
+
+                {/* ✅ Level (full width, required) */}
+                <div className="home-form-group">
+                  <label htmlFor="level" className="home-form-label">
+                    Service Level:<span style={requiredAsteriskStyle}>*</span>
+                  </label>
+                  <select
+                    id="level"
+                    name="level"
+                    required
+                    value={agentForm.level}
+                    onChange={handleAgentFormChange}
+                    className="home-form-input"
+                  >
+                    <option value="free">Trial/Free</option>
+                    <option value="basic">Basic</option>
+                    <option value="pro">Pro</option>
+                    <option value="enterprise">Enterprise</option>
+                  </select>
+                </div>
+
+                {agentFormError && <p className="home-form-error">{agentFormError}</p>}
+                {agentFormSuccess && (
+                  <p className="home-form-success">
+                        ✅ Account created successfully! 
+                        <a 
+                        href="/login" 
+                        style={{ 
+                            color: '#310956', 
+                            textDecoration: 'underline', 
+                            marginLeft: '8px',
+                            fontWeight: 'bold'
+                        }}
+                        >
+                        Click here to log in
+                        </a>
+                    </p>
+                )}
+
+                <button type="submit">Let's Go!</button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </section>
+
       {/* Services Section */}
       <section id="services" className="home-services-section">
         <div className="home-container">
@@ -771,7 +760,14 @@ export default function Home() {
               </ul>
             </div>
             <div className="home-services-cta">
-              <a href="#contact" className="home-btn" onClick={(e) => { e.preventDefault(); scrollToSection("contact"); }}>
+              <a
+                href="#contact"
+                className="home-btn"
+                onClick={(e) => {
+                  e.preventDefault();
+                  scrollToSection("contact");
+                }}
+              >
                 Learn More
               </a>
             </div>

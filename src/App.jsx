@@ -3,6 +3,11 @@ import HomeLayout from "./components/HomeLayout";
 import Layout from "./components/Layout"; // Make sure the path is correct
 
 import Home from "./Pages/Home";
+import DataDeletion from "./Pages/DataDeletion";
+import CookiePolicy from "./Pages/CookiePolicy";
+import TermsAndConditions from "./Pages/TermsAndConditions";
+import Privacy from "./Pages/Privacy";
+
 import Checkout from "./Pages/Checkout";
 import Dashboard from "./Pages/Dashboard";
 import Login from "./Pages/Login";
@@ -18,6 +23,11 @@ function App() {
         <Routes>
           <Route element={<HomeLayout />}>
             <Route path="/" element={<Home />} />
+            <Route path="/data-deletion" element={<DataDeletion />} />
+            <Route path="/cookies" element={<CookiePolicy />} />
+            <Route path="/terms-and-conditions" element={<TermsAndConditions />} />
+            <Route path="/privacy" element={<Privacy />} />
+
           </Route>
           <Route element={<HomeLayout />}>
             <Route path="/login" element={<Login />} />
