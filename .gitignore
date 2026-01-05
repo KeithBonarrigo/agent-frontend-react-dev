@@ -4,6 +4,7 @@
 *.REMOVE
 *.todo
 *.test
+.env.production
 
 # Node modules
 node_modules/
