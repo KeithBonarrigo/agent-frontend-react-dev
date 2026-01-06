@@ -21,6 +21,22 @@ export default function Home() {
     return () => window.removeEventListener("resize", onResize);
   }, []);
 
+  // Read 'service' URL parameter and set item value
+  useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const serviceParam = urlParams.get('service');
+    
+    if (serviceParam) {
+      const itemValue = parseInt(serviceParam, 10);
+      if (!isNaN(itemValue)) {
+        setAgentForm(prev => ({
+          ...prev,
+          item: itemValue
+        }));
+      }
+    }
+  }, []);
+
   const [agentForm, setAgentForm] = useState({
     open_ai_token: "",
     mls_token: "",
@@ -37,7 +53,7 @@ export default function Home() {
     office_address: "",
     level: "basic",
     office_wsp_phone: "",
-    item: "",
+    item: 1,
     date_paid: "",
     current: false,
     password: "",
@@ -46,7 +62,7 @@ export default function Home() {
     last_name: "",
     office_id: "",
     easy_broker_key: "",
-    domain: "",
+    company: "",
     wsp_phone_number_id: "",
     messenger_access_token: "",
   });
@@ -211,15 +227,14 @@ export default function Home() {
       office_address: toNullIfEmpty(raw.office_address),
       level: raw.level?.trim() || "basic",
       office_wsp_phone: toNullIfEmpty(raw.office_wsp_phone),
-      item: toNullIfEmpty(raw.item),
-      date_paid: toNullIfEmpty(raw.date_paid),
+      item: typeof raw.item === 'number' ? raw.item : (raw.item ? parseInt(raw.item, 10) : 1),      date_paid: toNullIfEmpty(raw.date_paid),
       current: !!raw.current,
       password: toNullIfEmpty(raw.password),
       first_name: toNullIfEmpty(raw.first_name),
       last_name: toNullIfEmpty(raw.last_name),
       office_id: toIntOrNull(raw.office_id),
       easy_broker_key: toNullIfEmpty(raw.easy_broker_key),
-      domain: typeof raw.domain === "string" ? raw.domain : "",
+      company: typeof raw.company === "string" ? raw.company : "",
       wsp_phone_number_id: toNullIfEmpty(raw.wsp_phone_number_id),
       messenger_access_token: toNullIfEmpty(raw.messenger_access_token),
     };
@@ -355,7 +370,7 @@ export default function Home() {
         last_name: "",
         office_id: "",
         easy_broker_key: "",
-        domain: "",
+        company: "",
         wsp_phone_number_id: "",
         messenger_access_token: "",
       });
@@ -621,15 +636,15 @@ export default function Home() {
 
                     <div style={rowWrapStyle}>
                       <div className="home-form-group" style={{ flex: 1 }}>
-                        <label htmlFor="domain" className="home-form-label">
-                          Domain (or Company):
+                        <label htmlFor="company" className="home-form-label">
+                          Company:
                         </label>
                         <input
                           type="text"
-                          id="domain"
-                          name="domain"
+                          id="company"
+                          name="company"
                           placeholder="example.com"
-                          value={agentForm.domain}
+                          value={agentForm.company}
                           onChange={handleAgentFormChange}
                           className="home-form-input"
                         />
@@ -654,6 +669,13 @@ export default function Home() {
                         </select>
                       </div>
                     </div>
+
+                    {/* Hidden item field */}
+                    <input
+                      type="hidden"
+                      name="item"
+                      value={agentForm.item}
+                    />
 
                     {agentFormError && <p className="home-form-error">{agentFormError}</p>}
                     {agentFormSuccess && (
