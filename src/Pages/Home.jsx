@@ -408,7 +408,7 @@ export default function Home() {
             type="button"
             className="home-btn home-btn-green"
             onClick={() => setIsAgentFormOpen((v) => !v)}
-            style={{ marginTop: "2em" }}
+            style={{ marginTop: "2em", border: "none", outline: "none" }}
           >
             {isAgentFormOpen ? "Close Form" : "Build your Agent Today"}
           </button>
@@ -450,7 +450,8 @@ export default function Home() {
               <div style={{
                 background: "white",
                 padding: "20px",
-                margin: 0
+                margin: 0,
+                borderBottom: "1px solid #ccc"
               }}>
                 <p
                   style={{
@@ -618,26 +619,26 @@ export default function Home() {
                       </div>
                     </div>
 
-                    <div className="home-form-group">
-                      <label htmlFor="domain" className="home-form-label">
-                        Domain (or Company):
-                      </label>
-                      <input
-                        type="text"
-                        id="domain"
-                        name="domain"
-                        placeholder="example.com"
-                        value={agentForm.domain}
-                        onChange={handleAgentFormChange}
-                        className="home-form-input"
-                      />
-                    </div>
+                    <div style={rowWrapStyle}>
+                      <div className="home-form-group" style={{ flex: 1 }}>
+                        <label htmlFor="domain" className="home-form-label">
+                          Domain (or Company):
+                        </label>
+                        <input
+                          type="text"
+                          id="domain"
+                          name="domain"
+                          placeholder="example.com"
+                          value={agentForm.domain}
+                          onChange={handleAgentFormChange}
+                          className="home-form-input"
+                        />
+                      </div>
 
-                    <div className="home-form-group">
-                      <label htmlFor="level" className="home-form-label">
-                        Service Level:<span style={requiredAsteriskStyle}>*</span>
-                      </label>
-                      <div style={{ display: "flex", justifyContent: "center" }}>
+                      <div className="home-form-group" style={{ flex: 1 }}>
+                        <label htmlFor="level" className="home-form-label">
+                          Service Level:<span style={requiredAsteriskStyle}>*</span>
+                        </label>
                         <select
                           id="level"
                           name="level"
@@ -645,7 +646,6 @@ export default function Home() {
                           value={agentForm.level}
                           onChange={handleAgentFormChange}
                           className="home-form-input"
-                          style={{ maxWidth: "300px", width: "100%" }}
                         >
                           <option value="free">Trial/Free</option>
                           <option value="basic">Basic</option>
@@ -678,9 +678,10 @@ export default function Home() {
                         type="submit"
                         className="home-btn home-btn-green"
                         style={{ 
-                          maxWidth: "200px", 
-                          width: "100%",
-                          padding: "12px 24px"
+                          border: "none", 
+                          outline: "none",
+                          padding: "12px 30px",
+                          fontSize: "16px"
                         }}
                       >
                         Let's Go!

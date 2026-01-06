@@ -120,7 +120,7 @@ body {
 
 .home-btn-green {
   background: #22c55e;
-  border: 2px solid #15803d;
+  /*border: 2px solid #15803d;*/
   color: #ffffff;
   letter-spacing:.2em;
 
@@ -133,12 +133,12 @@ body {
 
 .home-btn-green:hover {
   background: #16a34a;
-  border-color: #166534;
+  /*border-color: #166534;*/
 }
 
 .home-btn-green:active {
   background: #15803d;
-  border-color: #14532d;
+  /*border-color: #14532d;*/
 }
 
 
@@ -154,7 +154,7 @@ body {
 
 .home-hero-title {
   font-family: 'Roboto', sans-serif;
-  font-size: 2.0rem;
+  font-size: 2.0rem; 
   letter-spacing: 0.01em;
   margin: 0 auto .75em;
   color: #310956;
@@ -575,7 +575,7 @@ body {
   border: none;
   cursor: pointer;
   padding: 15px;
-  width: 100%;
+  width: 30%;
   border-radius: 5px;
   font-size: 1rem;
   font-weight: 500;
