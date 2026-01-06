@@ -71,6 +71,8 @@ export default function Home() {
   const [agentFormSuccess, setAgentFormSuccess] = useState(false);
 
   const [isAgentFormOpen, setIsAgentFormOpen] = useState(false);
+  const [showLoginLink, setShowLoginLink] = useState(false);
+
   const agentFormWrapperRef = useRef(null);
   const agentFormInnerRef = useRef(null);
 
@@ -344,6 +346,7 @@ export default function Home() {
 
       console.log("✅ User created successfully!");
       setAgentFormSuccess(true);
+      setShowLoginLink(true);
 
       setAgentForm({
         open_ai_token: "",
@@ -677,25 +680,32 @@ export default function Home() {
                       value={agentForm.item}
                     />
 
-                    {agentFormError && <p className="home-form-error">{agentFormError}</p>}
-                    {agentFormSuccess && (
-                      <p className="home-form-success">
-                            ✅ Account created successfully! 
-                            <a 
+                    {/* Fixed height container for messages */}
+                    <div style={{ minHeight: "60px", marginTop: "10px" }}>
+                      {agentFormError && <p className="home-form-error">{agentFormError}</p>}
+                      {agentFormSuccess && (
+                        <p className="home-form-success">
+                          ✅ Account created successfully! 
+                        </p>
+                      )}
+                      {showLoginLink && (
+                        <p style={{ textAlign: "center", marginTop: "10px" }}>
+                          <a 
                             href="/login" 
                             style={{ 
-                                color: '#310956', 
-                                textDecoration: 'underline', 
-                                marginLeft: '8px',
-                                fontWeight: 'bold'
+                              color: '#310956', 
+                              textDecoration: 'underline',
+                              fontWeight: 'bold',
+                              fontSize: '16px'
                             }}
-                            >
+                          >
                             Click here to log in
-                            </a>
+                          </a>
                         </p>
-                    )}
+                      )}
+                    </div>
 
-                    <div style={{ display: "flex", justifyContent: "center", marginTop: "20px" }}>
+                    <div style={{ display: "flex", justifyContent: "center", marginTop: "10px" }}>
                       <button 
                         type="submit"
                         className="home-btn home-btn-green"
