@@ -428,7 +428,7 @@ export default function Home() {
             onClick={() => setIsAgentFormOpen((v) => !v)}
             style={{ marginTop: "2em", border: "none", outline: "none" }}
           >
-            {isAgentFormOpen ? "Close Form" : "Build your Agent Today"}
+            {isAgentFormOpen ? "Close Form" : "Build your AI Agent Today"}
           </button>
 
           {/* Agent Form - With fade transition */}
