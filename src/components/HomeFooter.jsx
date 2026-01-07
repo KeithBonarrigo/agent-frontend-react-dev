@@ -24,7 +24,7 @@ function HomeFooter() {
               <a href="/cookies" className="home-footer-link">
                 Our Cookie Policy
               </a>{" "}
-              |{" "}
+              <br />{" "}
               <a href="/terms-and-conditions" className="home-footer-link">
                 Terms and Conditions
               </a>{" "}
