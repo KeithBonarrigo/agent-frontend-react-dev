@@ -1,6 +1,8 @@
 import { useState, useEffect } from "react";
+import { useUser } from '../contexts/UserContext';
 
 export default function ConversationsTab() {
+  const { user } = useUser(); // Get user from context
   const [conversations, setConversations] = useState([]);
   const [loadingConversations, setLoadingConversations] = useState(false);
   const [conversationsError, setConversationsError] = useState(null);
@@ -9,14 +11,19 @@ export default function ConversationsTab() {
   const [expandedUsers, setExpandedUsers] = useState(new Set());
   const [conversationSearch, setConversationSearch] = useState('');
 
-  // Fetch conversations on mount
+  // Fetch conversations when user.client_id is available
   useEffect(() => {
-    if (conversations.length === 0) {
+    if (user?.client_id) {
       fetchConversations();
     }
-  }, []);
+  }, [user?.client_id]);
 
   const fetchConversations = async () => {
+    if (!user?.client_id) {
+      console.warn('No client_id available');
+      return;
+    }
+
     setLoadingConversations(true);
     setConversationsError(null);
 
@@ -30,16 +37,22 @@ export default function ConversationsTab() {
       }
       url.searchParams.append('format', 'json');
       url.searchParams.append('limit', '5000');
+      url.searchParams.append('clientId', user.client_id.toString()); // Add clientId parameter
+
+      console.log('Fetching conversations for client:', user.client_id);
+      console.log('API URL:', url.toString());
 
       const response = await fetch(url.toString(), {
         credentials: 'include'
       });
 
       if (!response.ok) {
-        throw new Error('Failed to fetch conversations');
+        throw new Error(`Failed to fetch conversations: ${response.status}`);
       }
 
       const data = await response.json();
+      console.log('Conversations data received:', data);
+      
       setConversations(data.conversations || []);
     } catch (error) {
       console.error('Error fetching conversations:', error);
@@ -111,6 +124,15 @@ export default function ConversationsTab() {
       ch.users.some(u => u.userid.toLowerCase().includes(searchLower))
     );
   });
+
+  // Show message if no client_id available
+  if (!user?.client_id) {
+    return (
+      <div style={{ padding: '2em', textAlign: 'center', color: '#666' }}>
+        <p>No client ID available. Please log in.</p>
+      </div>
+    );
+  }
 
   return (
     <div>
@@ -199,7 +221,7 @@ export default function ConversationsTab() {
         </div>
       ) : filteredConversations.length === 0 ? (
         <div style={{ textAlign: 'center', padding: '2em', color: '#666' }}>
-          <p>No conversations found.</p>
+          <p>No conversations found for your account.</p>
         </div>
       ) : (
         <div>
