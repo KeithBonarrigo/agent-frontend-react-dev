@@ -29,7 +29,8 @@ export default function Dashboard() {
     const fetchTokenLimits = async () => {
       try {
         const apiBaseUrl = import.meta.env.VITE_API_URL || 'http://localhost:3000';
-        const response = await fetch(`${apiBaseUrl}/api/token-limits`, {
+        // FIXED: Changed from /api/token-limits to /api/token/limits
+        const response = await fetch(`${apiBaseUrl}/api/token/limits`, {
           credentials: 'include'
         });
 
@@ -66,7 +67,8 @@ export default function Dashboard() {
 
       try {
         const apiBaseUrl = import.meta.env.VITE_API_URL || 'http://localhost:3000';
-        const response = await fetch(`${apiBaseUrl}/api/token-usage/${user.client_id}`, {
+        // FIXED: Changed from /api/token-usage to /api/token/usage
+        const response = await fetch(`${apiBaseUrl}/api/token/usage/${user.client_id}`, {
           credentials: 'include'
         });
 
@@ -105,7 +107,8 @@ export default function Dashboard() {
     setLoadingTokens(true);
     try {
       const apiBaseUrl = import.meta.env.VITE_API_URL || 'http://localhost:3000';
-      const response = await fetch(`${apiBaseUrl}/api/token-usage/${user.client_id}`, {
+      // FIXED: Changed from /api/token-usage to /api/token/usage
+      const response = await fetch(`${apiBaseUrl}/api/token/usage/${user.client_id}`, {
         credentials: 'include'
       });
 
