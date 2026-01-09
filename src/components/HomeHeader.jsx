@@ -49,6 +49,11 @@ export default function HomeHeader() {
 
         <ul className="home-nav-links">
           <li>
+            <a href="/" onClick={(e) => handleNavClick(e, "home-hero")}>
+              Home
+            </a>
+          </li>
+          <li>
             <a href="#services" onClick={(e) => handleNavClick(e, "services")}>
               Services
             </a>

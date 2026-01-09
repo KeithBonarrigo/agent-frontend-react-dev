@@ -1,12 +1,48 @@
 import { useEffect, useRef, useState } from "react";
+import { loadStripe } from "@stripe/stripe-js";
+import { Elements } from "@stripe/react-stripe-js";
+import StripePaymentForm from "./StripePaymentForm";
 
-export default function SignupForm({ isOpen, onClose }) {
+export default function SignupForm({ isOpen }) {
   const [isMobile, setIsMobile] = useState(window.innerWidth < 640);
+  const [stripePromise, setStripePromise] = useState(null);
   
   useEffect(() => {
     const onResize = () => setIsMobile(window.innerWidth < 640);
     window.addEventListener("resize", onResize);
     return () => window.removeEventListener("resize", onResize);
+  }, []);
+
+  // Initialize Stripe - try local env var first, then fetch from backend
+  useEffect(() => {
+    const initStripe = async () => {
+      try {
+        // Try to use local env var first (for local development)
+        const localKey = import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY;
+        
+        if (localKey) {
+          console.log('✅ Using local Stripe key from env');
+          setStripePromise(loadStripe(localKey));
+        } else {
+          // Fallback: fetch from backend (for Heroku environments)
+          console.log('📡 Fetching Stripe key from backend...');
+          const apiBaseUrl = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+          const response = await fetch(`${apiBaseUrl}/api/stripe-config`);
+          const { publishableKey } = await response.json();
+          
+          if (publishableKey) {
+            console.log('✅ Stripe key loaded from backend');
+            setStripePromise(loadStripe(publishableKey));
+          } else {
+            console.error('❌ No publishable key available');
+          }
+        }
+      } catch (error) {
+        console.error('❌ Error loading Stripe key:', error);
+      }
+    };
+    
+    initStripe();
   }, []);
 
   // Read 'service' URL parameter and set item value
@@ -60,9 +96,22 @@ export default function SignupForm({ isOpen, onClose }) {
   const [showLoginLink, setShowLoginLink] = useState(false);
   const [termsAccepted, setTermsAccepted] = useState(false);
   const [showTermsModal, setShowTermsModal] = useState(false);
+  const [showPaymentForm, setShowPaymentForm] = useState(false);
+  const [clientSecret, setClientSecret] = useState("");
+  const [validatedFormData, setValidatedFormData] = useState(null);
+  const [emailExists, setEmailExists] = useState(false);
+  const [checkingEmail, setCheckingEmail] = useState(false);
 
   const agentFormWrapperRef = useRef(null);
   const agentFormInnerRef = useRef(null);
+
+  // Price mapping for service levels
+  const pricingMap = {
+    free: { amount: 0, name: "Trial/Free" },
+    basic: { amount: 2900, name: "Basic" }, // $29.00
+    pro: { amount: 7900, name: "Pro" },     // $79.00
+    enterprise: { amount: 19900, name: "Enterprise" } // $199.00
+  };
 
   useEffect(() => {
     const wrapper = agentFormWrapperRef.current;
@@ -99,6 +148,41 @@ export default function SignupForm({ isOpen, onClose }) {
       ...prev,
       [name]: type === "checkbox" ? checked : value,
     }));
+  };
+
+  const checkEmailExists = async (email) => {
+    if (!email || !email.trim()) {
+      setEmailExists(false);
+      return;
+    }
+
+    try {
+      setCheckingEmail(true);
+      const apiBaseUrl = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+      const response = await fetch(`${apiBaseUrl}/api/check-email`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email: email.trim() }),
+      });
+
+      const data = await response.json();
+      setEmailExists(data.exists);
+      
+      if (data.exists) {
+        setAgentFormError('This email is already registered. Please log in instead.');
+      } else {
+        // Clear error only if it was the email exists error
+        if (agentFormError === 'This email is already registered. Please log in instead.') {
+          setAgentFormError('');
+        }
+      }
+    } catch (error) {
+      console.error('Error checking email:', error);
+    } finally {
+      setCheckingEmail(false);
+    }
   };
 
   const normalizePayload = (raw) => {
@@ -149,6 +233,11 @@ export default function SignupForm({ isOpen, onClose }) {
     setAgentFormError("");
     setAgentFormSuccess(false);
 
+    if (emailExists) {
+      setAgentFormError("This email is already registered. Please log in instead.");
+      return;
+    }
+
     if (!agentForm.contact_email) {
       setAgentFormError("Email is required to create an account.");
       return;
@@ -187,12 +276,21 @@ export default function SignupForm({ isOpen, onClose }) {
       return;
     }
 
-    // NEW: Validate terms and conditions acceptance
     if (!termsAccepted) {
       setAgentFormError("You must accept the Terms and Conditions to create an account.");
       return;
     }
 
+    const payload = normalizePayload(agentForm);
+    setValidatedFormData(payload);
+
+    // If free tier, skip payment and create user directly
+    if (agentForm.level === "free") {
+      await createUser(payload, null);
+      return;
+    }
+
+    // For paid tiers, create payment intent
     try {
       const token = import.meta.env.VITE_CREATE_USER_TOKEN;
       
@@ -204,14 +302,12 @@ export default function SignupForm({ isOpen, onClose }) {
         return;
       }
 
-      const payload = normalizePayload(agentForm);
-
       const apiBaseUrl = import.meta.env.VITE_API_URL || 'http://localhost:3000';
-      const apiUrl = `${apiBaseUrl}/api/create_and_check_user`;
+      const apiUrl = `${apiBaseUrl}/api/create-payment-intent`;
       
-      console.log("🌐 API Base URL:", apiBaseUrl);
-      console.log("📡 Calling API:", apiUrl);
-      console.log("📦 Payload:", payload);
+      const pricing = pricingMap[agentForm.level];
+      
+      console.log("🌐 Creating payment intent for:", pricing);
 
       const res = await fetch(apiUrl, {
         method: "POST",
@@ -219,7 +315,70 @@ export default function SignupForm({ isOpen, onClose }) {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify(payload),
+        body: JSON.stringify({
+          amount: pricing.amount,
+          email: agentForm.contact_email,
+          name: `${agentForm.first_name || ''} ${agentForm.last_name || ''}`.trim() || agentForm.contact_email,
+          level: agentForm.level
+        }),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        const errorMessage = data?.error || "Failed to create payment intent";
+        console.error("❌ Payment intent error:", errorMessage);
+        setAgentFormError(`❌ ${errorMessage}`);
+        return;
+      }
+
+      console.log("✅ Payment intent created successfully!");
+      setClientSecret(data.clientSecret);
+      setShowPaymentForm(true);
+
+    } catch (err) {
+      console.error("❌ Payment intent creation error:", err);
+      setAgentFormError(
+        `❌ Network error: ${err.message}. Please check your connection and try again.`
+      );
+    }
+  };
+
+  const createUser = async (payload, paymentData) => {
+    try {
+      const token = import.meta.env.VITE_CREATE_USER_TOKEN;
+
+      if (!token) {
+        console.error("VITE_CREATE_USER_TOKEN is not set");
+        setAgentFormError(
+          "Configuration error: Missing authentication token. Please contact support."
+        );
+        return;
+      }
+
+      const apiBaseUrl = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+      const apiUrl = `${apiBaseUrl}/api/create_and_check_user`;
+
+      const userPayload = {
+        ...payload,
+        payment_intent_id: paymentData?.paymentIntentId || null,
+        payment_status: paymentData?.status || null,
+        payment_amount: paymentData?.amount || null,
+        payment_currency: paymentData?.currency || null,
+        payment_created: paymentData?.created || null,
+        date_paid: paymentData?.paymentIntentId ? new Date().toISOString() : null,
+        current: !!paymentData?.paymentIntentId
+      };
+
+      console.log("📡 Creating user with payload:", userPayload);
+
+      const res = await fetch(apiUrl, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(userPayload),
       });
 
       let data;
@@ -235,12 +394,9 @@ export default function SignupForm({ isOpen, onClose }) {
         }
       }
 
-      console.log("📥 Response status:", res.status);
-      console.log("📥 Response data:", data);
-
       if (!res.ok) {
         const errorMessage = data?.error || data?.message || data?.detail || "Failed to create user";
-        console.error("❌ Server error:", errorMessage, "Full response:", data);
+        console.error("❌ Server error:", errorMessage);
         setAgentFormError(`❌ ${errorMessage}`);
         return;
       }
@@ -248,6 +404,7 @@ export default function SignupForm({ isOpen, onClose }) {
       console.log("✅ User created successfully!");
       setAgentFormSuccess(true);
       setShowLoginLink(true);
+      setShowPaymentForm(false);
 
       setAgentForm({
         open_ai_token: "",
@@ -279,22 +436,26 @@ export default function SignupForm({ isOpen, onClose }) {
         messenger_access_token: "",
       });
 
-      // Reset terms checkbox after successful submission
       setTermsAccepted(false);
-
+      setEmailExists(false);
       setTimeout(() => setAgentFormSuccess(false), 5000);
     } catch (err) {
-      console.error("❌ Agent form submission error:", err);
-      console.error("Error details:", {
-        message: err.message,
-        stack: err.stack,
-        name: err.name
-      });
-      
+      console.error("❌ User creation error:", err);
       setAgentFormError(
         `❌ Network error: ${err.message}. Please check your connection and try again.`
       );
     }
+  };
+
+  const handlePaymentSuccess = async (paymentData) => {
+    console.log("✅ Payment successful:", paymentData);
+    await createUser(validatedFormData, paymentData);
+  };
+
+  const handlePaymentError = (error) => {
+    console.error("❌ Payment error:", error);
+    setAgentFormError(`Payment failed: ${error}`);
+    setShowPaymentForm(false);
   };
 
   const requiredAsteriskStyle = { color: "#d11", marginLeft: "0px" };
@@ -337,7 +498,6 @@ export default function SignupForm({ isOpen, onClose }) {
             }}
             onClick={(e) => e.stopPropagation()}
           >
-            {/* Modal Header */}
             <div
               style={{
                 background: "linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%)",
@@ -371,7 +531,6 @@ export default function SignupForm({ isOpen, onClose }) {
               </button>
             </div>
 
-            {/* Modal Content */}
             <div style={{ padding: "30px", lineHeight: "1.6" }}>
               <p style={{ marginTop: 0 }}>
                 <strong>Here are the terms and conditions</strong>
@@ -445,6 +604,96 @@ export default function SignupForm({ isOpen, onClose }) {
         </div>
       )}
 
+      {/* Stripe Payment Modal */}
+      {showPaymentForm && clientSecret && stripePromise && (
+        <div
+          style={{
+            position: "fixed",
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            backgroundColor: "rgba(0, 0, 0, 0.5)",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            zIndex: 10000,
+            padding: "20px"
+          }}
+        >
+          <div
+            style={{
+              backgroundColor: "white",
+              borderRadius: "8px",
+              maxWidth: "500px",
+              width: "100%",
+              maxHeight: "90vh",
+              overflow: "auto",
+              boxShadow: "0 4px 20px rgba(0, 0, 0, 0.3)"
+            }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div
+              style={{
+                background: "linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%)",
+                padding: "20px",
+                borderRadius: "8px 8px 0 0",
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center"
+              }}
+            >
+              <h2 style={{ margin: 0, color: "white", fontSize: "20px" }}>
+                Complete Payment
+              </h2>
+              <button
+                onClick={() => {
+                  setShowPaymentForm(false);
+                  setAgentFormError("Payment cancelled");
+                }}
+                style={{
+                  background: "transparent",
+                  border: "none",
+                  color: "white",
+                  fontSize: "28px",
+                  cursor: "pointer",
+                  padding: "0",
+                  width: "30px",
+                  height: "30px",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center"
+                }}
+              >
+                ×
+              </button>
+            </div>
+
+            <div style={{ padding: "30px" }}>
+              <div style={{ marginBottom: "20px", textAlign: "center" }}>
+                <p style={{ margin: 0, fontSize: "14px", color: "#666" }}>
+                  {pricingMap[agentForm.level].name} Plan
+                </p>
+                <p style={{ margin: "5px 0", fontSize: "32px", fontWeight: "bold", color: "#1e3a8a" }}>
+                  ${(pricingMap[agentForm.level].amount / 100).toFixed(2)}
+                </p>
+                <p style={{ margin: 0, fontSize: "12px", color: "#999" }}>
+                  per month
+                </p>
+              </div>
+
+              <Elements stripe={stripePromise} options={{ clientSecret }}>
+                <StripePaymentForm
+                  clientSecret={clientSecret}
+                  onSuccess={handlePaymentSuccess}
+                  onError={handlePaymentError}
+                />
+              </Elements>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Signup Form */}
       <div 
         id="agent-form" 
@@ -467,7 +716,6 @@ export default function SignupForm({ isOpen, onClose }) {
             overflow: "hidden"
           }}
         >
-          {/* Blue header section */}
           <div style={{
             background: "linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%)",
             padding: "20px 10px",
@@ -478,7 +726,6 @@ export default function SignupForm({ isOpen, onClose }) {
             </h2>
           </div>
 
-          {/* White description section */}
           <div style={{
             background: "white",
             padding: "20px",
@@ -503,8 +750,7 @@ export default function SignupForm({ isOpen, onClose }) {
             </p>
           </div>
 
-          {/* Form fields section */}
-          <div style={{ padding: "30px", background: "white" }}>
+          <div style={{ padding: "30px", background: "#f9f9f9" }}>
             <div
               id="agent-collapsible"
               className="agent-collapsible open"
@@ -553,9 +799,34 @@ export default function SignupForm({ isOpen, onClose }) {
                       required
                       value={agentForm.contact_email}
                       onChange={handleAgentFormChange}
+                      onBlur={(e) => checkEmailExists(e.target.value)}
                       className="home-form-input"
                       autoComplete="email"
+                      style={emailExists ? { borderColor: '#d11' } : {}}
                     />
+                    {checkingEmail && (
+                      <p style={{ 
+                        color: '#666', 
+                        fontSize: '13px', 
+                        marginTop: '5px',
+                        marginBottom: 0 
+                      }}>
+                        Checking email...
+                      </p>
+                    )}
+                    {emailExists && (
+                      <p style={{ 
+                        color: '#d11', 
+                        fontSize: '13px', 
+                        marginTop: '5px',
+                        marginBottom: 0 
+                      }}>
+                        This email is already registered.{' '}
+                        <a href="/login" style={{ color: '#1e3a8a', textDecoration: 'underline' }}>
+                          Log in here
+                        </a>
+                      </p>
+                    )}
                   </div>
 
                   <div className="home-form-group" style={{ flex: 1 }}>
@@ -627,7 +898,7 @@ export default function SignupForm({ isOpen, onClose }) {
                   <div
                     className="home-form-group"
                     style={{
-                      flex: isMobile ? "unset" : "0 0 auto",
+                      flex: 1,
                       display: "flex",
                       alignItems: "center",
                       gap: "10px",
@@ -660,7 +931,7 @@ export default function SignupForm({ isOpen, onClose }) {
                       type="text"
                       id="company"
                       name="company"
-                      placeholder="example.com"
+                      placeholder="Acme"
                       value={agentForm.company}
                       onChange={handleAgentFormChange}
                       className="home-form-input"
@@ -679,15 +950,14 @@ export default function SignupForm({ isOpen, onClose }) {
                       onChange={handleAgentFormChange}
                       className="home-form-input"
                     >
-                      <option value="free">Trial/Free</option>
-                      <option value="basic">Basic</option>
-                      <option value="pro">Pro</option>
-                      <option value="enterprise">Enterprise</option>
+                      <option value="free">Trial/Free - $0/month</option>
+                      <option value="basic">Basic - $29/month</option>
+                      <option value="pro">Pro - $79/month</option>
+                      <option value="enterprise">Enterprise - $199/month</option>
                     </select>
                   </div>
                 </div>
 
-                {/* Terms and Conditions Checkbox */}
                 <div style={{ marginTop: "20px", marginBottom: "10px" }}>
                   <div
                     style={{
@@ -695,9 +965,12 @@ export default function SignupForm({ isOpen, onClose }) {
                       alignItems: "center",
                       gap: "10px",
                       padding: "15px",
-                      backgroundColor: "#f8f9fa",
+                      backgroundColor: "#fff",
                       borderRadius: "4px",
-                      border: "1px solid #dee2e6"
+                      border: "1px solid #dee2e6",
+                      maxWidth: "20em", 
+                      marginLeft: "auto", 
+                      marginRight: "auto",
                     }}
                   >
                     <input
@@ -740,14 +1013,12 @@ export default function SignupForm({ isOpen, onClose }) {
                   </div>
                 </div>
 
-                {/* Hidden item field */}
                 <input
                   type="hidden"
                   name="item"
                   value={agentForm.item}
                 />
 
-                {/* Fixed height container for messages */}
                 <div style={{ minHeight: "60px", marginTop: "10px" }}>
                   {agentFormError && <p className="home-form-error">{agentFormError}</p>}
                   {agentFormSuccess && (
@@ -782,8 +1053,9 @@ export default function SignupForm({ isOpen, onClose }) {
                       padding: "12px 30px",
                       fontSize: "16px"
                     }}
+                    disabled={emailExists || checkingEmail}
                   >
-                    Let's Go!
+                    {agentForm.level === "free" ? "Let's Go!" : "Continue to Payment"}
                   </button>
                 </div>
               </div>

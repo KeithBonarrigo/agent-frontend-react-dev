@@ -210,12 +210,13 @@ export default function ConfigurationsTab({ user }: ConfigurationsTabProps) {
     <div>
       {/* Website Embed Code Section */}
       <div style={{ marginBottom: "2em" }}>
-        <p style={{ fontWeight: "bold", marginBottom: "0.5em" }}>Website Embed Code:</p>
-        <div style={{ position: "relative" }}>
+        <p style={{ fontWeight: "bold", marginBottom: "0.5em", textAlign:"center" }}><h2>Website Embed Code</h2></p>
+        <div style={{ position: "relative", width: "70%", marginLeft: "auto", marginRight:"auto" }}>
           <pre style={{ 
-            backgroundColor: "#f5f5f5", 
+            backgroundColor: "#fff", 
             padding: "1em", 
             borderRadius: "4px",
+            boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)",
             overflowX: "auto",
             border: "1px solid #ddd",
             margin: 0
@@ -226,7 +227,7 @@ export default function ConfigurationsTab({ user }: ConfigurationsTabProps) {
             onClick={handleCopy}
             style={{
               position: "absolute",
-              top: "0.5em",
+              top: "0.25em",
               right: "0.5em",
               padding: "0.4em 0.8em",
               backgroundColor: copied ? "#28a745" : "#007bff",
@@ -240,7 +241,7 @@ export default function ConfigurationsTab({ user }: ConfigurationsTabProps) {
             {copied ? "✓ Copied!" : "Copy"}
           </button>
         </div>
-        <p style={{ fontSize: "0.9em", color: "#666", marginTop: "0.5em" }}>
+        <p style={{ fontSize: "0.9em", color: "#666", marginTop: "0.5em", textAlign: "center" }}>
           Copy this code and paste it in the &lt;head&gt; section of your website.
         </p>
       </div>
@@ -260,14 +261,14 @@ export default function ConfigurationsTab({ user }: ConfigurationsTabProps) {
 
       {/* Client Instructions Form */}
       <div style={{ marginTop: "2em", paddingTop: "2em", borderTop: "1px solid #ddd" }}>
-        <h2>Client Instructions</h2>
+        <h2>Add Your Agent Instructions</h2>
         
         {loadingInstructions ? (
           <p>Loading instructions...</p>
         ) : (
           <form onSubmit={handleSubmit}>
             <div style={{ marginBottom: "1em" }}>
-              <p style={{ color: "#666", fontSize: "0.9em" }}>
+              <p style={{ color: "#666", fontSize: "0.9em", textAlign: "center" }}>
                 Add custom instructions for your AI agent. Drag to reorder, or use arrow buttons.
               </p>
             </div>
