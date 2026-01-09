@@ -21,10 +21,9 @@ export default function ConfigurationsTab({ clientId }: ConfigurationsTabProps) 
   const [loadingInstructions, setLoadingInstructions] = useState(true);
   const [saving, setSaving] = useState(false);
   const [saveMessage, setSaveMessage] = useState('');
-  const [copied, setCopied] = useState(false);
   const [draggedIndex, setDraggedIndex] = useState<number | null>(null);
 
-  // Fetch client instructions - USE clientId PROP
+  // Fetch client instructions
   useEffect(() => {
     const fetchInstructions = async () => {
       if (!clientId) {
@@ -45,7 +44,6 @@ export default function ConfigurationsTab({ clientId }: ConfigurationsTabProps) 
 
         const data = await response.json();
         
-        // Extract instructions from the response
         if (data.client_instructions) {
           if (Array.isArray(data.client_instructions.client_instructions) && 
               data.client_instructions.client_instructions.length > 0) {
@@ -65,42 +63,7 @@ export default function ConfigurationsTab({ clientId }: ConfigurationsTabProps) 
     };
 
     fetchInstructions();
-  }, [clientId]); // Depend on clientId prop
-
-  const dashboardMode = import.meta.env.VITE_MODE || 'local';
-  let webEmbedDomain: string;
-  let webEmbedProtocol: string;
-  
-  switch(dashboardMode){
-    case "local":
-        webEmbedDomain = 'localhost:3000';
-        webEmbedProtocol = 'http';
-    break;
-    case "dev":
-        webEmbedDomain = 'chatdev.aibridge.global';
-        webEmbedProtocol = 'https';
-    break;
-    case "staging":
-        webEmbedDomain = 'chatstaging.aibridge.global';
-        webEmbedProtocol = 'https';
-    break;
-    case "production":
-        webEmbedDomain = 'chat.aibridge.global';
-        webEmbedProtocol = 'https';
-    break;
-    default:
-        webEmbedDomain = 'localhost:3000';
-        webEmbedProtocol = 'http';
-  }
-
-  // USE clientId PROP for embed code
-  const embedCode = `<script src='${webEmbedProtocol}://${webEmbedDomain}/chatbot.js?id=${clientId}'></script>`;
-
-  const handleCopy = () => {
-    navigator.clipboard.writeText(embedCode);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
-  };
+  }, [clientId]);
 
   const handleInstructionChange = (index: number, value: string) => {
     const newInstructions = [...instructions];
@@ -159,7 +122,6 @@ export default function ConfigurationsTab({ clientId }: ConfigurationsTabProps) 
     setInstructions(newInstructions);
   };
 
-  // USE clientId PROP for save
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setSaving(true);
@@ -184,8 +146,6 @@ export default function ConfigurationsTab({ clientId }: ConfigurationsTabProps) 
         body: JSON.stringify(payload)
       });
 
-      //const responseData = await response.json();
-
       if (!response.ok) {
         throw new Error('Failed to save instructions');
       }
@@ -202,46 +162,8 @@ export default function ConfigurationsTab({ clientId }: ConfigurationsTabProps) 
 
   return (
     <div>
-      {/* Website Embed Code Section */}
-      <div style={{ marginBottom: "2em" }}>
-        <p style={{ fontWeight: "bold", marginBottom: "0.5em", textAlign:"center" }}><h2>Website Embed Code</h2></p>
-        <div style={{ position: "relative", width: "70%", marginLeft: "auto", marginRight:"auto" }}>
-          <pre style={{ 
-            backgroundColor: "#fff", 
-            padding: "1em", 
-            borderRadius: "4px",
-            boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)",
-            overflowX: "auto",
-            border: "1px solid #ddd",
-            margin: 0
-          }}>
-            <code>{embedCode}</code>
-          </pre>
-          <button
-            onClick={handleCopy}
-            style={{
-              position: "absolute",
-              top: "0.25em",
-              right: "0.5em",
-              padding: "0.4em 0.8em",
-              backgroundColor: copied ? "#28a745" : "#007bff",
-              color: "white",
-              border: "none",
-              borderRadius: "4px",
-              cursor: "pointer",
-              fontSize: "0.85em"
-            }}
-          >
-            {copied ? "✓ Copied!" : "Copy"}
-          </button>
-        </div>
-        <p style={{ fontSize: "0.9em", color: "#666", marginTop: "0.5em", textAlign: "center" }}>
-          Copy this code and paste it in the &lt;head&gt; section of your website.
-        </p>
-      </div>
-
       {/* Client Instructions Form */}
-      <div style={{ marginTop: "2em", paddingTop: "2em", borderTop: "1px solid #ddd" }}>
+      <div>
         <h2>Add Your Agent Instructions</h2>
         
         {loadingInstructions ? (
