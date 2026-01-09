@@ -30,22 +30,41 @@ export const UserProvider = ({ children }) => {
 
   // Check if user is still logged in on server
   const checkSession = async () => {
+    const storedUser = localStorage.getItem('user');
+    
+    // If no stored user, we're definitely not logged in
+    if (!storedUser) {
+      setUser(null);
+      setIsLoading(false);
+      return;
+    }
+
     try {
       const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3000";
       const res = await fetch(`${API_URL}/api/check-session`, {
-        credentials: 'include' // Send session cookie
+        credentials: 'include'
       });
 
       const data = await res.json();
 
-      if (data.loggedIn && data.user) {
-        setUser(data.user);
+      if (data.isAuthenticated && data.user) {
+        // Merge server data with localStorage data (server data takes priority)
+        const parsedStoredUser = JSON.parse(storedUser);
+        setUser({
+          ...parsedStoredUser,
+          ...data.user
+        });
       } else {
-        setUser(null);
+        // Server says not authenticated, but we have localStorage data
+        // Keep the localStorage data - user might have a valid session that just expired
+        // They'll get a 401 on their next API call if truly logged out
+        console.log('Server session expired, keeping localStorage user data');
+        setUser(JSON.parse(storedUser));
       }
     } catch (error) {
       console.error('Session check failed:', error);
-      // Keep local user data on network error
+      // On network error, trust localStorage
+      setUser(JSON.parse(storedUser));
     } finally {
       setIsLoading(false);
     }
@@ -70,6 +89,7 @@ export const UserProvider = ({ children }) => {
 
     // Store user data client-side
     const userData = {
+      account_id: data.user.account_id,
       email: data.user.email,
       first_name: data.user.first_name,
       last_name: data.user.last_name,
@@ -77,10 +97,13 @@ export const UserProvider = ({ children }) => {
       loginTime: new Date().toISOString()
     };
 
-    // ✅ If single account, set client_id and level automatically
+    // If single account, set client_id, level, and other fields automatically
     if (data.accounts.length === 1) {
       userData.client_id = data.accounts[0].client_id;
       userData.level = data.accounts[0].level;
+      userData.item_id = data.accounts[0].item_id;
+      userData.company = data.accounts[0].company;
+      userData.current = data.accounts[0].current;
     }
 
     setUser(userData);
@@ -122,14 +145,17 @@ export const UserProvider = ({ children }) => {
       throw new Error(data.error || 'Failed to select client');
     }
 
-    // ✅ Find the selected account and get its level
+    // Find the selected account and get all its data
     const selectedAccount = user.accounts.find(acc => acc.client_id === client_id);
 
-    // Update local user data
+    // Update local user data with all relevant fields
     setUser(prev => ({
       ...prev,
       client_id: client_id,
-      level: selectedAccount?.level || prev.level
+      level: selectedAccount?.level || prev.level,
+      item_id: selectedAccount?.item_id || prev.item_id,
+      company: selectedAccount?.company || prev.company,
+      current: selectedAccount?.current || prev.current
     }));
 
     localStorage.setItem('client_id', client_id);
@@ -145,13 +171,13 @@ export const UserProvider = ({ children }) => {
   };
 
   const value = {
-    user,              // Current user data
-    isLoading,         // Loading state
-    login,             // Login function
-    logout,            // Logout function
-    selectClient,      // Select account
-    updateUser,        // Update user data
-    isLoggedIn: !!user // Boolean helper
+    user,
+    isLoading,
+    login,
+    logout,
+    selectClient,
+    updateUser,
+    isLoggedIn: !!user
   };
 
   return (

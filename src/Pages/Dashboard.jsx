@@ -16,6 +16,12 @@ export default function Dashboard() {
   const [tokenError, setTokenError] = useState(null);
   const [tokenLimits, setTokenLimits] = useState(null);
   const [loadingLimits, setLoadingLimits] = useState(true);
+  
+  // State for multiple clients/subscriptions
+  const [clients, setClients] = useState([]);
+  const [selectedClientId, setSelectedClientId] = useState(null);
+  const [loadingClients, setLoadingClients] = useState(true);
+  const [itemNames, setItemNames] = useState({});
 
   // Redirect to login if not authenticated
   useEffect(() => {
@@ -24,12 +30,105 @@ export default function Dashboard() {
     }
   }, [isLoggedIn, isLoading, navigate]);
 
+  // Fetch all clients/subscriptions for this account
+  useEffect(() => {
+    const fetchClients = async () => {
+      console.log('📡 fetchClients called');
+      console.log('user?.account_id:', user?.account_id);
+      
+      if (!user?.account_id) {
+        console.warn('⚠️ No account_id found in user context!');
+        
+        if (user?.client_id) {
+          console.log('🔄 Falling back to single client from user context');
+          setClients([{
+            clientid: parseInt(user.client_id, 10),
+            first_name: user.first_name,
+            last_name: user.last_name,
+            contact_email: user.email,
+            level: user.level,
+            item: user.item_id,
+            company: user.company
+          }]);
+          setSelectedClientId(parseInt(user.client_id, 10));
+          setLoadingClients(false);
+        } else {
+          console.error('❌ No client_id either! User context is incomplete.');
+          setLoadingClients(false);
+        }
+        return;
+      }
+
+      setLoadingClients(true);
+      try {
+        const apiBaseUrl = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+        const url = `${apiBaseUrl}/api/account/${user.account_id}/clients`;
+        console.log('📡 Fetching clients from:', url);
+        
+        const response = await fetch(url, {
+          credentials: 'include'
+        });
+
+        console.log('📡 Clients response status:', response.status);
+
+        if (!response.ok) {
+          const errorText = await response.text();
+          console.error('❌ Clients fetch failed:', errorText);
+          throw new Error('Failed to fetch clients');
+        }
+
+        const data = await response.json();
+        console.log('✅ Clients data received:', data);
+        setClients(data.clients || []);
+        
+        if (data.clients && data.clients.length > 0) {
+          const initialClientId = user.client_id || data.clients[0].clientid;
+          console.log('Setting selectedClientId to:', initialClientId);
+          setSelectedClientId(parseInt(initialClientId, 10));
+
+          // Build item names from the response
+          const namesMap = {};
+          data.clients.forEach((client) => {
+            if (client.item) {
+              namesMap[client.item] = client.item_domain || `Subscription ${client.item}`;
+            }
+          });
+          console.log('Item names loaded:', namesMap);
+          setItemNames(namesMap);
+        }
+      } catch (error) {
+        console.error('❌ Error fetching clients:', error);
+        if (user) {
+          console.log('🔄 Using fallback client data from user context');
+          setClients([{
+            clientid: parseInt(user.client_id, 10),
+            first_name: user.first_name,
+            last_name: user.last_name,
+            contact_email: user.email,
+            level: user.level,
+            item: user.item_id,
+            company: user.company
+          }]);
+          setSelectedClientId(parseInt(user.client_id, 10));
+        }
+      } finally {
+        setLoadingClients(false);
+      }
+    };
+
+    if (user) {
+      fetchClients();
+    }
+  }, [user?.account_id, user?.client_id]);
+
+  // Get the currently selected client object - use string comparison for type safety
+  const selectedClient = clients.find(c => String(c.clientid) === String(selectedClientId)) || null;
+
   // Fetch token limits from server
   useEffect(() => {
     const fetchTokenLimits = async () => {
       try {
         const apiBaseUrl = import.meta.env.VITE_API_URL || 'http://localhost:3000';
-        // FIXED: Changed from /api/token-limits to /api/token/limits
         const response = await fetch(`${apiBaseUrl}/api/token/limits`, {
           credentials: 'include'
         });
@@ -42,7 +141,6 @@ export default function Dashboard() {
         setTokenLimits(data.limits);
       } catch (error) {
         console.error('Error fetching token limits:', error);
-        // Fallback to default limits if server fetch fails
         setTokenLimits({
           'free': 100000,
           'basic': 500000,
@@ -57,18 +155,18 @@ export default function Dashboard() {
     fetchTokenLimits();
   }, []);
 
-  // Fetch token usage
+  // Fetch token usage for ENTIRE ACCOUNT (sum of all subscriptions)
   useEffect(() => {
-    const fetchTokenUsage = async () => {
-      if (!user?.client_id) return;
+    const fetchAccountTokenUsage = async () => {
+      if (!user?.account_id) return;
 
       setLoadingTokens(true);
       setTokenError(null);
 
       try {
         const apiBaseUrl = import.meta.env.VITE_API_URL || 'http://localhost:3000';
-        // FIXED: Changed from /api/token-usage to /api/token/usage
-        const response = await fetch(`${apiBaseUrl}/api/token/usage/${user.client_id}`, {
+        console.log('📡 Fetching account token usage for account:', user.account_id);
+        const response = await fetch(`${apiBaseUrl}/api/token/usage/account/${user.account_id}`, {
           credentials: 'include'
         });
 
@@ -77,9 +175,10 @@ export default function Dashboard() {
         }
 
         const data = await response.json();
+        console.log('✅ Account token usage received:', data);
         setTokenUsage(data.tokens_used || 0);
       } catch (error) {
-        console.error('Error fetching token usage:', error);
+        console.error('Error fetching account token usage:', error);
         setTokenError('Unable to load token data');
         setTokenUsage(0);
       } finally {
@@ -87,10 +186,10 @@ export default function Dashboard() {
       }
     };
 
-    if (user?.client_id) {
-      fetchTokenUsage();
+    if (user?.account_id) {
+      fetchAccountTokenUsage();
     }
-  }, [user?.client_id]);
+  }, [user?.account_id]);
 
   const handleLogout = async () => {
     try {
@@ -101,14 +200,19 @@ export default function Dashboard() {
     }
   };
 
+  const handleClientChange = (e) => {
+    const newClientId = parseInt(e.target.value, 10);
+    console.log('🔄 Subscription changed to:', newClientId);
+    setSelectedClientId(newClientId);
+  };
+
   const refreshTokenUsage = async () => {
-    if (!user?.client_id) return;
+    if (!user?.account_id) return;
 
     setLoadingTokens(true);
     try {
       const apiBaseUrl = import.meta.env.VITE_API_URL || 'http://localhost:3000';
-      // FIXED: Changed from /api/token-usage to /api/token/usage
-      const response = await fetch(`${apiBaseUrl}/api/token/usage/${user.client_id}`, {
+      const response = await fetch(`${apiBaseUrl}/api/token/usage/account/${user.account_id}`, {
         credentials: 'include'
       });
 
@@ -124,36 +228,58 @@ export default function Dashboard() {
     }
   };
 
-  // Format number with commas
   const formatNumber = (num) => {
     if (num === null || num === undefined) return '0';
     return num.toLocaleString();
   };
 
-  // Get token limit for current user's service level
-  const getCurrentTokenLimit = () => {
-    if (!tokenLimits || !user?.level) return null;
-    return tokenLimits[user.level.toLowerCase()];
+  // Calculate account token limit (sum of all subscription limits, or highest tier)
+  const getAccountTokenLimit = () => {
+    if (!tokenLimits || clients.length === 0) return null;
+
+    // Option 1: Use the highest tier limit among all subscriptions
+    const tierOrder = ['free', 'basic', 'pro', 'enterprise'];
+    let highestTier = 'free';
+    
+    clients.forEach(client => {
+      const clientLevel = (client.level || 'basic').toLowerCase();
+      if (tierOrder.indexOf(clientLevel) > tierOrder.indexOf(highestTier)) {
+        highestTier = clientLevel;
+      }
+    });
+
+    return tokenLimits[highestTier];
+
+    // Option 2: Sum all subscription limits (uncomment if preferred)
+    // let totalLimit = 0;
+    // let hasUnlimited = false;
+    // clients.forEach(client => {
+    //   const clientLevel = (client.level || 'basic').toLowerCase();
+    //   const limit = tokenLimits[clientLevel];
+    //   if (limit === null) {
+    //     hasUnlimited = true;
+    //   } else {
+    //     totalLimit += limit;
+    //   }
+    // });
+    // return hasUnlimited ? null : totalLimit;
   };
 
-  // Calculate token usage percentage
   const getTokenUsagePercentage = () => {
-    const limit = getCurrentTokenLimit();
-    if (!limit) return 0; // unlimited
+    const limit = getAccountTokenLimit();
+    if (!limit) return 0;
     return Math.min((tokenUsage / limit) * 100, 100);
   };
 
-  // Get color based on usage
   const getUsageColor = () => {
     const percentage = getTokenUsagePercentage();
-    if (percentage < 50) return '#28a745'; // green
-    if (percentage < 80) return '#ffc107'; // yellow
-    return '#dc3545'; // red
+    if (percentage < 50) return '#28a745';
+    if (percentage < 80) return '#ffc107';
+    return '#dc3545';
   };
 
-  // Get usage status text
   const getUsageStatus = () => {
-    const limit = getCurrentTokenLimit();
+    const limit = getAccountTokenLimit();
     if (!limit) return 'Unlimited';
     const percentage = getTokenUsagePercentage();
     if (percentage < 50) return 'Good';
@@ -162,14 +288,21 @@ export default function Dashboard() {
     return 'Critical';
   };
 
-  const tokenLimit = getCurrentTokenLimit();
+  const tokenLimit = getAccountTokenLimit();
 
-  // Tab styles
+  // Get display name for a client/subscription
+  const getClientDisplayName = (client) => {
+    const itemName = itemNames[client.item] || `Subscription ${client.item || 'N/A'}`;
+    const company = client.company ? ` - ${client.company}` : '';
+    return `${itemName}${company}`;
+  };
+
   const tabContainerStyle = {
     display: 'flex',
     borderBottom: '2px solid #ddd',
-    marginTop: '2em',
-    marginBottom: '2em'
+    marginTop: '1.5em',
+    marginBottom: '2em',
+    flexWrap: 'wrap'
   };
 
   const tabStyle = (isActive) => ({
@@ -185,7 +318,6 @@ export default function Dashboard() {
     marginRight: '4px'
   });
 
-  // Show loading state while checking authentication
   if (isLoading) {
     return (
       <div style={{ padding: "2em", textAlign: "center" }}>
@@ -194,20 +326,27 @@ export default function Dashboard() {
     );
   }
 
-  // Don't render if not logged in (will redirect)
   if (!isLoggedIn || !user) {
     return null;
   }
 
   return (
     <div style={{ padding: "2em", maxWidth: "1200px", margin: "0 auto" }}>
+      {/* Header with Account Info */}
       <div style={{ 
         display: "flex", 
         justifyContent: "space-between", 
         alignItems: "center",
-        marginBottom: "1em"
+        marginBottom: "1.5em",
+        flexWrap: "wrap",
+        gap: "1em"
       }}>
-        <h1>Dashboard</h1>
+        <div>
+          <h1 style={{ margin: 0 }}>Dashboard</h1>
+          <p style={{ margin: "0.25em 0 0 0", color: "#666", fontSize: "0.95em" }}>
+            Welcome, {user.first_name || 'User'} {user.last_name || ''} ({user.email})
+          </p>
+        </div>
         <button 
           onClick={handleLogout}
           style={{
@@ -223,101 +362,72 @@ export default function Dashboard() {
         </button>
       </div>
 
-      {/* User Information Section */}
+      {/* Account Token Usage - Shows total across all subscriptions */}
       <div style={{
         backgroundColor: '#f8f9fa',
-        padding: '1.5em',
+        padding: '1.25em 1.5em',
         borderRadius: '8px',
-        marginBottom: '1em',
+        marginBottom: '1.5em',
         border: '1px solid #dee2e6'
       }}>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '1em' }}>
+        <div style={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          flexWrap: 'wrap',
+          gap: '1em'
+        }}>
           <div>
-            <p style={{ margin: '0 0 0.5em 0' }}>
-              <strong>Welcome, {user.first_name} {user.last_name}!</strong>
-            </p>
-            <p style={{ margin: '0 0 0.5em 0', color: '#666' }}>
-              <strong>Email:</strong> {user.email}
-            </p>
-          </div>
-          
-          <div>
-            <p style={{ margin: '0 0 0.5em 0', color: '#666' }}>
-              <strong>Client ID:</strong> {user.client_id}
-            </p>
-            <p style={{ margin: '0', color: '#666' }}>
-              <strong>Service Level:</strong> <span className="capitalize">{user.level}</span>
+            <h3 style={{ margin: '0 0 0.25em 0', color: '#333', fontSize: '1em' }}>
+              Account Token Usage
+            </h3>
+            <p style={{ margin: 0, fontSize: '0.85em', color: '#666' }}>
+              Total across all {clients.length} subscription{clients.length !== 1 ? 's' : ''}
             </p>
           </div>
 
-          {/* Token Usage Card */}
           <div style={{
-            backgroundColor: 'white',
-            padding: '1em',
-            borderRadius: '6px',
-            border: '1px solid #dee2e6',
             display: 'flex',
-            flexDirection: 'column',
-            justifyContent: 'center'
+            alignItems: 'center',
+            gap: '1.5em',
+            flexWrap: 'wrap'
           }}>
-            <div style={{ 
-              display: 'flex', 
-              justifyContent: 'space-between', 
-              alignItems: 'center',
-              marginBottom: '0.5em'
-            }}>
-              <div style={{ fontSize: '0.9em', color: '#666' }}>
-                Total Tokens Used
-              </div>
-              <button
-                onClick={refreshTokenUsage}
-                disabled={loadingTokens}
-                style={{
-                  padding: '0.3em 0.6em',
-                  fontSize: '0.85em',
-                  backgroundColor: loadingTokens ? '#6c757d' : '#007bff',
-                  color: 'white',
-                  border: 'none',
-                  borderRadius: '4px',
-                  cursor: loadingTokens ? 'not-allowed' : 'pointer',
-                  transition: 'background-color 0.2s'
-                }}
-                title="Refresh token count"
-              >
-                {loadingTokens ? '...' : '↻'}
-              </button>
-            </div>
-
             {loadingTokens || loadingLimits ? (
-              <div style={{ fontSize: '1.5em', color: '#007bff', textAlign: 'center' }}>
+              <div style={{ fontSize: '1.2em', color: '#007bff' }}>
                 Loading...
               </div>
             ) : tokenError ? (
-              <div style={{ fontSize: '0.9em', color: '#dc3545', textAlign: 'center' }}>
+              <div style={{ fontSize: '0.9em', color: '#dc3545' }}>
                 {tokenError}
               </div>
             ) : (
               <>
-                <div style={{
-                  fontSize: '2em',
-                  fontWeight: 'bold',
-                  color: getUsageColor(),
-                  textAlign: 'center',
-                  marginBottom: '0.3em'
-                }}>
-                  {formatNumber(tokenUsage)}
+                <div style={{ textAlign: 'center' }}>
+                  <div style={{
+                    fontSize: '1.75em',
+                    fontWeight: 'bold',
+                    color: getUsageColor()
+                  }}>
+                    {formatNumber(tokenUsage)}
+                  </div>
+                  <div style={{ fontSize: '0.75em', color: '#666' }}>
+                    tokens used
+                  </div>
                 </div>
 
                 {tokenLimit && (
-                  <>
-                    {/* Progress Bar */}
+                  <div style={{ 
+                    display: 'flex', 
+                    flexDirection: 'column', 
+                    gap: '0.25em',
+                    minWidth: '150px'
+                  }}>
                     <div style={{
                       width: '100%',
-                      height: '8px',
+                      height: '10px',
                       backgroundColor: '#e9ecef',
-                      borderRadius: '4px',
-                      overflow: 'hidden',
-                      marginBottom: '0.5em'
+                      borderRadius: '5px',
+                      overflow: 'hidden'
                     }}>
                       <div style={{
                         width: `${getTokenUsagePercentage()}%`,
@@ -326,29 +436,24 @@ export default function Dashboard() {
                         transition: 'width 0.3s ease'
                       }} />
                     </div>
-
-                    {/* Usage Info */}
                     <div style={{
                       display: 'flex',
                       justifyContent: 'space-between',
                       fontSize: '0.75em',
                       color: '#666'
                     }}>
-                      <span>
-                        {formatNumber(tokenLimit - tokenUsage)} remaining
-                      </span>
+                      <span>{formatNumber(tokenLimit - tokenUsage)} remaining</span>
                       <span style={{ color: getUsageColor(), fontWeight: 'bold' }}>
                         {getUsageStatus()}
                       </span>
                     </div>
-                  </>
+                  </div>
                 )}
 
                 {!tokenLimit && (
                   <div style={{
-                    fontSize: '0.8em',
+                    fontSize: '1em',
                     color: '#28a745',
-                    textAlign: 'center',
                     fontWeight: 'bold'
                   }}>
                     ∞ Unlimited
@@ -356,9 +461,122 @@ export default function Dashboard() {
                 )}
               </>
             )}
+
+            <button
+              onClick={refreshTokenUsage}
+              disabled={loadingTokens}
+              style={{
+                padding: '0.5em 1em',
+                fontSize: '0.9em',
+                backgroundColor: loadingTokens ? '#6c757d' : '#007bff',
+                color: 'white',
+                border: 'none',
+                borderRadius: '4px',
+                cursor: loadingTokens ? 'not-allowed' : 'pointer'
+              }}
+              title="Refresh token count"
+            >
+              {loadingTokens ? '...' : '↻ Refresh'}
+            </button>
           </div>
         </div>
       </div>
+
+      {/* Subscription Selector */}
+      <div style={{
+        backgroundColor: '#e7f3ff',
+        padding: '1.25em 1.5em',
+        borderRadius: '8px',
+        marginBottom: '1.5em',
+        border: '1px solid #b3d7ff'
+      }}>
+        <div style={{
+          display: 'flex',
+          alignItems: 'center',
+          gap: '1em',
+          flexWrap: 'wrap'
+        }}>
+          <label style={{ 
+            fontWeight: 'bold', 
+            color: '#0056b3',
+            whiteSpace: 'nowrap',
+            fontSize: '1.1em'
+          }}>
+            Select Subscription:
+          </label>
+          
+          {loadingClients ? (
+            <span style={{ color: '#666' }}>Loading subscriptions...</span>
+          ) : clients.length === 0 ? (
+            <span style={{ color: '#dc3545' }}>No subscriptions found</span>
+          ) : (
+            <select
+              value={selectedClientId || ''}
+              onChange={handleClientChange}
+              style={{
+                padding: '0.6em 1em',
+                fontSize: '1em',
+                borderRadius: '4px',
+                border: '1px solid #0056b3',
+                backgroundColor: 'white',
+                minWidth: '280px',
+                cursor: 'pointer'
+              }}
+            >
+              {clients.map((client) => (
+                <option key={client.clientid} value={client.clientid}>
+                  {getClientDisplayName(client)} ({client.level || 'basic'})
+                </option>
+              ))}
+            </select>
+          )}
+
+          <span style={{ color: '#666', fontSize: '0.9em', marginLeft: 'auto' }}>
+            {clients.length} subscription{clients.length !== 1 ? 's' : ''} on this account
+          </span>
+        </div>
+      </div>
+
+      {/* Selected Subscription Details */}
+      {selectedClient && (
+        <div style={{
+          backgroundColor: '#fff',
+          padding: '1.5em',
+          borderRadius: '8px',
+          marginBottom: '1em',
+          border: '1px solid #dee2e6'
+        }}>
+          <h3 style={{ margin: '0 0 1em 0', color: '#333' }}>
+            {getClientDisplayName(selectedClient)}
+          </h3>
+          
+          <div style={{ display: 'flex', gap: '2em', flexWrap: 'wrap' }}>
+            <p style={{ margin: '0', color: '#666' }}>
+              <strong>Subscription ID:</strong> {selectedClientId}
+            </p>
+            <p style={{ margin: '0', color: '#666' }}>
+              <strong>Service Level:</strong>{' '}
+              <span style={{ 
+                textTransform: 'capitalize',
+                backgroundColor: selectedClient.level === 'enterprise' ? '#6f42c1' : 
+                                 selectedClient.level === 'pro' ? '#007bff' : 
+                                 selectedClient.level === 'basic' ? '#28a745' : '#6c757d',
+                color: 'white',
+                padding: '0.15em 0.5em',
+                borderRadius: '3px',
+                fontSize: '0.9em'
+              }}>
+                {selectedClient.level || 'basic'}
+              </span>
+            </p>
+            {selectedClient.company && (
+              <p style={{ margin: '0', color: '#666' }}>
+                <strong>Company:</strong> {selectedClient.company}
+              </p>
+            )}
+          </div>
+        </div>
+      )}
 
       {/* Tabs Navigation */}
       <div style={tabContainerStyle}>
@@ -389,10 +607,22 @@ export default function Dashboard() {
       </div>
 
       {/* Tab Content */}
-      {activeTab === 'configurations' && <ConfigurationsTab user={user} />}
-      {activeTab === 'models' && <ModelsTab />}
-      {activeTab === 'integrations' && <IntegrationsTab />}
-      {activeTab === 'conversations' && <ConversationsTab />}
+      {loadingClients ? (
+        <div style={{ textAlign: 'center', padding: '2em' }}>
+          <p>Loading subscriptions...</p>
+        </div>
+      ) : selectedClient ? (
+        <>
+          {activeTab === 'configurations' && <ConfigurationsTab user={selectedClient} clientId={selectedClientId} />}
+          {activeTab === 'models' && <ModelsTab user={selectedClient} clientId={selectedClientId} />}
+          {activeTab === 'integrations' && <IntegrationsTab user={selectedClient} clientId={selectedClientId} />}
+          {activeTab === 'conversations' && <ConversationsTab user={selectedClient} clientId={selectedClientId} />}
+        </>
+      ) : (
+        <div style={{ textAlign: 'center', padding: '2em', color: '#666' }}>
+          <p>No subscription selected. Please select a subscription above.</p>
+        </div>
+      )}
     </div>
   );
 }

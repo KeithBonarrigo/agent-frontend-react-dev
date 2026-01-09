@@ -722,7 +722,7 @@ export default function SignupForm({ isOpen }) {
             margin: 0
           }}>
             <h2 style={{ margin: 0, color: "white", textAlign: "center" }}>
-              Build Your AI Agent in 30 Seconds
+              Start an Account and Build Your AI Agent in 30 Seconds
             </h2>
           </div>
 

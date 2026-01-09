@@ -1,26 +1,22 @@
 import { useState, useEffect } from "react";
 
 // TypeScript interfaces
-interface Account {
-  client_id: number;
-  level: string;
-  email: string;
-}
-
 interface User {
-  client_id: number;
-  email: string;
+  clientid?: number;
+  contact_email?: string;
   first_name?: string;
   last_name?: string;
   level?: string;
-  accounts?: Account[];
+  item?: number;
+  company?: string;
 }
 
 interface ConfigurationsTabProps {
   user: User;
+  clientId: number;
 }
 
-export default function ConfigurationsTab({ user }: ConfigurationsTabProps) {
+export default function ConfigurationsTab({ clientId }: ConfigurationsTabProps) {
   const [instructions, setInstructions] = useState<string[]>(['']);
   const [loadingInstructions, setLoadingInstructions] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -28,14 +24,18 @@ export default function ConfigurationsTab({ user }: ConfigurationsTabProps) {
   const [copied, setCopied] = useState(false);
   const [draggedIndex, setDraggedIndex] = useState<number | null>(null);
 
-  // Fetch client instructions
+  // Fetch client instructions - USE clientId PROP
   useEffect(() => {
     const fetchInstructions = async () => {
-      if (!user?.client_id) return;
+      if (!clientId) {
+        console.warn('No clientId provided to ConfigurationsTab');
+        setLoadingInstructions(false);
+        return;
+      }
 
       try {
         const apiBaseUrl = import.meta.env.VITE_API_URL || 'http://localhost:3000';
-        const response = await fetch(`${apiBaseUrl}/api/client-instructions/${user.client_id}`, {
+        const response = await fetch(`${apiBaseUrl}/api/client-instructions/${clientId}`, {
           credentials: 'include'
         });
 
@@ -64,10 +64,8 @@ export default function ConfigurationsTab({ user }: ConfigurationsTabProps) {
       }
     };
 
-    if (user?.client_id) {
-      fetchInstructions();
-    }
-  }, [user?.client_id]);
+    fetchInstructions();
+  }, [clientId]); // Depend on clientId prop
 
   const dashboardMode = import.meta.env.VITE_MODE || 'local';
   let webEmbedDomain: string;
@@ -95,7 +93,8 @@ export default function ConfigurationsTab({ user }: ConfigurationsTabProps) {
         webEmbedProtocol = 'http';
   }
 
-  const embedCode = `<script src='${webEmbedProtocol}://${webEmbedDomain}/chatbot.js?id=${user?.client_id}'></script>`;
+  // USE clientId PROP for embed code
+  const embedCode = `<script src='${webEmbedProtocol}://${webEmbedDomain}/chatbot.js?id=${clientId}'></script>`;
 
   const handleCopy = () => {
     navigator.clipboard.writeText(embedCode);
@@ -121,7 +120,6 @@ export default function ConfigurationsTab({ user }: ConfigurationsTabProps) {
     setInstructions(newInstructions);
   };
 
-  // NEW: Drag and drop handlers
   const handleDragStart = (index: number) => {
     setDraggedIndex(index);
   };
@@ -134,10 +132,7 @@ export default function ConfigurationsTab({ user }: ConfigurationsTabProps) {
     const newInstructions = [...instructions];
     const draggedItem = newInstructions[draggedIndex];
     
-    // Remove from old position
     newInstructions.splice(draggedIndex, 1);
-    
-    // Insert at new position
     newInstructions.splice(index, 0, draggedItem);
     
     setInstructions(newInstructions);
@@ -148,7 +143,6 @@ export default function ConfigurationsTab({ user }: ConfigurationsTabProps) {
     setDraggedIndex(null);
   };
 
-  // NEW: Arrow button handlers for reordering
   const moveUp = (index: number) => {
     if (index === 0) return;
     const newInstructions = [...instructions];
@@ -165,13 +159,13 @@ export default function ConfigurationsTab({ user }: ConfigurationsTabProps) {
     setInstructions(newInstructions);
   };
 
+  // USE clientId PROP for save
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setSaving(true);
     setSaveMessage('');
 
     try {
-      // Filter out empty instructions
       const filteredInstructions = instructions.filter(inst => inst.trim() !== '');
       
       const payload = {
@@ -181,7 +175,7 @@ export default function ConfigurationsTab({ user }: ConfigurationsTabProps) {
       };
 
       const apiBaseUrl = import.meta.env.VITE_API_URL || 'http://localhost:3000';
-      const response = await fetch(`${apiBaseUrl}/api/client-instructions/${user.client_id}`, {
+      const response = await fetch(`${apiBaseUrl}/api/client-instructions/${clientId}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json'
@@ -190,7 +184,7 @@ export default function ConfigurationsTab({ user }: ConfigurationsTabProps) {
         body: JSON.stringify(payload)
       });
 
-      const responseData = await response.json();
+      //const responseData = await response.json();
 
       if (!response.ok) {
         throw new Error('Failed to save instructions');
@@ -246,19 +240,6 @@ export default function ConfigurationsTab({ user }: ConfigurationsTabProps) {
         </p>
       </div>
 
-      {user.accounts && user.accounts.length > 1 && (
-        <div style={{ marginTop: "2em", marginBottom: "2em" }}>
-          <h3>Your Accounts:</h3>
-          <ul>
-            {user.accounts.map(acc => (
-              <li key={acc.client_id}>
-                {acc.level} - {acc.email}
-              </li>
-            ))}
-          </ul>
-        </div>
-      )}
-
       {/* Client Instructions Form */}
       <div style={{ marginTop: "2em", paddingTop: "2em", borderTop: "1px solid #ddd" }}>
         <h2>Add Your Agent Instructions</h2>
@@ -291,7 +272,6 @@ export default function ConfigurationsTab({ user }: ConfigurationsTabProps) {
                   borderRadius: "4px"
                 }}
               >
-                {/* NEW: Drag Handle */}
                 <div
                   style={{
                     cursor: instruction.trim() !== '' ? 'grab' : 'default',
@@ -307,7 +287,6 @@ export default function ConfigurationsTab({ user }: ConfigurationsTabProps) {
                   ⋮⋮
                 </div>
 
-                {/* NEW: Order number */}
                 <div
                   style={{
                     display: "flex",
@@ -322,7 +301,6 @@ export default function ConfigurationsTab({ user }: ConfigurationsTabProps) {
                   {index + 1}
                 </div>
 
-                {/* Textarea */}
                 <textarea
                   value={instruction}
                   onChange={(e) => handleInstructionChange(index, e.target.value)}
@@ -338,7 +316,6 @@ export default function ConfigurationsTab({ user }: ConfigurationsTabProps) {
                   }}
                 />
 
-                {/* NEW: Arrow buttons */}
                 <div style={{ display: "flex", flexDirection: "column", gap: "5px" }}>
                   <button
                     type="button"
@@ -376,7 +353,6 @@ export default function ConfigurationsTab({ user }: ConfigurationsTabProps) {
                   </button>
                 </div>
 
-                {/* Remove button */}
                 {instructions.length > 1 && (
                   <button
                     type="button"

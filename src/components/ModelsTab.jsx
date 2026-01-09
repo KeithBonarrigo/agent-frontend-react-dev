@@ -1,8 +1,6 @@
 import { useState, useEffect } from "react";
-import { useUser } from "../contexts/UserContext";
 
-export default function ModelsTab() {
-  const { user } = useUser();
+export default function ModelsTab({ user, clientId }) {
   const [selectedModel, setSelectedModel] = useState("");
   const [currentModel, setCurrentModel] = useState("");
   const [loading, setLoading] = useState(false);
@@ -10,12 +8,20 @@ export default function ModelsTab() {
   const [success, setSuccess] = useState(false);
   const [fetchingCurrent, setFetchingCurrent] = useState(true);
 
-  // Fetch current model on mount
+  // Debug logging
   useEffect(() => {
-    if (user?.client_id) {
+    console.log('===== ModelsTab DEBUG =====');
+    console.log('clientId prop:', clientId);
+    console.log('user:', user);
+    console.log('===========================');
+  }, [user, clientId]);
+
+  // Fetch current model on mount - USE clientId PROP
+  useEffect(() => {
+    if (clientId) {
       fetchCurrentModel();
     }
-  }, [user?.client_id]);
+  }, [clientId]);
 
   const fetchCurrentModel = async () => {
     setFetchingCurrent(true);
@@ -23,7 +29,8 @@ export default function ModelsTab() {
 
     try {
       const apiBaseUrl = import.meta.env.VITE_API_URL || 'http://localhost:3000';
-      const response = await fetch(`${apiBaseUrl}/api/model/${user.client_id}`, {
+      console.log(`📡 Fetching model for client ${clientId}`);
+      const response = await fetch(`${apiBaseUrl}/api/model/${clientId}`, {
         credentials: 'include'
       });
 
@@ -32,6 +39,7 @@ export default function ModelsTab() {
       }
 
       const data = await response.json();
+      console.log('✅ Model received:', data);
       
       if (data.model) {
         setCurrentModel(data.model);
@@ -55,7 +63,7 @@ export default function ModelsTab() {
     setError("");
     setSuccess(false);
 
-    if (!user?.client_id) {
+    if (!clientId) {
       setError("No client ID available. Please log in.");
       setLoading(false);
       return;
@@ -76,7 +84,7 @@ export default function ModelsTab() {
         },
         credentials: 'include',
         body: JSON.stringify({
-          clientId: user.client_id,
+          clientId: clientId,
           model: selectedModel
         })
       });
@@ -105,7 +113,6 @@ export default function ModelsTab() {
   };
 
   const handleCancel = () => {
-    // If current model shows "Not set", reset to gpt-5
     if (currentModel.includes('Not set')) {
       setSelectedModel('gpt-5');
     } else {
@@ -115,7 +122,6 @@ export default function ModelsTab() {
     setSuccess(false);
   };
 
-  // Helper to check if selected model matches current model
   const isModelUnchanged = () => {
     if (currentModel.includes('Not set')) {
       return selectedModel === 'gpt-5';
@@ -123,10 +129,10 @@ export default function ModelsTab() {
     return selectedModel === currentModel;
   };
 
-  if (!user?.client_id) {
+  if (!clientId) {
     return (
       <div style={{ padding: "2em", textAlign: "center", color: "#666" }}>
-        <p>Please log in to configure models.</p>
+        <p>Please select a subscription to configure models.</p>
       </div>
     );
   }
@@ -141,7 +147,7 @@ export default function ModelsTab() {
         </div>
       ) : (
         <form onSubmit={handleSubmit}>
-          {/* Current Model Display - Always visible */}
+          {/* Current Model Display */}
           <div style={{
             padding: "20px",
             backgroundColor: "#f8f9fa",
@@ -201,7 +207,6 @@ export default function ModelsTab() {
             >
               <option value="">-- Select a Model --</option>
               
-              {/* Claude Models Group */}
               <optgroup label="Claude (Anthropic)">
                 <option value="claude-3-5-sonnet">claude-3-5-sonnet (Most Popular)</option>
                 <option value="claude-3-7-sonnet">claude-3-7-sonnet (Newest - Sonnet 4)</option>
@@ -209,7 +214,6 @@ export default function ModelsTab() {
                 <option value="claude-3-opus">claude-3-opus (Most Capable)</option>
               </optgroup>
 
-              {/* OpenAI Models Group */}
               <optgroup label="OpenAI">
                 <option value="gpt-5">gpt-5</option>
                 <option value="gpt-4-turbo">gpt-4-turbo</option>

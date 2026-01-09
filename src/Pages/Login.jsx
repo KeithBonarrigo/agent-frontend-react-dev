@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useUser } from "../contexts/UserContext"; // Add this import
+import { useUser } from "../contexts/UserContext";
 
 const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3000";
 
@@ -8,9 +8,6 @@ export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
-  const [accounts, setAccounts] = useState([]);
-  const [selectedClient, setSelectedClient] = useState(null);
-  const [itemNames, setItemNames] = useState({});
   
   const [showSignup, setShowSignup] = useState(false);
   const [signupData, setSignupData] = useState({
@@ -23,57 +20,19 @@ export default function Login() {
   const [signupSuccess, setSignupSuccess] = useState(false);
 
   const navigate = useNavigate();
-  const { login, selectClient } = useUser(); // ✅ Get login and selectClient from context
+  const { login } = useUser();
 
   const handleLogin = async (e) => {
     e.preventDefault();
     setError("");
-    setAccounts([]);
-    setSelectedClient(null);
-    setItemNames({});
 
     try {
-      // ✅ Use context login instead of direct fetch
-      const data = await login(email, password);
-
-      if (data.accounts.length === 1) {
-        // Single account - navigate directly to dashboard
-        navigate("/dashboard");
-      } else {
-        // Multiple accounts - show selection
-        setAccounts(data.accounts);
-
-        const lookups = await Promise.all(
-          data.accounts.map(async (acc) => {
-            const resp = await fetch(`${API_URL}/api/item-name?id=${acc.item_id}`);
-            const json = await resp.json();
-            return { item_id: acc.item_id, name: json.item_name };
-          })
-        );
-
-        const namesMap = {};
-        lookups.forEach((n) => {
-          namesMap[n.item_id] = n.name;
-        });
-
-        setItemNames(namesMap);
-      }
+      await login(email, password);
+      // Always navigate to dashboard - subscription selection happens there
+      navigate("/dashboard");
     } catch (err) {
       console.error("Login error:", err);
       setError(err.message || "❌ Server error.");
-    }
-  };
-
-  const handleSelect = async () => {
-    if (selectedClient) {
-      try {
-        // ✅ Use context selectClient instead of localStorage
-        await selectClient(selectedClient);
-        navigate("/dashboard");
-      } catch (err) {
-        console.error("Client selection error:", err);
-        setError(err.message || "Failed to select account");
-      }
     }
   };
 
@@ -179,37 +138,6 @@ export default function Login() {
             <button className="btn" type="submit">Log In</button>
           </div>
         </form>
-
-        {accounts.length > 1 && (
-          <div style={{ marginTop: "2em" }}>
-            <h4>Select a subscription:</h4>
-            {accounts.map((acc, i) => (
-              <div key={i} style={{ padding: "0.5em 0" }}>
-                <label
-                  style={{
-                    display: "grid",
-                    gridTemplateColumns: "auto 1fr",
-                    alignItems: "center",
-                    gap: "0.75em",
-                    fontSize: "1rem"
-                  }}
-                >
-                  <input
-                    type="radio"
-                    name="client"
-                    value={acc.client_id}
-                    onChange={() => setSelectedClient(acc.client_id)}
-                    style={{ transform: "scale(1.2)", margin: 0 }}
-                  />
-                  <span>{itemNames[acc.item_id] || `Item ${acc.item_id}`}</span>
-                </label>
-              </div>
-            ))}
-            <button onClick={handleSelect} disabled={!selectedClient} style={{ marginTop: "1em" }}>
-              Continue
-            </button>
-          </div>
-        )}
       </div>
 
       <div style={{
