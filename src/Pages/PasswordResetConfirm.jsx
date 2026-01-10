@@ -1,73 +1,119 @@
+// pages/PasswordResetConfirm.jsx
 import { useState } from "react";
-import { useSearchParams, useNavigate } from "react-router-dom";
-import axios from "axios";
+import { useSearchParams, Link, useNavigate } from "react-router-dom";
 
-const BACKEND_URL =
-  import.meta.env.VITE_BACKEND_URL || window.BACKEND_URL || "http://localhost:8000";
+const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3000";
 
 export default function PasswordResetConfirm() {
-  const [params] = useSearchParams();
-  const token = params.get("token");
+  const [searchParams] = useSearchParams();
   const navigate = useNavigate();
+  
+  const token = searchParams.get("token");
+  const email = searchParams.get("email");
 
-  const [newPassword, setNewPassword] = useState("");
-  const [confirm, setConfirm] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState("");
-  const [success, setSuccess] = useState("");
+  const [success, setSuccess] = useState(false);
+  const [loading, setLoading] = useState(false);
 
-  const validatePassword = (pwd) =>
-    pwd.length >= 12 &&
-    /[A-Za-z]/.test(pwd) &&
-    /\d/.test(pwd) &&
-    /[!@#$%^&*(),.?":{}|<>]/.test(pwd);
+  if (!token || !email) {
+    return (
+      <div className="container" style={{ maxWidth: 400, margin: "auto", padding: "2em" }}>
+        <h2>Invalid Link</h2>
+        <p>This password reset link is invalid or has expired.</p>
+        <Link to="/password-reset/request" style={{ color: "#1e3a8a" }}>
+          Request a new reset link
+        </Link>
+      </div>
+    );
+  }
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (e) => {
+    e.preventDefault();
     setError("");
-    if (!token) {
-      setError("Missing reset token.");
+
+    if (password !== confirmPassword) {
+      setError("Passwords don't match");
       return;
     }
 
-    if (newPassword !== confirm) {
-      setError("Passwords do not match.");
+    if (password.length < 6) {
+      setError("Password must be at least 6 characters");
       return;
     }
 
-    if (!validatePassword(newPassword)) {
-      setError("Password must be at least 12 characters and include letters, numbers, and symbols.");
-      return;
-    }
+    setLoading(true);
 
     try {
-        const res = await axios.post(`${BACKEND_URL}/password-reset/confirm`, {
-        token,
-        new_password: newPassword,
+      const res = await fetch(`${API_URL}/api/password-reset/confirm`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, token, newPassword: password }),
       });
-      setSuccess(res.data.message);
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        setError(data.error || "Failed to reset password");
+        return;
+      }
+
+      setSuccess(true);
       setTimeout(() => navigate("/login"), 3000);
     } catch (err) {
-      setError(err.response?.data?.error || "Error resetting password.");
+      console.error("Password reset error:", err);
+      setError("Server error. Please try again.");
+    } finally {
+      setLoading(false);
     }
   };
 
+  if (success) {
+    return (
+      <div className="container" style={{ maxWidth: 400, margin: "auto", padding: "2em" }}>
+        <h2 style={{ color: "green" }}>✅ Password Reset!</h2>
+        <p>Your password has been updated successfully.</p>
+        <p>Redirecting to login...</p>
+      </div>
+    );
+  }
+
   return (
-    <div style={{ maxWidth: 400, margin: "auto", padding: 20 }}>
-      <h2>🔑 Reset Your Password</h2>
-      <input
-        type="password"
-        placeholder="New password"
-        value={newPassword}
-        onChange={(e) => setNewPassword(e.target.value)}
-      />
-      <input
-        type="password"
-        placeholder="Confirm new password"
-        value={confirm}
-        onChange={(e) => setConfirm(e.target.value)}
-      />
-      <button onClick={handleSubmit}>Reset Password</button>
-      {success && <p style={{ color: "green" }}>{success}</p>}
-      {error && <p style={{ color: "red" }}>{error}</p>}
+    <div className="container" style={{ maxWidth: 400, margin: "auto", padding: "2em" }}>
+      <h2>Set New Password</h2>
+      <p style={{ color: "#666" }}>Enter your new password below.</p>
+
+      <form onSubmit={handleSubmit}>
+        <input
+          type="password"
+          placeholder="New Password"
+          required
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          style={{ width: "100%", padding: "10px", marginBottom: "1em" }}
+        />
+
+        <input
+          type="password"
+          placeholder="Confirm New Password"
+          required
+          value={confirmPassword}
+          onChange={(e) => setConfirmPassword(e.target.value)}
+          style={{ width: "100%", padding: "10px", marginBottom: "1em" }}
+        />
+
+        {error && <p style={{ color: "red" }}>{error}</p>}
+
+        <button 
+          className="btn" 
+          type="submit" 
+          disabled={loading}
+          style={{ width: "100%" }}
+        >
+          {loading ? "Resetting..." : "Reset Password"}
+        </button>
+      </form>
     </div>
   );
 }
