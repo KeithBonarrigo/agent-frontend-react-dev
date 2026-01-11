@@ -17,17 +17,26 @@ export default function Dashboard() {
   const [tokenLimits, setTokenLimits] = useState(null);
   const [loadingLimits, setLoadingLimits] = useState(true);
   
-  // State for multiple clients/subscriptions
+  // State for multiple clients/agents
   const [clients, setClients] = useState([]);
   const [selectedClientId, setSelectedClientId] = useState(null);
   const [loadingClients, setLoadingClients] = useState(true);
-  const [itemNames, setItemNames] = useState({});
 
   // State for cancel subscription
   const [showCancelModal, setShowCancelModal] = useState(false);
   const [cancelLoading, setCancelLoading] = useState(false);
   const [cancelError, setCancelError] = useState(null);
   const [cancelSuccess, setCancelSuccess] = useState(null);
+
+  // State for new agent
+  const [showNewAgentModal, setShowNewAgentModal] = useState(false);
+  const [newAgentLoading, setNewAgentLoading] = useState(false);
+  const [newAgentError, setNewAgentError] = useState(null);
+  const [newAgentSuccess, setNewAgentSuccess] = useState(null);
+  const [newAgentForm, setNewAgentForm] = useState({
+    name: '',
+    company: ''
+  });
 
   // Redirect to login if not authenticated
   useEffect(() => {
@@ -36,7 +45,7 @@ export default function Dashboard() {
     }
   }, [isLoggedIn, isLoading, navigate]);
 
-  // Fetch all clients/subscriptions for this account
+  // Fetch all clients/agents for this account
   useEffect(() => {
     const fetchClients = async () => {
       console.log('📡 fetchClients called');
@@ -49,6 +58,7 @@ export default function Dashboard() {
           console.log('🔄 Falling back to single client from user context');
           setClients([{
             clientid: parseInt(user.client_id, 10),
+            agent_name: user.agent_name || 'My Agent',
             first_name: user.first_name,
             last_name: user.last_name,
             contact_email: user.email,
@@ -91,16 +101,6 @@ export default function Dashboard() {
           const initialClientId = user.client_id || data.clients[0].clientid;
           console.log('Setting selectedClientId to:', initialClientId);
           setSelectedClientId(parseInt(initialClientId, 10));
-
-          // Build item names from the response
-          const namesMap = {};
-          data.clients.forEach((client) => {
-            if (client.item) {
-              namesMap[client.item] = client.item_domain || `Subscription ${client.item}`;
-            }
-          });
-          console.log('Item names loaded:', namesMap);
-          setItemNames(namesMap);
         }
       } catch (error) {
         console.error('❌ Error fetching clients:', error);
@@ -108,6 +108,7 @@ export default function Dashboard() {
           console.log('🔄 Using fallback client data from user context');
           setClients([{
             clientid: parseInt(user.client_id, 10),
+            agent_name: user.agent_name || 'My Agent',
             first_name: user.first_name,
             last_name: user.last_name,
             contact_email: user.email,
@@ -129,6 +130,9 @@ export default function Dashboard() {
 
   // Get the currently selected client object - use string comparison for type safety
   const selectedClient = clients.find(c => String(c.clientid) === String(selectedClientId)) || null;
+
+  // Get account level from first client (they all share the same account level)
+  const accountLevel = clients.length > 0 ? (clients[0].level || 'basic') : (user?.level || 'basic');
 
   // Fetch token limits from server
   useEffect(() => {
@@ -161,7 +165,7 @@ export default function Dashboard() {
     fetchTokenLimits();
   }, []);
 
-  // Fetch token usage for ENTIRE ACCOUNT (sum of all subscriptions)
+  // Fetch token usage for ENTIRE ACCOUNT (sum of all agents)
   useEffect(() => {
     const fetchAccountTokenUsage = async () => {
       if (!user?.account_id) return;
@@ -208,16 +212,16 @@ export default function Dashboard() {
 
   const handleClientChange = (e) => {
     const newClientId = parseInt(e.target.value, 10);
-    console.log('🔄 Subscription changed to:', newClientId);
+    console.log('🔄 Agent changed to:', newClientId);
     setSelectedClientId(newClientId);
-    // Clear any previous cancel messages when switching subscriptions
+    // Clear any previous cancel messages when switching agents
     setCancelSuccess(null);
     setCancelError(null);
   };
 
   const handleCancelSubscription = async (immediate = false) => {
     if (!selectedClient?.subscription_id) {
-      setCancelError('No subscription ID found for this subscription.');
+      setCancelError('No subscription ID found for this agent.');
       return;
     }
 
@@ -267,6 +271,84 @@ export default function Dashboard() {
     }
   };
 
+  const handleNewAgentFormChange = (e) => {
+    const { name, value } = e.target;
+    setNewAgentForm(prev => ({
+      ...prev,
+      [name]: value
+    }));
+  };
+
+  const handleCreateAgent = async (e) => {
+    e.preventDefault();
+    
+    if (!newAgentForm.name.trim()) {
+      setNewAgentError('Please enter a name for this agent');
+      return;
+    }
+
+    setNewAgentLoading(true);
+    setNewAgentError(null);
+    setNewAgentSuccess(null);
+
+    try {
+      const apiBaseUrl = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+      
+      const response = await fetch(`${apiBaseUrl}/api/account/${user.account_id}/clients`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          name: newAgentForm.name.trim(),
+          company: newAgentForm.company.trim() || null,
+          contactEmail: user.email,
+          firstName: user.first_name,
+          lastName: user.last_name,
+          level: accountLevel // Inherit the account's plan level
+        }),
+        credentials: 'include'
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || 'Failed to create agent');
+      }
+
+      setNewAgentSuccess('Agent created successfully!');
+      
+      // Reset form
+      setNewAgentForm({
+        name: '',
+        company: ''
+      });
+
+      // Refresh clients list after a short delay
+      setTimeout(() => {
+        setShowNewAgentModal(false);
+        setNewAgentSuccess(null);
+        window.location.reload();
+      }, 1500);
+
+    } catch (error) {
+      console.error('Create agent error:', error);
+      setNewAgentError(error.message);
+    } finally {
+      setNewAgentLoading(false);
+    }
+  };
+
+  const closeNewAgentModal = () => {
+    setShowNewAgentModal(false);
+    setNewAgentForm({
+      name: '',
+      company: ''
+    });
+    setNewAgentError(null);
+    setNewAgentSuccess(null);
+  };
+
   const refreshTokenUsage = async () => {
     if (!user?.account_id) return;
 
@@ -294,11 +376,11 @@ export default function Dashboard() {
     return num.toLocaleString();
   };
 
-  // Calculate account token limit (sum of all subscription limits, or highest tier)
+  // Calculate account token limit (sum of all agent limits, or highest tier)
   const getAccountTokenLimit = () => {
     if (!tokenLimits || clients.length === 0) return null;
 
-    // Option 1: Use the highest tier limit among all subscriptions
+    // Option 1: Use the highest tier limit among all agents
     const tierOrder = ['free', 'basic', 'pro', 'enterprise'];
     let highestTier = 'free';
     
@@ -337,11 +419,25 @@ export default function Dashboard() {
 
   const tokenLimit = getAccountTokenLimit();
 
-  // Get display name for a client/subscription
+  // Get display name for a client/agent
   const getClientDisplayName = (client) => {
-    const itemName = itemNames[client.item] || `Subscription ${client.item || 'N/A'}`;
-    const company = client.company ? ` - ${client.company}` : '';
-    return `${itemName}${company}`;
+    // Use agent_name if available, otherwise fall back to company or generic name
+    if (client.agent_name) {
+      return client.agent_name;
+    }
+    if (client.company) {
+      return client.company;
+    }
+    return `Agent ${client.item || client.clientid}`;
+  };
+
+  const getLevelColor = (level) => {
+    switch ((level || 'basic').toLowerCase()) {
+      case 'enterprise': return '#6f42c1';
+      case 'pro': return '#007bff';
+      case 'basic': return '#28a745';
+      default: return '#6c757d';
+    }
   };
 
   const tabContainerStyle = {
@@ -364,6 +460,23 @@ export default function Dashboard() {
     transition: 'all 0.3s ease',
     marginRight: '4px'
   });
+
+  const inputStyle = {
+    width: '100%',
+    padding: '12px',
+    fontSize: '14px',
+    border: '1px solid #ddd',
+    borderRadius: '4px',
+    boxSizing: 'border-box'
+  };
+
+  const labelStyle = {
+    display: 'block',
+    marginBottom: '6px',
+    fontWeight: 'bold',
+    color: '#333',
+    fontSize: '14px'
+  };
 
   if (isLoading) {
     return (
@@ -513,6 +626,181 @@ export default function Dashboard() {
         </div>
       )}
 
+      {/* New Agent Modal */}
+      {showNewAgentModal && (
+        <div
+          style={{
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            backgroundColor: 'rgba(0, 0, 0, 0.5)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            zIndex: 10000,
+            padding: '20px'
+          }}
+          onClick={closeNewAgentModal}
+        >
+          <div
+            style={{
+              backgroundColor: 'white',
+              borderRadius: '8px',
+              maxWidth: '500px',
+              width: '100%',
+              boxShadow: '0 4px 20px rgba(0, 0, 0, 0.3)'
+            }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div
+              style={{
+                background: 'linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%)',
+                padding: '20px',
+                borderRadius: '8px 8px 0 0'
+              }}
+            >
+              <h2 style={{ margin: 0, color: 'white', fontSize: '20px' }}>
+                Create New Agent
+              </h2>
+              <p style={{ margin: '8px 0 0 0', color: 'rgba(255,255,255,0.8)', fontSize: '14px' }}>
+                Add another agent under your{' '}
+                <span style={{ 
+                  backgroundColor: 'rgba(255,255,255,0.2)', 
+                  padding: '2px 8px', 
+                  borderRadius: '4px',
+                  textTransform: 'capitalize'
+                }}>
+                  {accountLevel}
+                </span>
+                {' '}plan
+              </p>
+            </div>
+
+            <form onSubmit={handleCreateAgent} style={{ padding: '30px' }}>
+              {/* Info Box */}
+              <div style={{
+                backgroundColor: '#e7f3ff',
+                border: '1px solid #b3d7ff',
+                borderRadius: '8px',
+                padding: '15px',
+                marginBottom: '24px'
+              }}>
+                <p style={{ margin: 0, color: '#0056b3', fontSize: '14px' }}>
+                  💡 This will create a new agent that shares your account's token limit. 
+                  All agents under your account contribute to the same token usage.
+                </p>
+              </div>
+
+              {/* Name Field */}
+              <div style={{ marginBottom: '20px' }}>
+                <label style={labelStyle}>
+                  Agent Name <span style={{ color: '#dc3545' }}>*</span>
+                </label>
+                <input
+                  type="text"
+                  name="name"
+                  value={newAgentForm.name}
+                  onChange={handleNewAgentFormChange}
+                  placeholder="e.g., My Real Estate Bot, Customer Service Bot"
+                  style={inputStyle}
+                  required
+                />
+                <p style={{ margin: '6px 0 0 0', fontSize: '12px', color: '#666' }}>
+                  A friendly name to identify this agent
+                </p>
+              </div>
+
+              {/* Company Field */}
+              <div style={{ marginBottom: '24px' }}>
+                <label style={labelStyle}>
+                  Company Name <span style={{ color: '#999', fontWeight: 'normal' }}>(optional)</span>
+                </label>
+                <input
+                  type="text"
+                  name="company"
+                  value={newAgentForm.company}
+                  onChange={handleNewAgentFormChange}
+                  placeholder="e.g., Acme Real Estate"
+                  style={inputStyle}
+                />
+              </div>
+
+              {/* Error Message */}
+              {newAgentError && (
+                <div style={{
+                  backgroundColor: '#f8d7da',
+                  border: '1px solid #f5c6cb',
+                  borderRadius: '8px',
+                  padding: '12px',
+                  marginBottom: '16px',
+                  color: '#721c24'
+                }}>
+                  ❌ {newAgentError}
+                </div>
+              )}
+
+              {/* Success Message */}
+              {newAgentSuccess && (
+                <div style={{
+                  backgroundColor: '#d4edda',
+                  border: '1px solid #c3e6cb',
+                  borderRadius: '8px',
+                  padding: '12px',
+                  marginBottom: '16px',
+                  color: '#155724'
+                }}>
+                  ✅ {newAgentSuccess}
+                </div>
+              )}
+
+              {/* Buttons */}
+              <div style={{ display: 'flex', gap: '12px' }}>
+                <button
+                  type="button"
+                  onClick={closeNewAgentModal}
+                  style={{
+                    flex: 1,
+                    padding: '12px',
+                    backgroundColor: 'transparent',
+                    color: '#666',
+                    border: '1px solid #ddd',
+                    borderRadius: '4px',
+                    fontSize: '14px',
+                    cursor: 'pointer'
+                  }}
+                >
+                  Cancel
+                </button>
+
+                <button
+                  type="submit"
+                  disabled={newAgentLoading || !newAgentForm.name.trim()}
+                  style={{
+                    flex: 2,
+                    padding: '12px',
+                    backgroundColor: newAgentLoading || !newAgentForm.name.trim()
+                      ? '#ccc' 
+                      : '#28a745',
+                    color: 'white',
+                    border: 'none',
+                    borderRadius: '4px',
+                    fontSize: '14px',
+                    cursor: newAgentLoading || !newAgentForm.name.trim() 
+                      ? 'not-allowed' 
+                      : 'pointer',
+                    fontWeight: 'bold'
+                  }}
+                >
+                  {newAgentLoading ? 'Creating...' : 'Create Agent'}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
       {/* Header with Account Info */}
       <div style={{ 
         display: "flex", 
@@ -543,7 +831,7 @@ export default function Dashboard() {
         </button>
       </div>
 
-      {/* Account Token Usage - Shows total across all subscriptions */}
+      {/* Account Token Usage - Shows total across all agents */}
       <div style={{
         backgroundColor: '#f8f9fa',
         padding: '1.25em 1.5em',
@@ -561,9 +849,21 @@ export default function Dashboard() {
           <div>
             <h3 style={{ margin: '0 0 0.25em 0', color: '#333', fontSize: '1em' }}>
               Account Token Usage
+              <span style={{
+                marginLeft: '10px',
+                backgroundColor: getLevelColor(accountLevel),
+                color: 'white',
+                padding: '2px 8px',
+                borderRadius: '4px',
+                fontSize: '0.8em',
+                textTransform: 'capitalize',
+                verticalAlign: 'middle'
+              }}>
+                {accountLevel}
+              </span>
             </h3>
             <p style={{ margin: 0, fontSize: '0.85em', color: '#666' }}>
-              Total across all {clients.length} subscription{clients.length !== 1 ? 's' : ''}
+              Total across all {clients.length} agent{clients.length !== 1 ? 's' : ''}
             </p>
           </div>
 
@@ -663,7 +963,7 @@ export default function Dashboard() {
         </div>
       </div>
 
-      {/* Subscription Selector */}
+      {/* Agent Selector */}
       <div style={{
         backgroundColor: '#e7f3ff',
         padding: '1.25em 1.5em',
@@ -683,13 +983,13 @@ export default function Dashboard() {
             whiteSpace: 'nowrap',
             fontSize: '1.1em'
           }}>
-            Select Subscription:
+            Select Agent:
           </label>
           
           {loadingClients ? (
-            <span style={{ color: '#666' }}>Loading subscriptions...</span>
+            <span style={{ color: '#666' }}>Loading agents...</span>
           ) : clients.length === 0 ? (
-            <span style={{ color: '#dc3545' }}>No subscriptions found</span>
+            <span style={{ color: '#dc3545' }}>No agents found</span>
           ) : (
             <select
               value={selectedClientId || ''}
@@ -706,19 +1006,42 @@ export default function Dashboard() {
             >
               {clients.map((client) => (
                 <option key={client.clientid} value={client.clientid}>
-                  {getClientDisplayName(client)} ({client.level || 'basic'})
+                  {getClientDisplayName(client)}
                 </option>
               ))}
             </select>
           )}
 
+          {/* New Agent Button */}
+          <button
+            onClick={() => setShowNewAgentModal(true)}
+            style={{
+              padding: '0.6em 1.2em',
+              fontSize: '1em',
+              backgroundColor: '#28a745',
+              color: 'white',
+              border: 'none',
+              borderRadius: '4px',
+              cursor: 'pointer',
+              fontWeight: 'bold',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '6px',
+              transition: 'background-color 0.2s ease'
+            }}
+            onMouseOver={(e) => e.target.style.backgroundColor = '#218838'}
+            onMouseOut={(e) => e.target.style.backgroundColor = '#28a745'}
+          >
+            <span style={{ fontSize: '1.2em' }}>+</span> New Agent
+          </button>
+
           <span style={{ color: '#666', fontSize: '0.9em', marginLeft: 'auto' }}>
-            {clients.length} subscription{clients.length !== 1 ? 's' : ''} on this account
+            {clients.length} agent{clients.length !== 1 ? 's' : ''} on this account
           </span>
         </div>
       </div>
 
-      {/* Selected Subscription Details */}
+      {/* Selected Agent Details */}
       {selectedClient && (
         <div style={{
           backgroundColor: '#fff',
@@ -741,15 +1064,13 @@ export default function Dashboard() {
               
               <div style={{ display: 'flex', gap: '2em', flexWrap: 'wrap' }}>
                 <p style={{ margin: '0', color: '#666' }}>
-                  <strong>Subscription ID:</strong> {selectedClientId}
+                  <strong>Agent ID:</strong> {selectedClientId}
                 </p>
                 <p style={{ margin: '0', color: '#666' }}>
                   <strong>Service Level:</strong>{' '}
                   <span style={{ 
                     textTransform: 'capitalize',
-                    backgroundColor: selectedClient.level === 'enterprise' ? '#6f42c1' : 
-                                     selectedClient.level === 'pro' ? '#007bff' : 
-                                     selectedClient.level === 'basic' ? '#28a745' : '#6c757d',
+                    backgroundColor: getLevelColor(selectedClient.level),
                     color: 'white',
                     padding: '0.15em 0.5em',
                     borderRadius: '3px',
@@ -871,7 +1192,7 @@ export default function Dashboard() {
       {/* Tab Content */}
       {loadingClients ? (
         <div style={{ textAlign: 'center', padding: '2em' }}>
-          <p>Loading subscriptions...</p>
+          <p>Loading agents...</p>
         </div>
       ) : selectedClient ? (
         <>
@@ -882,7 +1203,7 @@ export default function Dashboard() {
         </>
       ) : (
         <div style={{ textAlign: 'center', padding: '2em', color: '#666' }}>
-          <p>No subscription selected. Please select a subscription above.</p>
+          <p>No agent selected. Please select an agent above.</p>
         </div>
       )}
     </div>

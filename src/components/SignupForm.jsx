@@ -6,7 +6,7 @@ import StripePaymentForm from "./StripePaymentForm";
 export default function SignupForm({ isOpen }) {
   const [isMobile, setIsMobile] = useState(window.innerWidth < 640);
   const [stripePromise, setStripePromise] = useState(null);
-  const [subscriptionData, setSubscriptionData] = useState(null); // ADD THIS
+  const [subscriptionData, setSubscriptionData] = useState(null);
   
   useEffect(() => {
     const onResize = () => setIsMobile(window.innerWidth < 640);
@@ -63,6 +63,7 @@ export default function SignupForm({ isOpen }) {
   }, []);
 
   const [agentForm, setAgentForm] = useState({
+    agent_name: "",
     open_ai_token: "",
     mls_token: "",
     sf_client_key: "",
@@ -204,12 +205,14 @@ export default function SignupForm({ isOpen }) {
       if (level === 'easybroker') {
         return 'easybroker.aibridge.global';
       }
-      return null;
+      // Default domain for all other levels
+      return 'base.aibridge.global';
     };
 
     const level = raw.level?.trim() || "basic";
 
     return {
+      agent_name: toNullIfEmpty(raw.agent_name),
       open_ai_token: toNullIfEmpty(raw.open_ai_token),
       mls_token: toNullIfEmpty(raw.mls_token),
       sf_client_key: toNullIfEmpty(raw.sf_client_key),
@@ -432,6 +435,7 @@ export default function SignupForm({ isOpen }) {
       setSubscriptionData(null); // Clear subscription data
 
       setAgentForm({
+        agent_name: "",
         open_ai_token: "",
         mls_token: "",
         sf_client_key: "",
@@ -803,6 +807,29 @@ export default function SignupForm({ isOpen }) {
               ref={agentFormWrapperRef}
             >
               <div ref={agentFormInnerRef}>
+                {/* Agent Name Field */}
+                <div className="home-form-group" style={{ marginBottom: "16px" }}>
+                  <label htmlFor="agent_name" className="home-form-label">
+                    Agent Name:
+                  </label>
+                  <input
+                    type="text"
+                    id="agent_name"
+                    name="agent_name"
+                    value={agentForm.agent_name}
+                    onChange={handleAgentFormChange}
+                    placeholder="e.g., My Real Estate Bot, Customer Service Agent"
+                    className="home-form-input"
+                  />
+                  <p style={{ 
+                    margin: "6px 0 0 0", 
+                    fontSize: "12px", 
+                    color: "#666" 
+                  }}>
+                    A friendly name to identify your agent (you can change this later)
+                  </p>
+                </div>
+
                 <div style={rowWrapStyle}>
                   <div className="home-form-group" style={{ flex: 1 }}>
                     <label htmlFor="first_name" className="home-form-label">
