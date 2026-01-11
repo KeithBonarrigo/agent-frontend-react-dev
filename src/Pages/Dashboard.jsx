@@ -23,6 +23,12 @@ export default function Dashboard() {
   const [loadingClients, setLoadingClients] = useState(true);
   const [itemNames, setItemNames] = useState({});
 
+  // State for cancel subscription
+  const [showCancelModal, setShowCancelModal] = useState(false);
+  const [cancelLoading, setCancelLoading] = useState(false);
+  const [cancelError, setCancelError] = useState(null);
+  const [cancelSuccess, setCancelSuccess] = useState(null);
+
   // Redirect to login if not authenticated
   useEffect(() => {
     if (!isLoading && !isLoggedIn) {
@@ -204,6 +210,61 @@ export default function Dashboard() {
     const newClientId = parseInt(e.target.value, 10);
     console.log('🔄 Subscription changed to:', newClientId);
     setSelectedClientId(newClientId);
+    // Clear any previous cancel messages when switching subscriptions
+    setCancelSuccess(null);
+    setCancelError(null);
+  };
+
+  const handleCancelSubscription = async (immediate = false) => {
+    if (!selectedClient?.subscription_id) {
+      setCancelError('No subscription ID found for this subscription.');
+      return;
+    }
+
+    setCancelLoading(true);
+    setCancelError(null);
+    setCancelSuccess(null);
+
+    try {
+      const token = import.meta.env.VITE_CREATE_USER_TOKEN;
+      const apiBaseUrl = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+      const endpoint = immediate ? '/api/cancel-subscription-now' : '/api/cancel-subscription';
+
+      const response = await fetch(`${apiBaseUrl}${endpoint}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({
+          subscriptionId: selectedClient.subscription_id
+        }),
+        credentials: 'include'
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || 'Failed to cancel subscription');
+      }
+
+      setCancelSuccess(immediate 
+        ? 'Subscription cancelled immediately.' 
+        : 'Subscription will be cancelled at the end of the billing period.'
+      );
+      setShowCancelModal(false);
+
+      // Refresh clients list to show updated status
+      setTimeout(() => {
+        window.location.reload();
+      }, 2000);
+
+    } catch (error) {
+      console.error('Cancel subscription error:', error);
+      setCancelError(error.message);
+    } finally {
+      setCancelLoading(false);
+    }
   };
 
   const refreshTokenUsage = async () => {
@@ -249,20 +310,6 @@ export default function Dashboard() {
     });
 
     return tokenLimits[highestTier];
-
-    // Option 2: Sum all subscription limits (uncomment if preferred)
-    // let totalLimit = 0;
-    // let hasUnlimited = false;
-    // clients.forEach(client => {
-    //   const clientLevel = (client.level || 'basic').toLowerCase();
-    //   const limit = tokenLimits[clientLevel];
-    //   if (limit === null) {
-    //     hasUnlimited = true;
-    //   } else {
-    //     totalLimit += limit;
-    //   }
-    // });
-    // return hasUnlimited ? null : totalLimit;
   };
 
   const getTokenUsagePercentage = () => {
@@ -332,6 +379,140 @@ export default function Dashboard() {
 
   return (
     <div style={{ padding: "2em", maxWidth: "1200px", margin: "0 auto" }}>
+      {/* Cancel Subscription Modal */}
+      {showCancelModal && selectedClient && (
+        <div
+          style={{
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            backgroundColor: 'rgba(0, 0, 0, 0.5)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            zIndex: 10000,
+            padding: '20px'
+          }}
+          onClick={() => setShowCancelModal(false)}
+        >
+          <div
+            style={{
+              backgroundColor: 'white',
+              borderRadius: '8px',
+              maxWidth: '500px',
+              width: '100%',
+              boxShadow: '0 4px 20px rgba(0, 0, 0, 0.3)'
+            }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div
+              style={{
+                background: 'linear-gradient(135deg, #dc3545 0%, #c82333 100%)',
+                padding: '20px',
+                borderRadius: '8px 8px 0 0'
+              }}
+            >
+              <h2 style={{ margin: 0, color: 'white', fontSize: '20px' }}>
+                Cancel Subscription
+              </h2>
+            </div>
+
+            <div style={{ padding: '30px' }}>
+              <p style={{ marginTop: 0 }}>
+                Are you sure you want to cancel <strong>{getClientDisplayName(selectedClient)}</strong>?
+              </p>
+
+              <div style={{
+                backgroundColor: '#fff3cd',
+                border: '1px solid #ffc107',
+                borderRadius: '8px',
+                padding: '15px',
+                marginBottom: '20px'
+              }}>
+                <p style={{ margin: 0, color: '#856404', fontSize: '14px' }}>
+                  <strong>Cancel at period end:</strong> You'll keep access until your current billing period ends.
+                </p>
+              </div>
+
+              <div style={{
+                backgroundColor: '#f8d7da',
+                border: '1px solid #f5c6cb',
+                borderRadius: '8px',
+                padding: '15px',
+                marginBottom: '20px'
+              }}>
+                <p style={{ margin: 0, color: '#721c24', fontSize: '14px' }}>
+                  <strong>Cancel immediately:</strong> Your access will end right away. No refunds for partial periods.
+                </p>
+              </div>
+
+              {cancelError && (
+                <p style={{ color: '#dc3545', marginBottom: '15px' }}>
+                  ❌ {cancelError}
+                </p>
+              )}
+
+              <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
+                <button
+                  onClick={() => handleCancelSubscription(false)}
+                  disabled={cancelLoading}
+                  style={{
+                    flex: 1,
+                    padding: '12px',
+                    backgroundColor: cancelLoading ? '#ccc' : '#ffc107',
+                    color: '#000',
+                    border: 'none',
+                    borderRadius: '4px',
+                    fontSize: '14px',
+                    cursor: cancelLoading ? 'not-allowed' : 'pointer',
+                    fontWeight: 'bold'
+                  }}
+                >
+                  {cancelLoading ? 'Processing...' : 'Cancel at Period End'}
+                </button>
+
+                <button
+                  onClick={() => handleCancelSubscription(true)}
+                  disabled={cancelLoading}
+                  style={{
+                    flex: 1,
+                    padding: '12px',
+                    backgroundColor: cancelLoading ? '#ccc' : '#dc3545',
+                    color: 'white',
+                    border: 'none',
+                    borderRadius: '4px',
+                    fontSize: '14px',
+                    cursor: cancelLoading ? 'not-allowed' : 'pointer',
+                    fontWeight: 'bold'
+                  }}
+                >
+                  {cancelLoading ? 'Processing...' : 'Cancel Immediately'}
+                </button>
+              </div>
+
+              <button
+                onClick={() => setShowCancelModal(false)}
+                style={{
+                  width: '100%',
+                  padding: '12px',
+                  marginTop: '10px',
+                  backgroundColor: 'transparent',
+                  color: '#666',
+                  border: '1px solid #ddd',
+                  borderRadius: '4px',
+                  fontSize: '14px',
+                  cursor: 'pointer'
+                }}
+              >
+                Keep My Subscription
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Header with Account Info */}
       <div style={{ 
         display: "flex", 
@@ -546,35 +727,116 @@ export default function Dashboard() {
           marginBottom: '1em',
           border: '1px solid #dee2e6'
         }}>
-          <h3 style={{ margin: '0 0 1em 0', color: '#333' }}>
-            {getClientDisplayName(selectedClient)}
-          </h3>
-          
-          <div style={{ display: 'flex', gap: '2em', flexWrap: 'wrap' }}>
-            <p style={{ margin: '0', color: '#666' }}>
-              <strong>Subscription ID:</strong> {selectedClientId}
-            </p>
-            <p style={{ margin: '0', color: '#666' }}>
-              <strong>Service Level:</strong>{' '}
-              <span style={{ 
-                textTransform: 'capitalize',
-                backgroundColor: selectedClient.level === 'enterprise' ? '#6f42c1' : 
-                                 selectedClient.level === 'pro' ? '#007bff' : 
-                                 selectedClient.level === 'basic' ? '#28a745' : '#6c757d',
-                color: 'white',
-                padding: '0.15em 0.5em',
-                borderRadius: '3px',
-                fontSize: '0.9em'
-              }}>
-                {selectedClient.level || 'basic'}
-              </span>
-            </p>
-            {selectedClient.company && (
-              <p style={{ margin: '0', color: '#666' }}>
-                <strong>Company:</strong> {selectedClient.company}
-              </p>
+          <div style={{ 
+            display: 'flex', 
+            justifyContent: 'space-between', 
+            alignItems: 'flex-start',
+            flexWrap: 'wrap',
+            gap: '1em'
+          }}>
+            <div>
+              <h3 style={{ margin: '0 0 1em 0', color: '#333' }}>
+                {getClientDisplayName(selectedClient)}
+              </h3>
+              
+              <div style={{ display: 'flex', gap: '2em', flexWrap: 'wrap' }}>
+                <p style={{ margin: '0', color: '#666' }}>
+                  <strong>Subscription ID:</strong> {selectedClientId}
+                </p>
+                <p style={{ margin: '0', color: '#666' }}>
+                  <strong>Service Level:</strong>{' '}
+                  <span style={{ 
+                    textTransform: 'capitalize',
+                    backgroundColor: selectedClient.level === 'enterprise' ? '#6f42c1' : 
+                                     selectedClient.level === 'pro' ? '#007bff' : 
+                                     selectedClient.level === 'basic' ? '#28a745' : '#6c757d',
+                    color: 'white',
+                    padding: '0.15em 0.5em',
+                    borderRadius: '3px',
+                    fontSize: '0.9em'
+                  }}>
+                    {selectedClient.level || 'basic'}
+                  </span>
+                </p>
+                {selectedClient.subscription_status && (
+                  <p style={{ margin: '0', color: '#666' }}>
+                    <strong>Status:</strong>{' '}
+                    <span style={{ 
+                      backgroundColor: 
+                        selectedClient.subscription_status === 'active' ? '#28a745' : 
+                        selectedClient.subscription_status === 'trialing' ? '#17a2b8' :
+                        selectedClient.subscription_status === 'past_due' ? '#ffc107' :
+                        selectedClient.subscription_status === 'cancelled' ? '#dc3545' : '#6c757d',
+                      color: selectedClient.subscription_status === 'past_due' ? '#000' : 'white',
+                      padding: '0.15em 0.5em',
+                      borderRadius: '3px',
+                      fontSize: '0.9em',
+                      textTransform: 'capitalize'
+                    }}>
+                      {selectedClient.subscription_status}
+                    </span>
+                  </p>
+                )}
+                {selectedClient.company && (
+                  <p style={{ margin: '0', color: '#666' }}>
+                    <strong>Company:</strong> {selectedClient.company}
+                  </p>
+                )}
+                {selectedClient.trial_end && selectedClient.subscription_status === 'trialing' && (
+                  <p style={{ margin: '0', color: '#666' }}>
+                    <strong>Trial Ends:</strong>{' '}
+                    {new Date(selectedClient.trial_end).toLocaleDateString('en-US', {
+                      year: 'numeric',
+                      month: 'long',
+                      day: 'numeric'
+                    })}
+                  </p>
+                )}
+              </div>
+            </div>
+
+            {/* Cancel Subscription Button */}
+            {selectedClient.subscription_id && 
+             selectedClient.subscription_status !== 'cancelled' && (
+              <button
+                onClick={() => setShowCancelModal(true)}
+                style={{
+                  padding: '0.5em 1em',
+                  backgroundColor: 'transparent',
+                  color: '#dc3545',
+                  border: '1px solid #dc3545',
+                  borderRadius: '4px',
+                  cursor: 'pointer',
+                  fontSize: '0.9em',
+                  transition: 'all 0.2s ease'
+                }}
+                onMouseOver={(e) => {
+                  e.target.style.backgroundColor = '#dc3545';
+                  e.target.style.color = 'white';
+                }}
+                onMouseOut={(e) => {
+                  e.target.style.backgroundColor = 'transparent';
+                  e.target.style.color = '#dc3545';
+                }}
+              >
+                Cancel Subscription
+              </button>
             )}
           </div>
+
+          {/* Success/Error Messages */}
+          {cancelSuccess && (
+            <div style={{
+              marginTop: '1em',
+              padding: '1em',
+              backgroundColor: '#d4edda',
+              border: '1px solid #c3e6cb',
+              borderRadius: '4px',
+              color: '#155724'
+            }}>
+              ✅ {cancelSuccess}
+            </div>
+          )}
         </div>
       )}
 

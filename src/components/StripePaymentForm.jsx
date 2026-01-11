@@ -1,11 +1,11 @@
+import { useStripe, useElements, PaymentElement } from "@stripe/react-stripe-js";
 import { useState } from "react";
-import { PaymentElement, useStripe, useElements } from "@stripe/react-stripe-js";
 
-export default function StripePaymentForm({ clientSecret, onSuccess, onError }) {
+export default function StripePaymentForm({ clientSecret, onSuccess, onError, isSetupIntent = false }) {
   const stripe = useStripe();
   const elements = useElements();
   const [isProcessing, setIsProcessing] = useState(false);
-  const [message, setMessage] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -15,64 +15,58 @@ export default function StripePaymentForm({ clientSecret, onSuccess, onError }) 
     }
 
     setIsProcessing(true);
-    setMessage("");
+    setErrorMessage("");
 
     try {
-      const { error, paymentIntent } = await stripe.confirmPayment({
-        elements,
-        confirmParams: {
-          return_url: window.location.origin + "/payment-success",
-        },
-        redirect: "if_required",
-      });
+      let result;
 
-      if (error) {
-        setMessage(error.message || "An error occurred during payment");
-        onError(error.message || "Payment failed");
-        setIsProcessing(false);
-      } else if (paymentIntent && paymentIntent.status === "succeeded") {
-        setMessage("Payment successful!");
-        onSuccess({
-          paymentIntentId: paymentIntent.id,
-          status: paymentIntent.status,
-          amount: paymentIntent.amount,
-          currency: paymentIntent.currency,
-          created: paymentIntent.created
+      if (isSetupIntent) {
+        // For subscriptions with trial - we're saving a payment method
+        result = await stripe.confirmSetup({
+          elements,
+          confirmParams: {
+            return_url: window.location.href,
+          },
+          redirect: "if_required"
         });
       } else {
-        setMessage("Payment processing...");
-        setIsProcessing(false);
+        // For immediate payments
+        result = await stripe.confirmPayment({
+          elements,
+          confirmParams: {
+            return_url: window.location.href,
+          },
+          redirect: "if_required"
+        });
+      }
+
+      if (result.error) {
+        setErrorMessage(result.error.message);
+        onError(result.error.message);
+      } else {
+        const intent = result.setupIntent || result.paymentIntent;
+        onSuccess({
+          paymentIntentId: intent.id,
+          status: intent.status,
+          amount: intent.amount,
+          currency: intent.currency,
+          created: intent.created
+        });
       }
     } catch (err) {
-      console.error("Payment error:", err);
-      setMessage("An unexpected error occurred");
-      onError("An unexpected error occurred");
+      setErrorMessage(err.message);
+      onError(err.message);
+    } finally {
       setIsProcessing(false);
     }
   };
 
   return (
-    <form onSubmit={handleSubmit} style={{ width: "100%" }}>
-      <PaymentElement 
-        options={{
-          layout: "tabs"
-        }}
-      />
+    <form onSubmit={handleSubmit}>
+      <PaymentElement />
       
-      {message && (
-        <div
-          style={{
-            marginTop: "15px",
-            padding: "10px",
-            borderRadius: "4px",
-            backgroundColor: message.includes("successful") ? "#d4edda" : "#f8d7da",
-            color: message.includes("successful") ? "#155724" : "#721c24",
-            border: `1px solid ${message.includes("successful") ? "#c3e6cb" : "#f5c6cb"}`,
-            fontSize: "14px"
-          }}
-        >
-          {message}
-        </div>
+      {errorMessage && (
+        <p style={{ color: "red", marginTop: "10px" }}>{errorMessage}</p>
       )}
 
       <button
@@ -80,30 +74,18 @@ export default function StripePaymentForm({ clientSecret, onSuccess, onError }) 
         disabled={!stripe || isProcessing}
         style={{
           width: "100%",
+          padding: "12px",
           marginTop: "20px",
-          padding: "14px",
-          backgroundColor: isProcessing ? "#6c757d" : "#28a745",
+          backgroundColor: isProcessing ? "#ccc" : "#1e3a8a",
           color: "white",
           border: "none",
           borderRadius: "4px",
           fontSize: "16px",
-          fontWeight: "bold",
-          cursor: isProcessing ? "not-allowed" : "pointer",
-          opacity: isProcessing ? 0.7 : 1,
-          transition: "all 0.2s"
+          cursor: isProcessing ? "not-allowed" : "pointer"
         }}
       >
-        {isProcessing ? "Processing..." : "Pay Now"}
+        {isProcessing ? "Processing..." : (isSetupIntent ? "Start Free Trial" : "Pay Now")}
       </button>
-
-      <p style={{ 
-        marginTop: "15px", 
-        fontSize: "12px", 
-        color: "#666", 
-        textAlign: "center" 
-      }}>
-        🔒 Your payment information is secure and encrypted
-      </p>
     </form>
   );
 }

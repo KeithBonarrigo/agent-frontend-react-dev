@@ -6,6 +6,7 @@ import StripePaymentForm from "./StripePaymentForm";
 export default function SignupForm({ isOpen }) {
   const [isMobile, setIsMobile] = useState(window.innerWidth < 640);
   const [stripePromise, setStripePromise] = useState(null);
+  const [subscriptionData, setSubscriptionData] = useState(null); // ADD THIS
   
   useEffect(() => {
     const onResize = () => setIsMobile(window.innerWidth < 640);
@@ -108,9 +109,9 @@ export default function SignupForm({ isOpen }) {
   // Price mapping for service levels
   const pricingMap = {
     free: { amount: 0, name: "Trial/Free" },
-    basic: { amount: 2900, name: "Basic" }, // $29.00
-    pro: { amount: 7900, name: "Pro" },     // $79.00
-    enterprise: { amount: 19900, name: "Enterprise" }, // $199.00
+    basic: { amount: 2900, name: "Basic" },
+    pro: { amount: 7900, name: "Pro" },
+    enterprise: { amount: 19900, name: "Enterprise" },
     easybroker: { amount: 7900, name: "Real Estate Agent (EasyBroker)" },
   };
 
@@ -174,7 +175,6 @@ export default function SignupForm({ isOpen }) {
       if (data.exists) {
         setAgentFormError('This email is already registered. Please log in instead.');
       } else {
-        // Clear error only if it was the email exists error
         if (agentFormError === 'This email is already registered. Please log in instead.') {
           setAgentFormError('');
         }
@@ -200,6 +200,15 @@ export default function SignupForm({ isOpen }) {
       return Number.isFinite(num) ? num : null;
     };
 
+    const getDomain = (level) => {
+      if (level === 'easybroker') {
+        return 'easybroker.aibridge.global';
+      }
+      return null;
+    };
+
+    const level = raw.level?.trim() || "basic";
+
     return {
       open_ai_token: toNullIfEmpty(raw.open_ai_token),
       mls_token: toNullIfEmpty(raw.mls_token),
@@ -213,7 +222,7 @@ export default function SignupForm({ isOpen }) {
       contact_phone: toNullIfEmpty(raw.contact_phone),
       contact_phone_wsp: !!raw.contact_phone_wsp,
       office_address: toNullIfEmpty(raw.office_address),
-      level: raw.level?.trim() || "basic",
+      level: level,
       office_wsp_phone: toNullIfEmpty(raw.office_wsp_phone),
       item: typeof raw.item === 'number' ? raw.item : (raw.item ? parseInt(raw.item, 10) : 1),
       date_paid: toNullIfEmpty(raw.date_paid),
@@ -226,6 +235,7 @@ export default function SignupForm({ isOpen }) {
       company: typeof raw.company === "string" ? raw.company : "",
       wsp_phone_number_id: toNullIfEmpty(raw.wsp_phone_number_id),
       messenger_access_token: toNullIfEmpty(raw.messenger_access_token),
+      domain: getDomain(level),
     };
   };
 
@@ -291,7 +301,7 @@ export default function SignupForm({ isOpen }) {
       return;
     }
 
-    // For paid tiers, create payment intent
+    // For paid tiers, create SUBSCRIPTION (not payment intent)
     try {
       const token = import.meta.env.VITE_CREATE_USER_TOKEN;
       
@@ -304,11 +314,11 @@ export default function SignupForm({ isOpen }) {
       }
 
       const apiBaseUrl = import.meta.env.VITE_API_URL || 'http://localhost:3000';
-      const apiUrl = `${apiBaseUrl}/api/create-payment-intent`;
+      const apiUrl = `${apiBaseUrl}/api/create-subscription`; // CHANGED from create-payment-intent
       
       const pricing = pricingMap[agentForm.level];
       
-      console.log("🌐 Creating payment intent for:", pricing);
+      console.log("🌐 Creating subscription for:", pricing);
 
       const res = await fetch(apiUrl, {
         method: "POST",
@@ -317,7 +327,6 @@ export default function SignupForm({ isOpen }) {
           Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({
-          amount: pricing.amount,
           email: agentForm.contact_email,
           name: `${agentForm.first_name || ''} ${agentForm.last_name || ''}`.trim() || agentForm.contact_email,
           level: agentForm.level
@@ -327,18 +336,26 @@ export default function SignupForm({ isOpen }) {
       const data = await res.json();
 
       if (!res.ok) {
-        const errorMessage = data?.error || "Failed to create payment intent";
-        console.error("❌ Payment intent error:", errorMessage);
+        const errorMessage = data?.error || "Failed to create subscription";
+        console.error("❌ Subscription error:", errorMessage);
         setAgentFormError(`❌ ${errorMessage}`);
         return;
       }
 
-      console.log("✅ Payment intent created successfully!");
+      console.log("✅ Subscription created successfully!", data);
+      
+      // Store subscription data
+      setSubscriptionData({
+        subscriptionId: data.subscriptionId,
+        customerId: data.customerId,
+        trialEnd: data.trialEnd
+      });
+      
       setClientSecret(data.clientSecret);
       setShowPaymentForm(true);
 
     } catch (err) {
-      console.error("❌ Payment intent creation error:", err);
+      console.error("❌ Subscription creation error:", err);
       setAgentFormError(
         `❌ Network error: ${err.message}. Please check your connection and try again.`
       );
@@ -362,13 +379,19 @@ export default function SignupForm({ isOpen }) {
 
       const userPayload = {
         ...payload,
+        // Subscription data
+        subscription_id: paymentData?.subscriptionId || subscriptionData?.subscriptionId || null,
+        stripe_customer_id: paymentData?.customerId || subscriptionData?.customerId || null,
+        subscription_status: 'trialing',
+        trial_end: paymentData?.trialEnd || subscriptionData?.trialEnd || null,
+        // Legacy payment fields
         payment_intent_id: paymentData?.paymentIntentId || null,
-        payment_status: paymentData?.status || null,
+        payment_status: paymentData?.status || 'trialing',
         payment_amount: paymentData?.amount || null,
-        payment_currency: paymentData?.currency || null,
+        payment_currency: paymentData?.currency || 'usd',
         payment_created: paymentData?.created || null,
-        date_paid: paymentData?.paymentIntentId ? new Date().toISOString() : null,
-        current: !!paymentData?.paymentIntentId
+        date_paid: new Date().toISOString(),
+        current: true // User is active during trial
       };
 
       console.log("📡 Creating user with payload:", userPayload);
@@ -406,6 +429,7 @@ export default function SignupForm({ isOpen }) {
       setAgentFormSuccess(true);
       setShowLoginLink(true);
       setShowPaymentForm(false);
+      setSubscriptionData(null); // Clear subscription data
 
       setAgentForm({
         open_ai_token: "",
@@ -449,14 +473,18 @@ export default function SignupForm({ isOpen }) {
   };
 
   const handlePaymentSuccess = async (paymentData) => {
-    console.log("✅ Payment successful:", paymentData);
-    await createUser(validatedFormData, paymentData);
+    console.log("✅ Payment method saved:", paymentData);
+    await createUser(validatedFormData, {
+      ...paymentData,
+      ...subscriptionData
+    });
   };
 
   const handlePaymentError = (error) => {
     console.error("❌ Payment error:", error);
     setAgentFormError(`Payment failed: ${error}`);
     setShowPaymentForm(false);
+    setSubscriptionData(null);
   };
 
   const requiredAsteriskStyle = { color: "#d11", marginLeft: "0px" };
@@ -605,7 +633,7 @@ export default function SignupForm({ isOpen }) {
         </div>
       )}
 
-      {/* Stripe Payment Modal */}
+      {/* Stripe Payment Modal - UPDATED FOR SUBSCRIPTIONS */}
       {showPaymentForm && clientSecret && stripePromise && (
         <div
           style={{
@@ -645,11 +673,12 @@ export default function SignupForm({ isOpen }) {
               }}
             >
               <h2 style={{ margin: 0, color: "white", fontSize: "20px" }}>
-                Complete Payment
+                Start Your Free Trial
               </h2>
               <button
                 onClick={() => {
                   setShowPaymentForm(false);
+                  setSubscriptionData(null);
                   setAgentFormError("Payment cancelled");
                 }}
                 style={{
@@ -677,10 +706,25 @@ export default function SignupForm({ isOpen }) {
                 </p>
                 <p style={{ margin: "5px 0", fontSize: "32px", fontWeight: "bold", color: "#1e3a8a" }}>
                   ${(pricingMap[agentForm.level].amount / 100).toFixed(2)}
+                  <span style={{ fontSize: "16px", fontWeight: "normal" }}>/month</span>
                 </p>
-                <p style={{ margin: 0, fontSize: "12px", color: "#999" }}>
-                  per month
-                </p>
+                
+                {/* Trial info banner */}
+                <div style={{
+                  background: "#e8f5e9",
+                  border: "1px solid #4caf50",
+                  borderRadius: "8px",
+                  padding: "12px",
+                  marginTop: "15px"
+                }}>
+                  <p style={{ margin: 0, color: "#2e7d32", fontWeight: "bold" }}>
+                    🎉 30-Day Free Trial
+                  </p>
+                  <p style={{ margin: "5px 0 0 0", color: "#666", fontSize: "13px" }}>
+                    You won't be charged today. Your card will be charged after the trial ends.
+                    Cancel anytime during the trial.
+                  </p>
+                </div>
               </div>
 
               <Elements stripe={stripePromise} options={{ clientSecret }}>
@@ -688,6 +732,7 @@ export default function SignupForm({ isOpen }) {
                   clientSecret={clientSecret}
                   onSuccess={handlePaymentSuccess}
                   onError={handlePaymentError}
+                  isSetupIntent={true}
                 />
               </Elements>
             </div>
@@ -1057,7 +1102,7 @@ export default function SignupForm({ isOpen }) {
                     }}
                     disabled={emailExists || checkingEmail}
                   >
-                    {agentForm.level === "free" ? "Let's Go!" : "Continue to Payment"}
+                    {agentForm.level === "free" ? "Let's Go!" : "Start Free Trial"}
                   </button>
                 </div>
               </div>
