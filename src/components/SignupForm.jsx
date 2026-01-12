@@ -387,6 +387,8 @@ export default function SignupForm({ isOpen }) {
         stripe_customer_id: paymentData?.customerId || subscriptionData?.customerId || null,
         subscription_status: 'trialing',
         trial_end: paymentData?.trialEnd || subscriptionData?.trialEnd || null,
+        subscription_amount: pricingMap[payload.level]?.amount || null,
+        subscription_currency: 'usd',
         // Legacy payment fields
         payment_intent_id: paymentData?.paymentIntentId || null,
         payment_status: paymentData?.status || 'trialing',

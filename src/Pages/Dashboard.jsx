@@ -11,196 +11,113 @@ export default function Dashboard() {
   const navigate = useNavigate();
   const { user, isLoggedIn, isLoading, logout } = useUser();
   const [activeTab, setActiveTab] = useState('configurations');
-  const [tokenUsage, setTokenUsage] = useState(null);
-  const [loadingTokens, setLoadingTokens] = useState(true);
-  const [tokenError, setTokenError] = useState(null);
   const [tokenLimits, setTokenLimits] = useState(null);
   const [loadingLimits, setLoadingLimits] = useState(true);
   
-  // State for multiple clients/agents
+  // Subscriptions and agents
+  const [subscriptions, setSubscriptions] = useState([]);
   const [clients, setClients] = useState([]);
+  const [selectedSubscriptionId, setSelectedSubscriptionId] = useState(null);
   const [selectedClientId, setSelectedClientId] = useState(null);
-  const [loadingClients, setLoadingClients] = useState(true);
+  const [loadingData, setLoadingData] = useState(true);
 
-  // State for cancel subscription
+  // Modals
   const [showCancelModal, setShowCancelModal] = useState(false);
   const [cancelLoading, setCancelLoading] = useState(false);
   const [cancelError, setCancelError] = useState(null);
   const [cancelSuccess, setCancelSuccess] = useState(null);
 
-  // State for new agent
   const [showNewAgentModal, setShowNewAgentModal] = useState(false);
   const [newAgentLoading, setNewAgentLoading] = useState(false);
   const [newAgentError, setNewAgentError] = useState(null);
   const [newAgentSuccess, setNewAgentSuccess] = useState(null);
-  const [newAgentForm, setNewAgentForm] = useState({
-    name: '',
-    company: ''
-  });
+  const [newAgentForm, setNewAgentForm] = useState({ name: '', company: '' });
 
-  // Redirect to login if not authenticated
+  // Redirect if not authenticated
   useEffect(() => {
     if (!isLoading && !isLoggedIn) {
       navigate("/login");
     }
   }, [isLoggedIn, isLoading, navigate]);
 
-  // Fetch all clients/agents for this account
+  // Fetch subscriptions and agents
   useEffect(() => {
-    const fetchClients = async () => {
-      console.log('📡 fetchClients called');
-      console.log('user?.account_id:', user?.account_id);
-      
+    const fetchData = async () => {
       if (!user?.account_id) {
-        console.warn('⚠️ No account_id found in user context!');
-        
-        if (user?.client_id) {
-          console.log('🔄 Falling back to single client from user context');
-          setClients([{
-            clientid: parseInt(user.client_id, 10),
-            agent_name: user.agent_name || 'My Agent',
-            first_name: user.first_name,
-            last_name: user.last_name,
-            contact_email: user.email,
-            level: user.level,
-            item: user.item_id,
-            company: user.company
-          }]);
-          setSelectedClientId(parseInt(user.client_id, 10));
-          setLoadingClients(false);
-        } else {
-          console.error('❌ No client_id either! User context is incomplete.');
-          setLoadingClients(false);
-        }
+        setLoadingData(false);
         return;
       }
 
-      setLoadingClients(true);
+      setLoadingData(true);
       try {
         const apiBaseUrl = import.meta.env.VITE_API_URL || 'http://localhost:3000';
-        const url = `${apiBaseUrl}/api/account/${user.account_id}/clients`;
-        console.log('📡 Fetching clients from:', url);
-        
-        const response = await fetch(url, {
+        const response = await fetch(`${apiBaseUrl}/api/account/${user.account_id}/clients`, {
           credentials: 'include'
         });
 
-        console.log('📡 Clients response status:', response.status);
-
-        if (!response.ok) {
-          const errorText = await response.text();
-          console.error('❌ Clients fetch failed:', errorText);
-          throw new Error('Failed to fetch clients');
-        }
+        if (!response.ok) throw new Error('Failed to fetch data');
 
         const data = await response.json();
-        console.log('✅ Clients data received:', data);
-        setClients(data.clients || []);
+        console.log('✅ Data received:', data);
         
-        if (data.clients && data.clients.length > 0) {
-          const initialClientId = user.client_id || data.clients[0].clientid;
-          console.log('Setting selectedClientId to:', initialClientId);
-          setSelectedClientId(parseInt(initialClientId, 10));
+        setClients(data.clients || []);
+        setSubscriptions(data.subscriptions || []);
+        
+        // Set initial selections
+        if (data.subscriptions?.length > 0) {
+          const firstSub = data.subscriptions[0];
+          setSelectedSubscriptionId(firstSub.subscriptionid);
+          
+          // Find first agent in this subscription - use String() for type-safe comparison
+          const firstAgent = data.clients?.find(c => String(c.subscriptionid) === String(firstSub.subscriptionid));
+          if (firstAgent) {
+            setSelectedClientId(firstAgent.clientid);
+          }
         }
       } catch (error) {
-        console.error('❌ Error fetching clients:', error);
-        if (user) {
-          console.log('🔄 Using fallback client data from user context');
-          setClients([{
-            clientid: parseInt(user.client_id, 10),
-            agent_name: user.agent_name || 'My Agent',
-            first_name: user.first_name,
-            last_name: user.last_name,
-            contact_email: user.email,
-            level: user.level,
-            item: user.item_id,
-            company: user.company
-          }]);
-          setSelectedClientId(parseInt(user.client_id, 10));
-        }
+        console.error('Error fetching data:', error);
       } finally {
-        setLoadingClients(false);
+        setLoadingData(false);
       }
     };
 
-    if (user) {
-      fetchClients();
-    }
-  }, [user?.account_id, user?.client_id]);
+    if (user) fetchData();
+  }, [user?.account_id]);
 
-  // Get the currently selected client object - use string comparison for type safety
-  const selectedClient = clients.find(c => String(c.clientid) === String(selectedClientId)) || null;
-
-  // Get account level from first client (they all share the same account level)
-  const accountLevel = clients.length > 0 ? (clients[0].level || 'basic') : (user?.level || 'basic');
-
-  // Fetch token limits from server
+  // Fetch token limits
   useEffect(() => {
     const fetchTokenLimits = async () => {
       try {
         const apiBaseUrl = import.meta.env.VITE_API_URL || 'http://localhost:3000';
-        const response = await fetch(`${apiBaseUrl}/api/token/limits`, {
-          credentials: 'include'
-        });
-
-        if (!response.ok) {
-          throw new Error('Failed to fetch token limits');
+        const response = await fetch(`${apiBaseUrl}/api/token/limits`, { credentials: 'include' });
+        if (response.ok) {
+          const data = await response.json();
+          setTokenLimits(data.limits);
         }
-
-        const data = await response.json();
-        setTokenLimits(data.limits);
       } catch (error) {
         console.error('Error fetching token limits:', error);
-        setTokenLimits({
-          'free': 100000,
-          'basic': 500000,
-          'pro': 2000000,
-          'enterprise': null
-        });
+        setTokenLimits({ free: 100000, basic: 500000, pro: 2000000, enterprise: null });
       } finally {
         setLoadingLimits(false);
       }
     };
-
     fetchTokenLimits();
   }, []);
 
-  // Fetch token usage for ENTIRE ACCOUNT (sum of all agents)
-  useEffect(() => {
-    const fetchAccountTokenUsage = async () => {
-      if (!user?.account_id) return;
+  // Derived state - use String() for type-safe comparison
+  const selectedSubscription = subscriptions.find(s => String(s.subscriptionid) === String(selectedSubscriptionId));
+  const agentsInSubscription = clients.filter(c => String(c.subscriptionid) === String(selectedSubscriptionId));
+  const selectedClient = clients.find(c => String(c.clientid) === String(selectedClientId));
+  
+  const canCreateAgentInSubscription = selectedSubscription && 
+    selectedSubscription.plan_type === 'base' &&
+    selectedSubscription.subscription_status !== 'cancelled' &&
+    selectedSubscription.subscription_status !== 'past_due';
 
-      setLoadingTokens(true);
-      setTokenError(null);
+  const specialtySubAtLimit = selectedSubscription?.plan_type === 'specialty' && 
+    agentsInSubscription.length >= 1;
 
-      try {
-        const apiBaseUrl = import.meta.env.VITE_API_URL || 'http://localhost:3000';
-        console.log('📡 Fetching account token usage for account:', user.account_id);
-        const response = await fetch(`${apiBaseUrl}/api/token/usage/account/${user.account_id}`, {
-          credentials: 'include'
-        });
-
-        if (!response.ok) {
-          throw new Error('Failed to fetch token usage');
-        }
-
-        const data = await response.json();
-        console.log('✅ Account token usage received:', data);
-        setTokenUsage(data.tokens_used || 0);
-      } catch (error) {
-        console.error('Error fetching account token usage:', error);
-        setTokenError('Unable to load token data');
-        setTokenUsage(0);
-      } finally {
-        setLoadingTokens(false);
-      }
-    };
-
-    if (user?.account_id) {
-      fetchAccountTokenUsage();
-    }
-  }, [user?.account_id]);
-
+  // Handlers
   const handleLogout = async () => {
     try {
       await logout();
@@ -210,18 +127,25 @@ export default function Dashboard() {
     }
   };
 
-  const handleClientChange = (e) => {
-    const newClientId = parseInt(e.target.value, 10);
-    console.log('🔄 Agent changed to:', newClientId);
-    setSelectedClientId(newClientId);
-    // Clear any previous cancel messages when switching agents
+  const handleSubscriptionChange = (e) => {
+    const newSubId = e.target.value;  // Don't parseInt - keep as string
+    setSelectedSubscriptionId(newSubId);
+    
+    // Select first agent in this subscription - use String() comparison
+    const firstAgent = clients.find(c => String(c.subscriptionid) === String(newSubId));
+    setSelectedClientId(firstAgent?.clientid || null);
+    
     setCancelSuccess(null);
     setCancelError(null);
   };
 
+  const handleClientChange = (e) => {
+    setSelectedClientId(e.target.value);  // Don't parseInt - keep as string
+  };
+
   const handleCancelSubscription = async (immediate = false) => {
-    if (!selectedClient?.subscription_id) {
-      setCancelError('No subscription ID found for this agent.');
+    if (!selectedSubscription?.subscription_id) {
+      setCancelError('No Stripe subscription ID found.');
       return;
     }
 
@@ -240,50 +164,32 @@ export default function Dashboard() {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${token}`
         },
-        body: JSON.stringify({
-          subscriptionId: selectedClient.subscription_id
-        }),
+        body: JSON.stringify({ subscriptionId: selectedSubscription.subscription_id }),
         credentials: 'include'
       });
 
       const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.error || 'Failed to cancel subscription');
-      }
+      if (!response.ok) throw new Error(data.error || 'Failed to cancel');
 
       setCancelSuccess(immediate 
         ? 'Subscription cancelled immediately.' 
-        : 'Subscription will be cancelled at the end of the billing period.'
-      );
+        : 'Subscription will cancel at period end.');
       setShowCancelModal(false);
-
-      // Refresh clients list to show updated status
-      setTimeout(() => {
-        window.location.reload();
-      }, 2000);
+      setTimeout(() => window.location.reload(), 2000);
 
     } catch (error) {
-      console.error('Cancel subscription error:', error);
+      console.error('Cancel error:', error);
       setCancelError(error.message);
     } finally {
       setCancelLoading(false);
     }
   };
 
-  const handleNewAgentFormChange = (e) => {
-    const { name, value } = e.target;
-    setNewAgentForm(prev => ({
-      ...prev,
-      [name]: value
-    }));
-  };
-
   const handleCreateAgent = async (e) => {
     e.preventDefault();
     
     if (!newAgentForm.name.trim()) {
-      setNewAgentError('Please enter a name for this agent');
+      setNewAgentError('Please enter a name');
       return;
     }
 
@@ -293,38 +199,28 @@ export default function Dashboard() {
 
     try {
       const apiBaseUrl = import.meta.env.VITE_API_URL || 'http://localhost:3000';
-      
-      const response = await fetch(`${apiBaseUrl}/api/account/${user.account_id}/clients`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          name: newAgentForm.name.trim(),
-          company: newAgentForm.company.trim() || null,
-          contactEmail: user.email,
-          firstName: user.first_name,
-          lastName: user.last_name,
-          level: accountLevel // Inherit the account's plan level
-        }),
-        credentials: 'include'
-      });
+      const response = await fetch(
+        `${apiBaseUrl}/api/account/${user.account_id}/subscriptions/${selectedSubscriptionId}/clients`,
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            name: newAgentForm.name.trim(),
+            company: newAgentForm.company.trim() || null,
+            contactEmail: user.email,
+            firstName: user.first_name,
+            lastName: user.last_name
+          }),
+          credentials: 'include'
+        }
+      );
 
       const data = await response.json();
+      if (!response.ok) throw new Error(data.error || 'Failed to create agent');
 
-      if (!response.ok) {
-        throw new Error(data.error || 'Failed to create agent');
-      }
-
-      setNewAgentSuccess('Agent created successfully!');
+      setNewAgentSuccess('Agent created!');
+      setNewAgentForm({ name: '', company: '' });
       
-      // Reset form
-      setNewAgentForm({
-        name: '',
-        company: ''
-      });
-
-      // Refresh clients list after a short delay
       setTimeout(() => {
         setShowNewAgentModal(false);
         setNewAgentSuccess(null);
@@ -339,115 +235,52 @@ export default function Dashboard() {
     }
   };
 
-  const closeNewAgentModal = () => {
-    setShowNewAgentModal(false);
-    setNewAgentForm({
-      name: '',
-      company: ''
-    });
-    setNewAgentError(null);
-    setNewAgentSuccess(null);
+  // Utility functions
+  const formatNumber = (num) => num?.toLocaleString() || '0';
+  
+  const getLevelColor = (level) => {
+    const colors = {
+      enterprise: '#6f42c1',
+      pro: '#007bff',
+      basic: '#28a745',
+      easybroker: '#fd7e14',
+      free: '#6c757d'
+    };
+    return colors[level?.toLowerCase()] || '#6c757d';
   };
 
-  const refreshTokenUsage = async () => {
-    if (!user?.account_id) return;
-
-    setLoadingTokens(true);
-    try {
-      const apiBaseUrl = import.meta.env.VITE_API_URL || 'http://localhost:3000';
-      const response = await fetch(`${apiBaseUrl}/api/token/usage/account/${user.account_id}`, {
-        credentials: 'include'
-      });
-
-      if (response.ok) {
-        const data = await response.json();
-        setTokenUsage(data.tokens_used || 0);
-        setTokenError(null);
-      }
-    } catch (error) {
-      console.error('Error refreshing token usage:', error);
-    } finally {
-      setLoadingTokens(false);
-    }
+  const getStatusColor = (status) => {
+    const colors = {
+      active: '#28a745',
+      trialing: '#17a2b8',
+      past_due: '#ffc107',
+      cancelled: '#dc3545'
+    };
+    return colors[status] || '#6c757d';
   };
 
-  const formatNumber = (num) => {
-    if (num === null || num === undefined) return '0';
-    return num.toLocaleString();
-  };
-
-  // Calculate account token limit (sum of all agent limits, or highest tier)
-  const getAccountTokenLimit = () => {
-    if (!tokenLimits || clients.length === 0) return null;
-
-    // Option 1: Use the highest tier limit among all agents
-    const tierOrder = ['free', 'basic', 'pro', 'enterprise'];
-    let highestTier = 'free';
-    
-    clients.forEach(client => {
-      const clientLevel = (client.level || 'basic').toLowerCase();
-      if (tierOrder.indexOf(clientLevel) > tierOrder.indexOf(highestTier)) {
-        highestTier = clientLevel;
-      }
-    });
-
-    return tokenLimits[highestTier];
-  };
-
-  const getTokenUsagePercentage = () => {
-    const limit = getAccountTokenLimit();
+  const getUsagePercentage = (used, limit) => {
     if (!limit) return 0;
-    return Math.min((tokenUsage / limit) * 100, 100);
+    return Math.min((used / limit) * 100, 100);
   };
 
-  const getUsageColor = () => {
-    const percentage = getTokenUsagePercentage();
+  const getUsageColor = (percentage) => {
     if (percentage < 50) return '#28a745';
     if (percentage < 80) return '#ffc107';
     return '#dc3545';
   };
 
-  const getUsageStatus = () => {
-    const limit = getAccountTokenLimit();
-    if (!limit) return 'Unlimited';
-    const percentage = getTokenUsagePercentage();
-    if (percentage < 50) return 'Good';
-    if (percentage < 80) return 'Moderate';
-    if (percentage < 90) return 'High';
-    return 'Critical';
-  };
-
-  const tokenLimit = getAccountTokenLimit();
-
-  // Get display name for a client/agent
   const getClientDisplayName = (client) => {
-    // Use agent_name if available, otherwise fall back to company or generic name
-    if (client.agent_name) {
-      return client.agent_name;
-    }
-    if (client.company) {
-      return client.company;
-    }
-    return `Agent ${client.item || client.clientid}`;
+    return client.agent_name || client.company || `Agent ${client.item || client.clientid}`;
   };
 
-  const getLevelColor = (level) => {
-    switch ((level || 'basic').toLowerCase()) {
-      case 'enterprise': return '#6f42c1';
-      case 'pro': return '#007bff';
-      case 'basic': return '#28a745';
-      default: return '#6c757d';
-    }
+  const getSubscriptionDisplayName = (sub) => {
+    const levelName = sub.level?.charAt(0).toUpperCase() + sub.level?.slice(1);
+    const typeLabel = sub.plan_type === 'specialty' ? ' (Specialty)' : '';
+    return `${levelName}${typeLabel}`;
   };
 
-  const tabContainerStyle = {
-    display: 'flex',
-    borderBottom: '2px solid #ddd',
-    marginTop: '1.5em',
-    marginBottom: '2em',
-    flexWrap: 'wrap'
-  };
-
+  // Styles
   const tabStyle = (isActive) => ({
     padding: '12px 24px',
     backgroundColor: isActive ? '#007bff' : 'transparent',
@@ -457,7 +290,6 @@ export default function Dashboard() {
     cursor: 'pointer',
     fontSize: '16px',
     fontWeight: isActive ? 'bold' : 'normal',
-    transition: 'all 0.3s ease',
     marginRight: '4px'
   });
 
@@ -470,156 +302,64 @@ export default function Dashboard() {
     boxSizing: 'border-box'
   };
 
-  const labelStyle = {
-    display: 'block',
-    marginBottom: '6px',
-    fontWeight: 'bold',
-    color: '#333',
-    fontSize: '14px'
-  };
-
   if (isLoading) {
-    return (
-      <div style={{ padding: "2em", textAlign: "center" }}>
-        <p>Loading...</p>
-      </div>
-    );
+    return <div style={{ padding: "2em", textAlign: "center" }}><p>Loading...</p></div>;
   }
 
-  if (!isLoggedIn || !user) {
-    return null;
-  }
+  if (!isLoggedIn || !user) return null;
 
   return (
     <div style={{ padding: "2em", maxWidth: "1200px", margin: "0 auto" }}>
-      {/* Cancel Subscription Modal */}
-      {showCancelModal && selectedClient && (
-        <div
-          style={{
-            position: 'fixed',
-            top: 0,
-            left: 0,
-            right: 0,
-            bottom: 0,
-            backgroundColor: 'rgba(0, 0, 0, 0.5)',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            zIndex: 10000,
-            padding: '20px'
-          }}
-          onClick={() => setShowCancelModal(false)}
-        >
-          <div
-            style={{
-              backgroundColor: 'white',
-              borderRadius: '8px',
-              maxWidth: '500px',
-              width: '100%',
-              boxShadow: '0 4px 20px rgba(0, 0, 0, 0.3)'
-            }}
-            onClick={(e) => e.stopPropagation()}
-          >
-            <div
-              style={{
-                background: 'linear-gradient(135deg, #dc3545 0%, #c82333 100%)',
-                padding: '20px',
-                borderRadius: '8px 8px 0 0'
-              }}
-            >
-              <h2 style={{ margin: 0, color: 'white', fontSize: '20px' }}>
-                Cancel Subscription
-              </h2>
+      {/* Cancel Modal */}
+      {showCancelModal && selectedSubscription && (
+        <div style={{
+          position: 'fixed', top: 0, left: 0, right: 0, bottom: 0,
+          backgroundColor: 'rgba(0,0,0,0.5)', display: 'flex',
+          alignItems: 'center', justifyContent: 'center', zIndex: 10000, padding: '20px'
+        }} onClick={() => setShowCancelModal(false)}>
+          <div style={{
+            backgroundColor: 'white', borderRadius: '8px', maxWidth: '500px', width: '100%'
+          }} onClick={(e) => e.stopPropagation()}>
+            <div style={{
+              background: 'linear-gradient(135deg, #dc3545 0%, #c82333 100%)',
+              padding: '20px', borderRadius: '8px 8px 0 0'
+            }}>
+              <h2 style={{ margin: 0, color: 'white' }}>Cancel {getSubscriptionDisplayName(selectedSubscription)}</h2>
             </div>
-
             <div style={{ padding: '30px' }}>
-              <p style={{ marginTop: 0 }}>
-                Are you sure you want to cancel <strong>{getClientDisplayName(selectedClient)}</strong>?
-              </p>
-
-              <div style={{
-                backgroundColor: '#fff3cd',
-                border: '1px solid #ffc107',
-                borderRadius: '8px',
-                padding: '15px',
-                marginBottom: '20px'
-              }}>
+              <p>This will cancel your <strong>{selectedSubscription.level}</strong> subscription 
+                 and all {agentsInSubscription.length} agent(s) under it.</p>
+              
+              <div style={{ backgroundColor: '#fff3cd', border: '1px solid #ffc107', borderRadius: '8px', padding: '15px', marginBottom: '20px' }}>
                 <p style={{ margin: 0, color: '#856404', fontSize: '14px' }}>
-                  <strong>Cancel at period end:</strong> You'll keep access until your current billing period ends.
+                  <strong>Cancel at period end:</strong> Keep access until billing period ends.
                 </p>
               </div>
-
-              <div style={{
-                backgroundColor: '#f8d7da',
-                border: '1px solid #f5c6cb',
-                borderRadius: '8px',
-                padding: '15px',
-                marginBottom: '20px'
-              }}>
+              
+              <div style={{ backgroundColor: '#f8d7da', border: '1px solid #f5c6cb', borderRadius: '8px', padding: '15px', marginBottom: '20px' }}>
                 <p style={{ margin: 0, color: '#721c24', fontSize: '14px' }}>
-                  <strong>Cancel immediately:</strong> Your access will end right away. No refunds for partial periods.
+                  <strong>Cancel immediately:</strong> Access ends now. No refunds.
                 </p>
               </div>
-
-              {cancelError && (
-                <p style={{ color: '#dc3545', marginBottom: '15px' }}>
-                  ❌ {cancelError}
-                </p>
-              )}
-
+              
+              {cancelError && <p style={{ color: '#dc3545' }}>❌ {cancelError}</p>}
+              
               <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
-                <button
-                  onClick={() => handleCancelSubscription(false)}
-                  disabled={cancelLoading}
-                  style={{
-                    flex: 1,
-                    padding: '12px',
-                    backgroundColor: cancelLoading ? '#ccc' : '#ffc107',
-                    color: '#000',
-                    border: 'none',
-                    borderRadius: '4px',
-                    fontSize: '14px',
-                    cursor: cancelLoading ? 'not-allowed' : 'pointer',
-                    fontWeight: 'bold'
-                  }}
-                >
+                <button onClick={() => handleCancelSubscription(false)} disabled={cancelLoading}
+                  style={{ flex: 1, padding: '12px', backgroundColor: cancelLoading ? '#ccc' : '#ffc107',
+                    color: '#000', border: 'none', borderRadius: '4px', fontWeight: 'bold', cursor: cancelLoading ? 'not-allowed' : 'pointer' }}>
                   {cancelLoading ? 'Processing...' : 'Cancel at Period End'}
                 </button>
-
-                <button
-                  onClick={() => handleCancelSubscription(true)}
-                  disabled={cancelLoading}
-                  style={{
-                    flex: 1,
-                    padding: '12px',
-                    backgroundColor: cancelLoading ? '#ccc' : '#dc3545',
-                    color: 'white',
-                    border: 'none',
-                    borderRadius: '4px',
-                    fontSize: '14px',
-                    cursor: cancelLoading ? 'not-allowed' : 'pointer',
-                    fontWeight: 'bold'
-                  }}
-                >
+                <button onClick={() => handleCancelSubscription(true)} disabled={cancelLoading}
+                  style={{ flex: 1, padding: '12px', backgroundColor: cancelLoading ? '#ccc' : '#dc3545',
+                    color: 'white', border: 'none', borderRadius: '4px', fontWeight: 'bold', cursor: cancelLoading ? 'not-allowed' : 'pointer' }}>
                   {cancelLoading ? 'Processing...' : 'Cancel Immediately'}
                 </button>
               </div>
-
-              <button
-                onClick={() => setShowCancelModal(false)}
-                style={{
-                  width: '100%',
-                  padding: '12px',
-                  marginTop: '10px',
-                  backgroundColor: 'transparent',
-                  color: '#666',
-                  border: '1px solid #ddd',
-                  borderRadius: '4px',
-                  fontSize: '14px',
-                  cursor: 'pointer'
-                }}
-              >
-                Keep My Subscription
+              <button onClick={() => setShowCancelModal(false)}
+                style={{ width: '100%', padding: '12px', marginTop: '10px', backgroundColor: 'transparent',
+                  color: '#666', border: '1px solid #ddd', borderRadius: '4px', cursor: 'pointer' }}>
+                Keep Subscription
               </button>
             </div>
           </div>
@@ -628,171 +368,69 @@ export default function Dashboard() {
 
       {/* New Agent Modal */}
       {showNewAgentModal && (
-        <div
-          style={{
-            position: 'fixed',
-            top: 0,
-            left: 0,
-            right: 0,
-            bottom: 0,
-            backgroundColor: 'rgba(0, 0, 0, 0.5)',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            zIndex: 10000,
-            padding: '20px'
-          }}
-          onClick={closeNewAgentModal}
-        >
-          <div
-            style={{
-              backgroundColor: 'white',
-              borderRadius: '8px',
-              maxWidth: '500px',
-              width: '100%',
-              boxShadow: '0 4px 20px rgba(0, 0, 0, 0.3)'
-            }}
-            onClick={(e) => e.stopPropagation()}
-          >
-            <div
-              style={{
-                background: 'linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%)',
-                padding: '20px',
-                borderRadius: '8px 8px 0 0'
-              }}
-            >
-              <h2 style={{ margin: 0, color: 'white', fontSize: '20px' }}>
-                Create New Agent
-              </h2>
+        <div style={{
+          position: 'fixed', top: 0, left: 0, right: 0, bottom: 0,
+          backgroundColor: 'rgba(0,0,0,0.5)', display: 'flex',
+          alignItems: 'center', justifyContent: 'center', zIndex: 10000, padding: '20px'
+        }} onClick={() => setShowNewAgentModal(false)}>
+          <div style={{
+            backgroundColor: 'white', borderRadius: '8px', maxWidth: '500px', width: '100%'
+          }} onClick={(e) => e.stopPropagation()}>
+            <div style={{
+              background: 'linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%)',
+              padding: '20px', borderRadius: '8px 8px 0 0'
+            }}>
+              <h2 style={{ margin: 0, color: 'white' }}>Create New Agent</h2>
               <p style={{ margin: '8px 0 0 0', color: 'rgba(255,255,255,0.8)', fontSize: '14px' }}>
-                Add another agent under your{' '}
-                <span style={{ 
-                  backgroundColor: 'rgba(255,255,255,0.2)', 
-                  padding: '2px 8px', 
-                  borderRadius: '4px',
-                  textTransform: 'capitalize'
-                }}>
-                  {accountLevel}
-                </span>
-                {' '}plan
+                Adding to: <strong>{selectedSubscription ? getSubscriptionDisplayName(selectedSubscription) : ''}</strong>
               </p>
             </div>
-
             <form onSubmit={handleCreateAgent} style={{ padding: '30px' }}>
-              {/* Info Box */}
-              <div style={{
-                backgroundColor: '#e7f3ff',
-                border: '1px solid #b3d7ff',
-                borderRadius: '8px',
-                padding: '15px',
-                marginBottom: '24px'
-              }}>
+              <div style={{ backgroundColor: '#e7f3ff', border: '1px solid #b3d7ff', borderRadius: '8px', padding: '15px', marginBottom: '24px' }}>
                 <p style={{ margin: 0, color: '#0056b3', fontSize: '14px' }}>
-                  💡 This will create a new agent that shares your account's token limit. 
-                  All agents under your account contribute to the same token usage.
+                  💡 Token usage will count toward this subscription's limit 
+                  ({selectedSubscription?.token_limit ? formatNumber(selectedSubscription.token_limit) : 'Unlimited'} tokens)
                 </p>
               </div>
-
-              {/* Name Field */}
+              
               <div style={{ marginBottom: '20px' }}>
-                <label style={labelStyle}>
+                <label style={{ display: 'block', marginBottom: '6px', fontWeight: 'bold' }}>
                   Agent Name <span style={{ color: '#dc3545' }}>*</span>
                 </label>
-                <input
-                  type="text"
-                  name="name"
-                  value={newAgentForm.name}
-                  onChange={handleNewAgentFormChange}
-                  placeholder="e.g., My Real Estate Bot, Customer Service Bot"
-                  style={inputStyle}
-                  required
-                />
-                <p style={{ margin: '6px 0 0 0', fontSize: '12px', color: '#666' }}>
-                  A friendly name to identify this agent
-                </p>
+                <input type="text" value={newAgentForm.name}
+                  onChange={(e) => setNewAgentForm(prev => ({ ...prev, name: e.target.value }))}
+                  placeholder="e.g., My Sales Bot" style={inputStyle} required />
               </div>
-
-              {/* Company Field */}
+              
               <div style={{ marginBottom: '24px' }}>
-                <label style={labelStyle}>
-                  Company Name <span style={{ color: '#999', fontWeight: 'normal' }}>(optional)</span>
+                <label style={{ display: 'block', marginBottom: '6px', fontWeight: 'bold' }}>
+                  Company <span style={{ color: '#999', fontWeight: 'normal' }}>(optional)</span>
                 </label>
-                <input
-                  type="text"
-                  name="company"
-                  value={newAgentForm.company}
-                  onChange={handleNewAgentFormChange}
-                  placeholder="e.g., Acme Real Estate"
-                  style={inputStyle}
-                />
+                <input type="text" value={newAgentForm.company}
+                  onChange={(e) => setNewAgentForm(prev => ({ ...prev, company: e.target.value }))}
+                  placeholder="e.g., Acme Inc" style={inputStyle} />
               </div>
-
-              {/* Error Message */}
+              
               {newAgentError && (
-                <div style={{
-                  backgroundColor: '#f8d7da',
-                  border: '1px solid #f5c6cb',
-                  borderRadius: '8px',
-                  padding: '12px',
-                  marginBottom: '16px',
-                  color: '#721c24'
-                }}>
+                <div style={{ backgroundColor: '#f8d7da', border: '1px solid #f5c6cb', borderRadius: '8px', padding: '12px', marginBottom: '16px', color: '#721c24' }}>
                   ❌ {newAgentError}
                 </div>
               )}
-
-              {/* Success Message */}
               {newAgentSuccess && (
-                <div style={{
-                  backgroundColor: '#d4edda',
-                  border: '1px solid #c3e6cb',
-                  borderRadius: '8px',
-                  padding: '12px',
-                  marginBottom: '16px',
-                  color: '#155724'
-                }}>
+                <div style={{ backgroundColor: '#d4edda', border: '1px solid #c3e6cb', borderRadius: '8px', padding: '12px', marginBottom: '16px', color: '#155724' }}>
                   ✅ {newAgentSuccess}
                 </div>
               )}
-
-              {/* Buttons */}
+              
               <div style={{ display: 'flex', gap: '12px' }}>
-                <button
-                  type="button"
-                  onClick={closeNewAgentModal}
-                  style={{
-                    flex: 1,
-                    padding: '12px',
-                    backgroundColor: 'transparent',
-                    color: '#666',
-                    border: '1px solid #ddd',
-                    borderRadius: '4px',
-                    fontSize: '14px',
-                    cursor: 'pointer'
-                  }}
-                >
+                <button type="button" onClick={() => setShowNewAgentModal(false)}
+                  style={{ flex: 1, padding: '12px', backgroundColor: 'transparent', color: '#666', border: '1px solid #ddd', borderRadius: '4px', cursor: 'pointer' }}>
                   Cancel
                 </button>
-
-                <button
-                  type="submit"
-                  disabled={newAgentLoading || !newAgentForm.name.trim()}
-                  style={{
-                    flex: 2,
-                    padding: '12px',
-                    backgroundColor: newAgentLoading || !newAgentForm.name.trim()
-                      ? '#ccc' 
-                      : '#28a745',
-                    color: 'white',
-                    border: 'none',
-                    borderRadius: '4px',
-                    fontSize: '14px',
-                    cursor: newAgentLoading || !newAgentForm.name.trim() 
-                      ? 'not-allowed' 
-                      : 'pointer',
-                    fontWeight: 'bold'
-                  }}
-                >
+                <button type="submit" disabled={newAgentLoading || !newAgentForm.name.trim()}
+                  style={{ flex: 2, padding: '12px', backgroundColor: newAgentLoading ? '#ccc' : '#28a745',
+                    color: 'white', border: 'none', borderRadius: '4px', fontWeight: 'bold',
+                    cursor: newAgentLoading ? 'not-allowed' : 'pointer' }}>
                   {newAgentLoading ? 'Creating...' : 'Create Agent'}
                 </button>
               </div>
@@ -801,210 +439,123 @@ export default function Dashboard() {
         </div>
       )}
 
-      {/* Header with Account Info */}
-      <div style={{ 
-        display: "flex", 
-        justifyContent: "space-between", 
-        alignItems: "center",
-        marginBottom: "1.5em",
-        flexWrap: "wrap",
-        gap: "1em"
-      }}>
+      {/* Header */}
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "1.5em", flexWrap: "wrap", gap: "1em" }}>
         <div>
           <h1 style={{ margin: 0 }}>Dashboard</h1>
           <p style={{ margin: "0.25em 0 0 0", color: "#666", fontSize: "0.95em" }}>
             Welcome, {user.first_name || 'User'} {user.last_name || ''} ({user.email})
           </p>
         </div>
-        <button 
-          onClick={handleLogout}
-          style={{
-            padding: "0.5em 1.5em",
-            backgroundColor: "#dc3545",
-            color: "white",
-            border: "none",
-            borderRadius: "4px",
-            cursor: "pointer"
-          }}
-        >
+        <button onClick={handleLogout}
+          style={{ padding: "0.5em 1.5em", backgroundColor: "#dc3545", color: "white", border: "none", borderRadius: "4px", cursor: "pointer" }}>
           Logout
         </button>
       </div>
 
-      {/* Account Token Usage - Shows total across all agents */}
-      <div style={{
-        backgroundColor: '#f8f9fa',
-        padding: '1.25em 1.5em',
-        borderRadius: '8px',
-        marginBottom: '1.5em',
-        border: '1px solid #dee2e6'
-      }}>
-        <div style={{
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          flexWrap: 'wrap',
-          gap: '1em'
-        }}>
-          <div>
-            <h3 style={{ margin: '0 0 0.25em 0', color: '#333', fontSize: '1em' }}>
-              Account Token Usage
-              <span style={{
-                marginLeft: '10px',
-                backgroundColor: getLevelColor(accountLevel),
-                color: 'white',
-                padding: '2px 8px',
-                borderRadius: '4px',
-                fontSize: '0.8em',
-                textTransform: 'capitalize',
-                verticalAlign: 'middle'
-              }}>
-                {accountLevel}
-              </span>
-            </h3>
-            <p style={{ margin: 0, fontSize: '0.85em', color: '#666' }}>
-              Total across all {clients.length} agent{clients.length !== 1 ? 's' : ''}
-            </p>
-          </div>
-
-          <div style={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: '1.5em',
-            flexWrap: 'wrap'
-          }}>
-            {loadingTokens || loadingLimits ? (
-              <div style={{ fontSize: '1.2em', color: '#007bff' }}>
-                Loading...
-              </div>
-            ) : tokenError ? (
-              <div style={{ fontSize: '0.9em', color: '#dc3545' }}>
-                {tokenError}
-              </div>
-            ) : (
-              <>
-                <div style={{ textAlign: 'center' }}>
-                  <div style={{
-                    fontSize: '1.75em',
-                    fontWeight: 'bold',
-                    color: getUsageColor()
-                  }}>
-                    {formatNumber(tokenUsage)}
-                  </div>
-                  <div style={{ fontSize: '0.75em', color: '#666' }}>
-                    tokens used
-                  </div>
-                </div>
-
-                {tokenLimit && (
-                  <div style={{ 
-                    display: 'flex', 
-                    flexDirection: 'column', 
-                    gap: '0.25em',
-                    minWidth: '150px'
-                  }}>
-                    <div style={{
-                      width: '100%',
-                      height: '10px',
-                      backgroundColor: '#e9ecef',
-                      borderRadius: '5px',
-                      overflow: 'hidden'
-                    }}>
-                      <div style={{
-                        width: `${getTokenUsagePercentage()}%`,
-                        height: '100%',
-                        backgroundColor: getUsageColor(),
-                        transition: 'width 0.3s ease'
-                      }} />
-                    </div>
-                    <div style={{
-                      display: 'flex',
-                      justifyContent: 'space-between',
-                      fontSize: '0.75em',
-                      color: '#666'
-                    }}>
-                      <span>{formatNumber(tokenLimit - tokenUsage)} remaining</span>
-                      <span style={{ color: getUsageColor(), fontWeight: 'bold' }}>
-                        {getUsageStatus()}
-                      </span>
-                    </div>
-                  </div>
-                )}
-
-                {!tokenLimit && (
-                  <div style={{
-                    fontSize: '1em',
-                    color: '#28a745',
-                    fontWeight: 'bold'
-                  }}>
-                    ∞ Unlimited
-                  </div>
-                )}
-              </>
-            )}
-
-            <button
-              onClick={refreshTokenUsage}
-              disabled={loadingTokens}
-              style={{
-                padding: '0.5em 1em',
-                fontSize: '0.9em',
-                backgroundColor: loadingTokens ? '#6c757d' : '#007bff',
-                color: 'white',
-                border: 'none',
-                borderRadius: '4px',
-                cursor: loadingTokens ? 'not-allowed' : 'pointer'
-              }}
-              title="Refresh token count"
-            >
-              {loadingTokens ? '...' : '↻ Refresh'}
-            </button>
-          </div>
+      {/* Subscription Selector */}
+      <div style={{ backgroundColor: '#f0f4f8', padding: '1.25em 1.5em', borderRadius: '8px', marginBottom: '1.5em', border: '1px solid #d0d7de' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '1em', flexWrap: 'wrap' }}>
+          <label style={{ fontWeight: 'bold', color: '#24292f', fontSize: '1.1em' }}>Subscription:</label>
+          
+          {loadingData ? (
+            <span style={{ color: '#666' }}>Loading...</span>
+          ) : subscriptions.length === 0 ? (
+            <span style={{ color: '#dc3545' }}>No subscriptions found</span>
+          ) : (
+            <select value={selectedSubscriptionId || ''} onChange={handleSubscriptionChange}
+              style={{ padding: '0.6em 1em', fontSize: '1em', borderRadius: '4px', border: '1px solid #d0d7de', backgroundColor: 'white', minWidth: '250px', cursor: 'pointer' }}>
+              {subscriptions.map((sub) => (
+                <option key={sub.subscriptionid} value={sub.subscriptionid}>
+                  {getSubscriptionDisplayName(sub)} - {sub.agent_count || 0} agent(s)
+                </option>
+              ))}
+            </select>
+          )}
+          
+          <span style={{ color: '#666', fontSize: '0.9em', marginLeft: 'auto' }}>
+            {subscriptions.length} subscription{subscriptions.length !== 1 ? 's' : ''}
+          </span>
         </div>
       </div>
 
-      {/* Agent Selector */}
-      <div style={{
-        backgroundColor: '#e7f3ff',
-        padding: '1.25em 1.5em',
-        borderRadius: '8px',
-        marginBottom: '1.5em',
-        border: '1px solid #b3d7ff'
-      }}>
-        <div style={{
-          display: 'flex',
-          alignItems: 'center',
-          gap: '1em',
-          flexWrap: 'wrap'
-        }}>
-          <label style={{ 
-            fontWeight: 'bold', 
-            color: '#0056b3',
-            whiteSpace: 'nowrap',
-            fontSize: '1.1em'
-          }}>
-            Select Agent:
-          </label>
+      {/* Selected Subscription Details & Token Usage */}
+      {selectedSubscription && (
+        <div style={{ backgroundColor: '#fff', padding: '1.5em', borderRadius: '8px', marginBottom: '1.5em', border: '1px solid #dee2e6' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '1.5em' }}>
+            {/* Subscription Info */}
+            <div>
+              <h3 style={{ margin: '0 0 0.5em 0', display: 'flex', alignItems: 'center', gap: '10px' }}>
+                {getSubscriptionDisplayName(selectedSubscription)}
+                <span style={{
+                  backgroundColor: getStatusColor(selectedSubscription.subscription_status),
+                  color: selectedSubscription.subscription_status === 'past_due' ? '#000' : 'white',
+                  padding: '2px 8px', borderRadius: '4px', fontSize: '0.7em', textTransform: 'capitalize'
+                }}>
+                  {selectedSubscription.subscription_status}
+                </span>
+              </h3>
+              <div style={{ display: 'flex', gap: '2em', flexWrap: 'wrap', fontSize: '0.9em', color: '#666' }}>
+                <span><strong>Plan Type:</strong> {selectedSubscription.plan_type === 'specialty' ? 'Single Agent' : 'Multi-Agent'}</span>
+                <span><strong>Agents:</strong> {agentsInSubscription.length}</span>
+                {selectedSubscription.trial_end && selectedSubscription.subscription_status === 'trialing' && (
+                  <span><strong>Trial Ends:</strong> {new Date(selectedSubscription.trial_end).toLocaleDateString()}</span>
+                )}
+              </div>
+            </div>
+
+            {/* Token Usage */}
+            <div style={{ minWidth: '250px' }}>
+              <div style={{ fontSize: '0.85em', color: '#666', marginBottom: '4px' }}>Token Usage</div>
+              <div style={{ display: 'flex', alignItems: 'baseline', gap: '8px' }}>
+                <span style={{ fontSize: '1.5em', fontWeight: 'bold', color: getUsageColor(getUsagePercentage(selectedSubscription.tokens_used, selectedSubscription.token_limit)) }}>
+                  {formatNumber(selectedSubscription.tokens_used || 0)}
+                </span>
+                <span style={{ color: '#666' }}>
+                  / {selectedSubscription.token_limit ? formatNumber(selectedSubscription.token_limit) : '∞'}
+                </span>
+              </div>
+              {selectedSubscription.token_limit && (
+                <div style={{ width: '100%', height: '8px', backgroundColor: '#e9ecef', borderRadius: '4px', marginTop: '8px', overflow: 'hidden' }}>
+                  <div style={{
+                    width: `${getUsagePercentage(selectedSubscription.tokens_used, selectedSubscription.token_limit)}%`,
+                    height: '100%',
+                    backgroundColor: getUsageColor(getUsagePercentage(selectedSubscription.tokens_used, selectedSubscription.token_limit)),
+                    transition: 'width 0.3s'
+                  }} />
+                </div>
+              )}
+            </div>
+
+            {/* Cancel Button */}
+            {selectedSubscription.subscription_id && selectedSubscription.subscription_status !== 'cancelled' && (
+              <button onClick={() => setShowCancelModal(true)}
+                style={{ padding: '0.5em 1em', backgroundColor: 'transparent', color: '#dc3545',
+                  border: '1px solid #dc3545', borderRadius: '4px', cursor: 'pointer', fontSize: '0.9em' }}>
+                Cancel Subscription
+              </button>
+            )}
+          </div>
           
-          {loadingClients ? (
-            <span style={{ color: '#666' }}>Loading agents...</span>
-          ) : clients.length === 0 ? (
-            <span style={{ color: '#dc3545' }}>No agents found</span>
+          {cancelSuccess && (
+            <div style={{ marginTop: '1em', padding: '1em', backgroundColor: '#d4edda', border: '1px solid #c3e6cb', borderRadius: '4px', color: '#155724' }}>
+              ✅ {cancelSuccess}
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* Agent Selector */}
+      <div style={{ backgroundColor: '#e7f3ff', padding: '1.25em 1.5em', borderRadius: '8px', marginBottom: '1.5em', border: '1px solid #b3d7ff' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '1em', flexWrap: 'wrap' }}>
+          <label style={{ fontWeight: 'bold', color: '#0056b3', fontSize: '1.1em' }}>Select Agent:</label>
+          
+          {agentsInSubscription.length === 0 ? (
+            <span style={{ color: '#666' }}>No agents in this subscription</span>
           ) : (
-            <select
-              value={selectedClientId || ''}
-              onChange={handleClientChange}
-              style={{
-                padding: '0.6em 1em',
-                fontSize: '1em',
-                borderRadius: '4px',
-                border: '1px solid #0056b3',
-                backgroundColor: 'white',
-                minWidth: '280px',
-                cursor: 'pointer'
-              }}
-            >
-              {clients.map((client) => (
+            <select value={selectedClientId || ''} onChange={handleClientChange}
+              style={{ padding: '0.6em 1em', fontSize: '1em', borderRadius: '4px', border: '1px solid #0056b3', backgroundColor: 'white', minWidth: '280px', cursor: 'pointer' }}>
+              {agentsInSubscription.map((client) => (
                 <option key={client.clientid} value={client.clientid}>
                   {getClientDisplayName(client)}
                 </option>
@@ -1013,187 +564,53 @@ export default function Dashboard() {
           )}
 
           {/* New Agent Button */}
-          <button
-            onClick={() => setShowNewAgentModal(true)}
-            style={{
-              padding: '0.6em 1.2em',
-              fontSize: '1em',
-              backgroundColor: '#28a745',
-              color: 'white',
-              border: 'none',
-              borderRadius: '4px',
-              cursor: 'pointer',
-              fontWeight: 'bold',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '6px',
-              transition: 'background-color 0.2s ease'
-            }}
-            onMouseOver={(e) => e.target.style.backgroundColor = '#218838'}
-            onMouseOut={(e) => e.target.style.backgroundColor = '#28a745'}
-          >
-            <span style={{ fontSize: '1.2em' }}>+</span> New Agent
-          </button>
+          {canCreateAgentInSubscription && !specialtySubAtLimit ? (
+            <button onClick={() => setShowNewAgentModal(true)}
+              style={{ padding: '0.6em 1.2em', fontSize: '1em', backgroundColor: '#28a745',
+                color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer',
+                fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: '6px' }}>
+              <span style={{ fontSize: '1.2em' }}>+</span> New Agent
+            </button>
+          ) : specialtySubAtLimit ? (
+            <div style={{ padding: '0.6em 1em', backgroundColor: '#fff3cd', color: '#856404',
+              border: '1px solid #ffc107', borderRadius: '4px', fontSize: '0.9em' }}>
+              ⚠️ Specialty plans allow 1 agent only
+            </div>
+          ) : null}
 
           <span style={{ color: '#666', fontSize: '0.9em', marginLeft: 'auto' }}>
-            {clients.length} agent{clients.length !== 1 ? 's' : ''} on this account
+            {agentsInSubscription.length} agent{agentsInSubscription.length !== 1 ? 's' : ''} in this subscription
           </span>
         </div>
       </div>
 
       {/* Selected Agent Details */}
       {selectedClient && (
-        <div style={{
-          backgroundColor: '#fff',
-          padding: '1.5em',
-          borderRadius: '8px',
-          marginBottom: '1em',
-          border: '1px solid #dee2e6'
-        }}>
-          <div style={{ 
-            display: 'flex', 
-            justifyContent: 'space-between', 
-            alignItems: 'flex-start',
-            flexWrap: 'wrap',
-            gap: '1em'
-          }}>
-            <div>
-              <h3 style={{ margin: '0 0 1em 0', color: '#333' }}>
-                {getClientDisplayName(selectedClient)}
-              </h3>
-              
-              <div style={{ display: 'flex', gap: '2em', flexWrap: 'wrap' }}>
-                <p style={{ margin: '0', color: '#666' }}>
-                  <strong>Agent ID:</strong> {selectedClientId}
-                </p>
-                <p style={{ margin: '0', color: '#666' }}>
-                  <strong>Service Level:</strong>{' '}
-                  <span style={{ 
-                    textTransform: 'capitalize',
-                    backgroundColor: getLevelColor(selectedClient.level),
-                    color: 'white',
-                    padding: '0.15em 0.5em',
-                    borderRadius: '3px',
-                    fontSize: '0.9em'
-                  }}>
-                    {selectedClient.level || 'basic'}
-                  </span>
-                </p>
-                {selectedClient.subscription_status && (
-                  <p style={{ margin: '0', color: '#666' }}>
-                    <strong>Status:</strong>{' '}
-                    <span style={{ 
-                      backgroundColor: 
-                        selectedClient.subscription_status === 'active' ? '#28a745' : 
-                        selectedClient.subscription_status === 'trialing' ? '#17a2b8' :
-                        selectedClient.subscription_status === 'past_due' ? '#ffc107' :
-                        selectedClient.subscription_status === 'cancelled' ? '#dc3545' : '#6c757d',
-                      color: selectedClient.subscription_status === 'past_due' ? '#000' : 'white',
-                      padding: '0.15em 0.5em',
-                      borderRadius: '3px',
-                      fontSize: '0.9em',
-                      textTransform: 'capitalize'
-                    }}>
-                      {selectedClient.subscription_status}
-                    </span>
-                  </p>
-                )}
-                {selectedClient.company && (
-                  <p style={{ margin: '0', color: '#666' }}>
-                    <strong>Company:</strong> {selectedClient.company}
-                  </p>
-                )}
-                {selectedClient.trial_end && selectedClient.subscription_status === 'trialing' && (
-                  <p style={{ margin: '0', color: '#666' }}>
-                    <strong>Trial Ends:</strong>{' '}
-                    {new Date(selectedClient.trial_end).toLocaleDateString('en-US', {
-                      year: 'numeric',
-                      month: 'long',
-                      day: 'numeric'
-                    })}
-                  </p>
-                )}
-              </div>
-            </div>
-
-            {/* Cancel Subscription Button */}
-            {selectedClient.subscription_id && 
-             selectedClient.subscription_status !== 'cancelled' && (
-              <button
-                onClick={() => setShowCancelModal(true)}
-                style={{
-                  padding: '0.5em 1em',
-                  backgroundColor: 'transparent',
-                  color: '#dc3545',
-                  border: '1px solid #dc3545',
-                  borderRadius: '4px',
-                  cursor: 'pointer',
-                  fontSize: '0.9em',
-                  transition: 'all 0.2s ease'
-                }}
-                onMouseOver={(e) => {
-                  e.target.style.backgroundColor = '#dc3545';
-                  e.target.style.color = 'white';
-                }}
-                onMouseOut={(e) => {
-                  e.target.style.backgroundColor = 'transparent';
-                  e.target.style.color = '#dc3545';
-                }}
-              >
-                Cancel Subscription
-              </button>
-            )}
+        <div style={{ backgroundColor: '#fff', padding: '1.5em', borderRadius: '8px', marginBottom: '1em', border: '1px solid #dee2e6' }}>
+          <h3 style={{ margin: '0 0 1em 0', color: '#333' }}>{getClientDisplayName(selectedClient)}</h3>
+          <div style={{ display: 'flex', gap: '2em', flexWrap: 'wrap', fontSize: '0.95em', color: '#666' }}>
+            <span><strong>Agent ID:</strong> {selectedClient.clientid}</span>
+            <span><strong>Level:</strong> <span style={{
+              backgroundColor: getLevelColor(selectedClient.subscription_level || selectedClient.level),
+              color: 'white', padding: '0.15em 0.5em', borderRadius: '3px', fontSize: '0.9em', textTransform: 'capitalize'
+            }}>{selectedClient.subscription_level || selectedClient.level || 'basic'}</span></span>
+            {selectedClient.company && <span><strong>Company:</strong> {selectedClient.company}</span>}
+            {selectedClient.domain && <span><strong>Domain:</strong> {selectedClient.domain}</span>}
           </div>
-
-          {/* Success/Error Messages */}
-          {cancelSuccess && (
-            <div style={{
-              marginTop: '1em',
-              padding: '1em',
-              backgroundColor: '#d4edda',
-              border: '1px solid #c3e6cb',
-              borderRadius: '4px',
-              color: '#155724'
-            }}>
-              ✅ {cancelSuccess}
-            </div>
-          )}
         </div>
       )}
 
-      {/* Tabs Navigation */}
-      <div style={tabContainerStyle}>
-        <button 
-          style={tabStyle(activeTab === 'configurations')}
-          onClick={() => setActiveTab('configurations')}
-        >
-          Configurations
-        </button>
-        <button 
-          style={tabStyle(activeTab === 'models')}
-          onClick={() => setActiveTab('models')}
-        >
-          Models
-        </button>
-        <button 
-          style={tabStyle(activeTab === 'integrations')}
-          onClick={() => setActiveTab('integrations')}
-        >
-          Integrations
-        </button>
-        <button 
-          style={tabStyle(activeTab === 'conversations')}
-          onClick={() => setActiveTab('conversations')}
-        >
-          Conversations
-        </button>
+      {/* Tabs */}
+      <div style={{ display: 'flex', borderBottom: '2px solid #ddd', marginTop: '1.5em', marginBottom: '2em', flexWrap: 'wrap' }}>
+        <button style={tabStyle(activeTab === 'configurations')} onClick={() => setActiveTab('configurations')}>Configurations</button>
+        <button style={tabStyle(activeTab === 'models')} onClick={() => setActiveTab('models')}>Models</button>
+        <button style={tabStyle(activeTab === 'integrations')} onClick={() => setActiveTab('integrations')}>Integrations</button>
+        <button style={tabStyle(activeTab === 'conversations')} onClick={() => setActiveTab('conversations')}>Conversations</button>
       </div>
 
       {/* Tab Content */}
-      {loadingClients ? (
-        <div style={{ textAlign: 'center', padding: '2em' }}>
-          <p>Loading agents...</p>
-        </div>
+      {loadingData ? (
+        <div style={{ textAlign: 'center', padding: '2em' }}><p>Loading...</p></div>
       ) : selectedClient ? (
         <>
           {activeTab === 'configurations' && <ConfigurationsTab user={selectedClient} clientId={selectedClientId} />}
@@ -1203,7 +620,7 @@ export default function Dashboard() {
         </>
       ) : (
         <div style={{ textAlign: 'center', padding: '2em', color: '#666' }}>
-          <p>No agent selected. Please select an agent above.</p>
+          <p>No agent selected. {agentsInSubscription.length === 0 && canCreateAgentInSubscription && 'Create one to get started!'}</p>
         </div>
       )}
     </div>
