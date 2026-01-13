@@ -146,7 +146,7 @@ When a user signs up, you'll see:
 - `infoEmail`: String - Returns "info@botwerx.ai" for botwerx.ai, "info@aibridge.global" for all others
 - `adminEmail`: String - Returns "admin@botwerx.ai" for botwerx.ai, "admin@aibridge.global" for all others
 - `supportEmail`: String - Returns "support@botwerx.ai" for botwerx.ai, "support@aibridge.global" for all others
-- `websiteUrl`: String - Returns "https://botwerx.ai" for botwerx.ai, "https://aibridge.global" for all others
+- `websiteUrl`: String - Returns "https://www.botwerx.ai" for botwerx.ai, "https://aibridge.global" for all others
 - `isBotWerx`: Boolean convenience property
 - `isBase`: Boolean convenience property
 - `isLocal`: Boolean convenience property
