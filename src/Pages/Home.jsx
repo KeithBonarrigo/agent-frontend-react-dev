@@ -1,8 +1,10 @@
 import { useState } from "react";
 import SignupForm from "../components/SignupForm";
+import { useDomain } from "../contexts/DomainContext";
 import "../styles/Home.css";
 
 export default function Home() {
+  const { domainInfo } = useDomain();
   const [contactForm, setContactForm] = useState({
     name: "",
     email: "",
