@@ -82,9 +82,25 @@ export const DomainProvider = ({ children }) => {
     return domainInfo?.domainType === type;
   };
 
-  // Helper function to get the target domain for API calls or redirects
-  const getTargetDomain = () => {
-    return domainInfo?.targetDomain || 'base.aibridge.global';
+  // Helper function to get company name based on domain
+  const getCompanyName = () => {
+    if (domainInfo?.domainType === 'botwerx') {
+      return 'Botwerx, LLC';
+    }
+    return 'AI Bridge';
+  };
+
+  // Helper functions to get domain-specific email addresses
+  const getInfoEmail = () => {
+    return domainInfo?.domainType === 'botwerx' ? 'info@botwerx.ai' : 'info@aibridge.global';
+  };
+
+  const getAdminEmail = () => {
+    return domainInfo?.domainType === 'botwerx' ? 'admin@botwerx.ai' : 'admin@aibridge.global';
+  };
+
+  const getSupportEmail = () => {
+    return domainInfo?.domainType === 'botwerx' ? 'support@botwerx.ai' : 'support@aibridge.global';
   };
 
   const value = {
@@ -93,7 +109,11 @@ export const DomainProvider = ({ children }) => {
     getTargetDomain,
     isBotWerx: domainInfo?.domainType === 'botwerx',
     isBase: domainInfo?.domainType === 'base',
-    isLocal: domainInfo?.domainType === 'local'
+    isLocal: domainInfo?.domainType === 'local',
+    companyName: domainInfo?.domainType === 'botwerx' ? 'Botwerx, LLC' : 'AI Bridge',
+    infoEmail: domainInfo?.domainType === 'botwerx' ? 'info@botwerx.ai' : 'info@aibridge.global',
+    adminEmail: domainInfo?.domainType === 'botwerx' ? 'admin@botwerx.ai' : 'admin@aibridge.global',
+    supportEmail: domainInfo?.domainType === 'botwerx' ? 'support@botwerx.ai' : 'support@aibridge.global'
   };
 
   return (

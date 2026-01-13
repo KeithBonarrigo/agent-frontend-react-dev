@@ -1,5 +1,24 @@
+import { useDomain } from "../contexts/DomainContext";
+
 function HomeFooter() {
   const currentYear = new Date().getFullYear();
+  const { domainInfo, companyName } = useDomain();
+
+  // Get logo based on domain
+  const getLogoSrc = () => {
+    if (domainInfo?.domainType === 'botwerx') {
+      return '/img/logo-botwerx.jpeg';
+    }
+    return '/img/AI-Bridge-Logo-Med2.png';
+  };
+
+  // Get company address based on domain
+  const getCompanyAddress = () => {
+    if (domainInfo?.domainType === 'botwerx') {
+      return 'Botwerx, LLC - 45 S 3rd St. Pacific Beach, WA 98571-5071';
+    }
+    return 'AI Bridge - 45 S 3rd St. Pacific Beach, WA 98571-5071';
+  };
 
   return (
     <footer className="home-footer">
@@ -7,7 +26,7 @@ function HomeFooter() {
         <div className="home-footer-content">
           <div className="home-footer-left">
             <div className="home-footer-logo">
-              <img src="/img/AI-Bridge-Logo-Med2.png" alt="AI Bridge Logo" />
+              <img src={getLogoSrc()} alt={`${companyName} Logo`} />
             </div>
             {/*<p className="home-footer-tagline">
               AI Solutions for Everyday Business
@@ -33,7 +52,7 @@ function HomeFooter() {
                 Privacy
               </a>
             </p>
-            <p>AI Bridge - 45 S 3rd St. Pacific Beach, WA 98571-5071</p>
+            <p>{getCompanyAddress()}</p>
           </div>
 
           <div className="home-social-icons">

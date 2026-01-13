@@ -1,6 +1,9 @@
 import "../styles/ContentStyles.css";
+import { useDomain } from "../contexts/DomainContext";
 
 export default function PrivacyPolicy() {
+  const { infoEmail } = useDomain();
+
   return (
     <div className="policy-page">
       <section className="policy-header">
@@ -25,7 +28,7 @@ export default function PrivacyPolicy() {
                 Business Address: 45 S 3rd St, Pacific Beach, WA 98571-5017,
                 United States
               </li>
-              <li>Email Contact: info@aibridge.global</li>
+              <li>Email Contact: {infoEmail}</li>
               <li>Unified Business ID (UBI): 602491939</li>
             </ul>
           </div>
@@ -163,7 +166,7 @@ export default function PrivacyPolicy() {
               <li>Limit data processing in certain situations.</li>
             </ul>
             <p>
-              To exercise any of these rights, contact us at info@aibridge.global
+              To exercise any of these rights, contact us at {infoEmail}
               with a clear explanation of your request. We respond to valid
               requests within a reasonable time.
             </p>
@@ -209,7 +212,7 @@ export default function PrivacyPolicy() {
             <h2>13. Contact</h2>
             <p>
               For questions or concerns regarding this Privacy Policy or the
-              handling of your personal data, you may contact us at: <a href="mailto:info@aibridge.global">info@aibridge.global</a>
+              handling of your personal data, you may contact us at: <a href={`mailto:${infoEmail}`}>{infoEmail}</a>
             </p>
           </div>
         </div>

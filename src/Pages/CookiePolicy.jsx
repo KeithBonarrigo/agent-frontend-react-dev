@@ -1,6 +1,9 @@
 import "../styles/ContentStyles.css";
+import { useDomain } from "../contexts/DomainContext";
 
 export default function CookiePolicy() {
+  const { infoEmail } = useDomain();
+
   return (
     <div className="policy-page">
       <section className="policy-header">
@@ -129,7 +132,7 @@ export default function CookiePolicy() {
             <h2>6. Contact</h2>
             <p>
               If you have questions about this Cookie Policy or our use of
-              cookies, please contact us at: <a href="mailto:info@aibridge.global">info@aibridge.global</a>
+              cookies, please contact us at: <a href={`mailto:${infoEmail}`}>{infoEmail}</a>
             </p>
           </div>
         </div>

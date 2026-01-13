@@ -30,7 +30,18 @@ Example component showing how to use the domain context
 import { useDomain } from '../contexts/DomainContext';
 
 function MyComponent() {
-  const { domainInfo, isDomain, getTargetDomain, isBotWerx, isBase, isLocal } = useDomain();
+  const {
+    domainInfo,
+    isDomain,
+    getTargetDomain,
+    companyName,
+    infoEmail,
+    adminEmail,
+    supportEmail,
+    isBotWerx,
+    isBase,
+    isLocal
+  } = useDomain();
 
   // Access domain information
   console.log(domainInfo);
@@ -43,6 +54,16 @@ function MyComponent() {
   //   fullUrl: "https://botwerx.ai/signup",
   //   timestamp: "2026-01-12T..."
   // }
+
+  // Use company name and emails in your UI
+  return (
+    <div>
+      <h1>Welcome to {companyName}</h1>
+      <p>Copyright © {companyName}. All rights reserved.</p>
+      <p>Contact us at: <a href={`mailto:${infoEmail}`}>{infoEmail}</a></p>
+      <p>Support: <a href={`mailto:${supportEmail}`}>{supportEmail}</a></p>
+    </div>
+  );
 
   // Check domain type
   if (isBotWerx) {
@@ -119,6 +140,10 @@ When a user signs up, you'll see:
 ### Helper functions:
 - `isDomain(type)`: Check if current domain matches type
 - `getTargetDomain()`: Get the canonical domain
+- `companyName`: String - Returns "Botwerx, LLC" for botwerx.ai, "AI Bridge" for all others
+- `infoEmail`: String - Returns "info@botwerx.ai" for botwerx.ai, "info@aibridge.global" for all others
+- `adminEmail`: String - Returns "admin@botwerx.ai" for botwerx.ai, "admin@aibridge.global" for all others
+- `supportEmail`: String - Returns "support@botwerx.ai" for botwerx.ai, "support@aibridge.global" for all others
 - `isBotWerx`: Boolean convenience property
 - `isBase`: Boolean convenience property
 - `isLocal`: Boolean convenience property

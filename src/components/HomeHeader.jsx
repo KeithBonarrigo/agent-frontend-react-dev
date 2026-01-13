@@ -6,7 +6,7 @@ export default function HomeHeader() {
   const location = useLocation();
   const navigate = useNavigate();
   const { user, isLoggedIn, logout } = useUser();
-  const { domainInfo } = useDomain();
+  const { domainInfo, companyName } = useDomain();
 
   const scrollToSection = (sectionId) => {
     const el = document.getElementById(sectionId);
@@ -48,7 +48,7 @@ export default function HomeHeader() {
       console.log("🎨 Using BotWerx logo for domain:", hostname);
       return {
         src: '/img/logo-botwerx.jpeg',
-        alt: 'BotWerx'
+        alt: companyName
       };
     }
 
@@ -56,7 +56,7 @@ export default function HomeHeader() {
     console.log("🎨 Using default AI Bridge logo for domain:", hostname);
     return {
       src: '/img/AI-Bridge-Logo-Med2.png',
-      alt: 'AI Bridge'
+      alt: companyName
     };
   };
 

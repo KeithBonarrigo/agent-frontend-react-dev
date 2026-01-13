@@ -1,6 +1,9 @@
 import "../styles/ContentStyles.css";
+import { useDomain } from "../contexts/DomainContext";
 
 export default function TermsAndConditions() {
+  const { companyName, supportEmail } = useDomain();
+
   return (
     <div className="policy-page">
       <section className="policy-header">
@@ -98,7 +101,7 @@ export default function TermsAndConditions() {
             <h2>6. Intellectual Property</h2>
             <p>
               All content, code, and intellectual property related to the
-              chatbot are the property of AI Bridge or its licensors. You may
+              chatbot are the property of {companyName} or its licensors. You may
               not reproduce, distribute, or create derivative works without
               written permission.
             </p>
@@ -153,7 +156,7 @@ export default function TermsAndConditions() {
               data, please contact us:
             </p>
             <p>
-              Email: <a href="mailto:support@aibridge.global">support@aibridge.global</a>
+              Email: <a href={`mailto:${supportEmail}`}>{supportEmail}</a>
             </p>
             <p>3242 NE 3rd Ave. Camas, WA 98607</p>
           </div>

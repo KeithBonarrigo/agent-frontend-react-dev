@@ -1,6 +1,9 @@
 import "../styles/ContentStyles.css";
+import { useDomain } from "../contexts/DomainContext";
 
 export default function DataDeletionPolicy() {
+  const { companyName, infoEmail } = useDomain();
+
   return (
     <div className="policy-page">
       {/* Header Section */}
@@ -16,7 +19,7 @@ export default function DataDeletionPolicy() {
         <div className="home-container">
           <div className="policy-intro">
             <p>
-              <strong>At AI Bridge, we are committed to protecting your privacy and
+              <strong>At {companyName}, we are committed to protecting your privacy and
               ensuring you have control over your data. This User Data Deletion
               Policy outlines how users can request the deletion of their data
               collected through Facebook or Instagram integrations with our
@@ -73,7 +76,7 @@ export default function DataDeletionPolicy() {
               <h3>Option B: Direct Request</h3>
               <p>
                 You can request deletion by emailing us at:{" "}
-                <a href="mailto:info@aibridge.global">info@aibridge.global</a>
+                <a href={`mailto:${infoEmail}`}>{infoEmail}</a>
               </p>
               <p>Please include the following in your email:</p>
               <ul>
@@ -108,11 +111,11 @@ export default function DataDeletionPolicy() {
             </p>
             <div className="policy-contact">
               <p>
-                <strong>AI Bridge</strong>
+                <strong>{companyName}</strong>
                 <br />
                 3242 NE 3rd Ave Camas, WA 98607
                 <br />
-                <a href="mailto:info@aibridge.global">info@aibridge.global</a>
+                <a href={`mailto:${infoEmail}`}>{infoEmail}</a>
                 <br />
                 
                 <a  href="https://aibridge.global"
