@@ -289,6 +289,23 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
+  transition: transform 0.3s ease;
+}
+
+.home-card:hover .home-card-icon {
+  animation: jiggle 0.6s ease-in-out;
+}
+
+@keyframes jiggle {
+  0%, 100% {
+    transform: rotate(0deg);
+  }
+  10%, 30%, 50%, 70%, 90% {
+    transform: rotate(-15deg) scale(1.1);
+  }
+  20%, 40%, 60%, 80% {
+    transform: rotate(15deg) scale(1.1);
+  }
 }
 
 .home-card-title {
@@ -388,28 +405,29 @@ body {
   padding: 1.25rem 1.5rem;
   font-size: 1.15rem;
   font-weight: 500;
-  background: linear-gradient(135deg, #f8f9ff 0%, #ffffff 100%);
-  border: 2px solid #e0e7ff;
+  background: linear-gradient(135deg, #4a3668 0%, #3a2656 100%);
+  border: 2px solid #6b4a9a;
   border-radius: 12px;
   display: flex;
   align-items: center;
   gap: 1rem;
   transition: all 0.3s ease;
-  box-shadow: 0 2px 8px rgba(49, 9, 86, 0.08);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  color: #f0f0f0;
 }
 
 .home-service-item:hover {
   transform: translateY(-4px);
-  box-shadow: 0 6px 20px rgba(49, 9, 86, 0.15);
-  border-color: #310956;
-  background: linear-gradient(135deg, #ffffff 0%, #f8f9ff 100%);
+  box-shadow: 0 6px 20px rgba(255, 152, 0, 0.3);
+  border-color: #ff9800;
+  background: linear-gradient(135deg, #5a4678 0%, #4a3666 100%);
 }
 
 .home-checkmark {
-  color: #310956;
-  font-weight: bold;
-  font-size: 1.5rem;
-  background: linear-gradient(135deg, #310956 0%, #5b21b6 100%);
+  color: #ff9800;
+  font-weight: 900;
+  font-size: 2rem;
+  background: linear-gradient(135deg, #ff9800 0%, #ffa726 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -501,8 +519,8 @@ body {
 }
 
 .home-modal-title {
-  color: #ffffff;
-  background: #1e3a8a;
+  color: #f0f0f0;
+  background: linear-gradient(135deg, #4a3668 0%, #3a2656 100%);
   font-size: 2rem;
   margin: -40px -40px 1.5rem -40px;
   padding: 2rem 40px;
@@ -512,11 +530,17 @@ body {
   align-items: center;
   justify-content: center;
   gap: 1rem;
+  border-bottom: 2px solid #6b4a9a;
 }
 
 .home-modal-icon {
   font-size: 1.8rem;
   flex-shrink: 0;
+  color: #ff9800;
+  background: linear-gradient(135deg, #ff9800 0%, #ffa726 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
 .home-modal-description {

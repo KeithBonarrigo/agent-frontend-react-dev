@@ -25,32 +25,32 @@ export default function Home() {
     {
       title: "24/7 Customer Support",
       icon: "fa-clock",
-      description: "Never miss a customer inquiry again. Our AI agents work around the clock, providing instant responses to customer questions at any time of day or night. Whether it's 3 PM or 3 AM, your customers receive immediate, helpful assistance that keeps them engaged and satisfied. This continuous availability ensures you capture every opportunity and maintain customer trust, even outside business hours."
+      description: "<strong>Never miss a customer inquiry again.</strong> Our AI agents work around the clock, providing instant responses to customer questions at any time of day or night. Whether it's 3 PM or 3 AM, your customers receive <strong>immediate, helpful assistance</strong> that keeps them engaged and satisfied. This continuous availability ensures you <strong>capture every opportunity</strong> and maintain customer trust, even outside business hours."
     },
     {
       title: "Instant Response Times",
       icon: "fa-bolt",
-      description: "Say goodbye to long wait times. Our AI agents respond to customer inquiries in milliseconds, dramatically reducing response times from hours or days to seconds. This immediate engagement keeps customers interested, prevents them from bouncing to competitors, and creates a seamless experience that modern consumers expect. Fast responses lead to higher satisfaction rates and increased conversion."
+      description: "<strong>Say goodbye to long wait times.</strong> Our AI agents respond to customer inquiries in milliseconds, <strong>dramatically reducing response times from hours or days to seconds.</strong> This immediate engagement keeps customers interested, prevents them from bouncing to competitors, and creates a seamless experience that modern consumers expect. <strong>Fast responses lead to higher satisfaction rates and increased conversion.</strong>"
     },
     {
       title: "Automated Lead Qualification",
       icon: "fa-filter",
-      description: "Let AI handle the heavy lifting of lead qualification. Our intelligent agents ask the right questions, gather essential information, and automatically score and route leads based on their potential value. This ensures your sales team focuses only on high-quality prospects, saving time and increasing close rates. The system learns from every interaction, continuously improving its qualification accuracy."
+      description: "<strong>Let AI handle the heavy lifting of lead qualification.</strong> Our intelligent agents ask the right questions, gather essential information, and <strong>automatically score and route leads</strong> based on their potential value. This ensures your sales team <strong>focuses only on high-quality prospects,</strong> saving time and increasing close rates. The system learns from every interaction, continuously improving its qualification accuracy."
     },
     {
       title: "Reduced Operational Costs",
       icon: "fa-piggy-bank",
-      description: "Significantly lower your customer service expenses while improving quality. AI agents handle routine inquiries at a fraction of the cost of human agents, allowing you to scale support without proportionally scaling headcount. Reduce overhead costs including training, benefits, and infrastructure while maintaining or even improving service quality. The savings compound as your business grows."
+      description: "<strong>Significantly lower your customer service expenses while improving quality.</strong> AI agents handle routine inquiries at <strong>a fraction of the cost of human agents,</strong> allowing you to scale support without proportionally scaling headcount. <strong>Reduce overhead costs</strong> including training, benefits, and infrastructure while maintaining or even improving service quality. The savings compound as your business grows."
     },
     {
       title: "Scalable Customer Engagement",
       icon: "fa-chart-line",
-      description: "Handle thousands of simultaneous conversations without breaking a sweat. Unlike human teams that require hiring and training to scale, AI agents can instantly accommodate traffic spikes, seasonal surges, or rapid business growth. Whether you're handling 10 or 10,000 conversations, maintain the same high-quality experience for every customer without additional costs or delays."
+      description: "<strong>Handle thousands of simultaneous conversations without breaking a sweat.</strong> Unlike human teams that require hiring and training to scale, AI agents can <strong>instantly accommodate traffic spikes, seasonal surges, or rapid business growth.</strong> Whether you're handling 10 or 10,000 conversations, <strong>maintain the same high-quality experience for every customer</strong> without additional costs or delays."
     },
     {
       title: "Enhanced Customer Insights",
       icon: "fa-lightbulb",
-      description: "Turn every conversation into valuable business intelligence. AI agents automatically capture, analyze, and categorize customer interactions, revealing patterns, pain points, and opportunities you might otherwise miss. Gain deep insights into customer needs, common questions, and emerging trends. Use this data to refine products, improve services, and make informed strategic decisions that drive growth."
+      description: "<strong>Turn every conversation into valuable business intelligence.</strong> AI agents automatically capture, analyze, and categorize customer interactions, <strong>revealing patterns, pain points, and opportunities</strong> you might otherwise miss. Gain deep insights into customer needs, common questions, and emerging trends. Use this data to <strong>refine products, improve services, and make informed strategic decisions</strong> that drive growth."
     }
   ];
 
@@ -336,7 +336,7 @@ export default function Home() {
               <i className={`fa-solid ${serviceItems[activeServiceModal].icon} home-modal-icon`}></i>
               {serviceItems[activeServiceModal].title}
             </h2>
-            <p className="home-modal-description">{serviceItems[activeServiceModal].description}</p>
+            <p className="home-modal-description" dangerouslySetInnerHTML={{ __html: serviceItems[activeServiceModal].description }}></p>
           </div>
         </div>
       )}
