@@ -1,10 +1,12 @@
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useUser } from "../contexts/UserContext";
+import { useDomain } from "../contexts/DomainContext";
 
 export default function HomeHeader() {
   const location = useLocation();
   const navigate = useNavigate();
   const { user, isLoggedIn, logout } = useUser();
+  const { domainInfo } = useDomain();
 
   const scrollToSection = (sectionId) => {
     const el = document.getElementById(sectionId);
@@ -38,12 +40,34 @@ export default function HomeHeader() {
     }
   };
 
+  // Determine which logo to display based on domain
+  const getLogoConfig = () => {
+    const hostname = domainInfo?.hostname;
+
+    if (hostname === 'botwerx.ai' || hostname?.includes('botwerx.ai')) {
+      console.log("🎨 Using BotWerx logo for domain:", hostname);
+      return {
+        src: '/img/logo-botwerx.jpg',
+        alt: 'BotWerx'
+      };
+    }
+
+    // Default logo for all other domains
+    console.log("🎨 Using default AI Bridge logo for domain:", hostname);
+    return {
+      src: '/img/AI-Bridge-Logo-Med2.png',
+      alt: 'AI Bridge'
+    };
+  };
+
+  const logoConfig = getLogoConfig();
+
   return (
     <header className="home-header">
       <nav className="home-nav">
         <div className="home-logo">
           <Link to="/">
-            <img src="/img/AI-Bridge-Logo-Med2.png" alt="AI Bridge" />
+            <img src={logoConfig.src} alt={logoConfig.alt} />
           </Link>
         </div>
 

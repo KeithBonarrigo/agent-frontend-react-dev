@@ -23,9 +23,9 @@ export const DomainProvider = ({ children }) => {
     let domainType = 'unknown';
     let targetDomain = null;
 
-    if (currentDomain.includes('easybroker')) {
-      domainType = 'easybroker';
-      targetDomain = 'easybroker.aibridge.global';
+    if (currentDomain === 'botwerx.ai' || currentDomain.includes('botwerx.ai')) {
+      domainType = 'botwerx';
+      targetDomain = 'botwerx.ai';
     } else if (currentDomain.includes('base')) {
       domainType = 'base';
       targetDomain = 'base.aibridge.global';
@@ -56,6 +56,17 @@ export const DomainProvider = ({ children }) => {
     console.log("Full URL:", fullUrl);
     console.log("===================");
 
+    // Log detected domain type
+    if (domainType === 'botwerx') {
+      console.log("🤖 BotWerx Domain Detected");
+    } else if (domainType === 'base') {
+      console.log("🏠 Base Domain Detected");
+    } else if (domainType === 'local') {
+      console.log("💻 Local Development Environment");
+    } else {
+      console.log("🌐 Production Domain:", currentDomain);
+    }
+
     setDomainInfo(info);
   }, []);
 
@@ -80,7 +91,7 @@ export const DomainProvider = ({ children }) => {
     domainInfo,
     isDomain,
     getTargetDomain,
-    isEasyBroker: domainInfo?.domainType === 'easybroker',
+    isBotWerx: domainInfo?.domainType === 'botwerx',
     isBase: domainInfo?.domainType === 'base',
     isLocal: domainInfo?.domainType === 'local'
   };

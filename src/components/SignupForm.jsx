@@ -213,25 +213,14 @@ export default function SignupForm({ isOpen }) {
         console.log("🔍 Domain type:", domainInfo.domainType);
         console.log("🔍 User selected level:", level);
 
-        // If user is on easybroker domain OR selected easybroker level, use easybroker domain
-        if (domainInfo.domainType === 'easybroker' || level === 'easybroker') {
-          console.log("✅ Assigning EasyBroker domain");
-          return 'easybroker.aibridge.global';
-        }
-
-        // Otherwise use the current domain they're on
+        // Use the current domain they're visiting from (unless it's local development)
         if (domainInfo.domainType !== 'local') {
           console.log("✅ Using current domain:", currentDomain);
           return currentDomain;
         }
       }
 
-      // Fallback: Use level-based logic if no context available
-      if (level === 'easybroker') {
-        console.log("⚠️ Fallback: Using EasyBroker domain from level");
-        return 'easybroker.aibridge.global';
-      }
-
+      // Fallback for local development or if no context available
       console.log("⚠️ Fallback: Using default base domain");
       return 'base.aibridge.global';
     };

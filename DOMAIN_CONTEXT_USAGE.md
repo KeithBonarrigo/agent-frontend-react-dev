@@ -30,23 +30,23 @@ Example component showing how to use the domain context
 import { useDomain } from '../contexts/DomainContext';
 
 function MyComponent() {
-  const { domainInfo, isDomain, getTargetDomain, isEasyBroker, isBase, isLocal } = useDomain();
+  const { domainInfo, isDomain, getTargetDomain, isBotWerx, isBase, isLocal } = useDomain();
 
   // Access domain information
   console.log(domainInfo);
   // {
-  //   hostname: "easybroker.aibridge.global",
-  //   domainType: "easybroker",
-  //   targetDomain: "easybroker.aibridge.global",
+  //   hostname: "botwerx.ai",
+  //   domainType: "botwerx",
+  //   targetDomain: "botwerx.ai",
   //   protocol: "https:",
   //   port: "",
-  //   fullUrl: "https://easybroker.aibridge.global/signup",
+  //   fullUrl: "https://botwerx.ai/signup",
   //   timestamp: "2026-01-12T..."
   // }
 
   // Check domain type
-  if (isEasyBroker) {
-    // Show EasyBroker-specific content
+  if (isBotWerx) {
+    // Show BotWerx-specific content
   }
 
   if (isBase) {
@@ -58,19 +58,19 @@ function MyComponent() {
   }
 
   // Or use the helper function
-  if (isDomain('easybroker')) {
-    // EasyBroker logic
+  if (isDomain('botwerx')) {
+    // BotWerx logic
   }
 
   // Get the target domain for redirects or API calls
-  const domain = getTargetDomain(); // returns 'easybroker.aibridge.global'
+  const domain = getTargetDomain(); // returns 'botwerx.ai' or 'base.aibridge.global'
 }
 ```
 
 ## Domain Detection Logic
 
 The context automatically detects:
-- **EasyBroker Domain**: Any URL containing 'easybroker' → `domainType: 'easybroker'`
+- **BotWerx Domain**: botwerx.ai → `domainType: 'botwerx'`
 - **Base Domain**: Any URL containing 'base' → `domainType: 'base'`
 - **Local Development**: localhost or 127.0.0.1 → `domainType: 'local'`
 - **Production**: Any other domain → `domainType: 'production'`
@@ -119,7 +119,7 @@ When a user signs up, you'll see:
 ### Helper functions:
 - `isDomain(type)`: Check if current domain matches type
 - `getTargetDomain()`: Get the canonical domain
-- `isEasyBroker`: Boolean convenience property
+- `isBotWerx`: Boolean convenience property
 - `isBase`: Boolean convenience property
 - `isLocal`: Boolean convenience property
 
