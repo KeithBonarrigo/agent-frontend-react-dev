@@ -65,12 +65,16 @@ export const DomainProvider = ({ children }) => {
       console.log("🌐 Production Domain:", currentDomain);
     }
 
-    // Update favicon based on domain type
+    // Update favicon and title based on domain type
     const faviconPath = domainType === 'botwerx' ? '/favicon-botwerx.png' : '/favicon-ai-fav.png';
+    const pageTitle = domainType === 'botwerx' ? 'BotWerx - Agent Driven Engagement' : 'AIBridge - Agent Driven Engagement';
+
     const favicon = document.querySelector('link[rel="icon"]');
     if (favicon) {
       favicon.href = faviconPath;
     }
+
+    document.title = pageTitle;
 
     setDomainInfo(info);
   }, []);
