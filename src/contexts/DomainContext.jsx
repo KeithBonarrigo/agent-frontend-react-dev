@@ -19,23 +19,21 @@ export const DomainProvider = ({ children }) => {
     const protocol = window.location.protocol;
     const port = window.location.port;
 
-    // Determine domain type
-    let domainType = 'unknown';
-    let targetDomain = null;
+    // Determine domain type - defaults to botwerx
+    let domainType = 'botwerx';
+    let targetDomain = 'botwerx.ai';
 
-    if (currentDomain === 'botwerx.ai' || currentDomain.includes('botwerx.ai')) {
-      domainType = 'botwerx';
-      targetDomain = 'botwerx.ai';
-    } else if (currentDomain.includes('base')) {
+    if (currentDomain.includes('aibridge.global') || currentDomain.includes('base')) {
       domainType = 'base';
       targetDomain = 'base.aibridge.global';
     } else if (currentDomain === 'localhost' || currentDomain === '127.0.0.1') {
       domainType = 'local';
       targetDomain = 'localhost';
-    } else {
-      domainType = 'production';
-      targetDomain = currentDomain;
+    } else if (currentDomain === 'botwerx.ai' || currentDomain.includes('botwerx.ai')) {
+      domainType = 'botwerx';
+      targetDomain = 'botwerx.ai';
     }
+    // Default case: uses botwerx (already set above)
 
     const info = {
       hostname: currentDomain,
