@@ -67,7 +67,7 @@ export const DomainProvider = ({ children }) => {
 
     // Update favicon and title based on domain type
     const faviconPath = domainType === 'botwerx' ? '/favicon-botwerx.png' : '/favicon-ai-fav.png';
-    const pageTitle = 'Agent Driven Engagement';
+    const pageTitle = domainType === 'botwerx' ? 'BotWerx - Agent Driven Engagement' : 'AIBridge - Agent Driven Engagement';
 
     const favicon = document.querySelector('link[rel="icon"]');
     if (favicon) {
