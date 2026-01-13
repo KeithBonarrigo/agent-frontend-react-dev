@@ -231,15 +231,15 @@ export default function Home() {
       {/* Slider Section */}
       <section id="solutions" className="home-slider-section">
         <div className="home-container">
-          <h2 className="home-section-title">How Can AI Help My Business?</h2>
+          <h2 className="home-section-title">What Can AI Agents Do For You?</h2>
 
           <div className="home-slider-container">
             {[
-              { img: "/img/icon1.png", text: "Automate Your Conversations" },
+              { img: "/img/icon1.png", text: "Automate Conversations" },
               { img: "/img/icon2.jpg", text: "Qualify Leads Instantly" },
-              { img: "/img/icon3.png", text: "Handle Customer Inquiries" },
+              { img: "/img/icon3.png", text: "Handle Inquiries" },
               { img: "/img/icon4.png", text: "Scale Support Seamlessly" },
-              { img: "/img/icon5.png", text: "Personalize Every Interaction" },
+              { img: "/img/icon5.png", text: "Personalize Interactions" },
               { img: "/img/icon6.png", text: "Free Up Your Team" },
             ].map((item, index) => (
               <div key={index} className="home-slider-item">
