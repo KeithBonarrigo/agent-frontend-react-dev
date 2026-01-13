@@ -47,7 +47,7 @@ export default function HomeHeader() {
     if (hostname === 'botwerx.ai' || hostname?.includes('botwerx.ai')) {
       console.log("🎨 Using BotWerx logo for domain:", hostname);
       return {
-        src: '/img/logo-botwerx.jpg',
+        src: '/img/logo-botwerx.jpeg',
         alt: 'BotWerx'
       };
     }
