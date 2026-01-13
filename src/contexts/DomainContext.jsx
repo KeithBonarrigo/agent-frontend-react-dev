@@ -68,6 +68,10 @@ export const DomainProvider = ({ children }) => {
     // Update favicon and title based on domain type
     const faviconPath = domainType === 'botwerx' ? '/favicon-botwerx.png' : '/favicon-ai-fav.png';
     const pageTitle = domainType === 'botwerx' ? 'BotWerx - Agent Driven Engagement' : 'AIBridge - Agent Driven Engagement';
+    const description = domainType === 'botwerx'
+      ? 'BotWerx delivers intelligent agent-driven solutions to transform your business engagement and customer experience.'
+      : 'AIBridge provides cutting-edge agent-driven engagement solutions to connect your business with customers seamlessly.';
+    const siteName = domainType === 'botwerx' ? 'BotWerx' : 'AIBridge';
 
     const favicon = document.querySelector('link[rel="icon"]');
     if (favicon) {
@@ -75,6 +79,32 @@ export const DomainProvider = ({ children }) => {
     }
 
     document.title = pageTitle;
+
+    // Update or create meta tags
+    const updateMetaTag = (name, content, isProperty = false) => {
+      const attribute = isProperty ? 'property' : 'name';
+      let meta = document.querySelector(`meta[${attribute}="${name}"]`);
+      if (!meta) {
+        meta = document.createElement('meta');
+        meta.setAttribute(attribute, name);
+        document.head.appendChild(meta);
+      }
+      meta.setAttribute('content', content);
+    };
+
+    // Standard meta tags
+    updateMetaTag('description', description);
+
+    // Open Graph tags for social sharing
+    updateMetaTag('og:title', pageTitle, true);
+    updateMetaTag('og:description', description, true);
+    updateMetaTag('og:site_name', siteName, true);
+    updateMetaTag('og:type', 'website', true);
+
+    // Twitter Card tags
+    updateMetaTag('twitter:card', 'summary_large_image');
+    updateMetaTag('twitter:title', pageTitle);
+    updateMetaTag('twitter:description', description);
 
     setDomainInfo(info);
   }, []);
