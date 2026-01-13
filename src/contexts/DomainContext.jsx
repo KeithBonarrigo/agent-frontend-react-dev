@@ -65,6 +65,13 @@ export const DomainProvider = ({ children }) => {
       console.log("🌐 Production Domain:", currentDomain);
     }
 
+    // Update favicon based on domain type
+    const faviconPath = domainType === 'botwerx' ? '/favicon-botwerx.png' : '/favicon-ai-fav.png';
+    const favicon = document.querySelector('link[rel="icon"]');
+    if (favicon) {
+      favicon.href = faviconPath;
+    }
+
     setDomainInfo(info);
   }, []);
 
