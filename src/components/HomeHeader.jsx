@@ -11,7 +11,7 @@ export default function HomeHeader() {
   const scrollToSection = (sectionId) => {
     const el = document.getElementById(sectionId);
     if (el) {
-      el.scrollIntoView({ behavior: "smooth" });
+      el.scrollIntoView({ behavior: "smooth", block: "start" });
     }
   };
 
@@ -88,16 +88,11 @@ export default function HomeHeader() {
             </a>
           </li>
           <li>
-            <a href="#faq" onClick={(e) => handleNavClick(e, "faq")}>
-              FAQ
-            </a>
-          </li>
-          <li>
             <a href="#contact" onClick={(e) => handleNavClick(e, "contact")}>
               Contact
             </a>
           </li>
-          
+
           {/* Auth Links */}
           {isLoggedIn ? (
             <>

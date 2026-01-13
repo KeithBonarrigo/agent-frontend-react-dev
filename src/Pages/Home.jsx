@@ -59,16 +59,7 @@ export default function Home() {
     // Wait for DOM to be ready
     const initializeCarousel = () => {
       const slider = sliderRef.current;
-      if (!slider) {
-        console.log('Slider not found');
-        return;
-      }
-
-      console.log('Initializing carousel...', {
-        scrollWidth: slider.scrollWidth,
-        clientWidth: slider.clientWidth,
-        items: slider.querySelectorAll('.home-slider-item').length
-      });
+      if (!slider) return;
 
       let scrollInterval;
       let isUserInteracting = false;
@@ -78,11 +69,8 @@ export default function Home() {
 
         scrollInterval = setInterval(() => {
           if (!isUserInteracting && slider) {
-            const maxScroll = slider.scrollWidth - slider.clientWidth;
-            const currentScroll = slider.scrollLeft;
             const midPoint = slider.scrollWidth / 2;
-
-            console.log('Auto-scrolling...', { currentScroll, maxScroll, midPoint });
+            const currentScroll = slider.scrollLeft;
 
             // Infinite loop: when we reach the midpoint (end of first set), jump back to start without animation
             if (currentScroll >= midPoint - 10) {
@@ -94,14 +82,12 @@ export default function Home() {
             const gap = 32; // 2rem gap
             const scrollAmount = itemWidth + gap;
 
-            console.log('Scrolling by:', scrollAmount);
             slider.scrollBy({ left: scrollAmount, behavior: 'smooth' });
           }
         }, 3000); // Scroll every 3 seconds
       };
 
       const handleUserInteraction = () => {
-        console.log('User interaction detected');
         isUserInteracting = true;
         clearInterval(scrollInterval);
 
