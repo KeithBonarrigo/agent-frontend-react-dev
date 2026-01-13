@@ -235,12 +235,12 @@ export default function Home() {
 
           <div className="home-slider-container">
             {[
-              { img: "/img/icon1.png", text: "Connect Your Workflows" },
-              { img: "/img/icon2.jpg", text: "Capture Your Market" },
-              { img: "/img/icon3.png", text: "Transform Operations" },
-              { img: "/img/icon4.png", text: "Boost Business Potential" },
-              { img: "/img/icon5.png", text: "Innovate and Optimize" },
-              { img: "/img/icon6.png", text: "Empower Your Staff" },
+              { img: "/img/icon1.png", text: "Automate Your Conversations" },
+              { img: "/img/icon2.jpg", text: "Qualify Leads Instantly" },
+              { img: "/img/icon3.png", text: "Handle Customer Inquiries" },
+              { img: "/img/icon4.png", text: "Scale Support Seamlessly" },
+              { img: "/img/icon5.png", text: "Personalize Every Interaction" },
+              { img: "/img/icon6.png", text: "Free Up Your Team" },
             ].map((item, index) => (
               <div key={index} className="home-slider-item">
                 <img src={item.img} alt={item.text} className="home-slider-image" />
