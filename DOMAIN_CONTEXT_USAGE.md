@@ -38,6 +38,7 @@ function MyComponent() {
     infoEmail,
     adminEmail,
     supportEmail,
+    websiteUrl,
     isBotWerx,
     isBase,
     isLocal
@@ -55,13 +56,14 @@ function MyComponent() {
   //   timestamp: "2026-01-12T..."
   // }
 
-  // Use company name and emails in your UI
+  // Use company name, emails, and website URL in your UI
   return (
     <div>
       <h1>Welcome to {companyName}</h1>
       <p>Copyright © {companyName}. All rights reserved.</p>
       <p>Contact us at: <a href={`mailto:${infoEmail}`}>{infoEmail}</a></p>
       <p>Support: <a href={`mailto:${supportEmail}`}>{supportEmail}</a></p>
+      <p>Visit: <a href={websiteUrl}>{websiteUrl}</a></p>
     </div>
   );
 
@@ -144,6 +146,7 @@ When a user signs up, you'll see:
 - `infoEmail`: String - Returns "info@botwerx.ai" for botwerx.ai, "info@aibridge.global" for all others
 - `adminEmail`: String - Returns "admin@botwerx.ai" for botwerx.ai, "admin@aibridge.global" for all others
 - `supportEmail`: String - Returns "support@botwerx.ai" for botwerx.ai, "support@aibridge.global" for all others
+- `websiteUrl`: String - Returns "https://botwerx.ai" for botwerx.ai, "https://aibridge.global" for all others
 - `isBotWerx`: Boolean convenience property
 - `isBase`: Boolean convenience property
 - `isLocal`: Boolean convenience property

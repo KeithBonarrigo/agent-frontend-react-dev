@@ -1,11 +1,13 @@
 import { Outlet, Link, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import footerLogo from "../assets/aibridge-logo-transparent.png";
+import { useDomain } from "../contexts/DomainContext";
 
 export default function Layout() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isMobile, setIsMobile] = useState(window.innerWidth < 600);
   const navigate = useNavigate();
+  const { websiteUrl } = useDomain();
 
   useEffect(() => {
     const cid = localStorage.getItem("client_id");
@@ -112,7 +114,7 @@ export default function Layout() {
       }}>
         <div style={{ marginBottom: "0.5em" }}>
           &copy; {new Date().getFullYear()} Powered By{" "}
-          <a target="_blank" href="https://aibridge.global"><img
+          <a target="_blank" href={websiteUrl}><img
             src={footerLogo}
             alt="TravelChatColombia Logo"
             style={{

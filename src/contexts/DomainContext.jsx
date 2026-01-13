@@ -108,6 +108,11 @@ export const DomainProvider = ({ children }) => {
     return domainInfo?.domainType === 'botwerx' ? 'support@botwerx.ai' : 'support@aibridge.global';
   };
 
+  // Helper function to get domain-specific website URL
+  const getWebsiteUrl = () => {
+    return domainInfo?.domainType === 'botwerx' ? 'https://botwerx.ai' : 'https://aibridge.global';
+  };
+
   const value = {
     domainInfo,
     isDomain,
@@ -118,7 +123,8 @@ export const DomainProvider = ({ children }) => {
     companyName: domainInfo?.domainType === 'botwerx' ? 'Botwerx, LLC' : 'AI Bridge',
     infoEmail: domainInfo?.domainType === 'botwerx' ? 'info@botwerx.ai' : 'info@aibridge.global',
     adminEmail: domainInfo?.domainType === 'botwerx' ? 'admin@botwerx.ai' : 'admin@aibridge.global',
-    supportEmail: domainInfo?.domainType === 'botwerx' ? 'support@botwerx.ai' : 'support@aibridge.global'
+    supportEmail: domainInfo?.domainType === 'botwerx' ? 'support@botwerx.ai' : 'support@aibridge.global',
+    websiteUrl: domainInfo?.domainType === 'botwerx' ? 'https://botwerx.ai' : 'https://aibridge.global'
   };
 
   return (

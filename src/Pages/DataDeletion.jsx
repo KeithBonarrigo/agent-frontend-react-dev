@@ -2,7 +2,7 @@ import "../styles/ContentStyles.css";
 import { useDomain } from "../contexts/DomainContext";
 
 export default function DataDeletionPolicy() {
-  const { companyName, infoEmail } = useDomain();
+  const { companyName, infoEmail, websiteUrl } = useDomain();
 
   return (
     <div className="policy-page">
@@ -117,12 +117,12 @@ export default function DataDeletionPolicy() {
                 <br />
                 <a href={`mailto:${infoEmail}`}>{infoEmail}</a>
                 <br />
-                
-                <a  href="https://aibridge.global"
+
+                <a  href={websiteUrl}
                   target="_blank"
                   rel="noopener noreferrer"
                 >
-                  https://aibridge.global
+                  {websiteUrl}
                 </a>
               </p>
             </div>

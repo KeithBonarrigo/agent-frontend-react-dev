@@ -2,7 +2,7 @@ import "../styles/ContentStyles.css";
 import { useDomain } from "../contexts/DomainContext";
 
 export default function TermsAndConditions() {
-  const { companyName, supportEmail } = useDomain();
+  const { companyName, supportEmail, websiteUrl } = useDomain();
 
   return (
     <div className="policy-page">
@@ -70,7 +70,7 @@ export default function TermsAndConditions() {
               <li>Usage patterns for service improvement</li>
             </ul>
             <p>
-              Please refer to our <a href="https://aibridge.global/privacy.html">Privacy Policy</a> for full details on how your data is handled.
+              Please refer to our <a href={`${websiteUrl}/privacy.html`}>Privacy Policy</a> for full details on how your data is handled.
             </p>
           </div>
 
