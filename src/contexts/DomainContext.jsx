@@ -82,6 +82,11 @@ export const DomainProvider = ({ children }) => {
     return domainInfo?.domainType === type;
   };
 
+  // Helper function to get the target domain
+  const getTargetDomain = () => {
+    return domainInfo?.targetDomain;
+  };
+
   // Helper function to get company name based on domain
   const getCompanyName = () => {
     if (domainInfo?.domainType === 'botwerx') {
