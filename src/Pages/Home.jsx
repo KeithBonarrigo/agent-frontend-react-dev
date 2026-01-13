@@ -203,19 +203,19 @@ export default function Home() {
             <div>
               <ul className="home-services-list">
                 <li className="home-service-item">
-                  <span className="home-checkmark">✓</span> Technical Consulting
+                  <span className="home-checkmark">✓</span> 24/7 Customer Support
                 </li>
                 <li className="home-service-item">
-                  <span className="home-checkmark">✓</span> CRM Administration
+                  <span className="home-checkmark">✓</span> Instant Response Times
                 </li>
                 <li className="home-service-item">
-                  <span className="home-checkmark">✓</span> API Integration
+                  <span className="home-checkmark">✓</span> Automated Lead Qualification
                 </li>
                 <li className="home-service-item">
-                  <span className="home-checkmark">✓</span> Custom Solution Development
+                  <span className="home-checkmark">✓</span> Reduced Operational Costs
                 </li>
                 <li className="home-service-item">
-                  <span className="home-checkmark">✓</span> Productivity Enhancement
+                  <span className="home-checkmark">✓</span> Scalable Customer Engagement
                 </li>
               </ul>
             </div>
