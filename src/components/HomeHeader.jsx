@@ -44,18 +44,18 @@ export default function HomeHeader() {
   const getLogoConfig = () => {
     const hostname = domainInfo?.hostname;
 
-    if (hostname === 'botwerx.ai' || hostname?.includes('botwerx.ai')) {
-      console.log("🎨 Using BotWerx logo for domain:", hostname);
+    if (hostname?.includes('aibridge.global') || hostname?.includes('base')) {
+      console.log("🎨 Using AI Bridge logo for domain:", hostname);
       return {
-        src: '/img/logo-botwerx.jpeg',
+        src: '/img/AI-Bridge-Logo-Med2.png',
         alt: companyName
       };
     }
 
-    // Default logo for all other domains
-    console.log("🎨 Using default AI Bridge logo for domain:", hostname);
+    // Default logo (BotWerx) for all other domains
+    console.log("🎨 Using BotWerx logo for domain:", hostname);
     return {
-      src: '/img/AI-Bridge-Logo-Med2.png',
+      src: '/img/logo-botwerx.jpeg',
       alt: companyName
     };
   };
