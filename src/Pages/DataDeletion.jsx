@@ -19,95 +19,92 @@ export default function DataDeletionPolicy() {
         <div className="home-container">
           <div className="policy-intro">
             <p>
-              <strong>At {companyName}, we are committed to protecting your privacy and
-              ensuring you have control over your data. This User Data Deletion
-              Policy outlines how users can request the deletion of their data
-              collected through Facebook or Instagram integrations with our
-              application.</strong>
+              <strong>{companyName} prioritizes your privacy and empowers you with complete control
+              over your personal information. This policy details the process for requesting
+              deletion of data gathered through our Facebook or Instagram application integrations.</strong>
             </p>
           </div>
 
           <div className="policy-section">
-            <h2>1. Types of Data Collected</h2>
+            <h2>1. Information We Collect</h2>
             <p>
-              When you use our application via Facebook or Instagram, we may
-              collect the following data (as authorized by you through the Meta
-              login process):
+              Through your authorized Meta login, our application may gather the
+              following information when you connect via Facebook or Instagram:
             </p>
             <ul>
-              <li>Public profile information (name, profile picture, etc.)</li>
-              <li>Email address</li>
-              <li>Facebook or Instagram user ID</li>
+              <li>Publicly available profile details (display name, avatar image, etc.)</li>
+              <li>Your email address</li>
+              <li>Unique user identifier from Facebook or Instagram</li>
               <li>
-                Any other information explicitly granted through Facebook Login
+                Additional information you've specifically authorized via Facebook Login
                 permissions
               </li>
             </ul>
           </div>
 
           <div className="policy-section">
-            <h2>2. Purpose of Data Collection</h2>
-            <p>We use this data to:</p>
+            <h2>2. How We Use Your Information</h2>
+            <p>Your data enables us to:</p>
             <ul>
-              <li>Provide access to our platform's features</li>
-              <li>Customize and improve your user experience</li>
-              <li>Communicate with you (if consent is given)</li>
+              <li>Grant you access to our platform's functionality</li>
+              <li>Tailor and enhance your experience</li>
+              <li>Reach out to you when you've provided consent</li>
             </ul>
           </div>
 
           <div className="policy-section">
-            <h2>3. How to Request Data Deletion</h2>
+            <h2>3. Requesting Data Removal</h2>
             <p>
-              If you wish to delete your data from our systems, you can do so by
-              following one of these methods:
+              Should you choose to remove your information from our platform,
+              you have two convenient options:
             </p>
 
             <div className="policy-option">
-              <h3>Option A: Self-Service</h3>
+              <h3>Option A: Self-Service Deletion</h3>
               <ul>
-                <li>Go to your Facebook Account Settings.</li>
-                <li>Navigate to Apps and Websites.</li>
-                <li>Find and remove our application from the list.</li>
-                <li>This revokes our access and triggers a deletion request.</li>
+                <li>Access your Facebook Account Settings.</li>
+                <li>Select Apps and Websites from the menu.</li>
+                <li>Locate our application in your connected apps.</li>
+                <li>Remove the application to automatically initiate data deletion.</li>
               </ul>
             </div>
 
             <div className="policy-option">
-              <h3>Option B: Direct Request</h3>
+              <h3>Option B: Email Request</h3>
               <p>
-                You can request deletion by emailing us at:{" "}
+                Send your deletion request directly to:{" "}
                 <a href={`mailto:${infoEmail}`}>{infoEmail}</a>
               </p>
-              <p>Please include the following in your email:</p>
+              <p>Your email should contain:</p>
               <ul>
-                <li>Subject: User Data Deletion Request</li>
-                <li>Your full name</li>
+                <li>Subject line: User Data Deletion Request</li>
+                <li>Your complete name</li>
                 <li>
-                  Your Facebook/Instagram User ID (or a screenshot of your app
-                  profile)
+                  Your Facebook/Instagram User ID (alternatively, provide a screenshot
+                  showing your app profile)
                 </li>
               </ul>
               <p>
-                We will process your request within 7 business days and confirm
-                via email once your data has been deleted.
+                Your request will be handled within 7 business days, and you'll receive
+                email confirmation once the deletion is complete.
               </p>
             </div>
           </div>
 
           <div className="policy-section">
-            <h2>4. Retention Period</h2>
+            <h2>4. Data Retention Timeline</h2>
             <p>
-              We retain user data only for as long as necessary to fulfill the
-              purposes outlined in this policy, or as required by law. Once
-              deleted, all personal data is permanently removed from our servers.
+              Your information is stored only as long as needed to serve the purposes
+              described in this policy or to meet legal obligations. Upon deletion,
+              your personal information is permanently erased from our infrastructure.
             </p>
           </div>
 
           <div className="policy-section">
-            <h2>5. Contact Us</h2>
+            <h2>5. Get in Touch</h2>
             <p>
-              If you have any questions or concerns about our Data Deletion Policy
-              or data practices, please contact us:
+              For questions or concerns regarding this Data Deletion Policy or our
+              data handling practices, reach out to us:
             </p>
             <div className="policy-contact">
               <p>
@@ -129,11 +126,10 @@ export default function DataDeletionPolicy() {
           </div>
 
           <div className="policy-section">
-            <h2>6. Policy Updates</h2>
+            <h2>6. Updates to This Policy</h2>
             <p>
-              We may update this policy to reflect changes in legal or operational
-              requirements. Any changes will be posted on this page with a revised
-              "Effective Date".
+              This policy may be revised to accommodate legal or operational changes.
+              Updates will appear on this page with a new "Effective Date" noted at the top.
             </p>
           </div>
         </div>

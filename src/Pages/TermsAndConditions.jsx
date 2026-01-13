@@ -16,144 +16,148 @@ export default function TermsAndConditions() {
       <section className="policy-content-section">
         <div className="home-container">
           <div className="policy-section">
-            <h2>1. Description of Service</h2>
+            <h2>1. Service Overview</h2>
             <p>
-              Our chatbot provides automated responses to user queries through
-              natural language processing. It may assist with information,
-              guidance, or basic customer support functions. The chatbot is
-              intended for general informational purposes only and may not
-              always provide accurate or up-to-date information.
+              Our conversational agent delivers automated replies to user
+              inquiries using natural language understanding technology. It
+              offers assistance through information delivery, directional
+              guidance, and fundamental support capabilities. This chatbot
+              serves general informational needs and cannot guarantee the
+              accuracy or currency of all provided information.
             </p>
           </div>
 
           <div className="policy-section">
-            <h2>2. User Eligibility</h2>
+            <h2>2. Who May Use This Service</h2>
             <p>
-              By using the Service, you confirm that you are at least 18 years
-              of age or the age of majority in your jurisdiction. If you are
-              using the Service on behalf of an organization, you represent and
-              warrant that you are authorized to agree to these Terms on its
-              behalf.
+              Your use of the Service constitutes confirmation that you have
+              reached 18 years of age or your jurisdiction's legal age of
+              majority. When accessing the Service as an organizational
+              representative, you affirm possessing proper authorization to
+              accept these Terms for that entity.
             </p>
           </div>
 
           <div className="policy-section">
-            <h2>3. Acceptable Use</h2>
-            <p>You agree to:</p>
+            <h2>3. Permitted Usage Guidelines</h2>
+            <p>You commit to:</p>
             <ul>
-              <li>Use the Service only for lawful purposes.</li>
+              <li>Employ the Service exclusively for legitimate purposes.</li>
               <li>
-                Not interfere with or disrupt the integrity or performance of
-                the chatbot.
+                Refrain from compromising the chatbot's operational integrity
+                or performance.
               </li>
               <li>
-                Not input or transmit any viruses, malware, or harmful content.
+                Avoid transmitting malicious software, viruses, or damaging content.
               </li>
               <li>
-                Not use the Service to harass, abuse, or harm another person.
+                Never leverage the Service for harassment, abuse, or inflicting
+                harm upon others.
               </li>
             </ul>
             <p>
-              We reserve the right to suspend or terminate access for any user
-              violating these conditions.
+              We maintain authority to restrict or revoke access for users who
+              breach these guidelines.
             </p>
           </div>
 
           <div className="policy-section">
-            <h2>4. Data Collection & Privacy</h2>
+            <h2>4. Information Gathering & Privacy</h2>
             <p>
-              The chatbot may collect and store certain information, such as:
+              Our chatbot may capture and retain various data points, including:
             </p>
             <ul>
-              <li>Messages you send to the bot</li>
-              <li>Technical metadata (e.g. IP address, device type)</li>
-              <li>Usage patterns for service improvement</li>
+              <li>Communications you submit to the chatbot</li>
+              <li>System metadata (such as IP addresses and device specifications)</li>
+              <li>Behavioral patterns used to refine our service</li>
             </ul>
             <p>
-              Please refer to our <a href={`${websiteUrl}/privacy.html`}>Privacy Policy</a> for full details on how your data is handled.
+              Consult our <a href={`${websiteUrl}/privacy.html`}>Privacy Policy</a> for comprehensive information about data handling practices.
             </p>
           </div>
 
           <div className="policy-section">
-            <h2>5. AI Limitations</h2>
+            <h2>5. Artificial Intelligence Constraints</h2>
             <p>
-              The chatbot may use automated systems or AI to generate responses.
-              These responses:
+              Our chatbot employs automated intelligence systems to formulate
+              responses. These outputs:
             </p>
             <ul>
               <li>
-                Are not guaranteed to be accurate, complete, or applicable to
-                your specific situation.
+                Cannot be warranted for accuracy, completeness, or relevance to
+                your particular circumstances.
               </li>
               <li>
-                Should not be considered legal, medical, financial, or
-                professional advice.
+                Must not be interpreted as legal, medical, financial, or expert
+                professional counsel.
               </li>
               <li>
-                May occasionally contain errors or inappropriate content, which
-                we work to minimize.
+                May occasionally include inaccuracies or unsuitable material,
+                despite our ongoing efforts to reduce such occurrences.
               </li>
             </ul>
-            <p>Use of information provided by the chatbot is at your own risk.</p>
+            <p>You assume full responsibility when acting on chatbot-provided information.</p>
           </div>
 
           <div className="policy-section">
-            <h2>6. Intellectual Property</h2>
+            <h2>6. Ownership Rights</h2>
             <p>
-              All content, code, and intellectual property related to the
-              chatbot are the property of {companyName} or its licensors. You may
-              not reproduce, distribute, or create derivative works without
-              written permission.
+              Every element of content, source code, and intellectual property
+              associated with the chatbot belongs to {companyName} or its authorized
+              licensors. Reproduction, distribution, or derivative creation
+              requires explicit written consent.
             </p>
           </div>
 
           <div className="policy-section">
-            <h2>7. Disclaimers</h2>
+            <h2>7. Service Disclaimers</h2>
             <p>
-              The Service is provided "as is" and "as available". We make no
-              warranties, express or implied, including but not limited to:
+              This Service operates on an "as is" and "as available" basis. We
+              provide no guarantees, whether stated or implied, concerning:
             </p>
             <ul>
-              <li>Fitness for a particular purpose</li>
-              <li>Availability or uptime of the chatbot</li>
-              <li>Accuracy or completeness of responses</li>
+              <li>Suitability for your specific use case</li>
+              <li>Continuous accessibility or operational uptime</li>
+              <li>Precision or thoroughness of generated responses</li>
             </ul>
             <p>
-              We are not liable for any damages arising from use of the Service.
+              No liability attaches to us for damages stemming from Service usage.
             </p>
           </div>
 
           <div className="policy-section">
-            <h2>8. Changes to Terms</h2>
+            <h2>8. Terms Modifications</h2>
             <p>
-              We may update these Terms at any time. Changes will be posted on
-              this page with a revised effective date. Continued use of the
-              Service after changes constitutes acceptance of the new Terms.
+              These Terms may be revised at our discretion. Modifications will
+              appear on this page alongside an updated effective date. Your
+              continued Service usage following changes indicates acceptance of
+              the revised Terms.
             </p>
           </div>
 
           <div className="policy-section">
-            <h2>9. Termination</h2>
+            <h2>9. Service Termination</h2>
             <p>
-              We reserve the right to suspend or terminate the Service at any
-              time, with or without notice. Your access may also be revoked if
-              you violate these Terms.
+              We hold the right to discontinue or suspend the Service at our
+              discretion, whether or not advance notice is provided. Access
+              privileges may be withdrawn if you breach these Terms.
             </p>
           </div>
 
           <div className="policy-section">
-            <h2>10. Changes to This Policy</h2>
+            <h2>10. Policy Revisions</h2>
             <p>
-              We may update this policy at any time. We will notify you of
-              changes by updating the "Effective Date" at the top of this page.
+              This policy may undergo updates as needed. Changes will be
+              communicated through revision of the "Effective Date" displayed
+              at the page header.
             </p>
           </div>
 
           <div className="policy-section">
-            <h2>11. Contact Us</h2>
+            <h2>11. Contact Information</h2>
             <p>
-              If you have any questions about this policy or how we handle your
-              data, please contact us:
+              For questions about this policy or our data management practices,
+              please reach out:
             </p>
             <p>
               Email: <a href={`mailto:${supportEmail}`}>{supportEmail}</a>

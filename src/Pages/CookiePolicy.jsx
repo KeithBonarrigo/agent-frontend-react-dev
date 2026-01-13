@@ -2,7 +2,7 @@ import "../styles/ContentStyles.css";
 import { useDomain } from "../contexts/DomainContext";
 
 export default function CookiePolicy() {
-  const { infoEmail } = useDomain();
+  const { infoEmail, companyName, websiteUrl } = useDomain();
 
   return (
     <div className="policy-page">
@@ -16,81 +16,82 @@ export default function CookiePolicy() {
       <section className="policy-content-section">
         <div className="home-container">
           <div className="policy-section">
-            <h2>1. What Are Cookies?</h2>
+            <h2>1. Understanding Cookies</h2>
             <p>
-              Cookies are small text files stored on your device (computer,
-              mobile phone, tablet, etc.) when you visit a website. They are
-              widely used to enable websites to function, enhance user
-              experience, and collect statistical or marketing data.
+              Cookies represent tiny text files that get saved to your device
+              (including computers, smartphones, and tablets) during website visits.
+              Websites commonly employ them to maintain functionality, improve
+              browsing experiences, and gather analytics or promotional insights.
             </p>
             <p>
-              Cookies may be set by the website you are visiting (first-party
-              cookies) or by third parties (third-party cookies) providing
-              services or functionalities integrated into the site.
+              These files can originate from the site you're currently viewing
+              (first-party cookies) or from external parties (third-party cookies)
+              whose features or services are embedded within the website.
             </p>
           </div>
 
           <div className="policy-section">
-            <h2>2. Types of Cookies We Use</h2>
+            <h2>2. Cookie Categories on Our Platform</h2>
             <p>
-              The website www.aibridge.global may use the following types of
-              cookies:
+              Our website at {websiteUrl} may utilize the following cookie
+              categories:
             </p>
             <ul>
               <li>
-                <strong>Strictly Necessary Cookies</strong>
+                <strong>Essential Cookies</strong>
                 <br />
-                These cookies are essential for the operation of the site and
-                cannot be disabled. They enable features such as secure access,
-                navigation, and proper page loading.
+                Required for core site functionality, these cookies cannot be
+                turned off. They facilitate critical features like secure login,
+                site navigation, and correct page rendering.
               </li>
               <li>
-                <strong>Analytics or Performance Cookies</strong>
+                <strong>Performance & Analytics Cookies</strong>
                 <br />
-                These cookies collect anonymized data to help us understand how
-                users interact with the site. For example, pages visited,
-                session duration, or bounce rate.
+                These gather anonymized metrics that reveal user engagement
+                patterns on our platform. Examples include which pages attract
+                visitors, how long sessions last, and visitor drop-off points.
               </li>
               <li>
-                <strong>Preference or Functionality Cookies</strong>
+                <strong>Functional & Preference Cookies</strong>
                 <br />
-                These remember your settings or preferences, such as language,
-                region, or display layout, to enhance your experience on future
-                visits.
+                These retain your customized settings and choices, including
+                language selection, regional preferences, and interface layout,
+                to provide a personalized experience on return visits.
               </li>
               <li>
-                <strong>Marketing or Targeting Cookies (if used)</strong>
+                <strong>Advertising & Targeting Cookies (when applicable)</strong>
                 <br />
-                These track your browsing activity across websites to display
-                relevant advertising based on your interests. These are only
-                used with your consent.
+                These monitor your browsing patterns across multiple sites to
+                deliver advertising tailored to your interests. Implementation
+                requires your explicit consent.
               </li>
             </ul>
           </div>
 
           <div className="policy-section">
-            <h2>3. Third-Party Cookies</h2>
+            <h2>3. External Service Cookies</h2>
             <p>
-              We may use third-party services that place cookies on your device.
-              These may include:
+              Our platform integrates third-party services that may install
+              cookies on your device. Such services encompass:
             </p>
             <ul>
-              <li>Website analytics providers;</li>
-              <li>Cloud-based automation tools;</li>
-              <li>AI integrations or chatbots;</li>
-              <li>Social media plugins or trackers.</li>
+              <li>Analytics and web tracking platforms;</li>
+              <li>Cloud-hosted automation solutions;</li>
+              <li>Artificial intelligence integrations and conversational agents;</li>
+              <li>Social network widgets and monitoring tools.</li>
             </ul>
             <p>
-              We do not control these cookies and recommend reviewing the
-              privacy and cookie policies of those third-party providers.
+              Since these cookies fall outside our direct control, we encourage
+              you to consult the privacy and cookie documentation provided by
+              these external vendors.
             </p>
           </div>
 
           <div className="policy-section">
-            <h2>4. How to Manage Cookies</h2>
+            <h2>4. Controlling Your Cookie Settings</h2>
             <p>
-              You can manage or disable cookies through your browser settings at
-              any time. Below are links to instructions for common browsers:
+              You maintain complete control over cookie preferences through your
+              browser configuration. Access detailed guidance for popular browsers below:
             </p>
             <ul>
               <li>
@@ -115,24 +116,25 @@ export default function CookiePolicy() {
               </li>
             </ul>
             <p>
-              Please note that disabling certain cookies may affect the
-              functionality and performance of the website.
+              Be aware that blocking specific cookies could impact website
+              functionality and overall user experience.
             </p>
           </div>
 
           <div className="policy-section">
-            <h2>5. Updates to This Cookie Policy</h2>
+            <h2>5. Policy Modifications</h2>
             <p>
-              AI BRIDGE reserves the right to update this Cookie Policy at any
-              time. Significant changes will be published on this page.
+              {companyName} retains the authority to modify this Cookie Policy
+              as circumstances require. Material revisions will be reflected on
+              this page.
             </p>
           </div>
 
           <div className="policy-section">
-            <h2>6. Contact</h2>
+            <h2>6. Reach Out to Us</h2>
             <p>
-              If you have questions about this Cookie Policy or our use of
-              cookies, please contact us at: <a href={`mailto:${infoEmail}`}>{infoEmail}</a>
+              For inquiries regarding this Cookie Policy or our cookie
+              implementation, please contact us at: <a href={`mailto:${infoEmail}`}>{infoEmail}</a>
             </p>
           </div>
         </div>

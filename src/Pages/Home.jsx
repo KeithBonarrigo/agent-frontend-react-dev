@@ -18,6 +18,41 @@ export default function Home() {
   const [formSuccess, setFormSuccess] = useState(false);
   const [activeFaqIndex, setActiveFaqIndex] = useState(null);
   const [isSignupFormOpen, setIsSignupFormOpen] = useState(false);
+  const [activeServiceModal, setActiveServiceModal] = useState(null);
+
+  // Service items with detailed descriptions
+  const serviceItems = [
+    {
+      title: "24/7 Customer Support",
+      icon: "fa-clock",
+      description: "Never miss a customer inquiry again. Our AI agents work around the clock, providing instant responses to customer questions at any time of day or night. Whether it's 3 PM or 3 AM, your customers receive immediate, helpful assistance that keeps them engaged and satisfied. This continuous availability ensures you capture every opportunity and maintain customer trust, even outside business hours."
+    },
+    {
+      title: "Instant Response Times",
+      icon: "fa-bolt",
+      description: "Say goodbye to long wait times. Our AI agents respond to customer inquiries in milliseconds, dramatically reducing response times from hours or days to seconds. This immediate engagement keeps customers interested, prevents them from bouncing to competitors, and creates a seamless experience that modern consumers expect. Fast responses lead to higher satisfaction rates and increased conversion."
+    },
+    {
+      title: "Automated Lead Qualification",
+      icon: "fa-filter",
+      description: "Let AI handle the heavy lifting of lead qualification. Our intelligent agents ask the right questions, gather essential information, and automatically score and route leads based on their potential value. This ensures your sales team focuses only on high-quality prospects, saving time and increasing close rates. The system learns from every interaction, continuously improving its qualification accuracy."
+    },
+    {
+      title: "Reduced Operational Costs",
+      icon: "fa-piggy-bank",
+      description: "Significantly lower your customer service expenses while improving quality. AI agents handle routine inquiries at a fraction of the cost of human agents, allowing you to scale support without proportionally scaling headcount. Reduce overhead costs including training, benefits, and infrastructure while maintaining or even improving service quality. The savings compound as your business grows."
+    },
+    {
+      title: "Scalable Customer Engagement",
+      icon: "fa-chart-line",
+      description: "Handle thousands of simultaneous conversations without breaking a sweat. Unlike human teams that require hiring and training to scale, AI agents can instantly accommodate traffic spikes, seasonal surges, or rapid business growth. Whether you're handling 10 or 10,000 conversations, maintain the same high-quality experience for every customer without additional costs or delays."
+    },
+    {
+      title: "Enhanced Customer Insights",
+      icon: "fa-lightbulb",
+      description: "Turn every conversation into valuable business intelligence. AI agents automatically capture, analyze, and categorize customer interactions, revealing patterns, pain points, and opportunities you might otherwise miss. Gain deep insights into customer needs, common questions, and emerging trends. Use this data to refine products, improve services, and make informed strategic decisions that drive growth."
+    }
+  ];
 
   // Auto-scroll carousel effect
   useEffect(() => {
@@ -284,24 +319,16 @@ export default function Home() {
         <div className="home-container">
           <div className="home-services-grid">
             <ul className="home-services-list">
-              <li className="home-service-item">
-                <span className="home-checkmark">✓</span> 24/7 Customer Support
-              </li>
-              <li className="home-service-item">
-                <span className="home-checkmark">✓</span> Instant Response Times
-              </li>
-              <li className="home-service-item">
-                <span className="home-checkmark">✓</span> Automated Lead Qualification
-              </li>
-              <li className="home-service-item">
-                <span className="home-checkmark">✓</span> Reduced Operational Costs
-              </li>
-              <li className="home-service-item">
-                <span className="home-checkmark">✓</span> Scalable Customer Engagement
-              </li>
-              <li className="home-service-item">
-                <span className="home-checkmark">✓</span> Enhanced Customer Insights
-              </li>
+              {serviceItems.map((service, index) => (
+                <li
+                  key={index}
+                  className="home-service-item"
+                  onClick={() => setActiveServiceModal(index)}
+                  style={{ cursor: 'pointer' }}
+                >
+                  <span className="home-checkmark">✓</span> {service.title}
+                </li>
+              ))}
             </ul>
             <div className="home-services-cta">
               <a href="#contact" className="home-btn" onClick={(e) => { e.preventDefault(); scrollToSection("contact"); }}>
@@ -311,6 +338,22 @@ export default function Home() {
           </div>
         </div>
       </section>
+
+      {/* Service Modal */}
+      {activeServiceModal !== null && (
+        <div className="home-modal-overlay" onClick={() => setActiveServiceModal(null)}>
+          <div className="home-modal-content" onClick={(e) => e.stopPropagation()}>
+            <button className="home-modal-close" onClick={() => setActiveServiceModal(null)}>
+              ×
+            </button>
+            <h2 className="home-modal-title">
+              <i className={`fa-solid ${serviceItems[activeServiceModal].icon} home-modal-icon`}></i>
+              {serviceItems[activeServiceModal].title}
+            </h2>
+            <p className="home-modal-description">{serviceItems[activeServiceModal].description}</p>
+          </div>
+        </div>
+      )}
 
       {/* Slider Section */}
       <section id="solutions" className="home-slider-section">
@@ -377,76 +420,82 @@ export default function Home() {
           <form onSubmit={handleContactSubmit} className="home-form" id="contact-form">
             <h2>Contact Us</h2>
 
-            <div className="home-form-group">
-              <label htmlFor="name" className="home-form-label">
-                Name:
-              </label>
-              <input
-                type="text"
-                id="name"
-                name="name"
-                required
-                value={contactForm.name}
-                onChange={handleFormChange}
-                className="home-form-input"
-              />
+            <div className="home-form-row">
+              <div className="home-form-group">
+                <label htmlFor="name" className="home-form-label">
+                  Name:
+                </label>
+                <input
+                  type="text"
+                  id="name"
+                  name="name"
+                  required
+                  value={contactForm.name}
+                  onChange={handleFormChange}
+                  className="home-form-input"
+                />
+              </div>
+
+              <div className="home-form-group">
+                <label htmlFor="email" className="home-form-label">
+                  Email:
+                </label>
+                <input
+                  type="email"
+                  id="email"
+                  name="email"
+                  required
+                  value={contactForm.email}
+                  onChange={handleFormChange}
+                  className="home-form-input"
+                />
+              </div>
             </div>
 
-            <div className="home-form-group">
-              <label htmlFor="email" className="home-form-label">
-                Email:
-              </label>
-              <input
-                type="email"
-                id="email"
-                name="email"
-                required
-                value={contactForm.email}
-                onChange={handleFormChange}
-                className="home-form-input"
-              />
+            <div className="home-form-row">
+              <div className="home-form-group">
+                <label htmlFor="phone" className="home-form-label">
+                  Phone:
+                </label>
+                <input
+                  type="tel"
+                  id="phone"
+                  name="phone"
+                  value={contactForm.phone}
+                  onChange={handleFormChange}
+                  className="home-form-input"
+                />
+              </div>
+
+              <div className="home-form-group">
+                <label htmlFor="company" className="home-form-label">
+                  Company:
+                </label>
+                <input
+                  type="text"
+                  id="company"
+                  name="company"
+                  value={contactForm.company}
+                  onChange={handleFormChange}
+                  className="home-form-input"
+                />
+              </div>
             </div>
 
-            <div className="home-form-group">
-              <label htmlFor="phone" className="home-form-label">
-                Phone:
-              </label>
-              <input
-                type="tel"
-                id="phone"
-                name="phone"
-                value={contactForm.phone}
-                onChange={handleFormChange}
-                className="home-form-input"
-              />
-            </div>
-
-            <div className="home-form-group">
-              <label htmlFor="company" className="home-form-label">
-                Company:
-              </label>
-              <input
-                type="text"
-                id="company"
-                name="company"
-                value={contactForm.company}
-                onChange={handleFormChange}
-                className="home-form-input"
-              />
-            </div>
-
-            <div className="home-form-group">
-              <label htmlFor="website" className="home-form-label">
-                Website:
-              </label>
-              <input
-                type="url"
-                id="website"
-                name="website"
-                value={contactForm.website}
-                onChange={handleFormChange}
-                className="home-form-input"
-              />
+            <div className="home-form-row">
+              <div className="home-form-group">
+                <label htmlFor="website" className="home-form-label">
+                  Website:
+                </label>
+                <input
+                  type="url"
+                  id="website"
+                  name="website"
+                  value={contactForm.website}
+                  onChange={handleFormChange}
+                  className="home-form-input"
+                />
+              </div>
             </div>
 
             <div className="home-form-group">

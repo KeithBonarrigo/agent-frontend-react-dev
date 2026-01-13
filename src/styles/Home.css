@@ -395,6 +395,112 @@ body {
 }
 
 /* ============================================
+   SERVICE MODAL
+   ============================================ */
+
+.home-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 20px;
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.home-modal-content {
+  background: linear-gradient(to bottom, #ffffff 0%, #dce0f0 100%);
+  border-radius: 16px;
+  padding: 40px;
+  max-width: 600px;
+  width: 100%;
+  position: relative;
+  box-shadow: 0 20px 60px rgba(49, 9, 86, 0.3);
+  animation: slideUp 0.3s ease;
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(50px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.home-modal-close {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  background: transparent !important;
+  border: none;
+  outline: none;
+  font-size: 2.5rem;
+  color: #ffffff;
+  cursor: pointer;
+  line-height: 1;
+  padding: 0;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 0.3s ease;
+}
+
+.home-modal-close:hover {
+  color: #999;
+  background: transparent !important;
+}
+
+.home-modal-close:focus {
+  background: transparent !important;
+  outline: none;
+}
+
+.home-modal-title {
+  color: #ffffff;
+  background: #1e3a8a;
+  font-size: 2rem;
+  margin: -40px -40px 1.5rem -40px;
+  padding: 2rem 40px;
+  font-weight: 600;
+  border-radius: 16px 16px 0 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+}
+
+.home-modal-icon {
+  font-size: 1.8rem;
+  flex-shrink: 0;
+}
+
+.home-modal-description {
+  color: #333;
+  font-size: 1.1rem;
+  line-height: 1.8;
+  margin: 0;
+}
+
+/* ============================================
    SLIDER SECTION
    ============================================ */
 
@@ -618,6 +724,17 @@ body {
   text-align: center;
 }
 
+.home-form-row {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 10px;
+}
+
+.home-form-row .home-form-group {
+  flex: 1;
+  margin-bottom: 0;
+}
+
 .home-form-group {
   margin-bottom: 10px;
 }
@@ -656,6 +773,8 @@ body {
   font-size: 1rem;
   font-weight: 500;
   transition: all 0.3s ease;
+  display: block;
+  margin: 0 auto;
 }
 
 .home-form button[type="submit"]:hover {
