@@ -1,10 +1,11 @@
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import SignupForm from "../components/SignupForm";
 import { useDomain } from "../contexts/DomainContext";
 import "../styles/Home.css";
 
 export default function Home() {
   const { domainInfo } = useDomain();
+  const sliderRef = useRef(null);
   const [contactForm, setContactForm] = useState({
     name: "",
     email: "",
@@ -17,6 +18,88 @@ export default function Home() {
   const [formSuccess, setFormSuccess] = useState(false);
   const [activeFaqIndex, setActiveFaqIndex] = useState(null);
   const [isSignupFormOpen, setIsSignupFormOpen] = useState(false);
+
+  // Auto-scroll carousel effect
+  useEffect(() => {
+    // Wait for DOM to be ready
+    const initializeCarousel = () => {
+      const slider = sliderRef.current;
+      if (!slider) {
+        console.log('Slider not found');
+        return;
+      }
+
+      console.log('Initializing carousel...', {
+        scrollWidth: slider.scrollWidth,
+        clientWidth: slider.clientWidth,
+        items: slider.querySelectorAll('.home-slider-item').length
+      });
+
+      let scrollInterval;
+      let isUserInteracting = false;
+
+      const startAutoScroll = () => {
+        if (scrollInterval) clearInterval(scrollInterval);
+
+        scrollInterval = setInterval(() => {
+          if (!isUserInteracting && slider) {
+            const maxScroll = slider.scrollWidth - slider.clientWidth;
+            const currentScroll = slider.scrollLeft;
+            const midPoint = slider.scrollWidth / 2;
+
+            console.log('Auto-scrolling...', { currentScroll, maxScroll, midPoint });
+
+            // Infinite loop: when we reach the midpoint (end of first set), jump back to start without animation
+            if (currentScroll >= midPoint - 10) {
+              slider.scrollTo({ left: 0, behavior: 'instant' });
+            }
+
+            // Scroll to next item
+            const itemWidth = slider.querySelector('.home-slider-item')?.offsetWidth || 0;
+            const gap = 32; // 2rem gap
+            const scrollAmount = itemWidth + gap;
+
+            console.log('Scrolling by:', scrollAmount);
+            slider.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+          }
+        }, 3000); // Scroll every 3 seconds
+      };
+
+      const handleUserInteraction = () => {
+        console.log('User interaction detected');
+        isUserInteracting = true;
+        clearInterval(scrollInterval);
+
+        // Resume auto-scroll after 5 seconds of no interaction
+        setTimeout(() => {
+          isUserInteracting = false;
+          startAutoScroll();
+        }, 5000);
+      };
+
+      slider.addEventListener('touchstart', handleUserInteraction);
+      slider.addEventListener('mousedown', handleUserInteraction);
+      slider.addEventListener('wheel', handleUserInteraction);
+
+      startAutoScroll();
+
+      return () => {
+        clearInterval(scrollInterval);
+        if (slider) {
+          slider.removeEventListener('touchstart', handleUserInteraction);
+          slider.removeEventListener('mousedown', handleUserInteraction);
+          slider.removeEventListener('wheel', handleUserInteraction);
+        }
+      };
+    };
+
+    // Give the DOM time to render
+    const timeout = setTimeout(initializeCarousel, 500);
+
+    return () => {
+      clearTimeout(timeout);
+    };
+  }, []);
 
   const faqs = [
     {
@@ -200,25 +283,26 @@ export default function Home() {
       <section id="services" className="home-services-section">
         <div className="home-container">
           <div className="home-services-grid">
-            <div>
-              <ul className="home-services-list">
-                <li className="home-service-item">
-                  <span className="home-checkmark">✓</span> 24/7 Customer Support
-                </li>
-                <li className="home-service-item">
-                  <span className="home-checkmark">✓</span> Instant Response Times
-                </li>
-                <li className="home-service-item">
-                  <span className="home-checkmark">✓</span> Automated Lead Qualification
-                </li>
-                <li className="home-service-item">
-                  <span className="home-checkmark">✓</span> Reduced Operational Costs
-                </li>
-                <li className="home-service-item">
-                  <span className="home-checkmark">✓</span> Scalable Customer Engagement
-                </li>
-              </ul>
-            </div>
+            <ul className="home-services-list">
+              <li className="home-service-item">
+                <span className="home-checkmark">✓</span> 24/7 Customer Support
+              </li>
+              <li className="home-service-item">
+                <span className="home-checkmark">✓</span> Instant Response Times
+              </li>
+              <li className="home-service-item">
+                <span className="home-checkmark">✓</span> Automated Lead Qualification
+              </li>
+              <li className="home-service-item">
+                <span className="home-checkmark">✓</span> Reduced Operational Costs
+              </li>
+              <li className="home-service-item">
+                <span className="home-checkmark">✓</span> Scalable Customer Engagement
+              </li>
+              <li className="home-service-item">
+                <span className="home-checkmark">✓</span> Enhanced Customer Insights
+              </li>
+            </ul>
             <div className="home-services-cta">
               <a href="#contact" className="home-btn" onClick={(e) => { e.preventDefault(); scrollToSection("contact"); }}>
                 Learn More
@@ -230,11 +314,18 @@ export default function Home() {
 
       {/* Slider Section */}
       <section id="solutions" className="home-slider-section">
-        <div className="home-container">
-          <h2 className="home-section-title">What Can AI Agents Do For You?</h2>
+        <h2 className="home-section-title">What Can AI Agents Do For You?</h2>
 
-          <div className="home-slider-container">
+        <div className="home-container">
+          <div ref={sliderRef} className="home-slider-container">
             {[
+              { img: "/img/icon1.png", text: "Automate Conversations" },
+              { img: "/img/icon2.jpg", text: "Qualify Leads Instantly" },
+              { img: "/img/icon3.png", text: "Handle Inquiries" },
+              { img: "/img/icon4.png", text: "Scale Support Seamlessly" },
+              { img: "/img/icon5.png", text: "Personalize Interactions" },
+              { img: "/img/icon6.png", text: "Free Up Your Team" },
+              // Duplicate items for infinite loop effect
               { img: "/img/icon1.png", text: "Automate Conversations" },
               { img: "/img/icon2.jpg", text: "Qualify Leads Instantly" },
               { img: "/img/icon3.png", text: "Handle Inquiries" },
