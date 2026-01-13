@@ -15,11 +15,13 @@ import PasswordResetRequest from "./Pages/PasswordResetRequest";
 import PasswordResetCheckEmail from "./Pages/PasswordResetCheckEmail";
 import PasswordResetConfirm from "./Pages/PasswordResetConfirm";
 import { UserProvider } from './contexts/UserContext';
+import { DomainProvider } from './contexts/DomainContext';
 
 function App() {
   return (
-    <UserProvider>
-      <BrowserRouter>
+    <DomainProvider>
+      <UserProvider>
+        <BrowserRouter>
         <Routes>
           <Route element={<HomeLayout />}>
             <Route path="/" element={<Home />} />
@@ -40,6 +42,7 @@ function App() {
         </Routes>
       </BrowserRouter>
     </UserProvider>
+    </DomainProvider>
   );
 }
 

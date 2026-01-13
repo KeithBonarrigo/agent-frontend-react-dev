@@ -2,8 +2,12 @@ import { useEffect, useRef, useState } from "react";
 import { loadStripe } from "@stripe/stripe-js";
 import { Elements } from "@stripe/react-stripe-js";
 import StripePaymentForm from "./StripePaymentForm";
+import { useDomain } from "../contexts/DomainContext";
 
 export default function SignupForm({ isOpen }) {
+  // Get domain information from context
+  const { domainInfo, getTargetDomain } = useDomain();
+
   const [isMobile, setIsMobile] = useState(window.innerWidth < 640);
   const [stripePromise, setStripePromise] = useState(null);
   const [subscriptionData, setSubscriptionData] = useState(null);
@@ -202,14 +206,40 @@ export default function SignupForm({ isOpen }) {
     };
 
     const getDomain = (level) => {
+      // First, check if we have domain context
+      if (domainInfo) {
+        const currentDomain = domainInfo.targetDomain;
+        console.log("🔍 Domain from context:", currentDomain);
+        console.log("🔍 Domain type:", domainInfo.domainType);
+        console.log("🔍 User selected level:", level);
+
+        // If user is on easybroker domain OR selected easybroker level, use easybroker domain
+        if (domainInfo.domainType === 'easybroker' || level === 'easybroker') {
+          console.log("✅ Assigning EasyBroker domain");
+          return 'easybroker.aibridge.global';
+        }
+
+        // Otherwise use the current domain they're on
+        if (domainInfo.domainType !== 'local') {
+          console.log("✅ Using current domain:", currentDomain);
+          return currentDomain;
+        }
+      }
+
+      // Fallback: Use level-based logic if no context available
       if (level === 'easybroker') {
+        console.log("⚠️ Fallback: Using EasyBroker domain from level");
         return 'easybroker.aibridge.global';
       }
-      // Default domain for all other levels
+
+      console.log("⚠️ Fallback: Using default base domain");
       return 'base.aibridge.global';
     };
 
     const level = raw.level?.trim() || "basic";
+    const assignedDomain = getDomain(level);
+
+    console.log("📋 Final domain assignment:", assignedDomain);
 
     return {
       agent_name: toNullIfEmpty(raw.agent_name),
@@ -238,7 +268,7 @@ export default function SignupForm({ isOpen }) {
       company: typeof raw.company === "string" ? raw.company : "",
       wsp_phone_number_id: toNullIfEmpty(raw.wsp_phone_number_id),
       messenger_access_token: toNullIfEmpty(raw.messenger_access_token),
-      domain: getDomain(level),
+      domain: assignedDomain,
     };
   };
 
