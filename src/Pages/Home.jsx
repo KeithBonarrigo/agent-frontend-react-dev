@@ -252,7 +252,7 @@ export default function Home() {
       </section>
 
       {/* FAQ Section */}
-      <section id="faq" className="home-faq-section">
+      {/*<section id="faq" className="home-faq-section">
         <div className="home-container">
           <div className="home-faq-header">
             <h2 className="home-faq-title">Frequently Asked Questions</h2>
@@ -278,7 +278,7 @@ export default function Home() {
             ))}
           </div>
         </div>
-      </section>
+      </section>*/}
 
       {/* Contact Section */}
       <section id="contact" className="home-contact-section">
