@@ -18,9 +18,12 @@ export default function Home() {
   const [formSuccess, setFormSuccess] = useState(false);
   const [activeFaqIndex, setActiveFaqIndex] = useState(null);
   const [isSignupFormOpen, setIsSignupFormOpen] = useState(false);
-  const [activeServiceModal, setActiveServiceModal] = useState(null);
 
   // Service items with detailed descriptions
+  // Each item represents a key benefit/feature displayed in the Services section
+  // Contains: title (heading), icon (FontAwesome class), description (HTML with <strong> tags for emphasis)
+  // Rendered as expandable cards in a 2-column grid layout - hover reveals full description
+  // Changed: "Enhanced Customer Insights" replaced with "No-Code Integration" to highlight ease of setup
   const serviceItems = [
     {
       title: "24/7 Customer Support",
@@ -48,9 +51,11 @@ export default function Home() {
       description: "<strong>Handle thousands of simultaneous conversations without breaking a sweat.</strong> Unlike human teams that require hiring and training to scale, AI agents can <strong>instantly accommodate traffic spikes, seasonal surges, or rapid business growth.</strong> Whether you're handling 10 or 10,000 conversations, <strong>maintain the same high-quality experience for every customer</strong> without additional costs or delays."
     },
     {
-      title: "Enhanced Customer Insights",
-      icon: "fa-lightbulb",
-      description: "<strong>Turn every conversation into valuable business intelligence.</strong> AI agents automatically capture, analyze, and categorize customer interactions, <strong>revealing patterns, pain points, and opportunities</strong> you might otherwise miss. Gain deep insights into customer needs, common questions, and emerging trends. Use this data to <strong>refine products, improve services, and make informed strategic decisions</strong> that drive growth."
+      // Changed from "Enhanced Customer Insights" with fa-lightbulb icon
+      // New focus on no-code setup to appeal to non-technical users
+      title: "No-Code Integration",
+      icon: "fa-wand-magic-sparkles",
+      description: "<strong>Set up your AI agent in minutes without writing a single line of code.</strong> Our intuitive visual interface lets you configure conversations, customize responses, and integrate with your existing tools through simple point-and-click actions. <strong>No technical expertise required—</strong> if you can use a web browser, you can build sophisticated AI agents. Drag-and-drop workflows, pre-built templates, and <strong>visual conversation designers</strong> empower anyone to create powerful automation without developers or IT support."
     }
   ];
 
@@ -300,46 +305,34 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Services Section */}
+      {/* Services Section - Redesigned from clickable list with modal to hover-expandable cards
+          Previous implementation: ul.home-services-list with li items that opened a modal on click
+          New implementation: 2-column grid of cards that expand on hover to reveal descriptions
+          This change improves UX by showing content inline without modal interruption
+          Uses dangerouslySetInnerHTML to render HTML formatting in descriptions (bold text)
+          Removed: activeServiceModal state and modal overlay component */}
       <section id="services" className="home-services-section">
         <div className="home-container">
           <div className="home-services-grid">
-            <ul className="home-services-list">
-              {serviceItems.map((service, index) => (
-                <li
-                  key={index}
-                  className="home-service-item"
-                  onClick={() => setActiveServiceModal(index)}
-                  style={{ cursor: 'pointer' }}
-                >
-                  <span className="home-checkmark">✓</span> {service.title}
-                </li>
-              ))}
-            </ul>
-            <div className="home-services-cta">
-              <a href="#contact" className="home-btn" onClick={(e) => { e.preventDefault(); scrollToSection("contact"); }}>
-                Learn More
-              </a>
-            </div>
+            {serviceItems.map((service, index) => (
+              <div key={index} className="home-service-item">
+                {/* Header with icon and title - always visible */}
+                <div className="home-service-header">
+                  <i className={`fa-solid ${service.icon} home-service-icon`}></i>
+                  <h3 className="home-service-title">{service.title}</h3>
+                </div>
+                {/* Description - hidden by default, expands on hover via CSS max-height transition */}
+                <p className="home-service-description" dangerouslySetInnerHTML={{ __html: service.description }}></p>
+              </div>
+            ))}
+          </div>
+          <div className="home-services-cta">
+            <a href="#contact" className="home-btn" onClick={(e) => { e.preventDefault(); scrollToSection("contact"); }}>
+              Learn More
+            </a>
           </div>
         </div>
       </section>
-
-      {/* Service Modal */}
-      {activeServiceModal !== null && (
-        <div className="home-modal-overlay" onClick={() => setActiveServiceModal(null)}>
-          <div className="home-modal-content" onClick={(e) => e.stopPropagation()}>
-            <button className="home-modal-close" onClick={() => setActiveServiceModal(null)}>
-              ×
-            </button>
-            <h2 className="home-modal-title">
-              <i className={`fa-solid ${serviceItems[activeServiceModal].icon} home-modal-icon`}></i>
-              {serviceItems[activeServiceModal].title}
-            </h2>
-            <p className="home-modal-description" dangerouslySetInnerHTML={{ __html: serviceItems[activeServiceModal].description }}></p>
-          </div>
-        </div>
-      )}
 
       {/* Slider Section */}
       <section id="solutions" className="home-slider-section">

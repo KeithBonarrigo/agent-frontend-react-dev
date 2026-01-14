@@ -296,15 +296,18 @@ body {
   animation: jiggle 0.6s ease-in-out;
 }
 
+/* Jiggle animation - triggered on card icon hover
+   Changed from more aggressive values (±15deg, 1.1 scale) to subtle values (±5deg, 1.05 scale)
+   This makes the animation less distracting while still providing visual feedback */
 @keyframes jiggle {
   0%, 100% {
     transform: rotate(0deg);
   }
   10%, 30%, 50%, 70%, 90% {
-    transform: rotate(-15deg) scale(1.1);
+    transform: rotate(-5deg) scale(1.05);
   }
   20%, 40%, 60%, 80% {
-    transform: rotate(15deg) scale(1.1);
+    transform: rotate(5deg) scale(1.05);
   }
 }
 
@@ -383,59 +386,116 @@ body {
   background: #fff;
 }
 
+/* Services Grid - Redesigned layout for service/benefit cards
+   Changed from: single-column list (.home-services-list) with modal popups
+   Changed to: 2-column responsive grid with hover-expandable cards
+   This new design shows content inline without modal interruption */
 .home-services-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);  /* 2 columns on desktop */
+  gap: 2rem;
+  margin-bottom: 3rem;
+  align-items: start;  /* Cards align to top, allowing variable heights */
+}
+
+/* Service Item Card - Container for each benefit card
+   Redesigned from clickable list items to expandable cards
+   Previous: .home-service-item was a simple list item with checkmark
+   New: Full card with header section and collapsible description */
+.home-service-item {
+  border: 2px solid #6b4a9a;
+  border-radius: 16px;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
   display: flex;
   flex-direction: column;
-  align-items: center;
-  gap: 2rem;
-  max-width: 900px;
-  margin: 0 auto;
+  overflow: hidden;  /* Required for description max-height animation */
+  background: linear-gradient(180deg, #ffffff 0%, #f8f8f8 100%);
 }
 
-.home-services-list {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 1.5rem 2rem;
+/* Hover state - lifts card and changes border to orange accent */
+.home-service-item:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 8px 24px rgba(255, 152, 0, 0.3);  /* Orange glow on hover */
+  border-color: #ff9800;
 }
 
-.home-service-item {
-  padding: 1.25rem 1.5rem;
-  font-size: 1.15rem;
-  font-weight: 500;
-  background: linear-gradient(135deg, #4a3668 0%, #3a2656 100%);
-  border: 2px solid #6b4a9a;
-  border-radius: 12px;
+/* Service Header - New component containing icon and title
+   Always visible; dark purple gradient background
+   Replaces the old checkmark + title inline layout */
+.home-service-header {
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 1rem;
-  transition: all 0.3s ease;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-  color: #f0f0f0;
+  padding: 2rem;
+  background: linear-gradient(135deg, #4a3668 0%, #3a2656 100%);
+  min-height: 100px;
 }
 
-.home-service-item:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 6px 20px rgba(255, 152, 0, 0.3);
-  border-color: #ff9800;
+/* Header lightens slightly on hover for visual feedback */
+.home-service-item:hover .home-service-header {
   background: linear-gradient(135deg, #5a4678 0%, #4a3666 100%);
 }
 
-.home-checkmark {
+/* Service Icon - New styled icon replacing the checkmark
+   Uses gradient text effect for orange color
+   Triggers jiggle animation on card hover */
+.home-service-icon {
+  font-size: 2.5rem;
   color: #ff9800;
-  font-weight: 900;
-  font-size: 2rem;
   background: linear-gradient(135deg, #ff9800 0%, #ffa726 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
   flex-shrink: 0;
+  transition: transform 0.3s ease;
 }
 
+.home-service-item:hover .home-service-icon {
+  animation: jiggle 0.6s ease-in-out;
+}
+
+/* Service Title - Heading text in the header */
+.home-service-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #f0f0f0;
+  margin: 0;
+}
+
+/* Service Description - Collapsible content area
+   Hidden by default (max-height: 0), expands on hover
+   This replaces the modal popup from the previous design
+   Uses max-height transition for smooth expand/collapse animation */
+.home-service-description {
+  font-size: 1rem;
+  line-height: 1.7;
+  color: #333;
+  margin: 0;
+  padding: 0 2rem;
+  max-height: 0;  /* Collapsed state - content hidden */
+  overflow: hidden;
+  transition: max-height 0.4s ease, padding 0.4s ease;
+}
+
+/* Expanded state - description becomes visible on card hover */
+.home-service-item:hover .home-service-description {
+  max-height: 500px;  /* Large enough for any description */
+  padding: 2rem;
+}
+
+/* Bold text styling within descriptions - uses brand purple color */
+.home-service-description strong {
+  color: #310956;
+  font-weight: 600;
+}
+
+/* Services CTA - "Learn More" button container
+   Added margin-top: 1rem (was previously not explicitly set) */
 .home-services-cta {
   text-align: center;
+  margin-top: 1rem;
 }
 
 /* ============================================

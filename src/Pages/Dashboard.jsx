@@ -33,6 +33,32 @@ export default function Dashboard() {
   const [newAgentSuccess, setNewAgentSuccess] = useState(null);
   const [newAgentForm, setNewAgentForm] = useState({ name: '', company: '' });
 
+  // Training - URL Embedding state
+  // These states manage the URL-based embedding feature in the Training tab
+  // Allows users to submit website URLs that get crawled and converted to vector embeddings
+  // for RAG (Retrieval Augmented Generation) to enhance agent responses with web content
+  const [embeddingUrl, setEmbeddingUrl] = useState('');           // Current URL input value
+  const [embeddingLoading, setEmbeddingLoading] = useState(false); // Loading state during API call
+  const [embeddingError, setEmbeddingError] = useState(null);      // Error message from failed operations
+  const [embeddingSuccess, setEmbeddingSuccess] = useState(null);  // Success message after operations
+  const [isEmbeddingSectionOpen, setIsEmbeddingSectionOpen] = useState(true);  // Collapsible section toggle
+  const [showAddEmbeddingForm, setShowAddEmbeddingForm] = useState(false);     // Show/hide the add URL form
+  const [embeddingsList, setEmbeddingsList] = useState([]);        // List of existing URL embeddings
+  const [embeddingsLoading, setEmbeddingsLoading] = useState(false); // Loading state for fetching list
+
+  // Training - File Embedding state
+  // These states manage file upload-based embeddings in the Training tab
+  // Allows users to upload documents (PDF, TXT, DOC, DOCX) that get parsed and converted to embeddings
+  // for RAG to enhance agent responses with document content
+  const [embeddingFile, setEmbeddingFile] = useState(null);            // Selected file object
+  const [fileEmbeddingLoading, setFileEmbeddingLoading] = useState(false); // Loading during upload
+  const [fileEmbeddingError, setFileEmbeddingError] = useState(null);      // Error message
+  const [fileEmbeddingSuccess, setFileEmbeddingSuccess] = useState(null);  // Success message
+  const [isFileSectionOpen, setIsFileSectionOpen] = useState(true);    // Collapsible section toggle
+  const [showAddFileForm, setShowAddFileForm] = useState(false);       // Show/hide the add file form
+  const [fileEmbeddingsList, setFileEmbeddingsList] = useState([]);    // List of existing file embeddings
+  const [fileEmbeddingsLoading, setFileEmbeddingsLoading] = useState(false); // Loading state for list
+
   // Redirect if not authenticated
   useEffect(() => {
     if (!isLoading && !isLoggedIn) {
@@ -113,6 +139,17 @@ export default function Dashboard() {
     selectedSubscription.plan_type === 'base' &&
     selectedSubscription.subscription_status !== 'cancelled' &&
     selectedSubscription.subscription_status !== 'past_due';
+
+  // Fetch embeddings when selected client changes
+  // Triggers both URL and file embedding fetches when user selects a different agent
+  // This ensures the Training tab displays the correct embeddings for the current agent
+  // Interacts with: fetchEmbeddings(), fetchFileEmbeddings(), selectedClientId state
+  useEffect(() => {
+    if (selectedClientId) {
+      fetchEmbeddings();
+      fetchFileEmbeddings();
+    }
+  }, [selectedClientId]);
 
   const specialtySubAtLimit = selectedSubscription?.plan_type === 'specialty' && 
     agentsInSubscription.length >= 1;
@@ -232,6 +269,302 @@ export default function Dashboard() {
       setNewAgentError(error.message);
     } finally {
       setNewAgentLoading(false);
+    }
+  };
+
+  // handleCreateEmbedding - Creates a new URL-based embedding
+  // Called when user submits a URL in the Training tab's URL Embedding form
+  // Validates URL format, sends to backend API which crawls the page and creates vector embeddings
+  // Interacts with: /api/embeddings/create-from-url endpoint, embeddingUrl state, selectedClientId
+  // On success: clears form, refreshes embeddings list, shows success message for 5 seconds
+  const handleCreateEmbedding = async (e) => {
+    e.preventDefault();
+
+    if (!embeddingUrl.trim()) {
+      setEmbeddingError('Please enter a valid URL');
+      return;
+    }
+
+    // Basic URL validation - uses URL constructor to verify format
+    try {
+      new URL(embeddingUrl);
+    } catch {
+      setEmbeddingError('Please enter a valid URL (e.g., https://example.com)');
+      return;
+    }
+
+    setEmbeddingLoading(true);
+    setEmbeddingError(null);
+    setEmbeddingSuccess(null);
+
+    try {
+      const apiBaseUrl = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+      const response = await fetch(
+        `${apiBaseUrl}/api/embeddings/create-from-url`,
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            url: embeddingUrl.trim(),
+            clientId: selectedClientId,
+            type: 'url' // Flag to indicate this is a URL embedding (vs file embedding)
+          }),
+          credentials: 'include'
+        }
+      );
+
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.error || 'Failed to create embedding');
+
+      setEmbeddingSuccess('Embedding created successfully!');
+      setEmbeddingUrl('');
+      setShowAddEmbeddingForm(false);
+
+      // Refresh embeddings list to show the newly created embedding
+      fetchEmbeddings();
+
+      // Auto-clear success message after 5 seconds
+      setTimeout(() => {
+        setEmbeddingSuccess(null);
+      }, 5000);
+
+    } catch (error) {
+      console.error('Create embedding error:', error);
+      setEmbeddingError(error.message);
+    } finally {
+      setEmbeddingLoading(false);
+    }
+  };
+
+  // fetchEmbeddings - Retrieves URL-based embeddings for the current agent
+  // Called on client selection change and after creating/deleting embeddings
+  // Fetches from /api/embeddings/client/:clientId and filters for type='url' embeddings only
+  // Includes robust error handling for non-JSON responses (e.g., HTML error pages)
+  // Interacts with: embeddingsList state, selectedClientId, embeddingsLoading
+  const fetchEmbeddings = async () => {
+    if (!selectedClientId) {
+      console.log('⚠️ fetchEmbeddings called but no selectedClientId:', selectedClientId);
+      return;
+    }
+
+    console.log('📡 Fetching embeddings for clientId:', selectedClientId);
+    setEmbeddingsLoading(true);
+    try {
+      const apiBaseUrl = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+      const url = `${apiBaseUrl}/api/embeddings/client/${selectedClientId}`;
+      console.log('📡 Fetch URL:', url);
+
+      const response = await fetch(url, {
+        method: 'GET',
+        credentials: 'include'
+      });
+
+      console.log('📡 Response status:', response.status, response.statusText);
+
+      // Check if response is actually JSON before parsing
+      // This prevents parsing errors when server returns HTML error pages
+      const contentType = response.headers.get('content-type');
+      console.log('📡 Response content-type:', contentType);
+
+      let data;
+      if (contentType && contentType.includes('application/json')) {
+        data = await response.json();
+        console.log('📡 Embeddings response:', data);
+      } else {
+        const text = await response.text();
+        console.error('📡 Non-JSON response received:', text);
+        throw new Error(`Server returned ${response.status}: ${text.substring(0, 200)}`);
+      }
+
+      if (!response.ok) throw new Error(data.error || `Failed to fetch embeddings (${response.status})`);
+
+      // Filter to only URL embeddings (type === 'url' or no type field for backward compatibility)
+      // Backward compatibility: older embeddings without a type field are treated as URL embeddings
+      const allEmbeddings = data.embeddings || [];
+      const urlEmbeddings = allEmbeddings.filter(emb => !emb.type || emb.type === 'url');
+
+      setEmbeddingsList(urlEmbeddings);
+      console.log('✅ URL Embeddings loaded:', urlEmbeddings.length, 'of', allEmbeddings.length, 'total');
+    } catch (error) {
+      console.error('❌ Fetch embeddings error:', error);
+      console.error('❌ Error details:', {
+        message: error.message,
+        stack: error.stack
+      });
+      setEmbeddingsList([]); // Clear list on error to prevent stale data
+    } finally {
+      setEmbeddingsLoading(false);
+    }
+  };
+
+  // fetchFileEmbeddings - Retrieves file-based embeddings for the current agent
+  // Called on client selection change and after creating/deleting file embeddings
+  // Uses same API endpoint as URL embeddings but filters for type='file' only
+  // Note: Shares endpoint with fetchEmbeddings() - both fetch all embeddings, then filter client-side
+  // Interacts with: fileEmbeddingsList state, selectedClientId, fileEmbeddingsLoading
+  const fetchFileEmbeddings = async () => {
+    if (!selectedClientId) {
+      console.log('⚠️ fetchFileEmbeddings called but no selectedClientId:', selectedClientId);
+      return;
+    }
+
+    console.log('📄 Fetching file embeddings for clientId:', selectedClientId);
+    setFileEmbeddingsLoading(true);
+    try {
+      const apiBaseUrl = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+      // Using same endpoint as URL embeddings - filtering by type happens on frontend
+      const url = `${apiBaseUrl}/api/embeddings/client/${selectedClientId}`;
+      console.log('📄 Fetch URL:', url);
+
+      const response = await fetch(url, {
+        method: 'GET',
+        credentials: 'include'
+      });
+
+      console.log('📄 Response status:', response.status, response.statusText);
+
+      // Check if response is actually JSON before parsing
+      const contentType = response.headers.get('content-type');
+      console.log('📄 Response content-type:', contentType);
+
+      let data;
+      if (contentType && contentType.includes('application/json')) {
+        data = await response.json();
+        console.log('📄 File embeddings response:', data);
+      } else {
+        const text = await response.text();
+        console.error('📄 Non-JSON response received:', text);
+        throw new Error(`Server returned ${response.status}: ${text.substring(0, 200)}`);
+      }
+
+      if (!response.ok) throw new Error(data.error || `Failed to fetch file embeddings (${response.status})`);
+
+      // Filter to only file embeddings (type === 'file')
+      // Unlike URL embeddings, file embeddings must explicitly have type='file'
+      const allEmbeddings = data.embeddings || [];
+      const fileEmbeddings = allEmbeddings.filter(emb => emb.type === 'file');
+
+      setFileEmbeddingsList(fileEmbeddings);
+      console.log('✅ File embeddings loaded:', fileEmbeddings.length, 'of', allEmbeddings.length, 'total');
+    } catch (error) {
+      console.error('❌ Fetch file embeddings error:', error);
+      console.error('❌ Error details:', {
+        message: error.message,
+        stack: error.stack
+      });
+      setFileEmbeddingsList([]); // Clear list on error to prevent stale data
+    } finally {
+      setFileEmbeddingsLoading(false);
+    }
+  };
+
+  // handleCreateFileEmbedding - Uploads a file and creates embeddings from its content
+  // Called when user submits a file in the Training tab's File Embedding form
+  // Uses FormData to send file to backend, which parses document and creates vector embeddings
+  // Supports PDF, TXT, DOC, DOCX formats (validated via file input accept attribute)
+  // Interacts with: /api/embeddings/create-from-file endpoint, embeddingFile state, selectedClientId
+  // On success: clears form, resets file input, refreshes list, shows success message for 5 seconds
+  const handleCreateFileEmbedding = async (e) => {
+    e.preventDefault();
+
+    if (!embeddingFile) {
+      setFileEmbeddingError('Please select a file');
+      return;
+    }
+
+    setFileEmbeddingLoading(true);
+    setFileEmbeddingError(null);
+    setFileEmbeddingSuccess(null);
+
+    try {
+      const apiBaseUrl = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+      // Use FormData for multipart/form-data file upload (no Content-Type header needed)
+      const formData = new FormData();
+      formData.append('file', embeddingFile);
+      formData.append('clientId', selectedClientId);
+      formData.append('type', 'file'); // Flag to differentiate from URL embeddings
+
+      const response = await fetch(
+        `${apiBaseUrl}/api/embeddings/create-from-file`,
+        {
+          method: 'POST',
+          body: formData,
+          credentials: 'include'
+        }
+      );
+
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.error || 'Failed to create embedding from file');
+
+      setFileEmbeddingSuccess('File embedding created successfully!');
+      setEmbeddingFile(null);
+      setShowAddFileForm(false);
+
+      // Reset file input element manually (React doesn't control file inputs)
+      const fileInput = document.querySelector('input[type="file"]');
+      if (fileInput) fileInput.value = '';
+
+      // Refresh file embeddings list to show the newly created embedding
+      fetchFileEmbeddings();
+
+      // Auto-clear success message after 5 seconds
+      setTimeout(() => {
+        setFileEmbeddingSuccess(null);
+      }, 5000);
+
+    } catch (error) {
+      console.error('Create file embedding error:', error);
+      setFileEmbeddingError(error.message);
+    } finally {
+      setFileEmbeddingLoading(false);
+    }
+  };
+
+  // handleDeleteEmbedding - Deletes an embedding (URL or file) from the system
+  // Called when user clicks the delete button on an embedding in the Training tab
+  // Shows confirmation dialog before deletion to prevent accidental data loss
+  // Interacts with: /api/embeddings/:embeddingId (DELETE), fetchEmbeddings(), fetchFileEmbeddings()
+  // Uses embeddingType parameter to determine which list to refresh and which state to update
+  const handleDeleteEmbedding = async (embeddingId, embeddingType) => {
+    if (!confirm('Are you sure you want to delete this embedding? This action cannot be undone.')) {
+      return;
+    }
+
+    try {
+      const apiBaseUrl = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+      const response = await fetch(
+        `${apiBaseUrl}/api/embeddings/${embeddingId}`,
+        {
+          method: 'DELETE',
+          credentials: 'include'
+        }
+      );
+
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.error || 'Failed to delete embedding');
+
+      // Refresh the appropriate list based on embedding type
+      // This ensures the UI reflects the deletion immediately
+      if (embeddingType === 'url') {
+        fetchEmbeddings();
+        setEmbeddingSuccess('Embedding deleted successfully!');
+        setTimeout(() => setEmbeddingSuccess(null), 3000);
+      } else {
+        fetchFileEmbeddings();
+        setFileEmbeddingSuccess('Embedding deleted successfully!');
+        setTimeout(() => setFileEmbeddingSuccess(null), 3000);
+      }
+
+    } catch (error) {
+      console.error('Delete embedding error:', error);
+      // Show error in the appropriate section based on embedding type
+      if (embeddingType === 'url') {
+        setEmbeddingError(error.message);
+        setTimeout(() => setEmbeddingError(null), 5000);
+      } else {
+        setFileEmbeddingError(error.message);
+        setTimeout(() => setFileEmbeddingError(null), 5000);
+      }
     }
   };
 
@@ -600,9 +933,11 @@ export default function Dashboard() {
         </div>
       )}
 
-      {/* Tabs */}
+      {/* Tabs - Navigation for different dashboard sections */}
+      {/* Training tab added to allow users to manage RAG embeddings for their agents */}
       <div style={{ display: 'flex', borderBottom: '2px solid #ddd', marginTop: '1.5em', marginBottom: '2em', flexWrap: 'wrap' }}>
         <button style={tabStyle(activeTab === 'configurations')} onClick={() => setActiveTab('configurations')}>Configurations</button>
+        <button style={tabStyle(activeTab === 'training')} onClick={() => setActiveTab('training')}>Training</button>
         <button style={tabStyle(activeTab === 'models')} onClick={() => setActiveTab('models')}>Models</button>
         <button style={tabStyle(activeTab === 'integrations')} onClick={() => setActiveTab('integrations')}>Integrations</button>
         <button style={tabStyle(activeTab === 'conversations')} onClick={() => setActiveTab('conversations')}>Conversations</button>
@@ -614,6 +949,435 @@ export default function Dashboard() {
       ) : selectedClient ? (
         <>
           {activeTab === 'configurations' && <ConfigurationsTab user={selectedClient} clientId={selectedClientId} />}
+          {/* Training Tab - RAG Embedding Management
+              Allows users to add knowledge sources (URLs and files) to enhance their AI agent's responses
+              Two sections: URL Embeddings (web scraping) and File Embeddings (document uploads)
+              Each section is collapsible and has its own list, add form, and CRUD operations
+              Interacts with: embedding state variables, fetch/create/delete embedding functions */}
+          {activeTab === 'training' && (
+            <div style={{ padding: '2em', backgroundColor: '#f8f9fa', borderRadius: '8px', border: '1px solid #dee2e6' }}>
+              <h2 style={{ marginTop: 0, color: '#333' }}>Training</h2>
+              <p style={{ color: '#666', lineHeight: '1.6' }}>
+                Configure and manage your agent's training data, knowledge base, and learning parameters.
+              </p>
+
+              {/* URL Embedding Section - Collapsible panel for managing website-based embeddings */}
+              <div style={{ backgroundColor: 'white', padding: '1.5em', borderRadius: '8px', border: '1px solid #dee2e6', marginTop: '1.5em' }}>
+                <div
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                    cursor: 'pointer',
+                    marginBottom: isEmbeddingSectionOpen ? '1em' : 0
+                  }}
+                  onClick={() => setIsEmbeddingSectionOpen(!isEmbeddingSectionOpen)}
+                >
+                  <h3 style={{ margin: 0, color: '#333', display: 'flex', alignItems: 'center', gap: '0.5em' }}>
+                    <i className="fa-solid fa-globe" style={{ color: '#007bff' }}></i>
+                    URL Embeddings
+                  </h3>
+                  <i className={`fa-solid fa-chevron-${isEmbeddingSectionOpen ? 'up' : 'down'}`} style={{ color: '#666', fontSize: '0.9em' }}></i>
+                </div>
+
+                {isEmbeddingSectionOpen && (
+                  <>
+                    <p style={{ color: '#666', fontSize: '0.95em', marginBottom: '1.5em' }}>
+                      Train your agent by providing website URLs. The system will crawl and create embeddings from the content.
+                    </p>
+
+                    {/* Embeddings List */}
+                    {embeddingsLoading ? (
+                      <div style={{ textAlign: 'center', padding: '2em', color: '#666' }}>
+                        <i className="fa-solid fa-spinner fa-spin" style={{ marginRight: '0.5em' }}></i>
+                        Loading embeddings...
+                      </div>
+                    ) : embeddingsList.length > 0 ? (
+                      <div style={{ marginBottom: '1.5em' }}>
+                        <h4 style={{ margin: '0 0 0.75em 0', fontSize: '0.95em', color: '#666' }}>Embedded Websites</h4>
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5em' }}>
+                          {embeddingsList.map((embedding, index) => (
+                            <div key={index} style={{
+                              padding: '0.75em 1em',
+                              backgroundColor: '#f8f9fa',
+                              borderRadius: '4px',
+                              border: '1px solid #dee2e6',
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'space-between'
+                            }}>
+                              <div style={{ display: 'flex', alignItems: 'center', gap: '0.75em', flex: 1 }}>
+                                <i className="fa-solid fa-globe" style={{ color: '#007bff', fontSize: '0.9em' }}></i>
+                                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.25em' }}>
+                                  {embedding.title && (
+                                    <span style={{ color: '#333', fontSize: '0.95em', fontWeight: '500' }}>{embedding.title}</span>
+                                  )}
+                                  <span style={{ color: '#666', fontSize: '0.85em' }}>{embedding.url || embedding.source}</span>
+                                </div>
+                              </div>
+                              <div style={{ display: 'flex', alignItems: 'center', gap: '1em' }}>
+                                {embedding.created_at && (
+                                  <span style={{ fontSize: '0.85em', color: '#999', whiteSpace: 'nowrap' }}>
+                                    {new Date(embedding.created_at).toLocaleDateString()}
+                                  </span>
+                                )}
+                                <button
+                                  onClick={() => handleDeleteEmbedding(embedding.id, 'url')}
+                                  style={{
+                                    padding: '0.4em 0.75em',
+                                    fontSize: '0.85em',
+                                    backgroundColor: '#dc3545',
+                                    color: 'white',
+                                    border: 'none',
+                                    borderRadius: '4px',
+                                    cursor: 'pointer',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    gap: '0.4em'
+                                  }}
+                                  title="Delete embedding"
+                                >
+                                  <i className="fa-solid fa-trash"></i>
+                                  Delete
+                                </button>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    ) : (
+                      <div style={{ textAlign: 'center', padding: '2em', color: '#999', backgroundColor: '#f8f9fa', borderRadius: '4px', marginBottom: '1.5em' }}>
+                        No embeddings yet. Click "Add New Embedding" to get started.
+                      </div>
+                    )}
+
+                    {/* Add New Button */}
+                    {!showAddEmbeddingForm && (
+                      <button
+                        onClick={(e) => { e.stopPropagation(); setShowAddEmbeddingForm(true); }}
+                        style={{
+                          padding: '0.75em 1.5em',
+                          fontSize: '1em',
+                          backgroundColor: '#007bff',
+                          color: 'white',
+                          border: 'none',
+                          borderRadius: '4px',
+                          cursor: 'pointer',
+                          fontWeight: 'bold',
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: '0.5em'
+                        }}
+                      >
+                        <i className="fa-solid fa-plus"></i>
+                        Add New Embedding
+                      </button>
+                    )}
+
+                    {/* Add Embedding Form */}
+                    {showAddEmbeddingForm && (
+                      <form onSubmit={handleCreateEmbedding} style={{ marginTop: '1.5em', padding: '1.5em', backgroundColor: '#f8f9fa', borderRadius: '4px', border: '1px solid #dee2e6' }}>
+                  <div style={{ marginBottom: '1em' }}>
+                    <label style={{ display: 'block', marginBottom: '0.5em', fontWeight: 'bold', color: '#333' }}>
+                      Website URL <span style={{ color: '#dc3545' }}>*</span>
+                    </label>
+                    <input
+                      type="url"
+                      value={embeddingUrl}
+                      onChange={(e) => setEmbeddingUrl(e.target.value)}
+                      placeholder="https://example.com"
+                      disabled={embeddingLoading}
+                      style={{
+                        width: '100%',
+                        padding: '0.75em',
+                        fontSize: '1em',
+                        border: '1px solid #ddd',
+                        borderRadius: '4px',
+                        boxSizing: 'border-box'
+                      }}
+                      required
+                    />
+                  </div>
+
+                  {embeddingError && (
+                    <div style={{ backgroundColor: '#f8d7da', border: '1px solid #f5c6cb', borderRadius: '4px', padding: '0.75em', marginBottom: '1em', color: '#721c24' }}>
+                      ❌ {embeddingError}
+                    </div>
+                  )}
+
+                  {embeddingSuccess && (
+                    <div style={{ backgroundColor: '#d4edda', border: '1px solid #c3e6cb', borderRadius: '4px', padding: '0.75em', marginBottom: '1em', color: '#155724' }}>
+                      ✅ {embeddingSuccess}
+                    </div>
+                  )}
+
+                  <div style={{ display: 'flex', gap: '1em' }}>
+                    <button
+                      type="submit"
+                      disabled={embeddingLoading || !embeddingUrl.trim()}
+                      style={{
+                        padding: '0.75em 1.5em',
+                        fontSize: '1em',
+                        backgroundColor: embeddingLoading ? '#ccc' : '#007bff',
+                        color: 'white',
+                        border: 'none',
+                        borderRadius: '4px',
+                        cursor: embeddingLoading ? 'not-allowed' : 'pointer',
+                        fontWeight: 'bold'
+                      }}
+                    >
+                      {embeddingLoading ? (
+                        <>
+                          <i className="fa-solid fa-spinner fa-spin" style={{ marginRight: '0.5em' }}></i>
+                          Creating Embedding...
+                        </>
+                      ) : (
+                        <>
+                          <i className="fa-solid fa-plus" style={{ marginRight: '0.5em' }}></i>
+                          Create Embedding
+                        </>
+                      )}
+                    </button>
+
+                    <button
+                      type="button"
+                      onClick={(e) => { e.stopPropagation(); setShowAddEmbeddingForm(false); setEmbeddingUrl(''); setEmbeddingError(null); setEmbeddingSuccess(null); }}
+                      disabled={embeddingLoading}
+                      style={{
+                        padding: '0.75em 1.5em',
+                        fontSize: '1em',
+                        backgroundColor: '#6c757d',
+                        color: 'white',
+                        border: 'none',
+                        borderRadius: '4px',
+                        cursor: embeddingLoading ? 'not-allowed' : 'pointer',
+                        fontWeight: 'bold'
+                      }}
+                    >
+                      Cancel
+                    </button>
+                  </div>
+                </form>
+              )}
+            </>
+          )}
+              </div>
+
+              {/* File Embedding Section */}
+              <div style={{ backgroundColor: 'white', padding: '1.5em', borderRadius: '8px', border: '1px solid #dee2e6', marginTop: '1.5em' }}>
+                <div
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                    cursor: 'pointer',
+                    marginBottom: isFileSectionOpen ? '1em' : 0
+                  }}
+                  onClick={() => setIsFileSectionOpen(!isFileSectionOpen)}
+                >
+                  <h3 style={{ margin: 0, color: '#333', display: 'flex', alignItems: 'center', gap: '0.5em' }}>
+                    <i className="fa-solid fa-file-arrow-up" style={{ color: '#28a745' }}></i>
+                    File Embeddings
+                  </h3>
+                  <i className={`fa-solid fa-chevron-${isFileSectionOpen ? 'up' : 'down'}`} style={{ color: '#666', fontSize: '0.9em' }}></i>
+                </div>
+
+                {isFileSectionOpen && (
+                  <>
+                    <p style={{ color: '#666', fontSize: '0.95em', marginBottom: '1.5em' }}>
+                      Upload document files to train your agent. Supported formats: PDF, TXT, DOC, DOCX.
+                    </p>
+
+                    {/* File Embeddings List */}
+                    {fileEmbeddingsLoading ? (
+                      <div style={{ textAlign: 'center', padding: '2em', color: '#666' }}>
+                        <i className="fa-solid fa-spinner fa-spin" style={{ marginRight: '0.5em' }}></i>
+                        Loading file embeddings...
+                      </div>
+                    ) : fileEmbeddingsList.length > 0 ? (
+                      <div style={{ marginBottom: '1.5em' }}>
+                        <h4 style={{ margin: '0 0 0.75em 0', fontSize: '0.95em', color: '#666' }}>Uploaded Files</h4>
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5em' }}>
+                          {fileEmbeddingsList.map((embedding, index) => (
+                            <div key={index} style={{
+                              padding: '0.75em 1em',
+                              backgroundColor: '#f8f9fa',
+                              borderRadius: '4px',
+                              border: '1px solid #dee2e6',
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'space-between'
+                            }}>
+                              <div style={{ display: 'flex', alignItems: 'center', gap: '0.75em', flex: 1 }}>
+                                <i className="fa-solid fa-file" style={{ color: '#28a745', fontSize: '0.9em' }}></i>
+                                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.25em' }}>
+                                  {embedding.title && (
+                                    <span style={{ color: '#333', fontSize: '0.95em', fontWeight: '500' }}>{embedding.title}</span>
+                                  )}
+                                  <span style={{ color: '#666', fontSize: '0.85em' }}>{embedding.filename || embedding.url || embedding.source}</span>
+                                </div>
+                              </div>
+                              <div style={{ display: 'flex', alignItems: 'center', gap: '1em' }}>
+                                {embedding.created_at && (
+                                  <span style={{ fontSize: '0.85em', color: '#999', whiteSpace: 'nowrap' }}>
+                                    {new Date(embedding.created_at).toLocaleDateString()}
+                                  </span>
+                                )}
+                                <button
+                                  onClick={() => handleDeleteEmbedding(embedding.id, 'file')}
+                                  style={{
+                                    padding: '0.4em 0.75em',
+                                    fontSize: '0.85em',
+                                    backgroundColor: '#dc3545',
+                                    color: 'white',
+                                    border: 'none',
+                                    borderRadius: '4px',
+                                    cursor: 'pointer',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    gap: '0.4em'
+                                  }}
+                                  title="Delete embedding"
+                                >
+                                  <i className="fa-solid fa-trash"></i>
+                                  Delete
+                                </button>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    ) : (
+                      <div style={{ textAlign: 'center', padding: '2em', color: '#999', backgroundColor: '#f8f9fa', borderRadius: '4px', marginBottom: '1.5em' }}>
+                        No file embeddings yet. Click "Add New File" to get started.
+                      </div>
+                    )}
+
+                    {/* Add New Button */}
+                    {!showAddFileForm && (
+                      <button
+                        onClick={(e) => { e.stopPropagation(); setShowAddFileForm(true); }}
+                        style={{
+                          padding: '0.75em 1.5em',
+                          fontSize: '1em',
+                          backgroundColor: '#28a745',
+                          color: 'white',
+                          border: 'none',
+                          borderRadius: '4px',
+                          cursor: 'pointer',
+                          fontWeight: 'bold',
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: '0.5em'
+                        }}
+                      >
+                        <i className="fa-solid fa-plus"></i>
+                        Add New File
+                      </button>
+                    )}
+
+                    {/* Add File Form */}
+                    {showAddFileForm && (
+                      <form onSubmit={handleCreateFileEmbedding} style={{ marginTop: '1.5em', padding: '1.5em', backgroundColor: '#f8f9fa', borderRadius: '4px', border: '1px solid #dee2e6' }}>
+                      <div style={{ marginBottom: '1em' }}>
+                        <label style={{ display: 'block', marginBottom: '0.5em', fontWeight: 'bold', color: '#333' }}>
+                          Select File <span style={{ color: '#dc3545' }}>*</span>
+                        </label>
+                        <input
+                          type="file"
+                          onChange={(e) => setEmbeddingFile(e.target.files[0])}
+                          accept=".pdf,.txt,.doc,.docx"
+                          disabled={fileEmbeddingLoading}
+                          style={{
+                            width: '100%',
+                            padding: '0.75em',
+                            fontSize: '1em',
+                            border: '1px solid #ddd',
+                            borderRadius: '4px',
+                            boxSizing: 'border-box',
+                            cursor: fileEmbeddingLoading ? 'not-allowed' : 'pointer'
+                          }}
+                          required
+                        />
+                        {embeddingFile && (
+                          <div style={{ marginTop: '0.5em', fontSize: '0.9em', color: '#666' }}>
+                            Selected: {embeddingFile.name} ({(embeddingFile.size / 1024).toFixed(2)} KB)
+                          </div>
+                        )}
+                      </div>
+
+                      {fileEmbeddingError && (
+                        <div style={{ backgroundColor: '#f8d7da', border: '1px solid #f5c6cb', borderRadius: '4px', padding: '0.75em', marginBottom: '1em', color: '#721c24' }}>
+                          ❌ {fileEmbeddingError}
+                        </div>
+                      )}
+
+                      {fileEmbeddingSuccess && (
+                        <div style={{ backgroundColor: '#d4edda', border: '1px solid #c3e6cb', borderRadius: '4px', padding: '0.75em', marginBottom: '1em', color: '#155724' }}>
+                          ✅ {fileEmbeddingSuccess}
+                        </div>
+                      )}
+
+                      <div style={{ display: 'flex', gap: '1em' }}>
+                        <button
+                          type="submit"
+                          disabled={fileEmbeddingLoading || !embeddingFile}
+                          style={{
+                            padding: '0.75em 1.5em',
+                            fontSize: '1em',
+                            backgroundColor: fileEmbeddingLoading ? '#ccc' : '#28a745',
+                            color: 'white',
+                            border: 'none',
+                            borderRadius: '4px',
+                            cursor: fileEmbeddingLoading ? 'not-allowed' : 'pointer',
+                            fontWeight: 'bold'
+                          }}
+                        >
+                          {fileEmbeddingLoading ? (
+                            <>
+                              <i className="fa-solid fa-spinner fa-spin" style={{ marginRight: '0.5em' }}></i>
+                              Creating Embedding...
+                            </>
+                          ) : (
+                            <>
+                              <i className="fa-solid fa-upload" style={{ marginRight: '0.5em' }}></i>
+                              Upload File
+                            </>
+                          )}
+                        </button>
+
+                        <button
+                          type="button"
+                          onClick={(e) => { e.stopPropagation(); setShowAddFileForm(false); setEmbeddingFile(null); setFileEmbeddingError(null); setFileEmbeddingSuccess(null); }}
+                          disabled={fileEmbeddingLoading}
+                          style={{
+                            padding: '0.75em 1.5em',
+                            fontSize: '1em',
+                            backgroundColor: '#6c757d',
+                            color: 'white',
+                            border: 'none',
+                            borderRadius: '4px',
+                            cursor: fileEmbeddingLoading ? 'not-allowed' : 'pointer',
+                            fontWeight: 'bold'
+                          }}
+                        >
+                          Cancel
+                        </button>
+                      </div>
+                    </form>
+                    )}
+                  </>
+                )}
+              </div>
+
+              {/* Coming Soon Section */}
+              <div style={{ backgroundColor: '#fff3cd', border: '1px solid #ffc107', borderRadius: '8px', padding: '1.5em', marginTop: '1.5em' }}>
+                <p style={{ margin: 0, color: '#856404' }}>
+                  <strong>Additional Features Coming Soon:</strong> Document uploads, training datasets, and fine-tuning options will be available in future updates.
+                </p>
+              </div>
+            </div>
+          )}
           {activeTab === 'models' && <ModelsTab user={selectedClient} clientId={selectedClientId} />}
           {activeTab === 'integrations' && <IntegrationsTab user={selectedClient} clientId={selectedClientId} />}
           {activeTab === 'conversations' && <ConversationsTab user={selectedClient} clientId={selectedClientId} />}

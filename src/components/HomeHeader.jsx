@@ -77,9 +77,11 @@ export default function HomeHeader() {
               Home
             </a>
           </li>
+          {/* Changed link text from "Services" to "Benefits" to better describe the section content
+              The section showcases benefits of AI agents rather than listing services offered */}
           <li>
             <a href="#services" onClick={(e) => handleNavClick(e, "services")}>
-              Services
+              Benefits
             </a>
           </li>
           <li>
