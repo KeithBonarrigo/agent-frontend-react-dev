@@ -25,7 +25,7 @@ export default function AddOnsTab({ user, clientId }) {
     credsInstructions: null,
     credsWhereFind: null
   });
-  const [credentialsInput, setCredentialsInput] = useState(''); // JSON string for credentials
+  const [credentialsInput, setCredentialsInput] = useState(''); // JSON string for credentials (server add-ons)
   const [credentialsError, setCredentialsError] = useState(null);
   const [showWhereFind, setShowWhereFind] = useState(false); // Toggle for collapsible help section
 
@@ -375,8 +375,8 @@ export default function AddOnsTab({ user, clientId }) {
         </div>
       )}
 
-      {/* Add-Ons Grid */}
-      {!addOnsLoading && !addOnsError && availableAddOns.length > 0 && (
+      {/* Add-Ons Grid - Server-side decorators and Frontend integrations */}
+      {!addOnsLoading && !addOnsError && (
         <div style={{
           display: "grid",
           gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))",
@@ -384,6 +384,7 @@ export default function AddOnsTab({ user, clientId }) {
           maxWidth: "900px",
           margin: "0 auto"
         }}>
+          {/* Server-side Add-Ons */}
           {availableAddOns.map((addOn) => {
             const isEnabled = enabledAddOns.includes(addOn.key);
             const isSaving = savingAddOn === addOn.key;
@@ -768,14 +769,14 @@ export default function AddOnsTab({ user, clientId }) {
               Configure {credentialsModal.addOnName}
             </h3>
             <p style={{ color: "#666", marginBottom: "1.5em", fontSize: "0.9em" }}>
-              This add-on requires credentials to function. Paste your JSON credentials below (e.g., Google service account JSON).
+              {credentialsModal.credsInstructions || 'This add-on requires credentials to function. Paste your JSON credentials below (e.g., Google service account JSON).'}
             </p>
 
             <form onSubmit={handleCredentialsSubmit}>
               <textarea
                 value={credentialsInput}
                 onChange={(e) => setCredentialsInput(e.target.value)}
-                placeholder={credentialsModal.credsInstructions || '{"type": "service_account", "project_id": "...", ...}'}
+                placeholder={'{"type": "service_account", "project_id": "...", ...}'}
                 style={{
                   width: "100%",
                   minHeight: "200px",

@@ -60,6 +60,22 @@ export default function Dashboard() {
   const [fileEmbeddingsList, setFileEmbeddingsList] = useState([]);    // List of existing file embeddings
   const [fileEmbeddingsLoading, setFileEmbeddingsLoading] = useState(false); // Loading state for list
 
+  // Google Drive integration state - for importing files from Google Drive
+  // Uses environment variables configured by the app owner (not per-client credentials)
+  const [fileSource, setFileSource] = useState('local'); // 'local' or 'google-drive'
+  const [googleDriveFile, setGoogleDriveFile] = useState(null); // Selected Google Drive file metadata
+  const [isGoogleApiLoaded, setIsGoogleApiLoaded] = useState(false);
+  const [isGooglePickerLoading, setIsGooglePickerLoading] = useState(false);
+  const [googleAccessToken, setGoogleAccessToken] = useState(null);
+
+  // Google Drive credentials from environment variables (configured once by app owner)
+  const googleDriveConfig = {
+    clientId: import.meta.env.VITE_GOOGLE_CLIENT_ID || null,
+    apiKey: import.meta.env.VITE_GOOGLE_API_KEY || null,
+    appId: import.meta.env.VITE_GOOGLE_APP_ID || null
+  };
+  const isGoogleDriveEnabled = !!(googleDriveConfig.clientId && googleDriveConfig.apiKey);
+
   // Redirect if not authenticated
   useEffect(() => {
     if (!isLoading && !isLoggedIn) {
@@ -151,6 +167,203 @@ export default function Dashboard() {
       fetchFileEmbeddings();
     }
   }, [selectedClientId]);
+
+  // Load Google API scripts when Google Drive is selected as file source
+  useEffect(() => {
+    if (fileSource !== 'google-drive' || isGoogleApiLoaded || !isGoogleDriveEnabled) return;
+
+    // Load the Google API script
+    const loadGoogleApi = () => {
+      if (window.gapi) {
+        setIsGoogleApiLoaded(true);
+        return;
+      }
+
+      const script = document.createElement('script');
+      script.src = 'https://apis.google.com/js/api.js';
+      script.onload = () => {
+        window.gapi.load('picker', () => {
+          setIsGoogleApiLoaded(true);
+        });
+      };
+      document.body.appendChild(script);
+    };
+
+    // Load Google Identity Services for OAuth
+    const loadGoogleIdentity = () => {
+      if (window.google?.accounts) return;
+
+      const script = document.createElement('script');
+      script.src = 'https://accounts.google.com/gsi/client';
+      document.body.appendChild(script);
+    };
+
+    loadGoogleApi();
+    loadGoogleIdentity();
+  }, [fileSource, isGoogleApiLoaded, isGoogleDriveEnabled]);
+
+  // handleGoogleDrivePicker - Opens Google Picker to select a file from Google Drive
+  // User clicks "Sign in with Google" -> OAuth popup -> gets access token -> opens Picker
+  const handleGoogleDrivePicker = () => {
+    if (!isGoogleDriveEnabled) {
+      setFileEmbeddingError('Google Drive is not configured. Please contact your administrator.');
+      return;
+    }
+
+    setIsGooglePickerLoading(true);
+    setFileEmbeddingError(null);
+
+    // Initialize the token client for OAuth - user signs in with their Google account
+    const tokenClient = window.google.accounts.oauth2.initTokenClient({
+      client_id: googleDriveConfig.clientId,
+      scope: 'https://www.googleapis.com/auth/drive.readonly',
+      callback: (tokenResponse) => {
+        if (tokenResponse.error) {
+          setFileEmbeddingError('Failed to authenticate with Google Drive');
+          setIsGooglePickerLoading(false);
+          return;
+        }
+
+        setGoogleAccessToken(tokenResponse.access_token);
+        createGooglePicker(tokenResponse.access_token);
+      },
+    });
+
+    // Request access token - this opens the Google sign-in popup
+    tokenClient.requestAccessToken();
+  };
+
+  // createGooglePicker - Creates and shows the Google Picker UI
+  const createGooglePicker = (accessToken) => {
+    const picker = new window.google.picker.PickerBuilder()
+      .addView(new window.google.picker.DocsView()
+        .setIncludeFolders(false)
+        .setMimeTypes('text/csv,application/pdf,text/plain,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document'))
+      .setOAuthToken(accessToken)
+      .setDeveloperKey(googleDriveConfig.apiKey)
+      .setAppId(googleDriveConfig.appId)
+      .setCallback((data) => {
+        setIsGooglePickerLoading(false);
+        if (data.action === window.google.picker.Action.PICKED) {
+          const file = data.docs[0];
+          setGoogleDriveFile({
+            id: file.id,
+            name: file.name,
+            mimeType: file.mimeType,
+            size: file.sizeBytes
+          });
+          // Clear local file if any
+          setEmbeddingFile(null);
+        } else if (data.action === window.google.picker.Action.CANCEL) {
+          // User cancelled - do nothing
+        }
+      })
+      .build();
+
+    picker.setVisible(true);
+  };
+
+  // handleCreateFileEmbeddingFromGoogleDrive - Creates embedding from Google Drive file
+  // Downloads the file from Google Drive, then uploads to the existing /api/embeddings/create-from-file endpoint
+  // Google Docs/Sheets/Slides need to be exported to standard formats since they're proprietary
+  const handleCreateFileEmbeddingFromGoogleDrive = async () => {
+    if (!googleDriveFile || !googleAccessToken) {
+      setFileEmbeddingError('Please select a file from Google Drive');
+      return;
+    }
+
+    setFileEmbeddingLoading(true);
+    setFileEmbeddingError(null);
+    setFileEmbeddingSuccess(null);
+
+    try {
+      // Google Workspace files need to be exported, not downloaded directly
+      // Map Google MIME types to export formats
+      const googleExportMap = {
+        'application/vnd.google-apps.document': { exportMime: 'application/pdf', ext: '.pdf' },
+        'application/vnd.google-apps.spreadsheet': { exportMime: 'text/csv', ext: '.csv' },
+        'application/vnd.google-apps.presentation': { exportMime: 'application/pdf', ext: '.pdf' }
+      };
+
+      const isGoogleWorkspaceFile = googleExportMap[googleDriveFile.mimeType];
+      let driveResponse;
+      let finalFileName = googleDriveFile.name;
+      let finalMimeType = googleDriveFile.mimeType;
+
+      if (isGoogleWorkspaceFile) {
+        // Export Google Workspace files to standard format
+        const { exportMime, ext } = isGoogleWorkspaceFile;
+        driveResponse = await fetch(
+          `https://www.googleapis.com/drive/v3/files/${googleDriveFile.id}/export?mimeType=${encodeURIComponent(exportMime)}`,
+          {
+            headers: {
+              'Authorization': `Bearer ${googleAccessToken}`
+            }
+          }
+        );
+        // Add extension if not already present
+        if (!finalFileName.toLowerCase().endsWith(ext)) {
+          finalFileName = finalFileName + ext;
+        }
+        finalMimeType = exportMime;
+      } else {
+        // Regular files can be downloaded directly
+        driveResponse = await fetch(
+          `https://www.googleapis.com/drive/v3/files/${googleDriveFile.id}?alt=media`,
+          {
+            headers: {
+              'Authorization': `Bearer ${googleAccessToken}`
+            }
+          }
+        );
+      }
+
+      if (!driveResponse.ok) {
+        const errorText = await driveResponse.text();
+        console.error('Google Drive download error:', errorText);
+        throw new Error('Failed to download file from Google Drive. Please try selecting the file again.');
+      }
+
+      // Convert response to a File object
+      const blob = await driveResponse.blob();
+
+      // Sanitize filename - remove problematic characters
+      const sanitizedFileName = finalFileName.replace(/[<>:"/\\|?*]/g, '_').trim();
+
+      const file = new File([blob], sanitizedFileName, { type: finalMimeType || blob.type });
+
+      // Create FormData and upload to existing endpoint
+      const apiBaseUrl = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+      const formData = new FormData();
+      formData.append('file', file);
+      formData.append('clientId', selectedClientId);
+      formData.append('type', 'file');
+
+      const response = await fetch(`${apiBaseUrl}/api/embeddings/create-from-file`, {
+        method: 'POST',
+        body: formData,
+        credentials: 'include'
+      });
+
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.error || 'Failed to create embedding from Google Drive file');
+
+      setFileEmbeddingSuccess('File embedding created successfully from Google Drive!');
+      setGoogleDriveFile(null);
+      setShowAddFileForm(false);
+      setFileSource('local');
+
+      // Refresh list
+      fetchFileEmbeddings();
+
+      setTimeout(() => setFileEmbeddingSuccess(null), 5000);
+    } catch (error) {
+      console.error('Create file embedding from Google Drive error:', error);
+      setFileEmbeddingError(error.message);
+    } finally {
+      setFileEmbeddingLoading(false);
+    }
+  };
 
   const specialtySubAtLimit = selectedSubscription?.plan_type === 'specialty' && 
     agentsInSubscription.length >= 1;
@@ -1286,93 +1499,296 @@ export default function Dashboard() {
 
                     {/* Add File Form */}
                     {showAddFileForm && (
-                      <form onSubmit={handleCreateFileEmbedding} style={{ marginTop: '1.5em', padding: '1.5em', backgroundColor: '#f8f9fa', borderRadius: '4px', border: '1px solid #dee2e6' }}>
-                      <div style={{ marginBottom: '1em' }}>
-                        <label style={{ display: 'block', marginBottom: '0.5em', fontWeight: 'bold', color: '#333' }}>
-                          Select File <span style={{ color: '#dc3545' }}>*</span>
-                        </label>
-                        <input
-                          type="file"
-                          onChange={(e) => setEmbeddingFile(e.target.files[0])}
-                          accept=".pdf,.txt,.doc,.docx,.csv"
-                          disabled={fileEmbeddingLoading}
-                          style={{
-                            width: '100%',
-                            padding: '0.75em',
-                            fontSize: '1em',
-                            border: '1px solid #ddd',
-                            borderRadius: '4px',
-                            boxSizing: 'border-box',
-                            cursor: fileEmbeddingLoading ? 'not-allowed' : 'pointer'
-                          }}
-                          required
-                        />
-                        {embeddingFile && (
-                          <div style={{ marginTop: '0.5em', fontSize: '0.9em', color: '#666' }}>
-                            Selected: {embeddingFile.name} ({(embeddingFile.size / 1024).toFixed(2)} KB)
+                      <div style={{ marginTop: '1.5em', padding: '1.5em', backgroundColor: '#f8f9fa', borderRadius: '4px', border: '1px solid #dee2e6' }}>
+                        {/* File Source Selector */}
+                        <div style={{ marginBottom: '1.5em' }}>
+                          <label style={{ display: 'block', marginBottom: '0.75em', fontWeight: 'bold', color: '#333' }}>
+                            Choose File Source
+                          </label>
+                          <div style={{ display: 'flex', gap: '0.5em', flexWrap: 'wrap' }}>
+                            {/* Local Upload Button */}
+                            <button
+                              type="button"
+                              onClick={() => { setFileSource('local'); setGoogleDriveFile(null); }}
+                              style={{
+                                padding: '0.6em 1.2em',
+                                fontSize: '0.95em',
+                                backgroundColor: fileSource === 'local' ? '#28a745' : '#fff',
+                                color: fileSource === 'local' ? 'white' : '#333',
+                                border: `2px solid ${fileSource === 'local' ? '#28a745' : '#dee2e6'}`,
+                                borderRadius: '4px',
+                                cursor: 'pointer',
+                                display: 'flex',
+                                alignItems: 'center',
+                                gap: '0.5em',
+                                transition: 'all 0.2s ease'
+                              }}
+                            >
+                              <i className="fa-solid fa-computer"></i>
+                              Local File
+                            </button>
+
+                            {/* Google Drive Button - only show if enabled via environment variables */}
+                            {isGoogleDriveEnabled && (
+                              <button
+                                type="button"
+                                onClick={() => { setFileSource('google-drive'); setEmbeddingFile(null); }}
+                                style={{
+                                  padding: '0.6em 1.2em',
+                                  fontSize: '0.95em',
+                                  backgroundColor: fileSource === 'google-drive' ? '#4285f4' : '#fff',
+                                  color: fileSource === 'google-drive' ? 'white' : '#333',
+                                  border: `2px solid ${fileSource === 'google-drive' ? '#4285f4' : '#dee2e6'}`,
+                                  borderRadius: '4px',
+                                  cursor: 'pointer',
+                                  display: 'flex',
+                                  alignItems: 'center',
+                                  gap: '0.5em',
+                                  transition: 'all 0.2s ease'
+                                }}
+                              >
+                                <i className="fa-brands fa-google-drive"></i>
+                                Google Drive
+                              </button>
+                            )}
+                          </div>
+                        </div>
+
+                        {/* Local File Upload */}
+                        {fileSource === 'local' && (
+                          <form onSubmit={handleCreateFileEmbedding}>
+                            <div style={{ marginBottom: '1em' }}>
+                              <label style={{ display: 'block', marginBottom: '0.5em', fontWeight: 'bold', color: '#333' }}>
+                                Select File <span style={{ color: '#dc3545' }}>*</span>
+                              </label>
+                              <input
+                                type="file"
+                                onChange={(e) => setEmbeddingFile(e.target.files[0])}
+                                accept=".pdf,.txt,.doc,.docx,.csv"
+                                disabled={fileEmbeddingLoading}
+                                style={{
+                                  width: '100%',
+                                  padding: '0.75em',
+                                  fontSize: '1em',
+                                  border: '1px solid #ddd',
+                                  borderRadius: '4px',
+                                  boxSizing: 'border-box',
+                                  cursor: fileEmbeddingLoading ? 'not-allowed' : 'pointer'
+                                }}
+                                required
+                              />
+                              {embeddingFile && (
+                                <div style={{ marginTop: '0.5em', fontSize: '0.9em', color: '#666' }}>
+                                  Selected: {embeddingFile.name} ({(embeddingFile.size / 1024).toFixed(2)} KB)
+                                </div>
+                              )}
+                            </div>
+
+                            {fileEmbeddingError && (
+                              <div style={{ backgroundColor: '#f8d7da', border: '1px solid #f5c6cb', borderRadius: '4px', padding: '0.75em', marginBottom: '1em', color: '#721c24' }}>
+                                <i className="fa-solid fa-exclamation-triangle" style={{ marginRight: '0.5em' }}></i>
+                                {fileEmbeddingError}
+                              </div>
+                            )}
+
+                            {fileEmbeddingSuccess && (
+                              <div style={{ backgroundColor: '#d4edda', border: '1px solid #c3e6cb', borderRadius: '4px', padding: '0.75em', marginBottom: '1em', color: '#155724' }}>
+                                <i className="fa-solid fa-check-circle" style={{ marginRight: '0.5em' }}></i>
+                                {fileEmbeddingSuccess}
+                              </div>
+                            )}
+
+                            <div style={{ display: 'flex', gap: '1em' }}>
+                              <button
+                                type="submit"
+                                disabled={fileEmbeddingLoading || !embeddingFile}
+                                style={{
+                                  padding: '0.75em 1.5em',
+                                  fontSize: '1em',
+                                  backgroundColor: fileEmbeddingLoading ? '#ccc' : '#28a745',
+                                  color: 'white',
+                                  border: 'none',
+                                  borderRadius: '4px',
+                                  cursor: fileEmbeddingLoading ? 'not-allowed' : 'pointer',
+                                  fontWeight: 'bold'
+                                }}
+                              >
+                                {fileEmbeddingLoading ? (
+                                  <>
+                                    <i className="fa-solid fa-spinner fa-spin" style={{ marginRight: '0.5em' }}></i>
+                                    Creating Embedding...
+                                  </>
+                                ) : (
+                                  <>
+                                    <i className="fa-solid fa-upload" style={{ marginRight: '0.5em' }}></i>
+                                    Upload File
+                                  </>
+                                )}
+                              </button>
+
+                              <button
+                                type="button"
+                                onClick={(e) => { e.stopPropagation(); setShowAddFileForm(false); setEmbeddingFile(null); setFileEmbeddingError(null); setFileEmbeddingSuccess(null); setFileSource('local'); }}
+                                disabled={fileEmbeddingLoading}
+                                style={{
+                                  padding: '0.75em 1.5em',
+                                  fontSize: '1em',
+                                  backgroundColor: '#6c757d',
+                                  color: 'white',
+                                  border: 'none',
+                                  borderRadius: '4px',
+                                  cursor: fileEmbeddingLoading ? 'not-allowed' : 'pointer',
+                                  fontWeight: 'bold'
+                                }}
+                              >
+                                Cancel
+                              </button>
+                            </div>
+                          </form>
+                        )}
+
+                        {/* Google Drive File Picker */}
+                        {fileSource === 'google-drive' && (
+                          <div>
+                            <div style={{ marginBottom: '1em' }}>
+                              <label style={{ display: 'block', marginBottom: '0.5em', fontWeight: 'bold', color: '#333' }}>
+                                Select from Google Drive <span style={{ color: '#dc3545' }}>*</span>
+                              </label>
+
+                              {/* Google Drive Picker Button */}
+                              <button
+                                type="button"
+                                onClick={handleGoogleDrivePicker}
+                                disabled={isGooglePickerLoading || fileEmbeddingLoading}
+                                style={{
+                                  padding: '0.75em 1.5em',
+                                  fontSize: '1em',
+                                  backgroundColor: isGooglePickerLoading ? '#ccc' : '#4285f4',
+                                  color: 'white',
+                                  border: 'none',
+                                  borderRadius: '4px',
+                                  cursor: isGooglePickerLoading ? 'not-allowed' : 'pointer',
+                                  display: 'flex',
+                                  alignItems: 'center',
+                                  gap: '0.5em'
+                                }}
+                              >
+                                {isGooglePickerLoading ? (
+                                  <>
+                                    <i className="fa-solid fa-spinner fa-spin"></i>
+                                    Opening Google Drive...
+                                  </>
+                                ) : (
+                                  <>
+                                    <i className="fa-brands fa-google-drive"></i>
+                                    Choose from Google Drive
+                                  </>
+                                )}
+                              </button>
+
+                              {/* Selected Google Drive File Display */}
+                              {googleDriveFile && (
+                                <div style={{
+                                  marginTop: '1em',
+                                  padding: '0.75em 1em',
+                                  backgroundColor: '#e8f4fd',
+                                  border: '1px solid #4285f4',
+                                  borderRadius: '4px',
+                                  display: 'flex',
+                                  alignItems: 'center',
+                                  gap: '0.75em'
+                                }}>
+                                  <i className="fa-brands fa-google-drive" style={{ color: '#4285f4', fontSize: '1.2em' }}></i>
+                                  <div style={{ flex: 1 }}>
+                                    <div style={{ fontWeight: '500', color: '#333' }}>{googleDriveFile.name}</div>
+                                    {googleDriveFile.size && (
+                                      <div style={{ fontSize: '0.85em', color: '#666' }}>
+                                        {(googleDriveFile.size / 1024).toFixed(2)} KB
+                                      </div>
+                                    )}
+                                  </div>
+                                  <button
+                                    type="button"
+                                    onClick={() => setGoogleDriveFile(null)}
+                                    style={{
+                                      background: 'none',
+                                      border: 'none',
+                                      color: '#666',
+                                      cursor: 'pointer',
+                                      padding: '0.25em'
+                                    }}
+                                    title="Remove selection"
+                                  >
+                                    <i className="fa-solid fa-times"></i>
+                                  </button>
+                                </div>
+                              )}
+                            </div>
+
+                            {fileEmbeddingError && (
+                              <div style={{ backgroundColor: '#f8d7da', border: '1px solid #f5c6cb', borderRadius: '4px', padding: '0.75em', marginBottom: '1em', color: '#721c24' }}>
+                                <i className="fa-solid fa-exclamation-triangle" style={{ marginRight: '0.5em' }}></i>
+                                {fileEmbeddingError}
+                              </div>
+                            )}
+
+                            {fileEmbeddingSuccess && (
+                              <div style={{ backgroundColor: '#d4edda', border: '1px solid #c3e6cb', borderRadius: '4px', padding: '0.75em', marginBottom: '1em', color: '#155724' }}>
+                                <i className="fa-solid fa-check-circle" style={{ marginRight: '0.5em' }}></i>
+                                {fileEmbeddingSuccess}
+                              </div>
+                            )}
+
+                            <div style={{ display: 'flex', gap: '1em' }}>
+                              <button
+                                type="button"
+                                onClick={handleCreateFileEmbeddingFromGoogleDrive}
+                                disabled={fileEmbeddingLoading || !googleDriveFile}
+                                style={{
+                                  padding: '0.75em 1.5em',
+                                  fontSize: '1em',
+                                  backgroundColor: fileEmbeddingLoading || !googleDriveFile ? '#ccc' : '#28a745',
+                                  color: 'white',
+                                  border: 'none',
+                                  borderRadius: '4px',
+                                  cursor: fileEmbeddingLoading || !googleDriveFile ? 'not-allowed' : 'pointer',
+                                  fontWeight: 'bold'
+                                }}
+                              >
+                                {fileEmbeddingLoading ? (
+                                  <>
+                                    <i className="fa-solid fa-spinner fa-spin" style={{ marginRight: '0.5em' }}></i>
+                                    Creating Embedding...
+                                  </>
+                                ) : (
+                                  <>
+                                    <i className="fa-solid fa-cloud-arrow-up" style={{ marginRight: '0.5em' }}></i>
+                                    Import from Google Drive
+                                  </>
+                                )}
+                              </button>
+
+                              <button
+                                type="button"
+                                onClick={(e) => { e.stopPropagation(); setShowAddFileForm(false); setGoogleDriveFile(null); setFileEmbeddingError(null); setFileEmbeddingSuccess(null); setFileSource('local'); }}
+                                disabled={fileEmbeddingLoading}
+                                style={{
+                                  padding: '0.75em 1.5em',
+                                  fontSize: '1em',
+                                  backgroundColor: '#6c757d',
+                                  color: 'white',
+                                  border: 'none',
+                                  borderRadius: '4px',
+                                  cursor: fileEmbeddingLoading ? 'not-allowed' : 'pointer',
+                                  fontWeight: 'bold'
+                                }}
+                              >
+                                Cancel
+                              </button>
+                            </div>
                           </div>
                         )}
                       </div>
-
-                      {fileEmbeddingError && (
-                        <div style={{ backgroundColor: '#f8d7da', border: '1px solid #f5c6cb', borderRadius: '4px', padding: '0.75em', marginBottom: '1em', color: '#721c24' }}>
-                          ❌ {fileEmbeddingError}
-                        </div>
-                      )}
-
-                      {fileEmbeddingSuccess && (
-                        <div style={{ backgroundColor: '#d4edda', border: '1px solid #c3e6cb', borderRadius: '4px', padding: '0.75em', marginBottom: '1em', color: '#155724' }}>
-                          ✅ {fileEmbeddingSuccess}
-                        </div>
-                      )}
-
-                      <div style={{ display: 'flex', gap: '1em' }}>
-                        <button
-                          type="submit"
-                          disabled={fileEmbeddingLoading || !embeddingFile}
-                          style={{
-                            padding: '0.75em 1.5em',
-                            fontSize: '1em',
-                            backgroundColor: fileEmbeddingLoading ? '#ccc' : '#28a745',
-                            color: 'white',
-                            border: 'none',
-                            borderRadius: '4px',
-                            cursor: fileEmbeddingLoading ? 'not-allowed' : 'pointer',
-                            fontWeight: 'bold'
-                          }}
-                        >
-                          {fileEmbeddingLoading ? (
-                            <>
-                              <i className="fa-solid fa-spinner fa-spin" style={{ marginRight: '0.5em' }}></i>
-                              Creating Embedding...
-                            </>
-                          ) : (
-                            <>
-                              <i className="fa-solid fa-upload" style={{ marginRight: '0.5em' }}></i>
-                              Upload File
-                            </>
-                          )}
-                        </button>
-
-                        <button
-                          type="button"
-                          onClick={(e) => { e.stopPropagation(); setShowAddFileForm(false); setEmbeddingFile(null); setFileEmbeddingError(null); setFileEmbeddingSuccess(null); }}
-                          disabled={fileEmbeddingLoading}
-                          style={{
-                            padding: '0.75em 1.5em',
-                            fontSize: '1em',
-                            backgroundColor: '#6c757d',
-                            color: 'white',
-                            border: 'none',
-                            borderRadius: '4px',
-                            cursor: fileEmbeddingLoading ? 'not-allowed' : 'pointer',
-                            fontWeight: 'bold'
-                          }}
-                        >
-                          Cancel
-                        </button>
-                      </div>
-                    </form>
                     )}
                   </>
                 )}
