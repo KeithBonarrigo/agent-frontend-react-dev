@@ -1193,7 +1193,7 @@ export default function Dashboard() {
                 {isFileSectionOpen && (
                   <>
                     <p style={{ color: '#666', fontSize: '0.95em', marginBottom: '1.5em' }}>
-                      Upload document files to train your agent. Supported formats: PDF, TXT, DOC, DOCX.
+                      Upload document files to train your agent. Supported formats: PDF, TXT, DOC, DOCX, CSV.
                     </p>
 
                     {/* File Embeddings List */}
@@ -1294,7 +1294,7 @@ export default function Dashboard() {
                         <input
                           type="file"
                           onChange={(e) => setEmbeddingFile(e.target.files[0])}
-                          accept=".pdf,.txt,.doc,.docx"
+                          accept=".pdf,.txt,.doc,.docx,.csv"
                           disabled={fileEmbeddingLoading}
                           style={{
                             width: '100%',

@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 // AddOnsTab - Displays selectable decorators (integrations) that users can enable for their agent
 // Fetches available add-ons from the server's decorator registry (only those with selectable: true)
 // Allows users to toggle add-ons on/off for their specific agent
+// Also provides CSV file upload and embedding functionality for RAG training
 // Interacts with: /api/decorators/selectable, /api/clients/:clientId/decorators endpoints
 export default function AddOnsTab({ user, clientId }) {
   // Selectable Decorators (Add-Ons) state
@@ -27,6 +28,16 @@ export default function AddOnsTab({ user, clientId }) {
   const [credentialsInput, setCredentialsInput] = useState(''); // JSON string for credentials
   const [credentialsError, setCredentialsError] = useState(null);
   const [showWhereFind, setShowWhereFind] = useState(false); // Toggle for collapsible help section
+
+  // CSV Embedding state - for uploading and embedding CSV files
+  const [csvFile, setCsvFile] = useState(null);
+  const [csvEmbeddingLoading, setCsvEmbeddingLoading] = useState(false);
+  const [csvEmbeddingError, setCsvEmbeddingError] = useState(null);
+  const [csvEmbeddingSuccess, setCsvEmbeddingSuccess] = useState(null);
+  const [isCsvSectionOpen, setIsCsvSectionOpen] = useState(false);
+  const [showAddCsvForm, setShowAddCsvForm] = useState(false);
+  const [csvEmbeddingsList, setCsvEmbeddingsList] = useState([]);
+  const [csvEmbeddingsLoading, setCsvEmbeddingsLoading] = useState(false);
 
   // Fetch available selectable decorators from the server
   // Calls GET /api/decorators/selectable to get list of user-configurable add-ons
@@ -87,6 +98,124 @@ export default function AddOnsTab({ user, clientId }) {
 
     fetchEnabledAddOns();
   }, [clientId]);
+
+  // Fetch CSV embeddings when client changes
+  useEffect(() => {
+    if (clientId) {
+      fetchCsvEmbeddings();
+    }
+  }, [clientId]);
+
+  // fetchCsvEmbeddings - Retrieves CSV-based embeddings for the current agent
+  const fetchCsvEmbeddings = async () => {
+    if (!clientId) return;
+
+    setCsvEmbeddingsLoading(true);
+    try {
+      const apiBaseUrl = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+      const response = await fetch(`${apiBaseUrl}/api/embeddings/client/${clientId}`, {
+        method: 'GET',
+        credentials: 'include'
+      });
+
+      const contentType = response.headers.get('content-type');
+      let data;
+      if (contentType && contentType.includes('application/json')) {
+        data = await response.json();
+      } else {
+        const text = await response.text();
+        console.error('Non-JSON response received:', text);
+        throw new Error(`Server returned ${response.status}`);
+      }
+
+      if (!response.ok) throw new Error(data.error || 'Failed to fetch CSV embeddings');
+
+      // Filter to only CSV embeddings (type === 'csv')
+      const allEmbeddings = data.embeddings || [];
+      const csvEmbeddings = allEmbeddings.filter(emb => emb.type === 'csv');
+      setCsvEmbeddingsList(csvEmbeddings);
+    } catch (error) {
+      console.error('Fetch CSV embeddings error:', error);
+      setCsvEmbeddingsList([]);
+    } finally {
+      setCsvEmbeddingsLoading(false);
+    }
+  };
+
+  // handleCreateCsvEmbedding - Uploads a CSV file and creates embeddings from its content
+  const handleCreateCsvEmbedding = async (e) => {
+    e.preventDefault();
+
+    if (!csvFile) {
+      setCsvEmbeddingError('Please select a CSV file');
+      return;
+    }
+
+    setCsvEmbeddingLoading(true);
+    setCsvEmbeddingError(null);
+    setCsvEmbeddingSuccess(null);
+
+    try {
+      const apiBaseUrl = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+      const formData = new FormData();
+      formData.append('file', csvFile);
+      formData.append('clientId', clientId);
+      formData.append('type', 'csv');
+
+      const response = await fetch(`${apiBaseUrl}/api/embeddings/create-from-file`, {
+        method: 'POST',
+        body: formData,
+        credentials: 'include'
+      });
+
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.error || 'Failed to create embedding from CSV');
+
+      setCsvEmbeddingSuccess('CSV embedding created successfully!');
+      setCsvFile(null);
+      setShowAddCsvForm(false);
+
+      // Reset file input
+      const fileInput = document.querySelector('#csv-file-input');
+      if (fileInput) fileInput.value = '';
+
+      // Refresh list
+      fetchCsvEmbeddings();
+
+      setTimeout(() => setCsvEmbeddingSuccess(null), 5000);
+    } catch (error) {
+      console.error('Create CSV embedding error:', error);
+      setCsvEmbeddingError(error.message);
+    } finally {
+      setCsvEmbeddingLoading(false);
+    }
+  };
+
+  // handleDeleteCsvEmbedding - Deletes a CSV embedding
+  const handleDeleteCsvEmbedding = async (embeddingId) => {
+    if (!confirm('Are you sure you want to delete this CSV embedding? This action cannot be undone.')) {
+      return;
+    }
+
+    try {
+      const apiBaseUrl = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+      const response = await fetch(`${apiBaseUrl}/api/embeddings/${embeddingId}`, {
+        method: 'DELETE',
+        credentials: 'include'
+      });
+
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.error || 'Failed to delete embedding');
+
+      fetchCsvEmbeddings();
+      setCsvEmbeddingSuccess('CSV embedding deleted successfully!');
+      setTimeout(() => setCsvEmbeddingSuccess(null), 3000);
+    } catch (error) {
+      console.error('Delete CSV embedding error:', error);
+      setCsvEmbeddingError(error.message);
+      setTimeout(() => setCsvEmbeddingError(null), 5000);
+    }
+  };
 
   // Toggle an add-on on/off for this client
   // If enabling an add-on that requires credentials, opens the credentials modal first
@@ -374,6 +503,227 @@ export default function AddOnsTab({ user, clientId }) {
           })}
         </div>
       )}
+
+      {/* CSV Embedding Section */}
+      <div style={{ backgroundColor: 'white', padding: '1.5em', borderRadius: '8px', border: '1px solid #dee2e6', marginTop: '2em' }}>
+        <div
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            cursor: 'pointer',
+            marginBottom: isCsvSectionOpen ? '1em' : 0
+          }}
+          onClick={() => setIsCsvSectionOpen(!isCsvSectionOpen)}
+        >
+          <h3 style={{ margin: 0, color: '#333', display: 'flex', alignItems: 'center', gap: '0.5em' }}>
+            <i className="fa-solid fa-file-csv" style={{ color: '#17a2b8' }}></i>
+            CSV Embeddings
+            <span style={{ fontSize: '0.75em', color: '#666', fontWeight: 'normal' }}>
+              - {csvEmbeddingsList.length} {csvEmbeddingsList.length === 1 ? 'Embedding' : 'Embeddings'}
+            </span>
+          </h3>
+          <i className={`fa-solid fa-chevron-${isCsvSectionOpen ? 'up' : 'down'}`} style={{ color: '#666', fontSize: '0.9em' }}></i>
+        </div>
+
+        {isCsvSectionOpen && (
+          <>
+            <p style={{ color: '#666', fontSize: '0.95em', marginBottom: '1.5em' }}>
+              Upload CSV files to train your agent. Each row will be processed and embedded for RAG retrieval.
+            </p>
+
+            {/* CSV Embeddings List */}
+            {csvEmbeddingsLoading ? (
+              <div style={{ textAlign: 'center', padding: '2em', color: '#666' }}>
+                <i className="fa-solid fa-spinner fa-spin" style={{ marginRight: '0.5em' }}></i>
+                Loading CSV embeddings...
+              </div>
+            ) : csvEmbeddingsList.length > 0 ? (
+              <div style={{ marginBottom: '1.5em' }}>
+                <h4 style={{ margin: '0 0 0.75em 0', fontSize: '0.95em', color: '#666' }}>Uploaded CSV Files</h4>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5em' }}>
+                  {csvEmbeddingsList.map((embedding, index) => (
+                    <div key={index} style={{
+                      padding: '0.75em 1em',
+                      backgroundColor: '#f8f9fa',
+                      borderRadius: '4px',
+                      border: '1px solid #dee2e6',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'space-between'
+                    }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.75em', flex: 1 }}>
+                        <i className="fa-solid fa-file-csv" style={{ color: '#17a2b8', fontSize: '0.9em' }}></i>
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.25em' }}>
+                          {embedding.title && (
+                            <span style={{ color: '#333', fontSize: '0.95em', fontWeight: '500' }}>{embedding.title}</span>
+                          )}
+                          <span style={{ color: '#666', fontSize: '0.85em' }}>{embedding.filename || embedding.url || embedding.source}</span>
+                        </div>
+                      </div>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '1em' }}>
+                        {embedding.created_at && (
+                          <span style={{ fontSize: '0.85em', color: '#999', whiteSpace: 'nowrap' }}>
+                            {new Date(embedding.created_at).toLocaleDateString()}
+                          </span>
+                        )}
+                        <button
+                          onClick={() => handleDeleteCsvEmbedding(embedding.id)}
+                          style={{
+                            padding: '0.4em 0.75em',
+                            fontSize: '0.85em',
+                            backgroundColor: '#dc3545',
+                            color: 'white',
+                            border: 'none',
+                            borderRadius: '4px',
+                            cursor: 'pointer',
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: '0.4em'
+                          }}
+                          title="Delete embedding"
+                        >
+                          <i className="fa-solid fa-trash"></i>
+                          Delete
+                        </button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            ) : (
+              <div style={{ textAlign: 'center', padding: '2em', color: '#999', backgroundColor: '#f8f9fa', borderRadius: '4px', marginBottom: '1.5em' }}>
+                No CSV embeddings yet. Click "Add CSV File" to get started.
+              </div>
+            )}
+
+            {/* Success/Error Messages */}
+            {csvEmbeddingSuccess && (
+              <div style={{ backgroundColor: '#d4edda', border: '1px solid #c3e6cb', borderRadius: '4px', padding: '0.75em', marginBottom: '1em', color: '#155724' }}>
+                <i className="fa-solid fa-check-circle" style={{ marginRight: '0.5em' }}></i>
+                {csvEmbeddingSuccess}
+              </div>
+            )}
+
+            {csvEmbeddingError && !showAddCsvForm && (
+              <div style={{ backgroundColor: '#f8d7da', border: '1px solid #f5c6cb', borderRadius: '4px', padding: '0.75em', marginBottom: '1em', color: '#721c24' }}>
+                <i className="fa-solid fa-exclamation-triangle" style={{ marginRight: '0.5em' }}></i>
+                {csvEmbeddingError}
+              </div>
+            )}
+
+            {/* Add New Button */}
+            {!showAddCsvForm && (
+              <button
+                onClick={(e) => { e.stopPropagation(); setShowAddCsvForm(true); }}
+                style={{
+                  padding: '0.75em 1.5em',
+                  fontSize: '1em',
+                  backgroundColor: '#17a2b8',
+                  color: 'white',
+                  border: 'none',
+                  borderRadius: '4px',
+                  cursor: 'pointer',
+                  fontWeight: 'bold',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '0.5em'
+                }}
+              >
+                <i className="fa-solid fa-plus"></i>
+                Add CSV File
+              </button>
+            )}
+
+            {/* Add CSV Form */}
+            {showAddCsvForm && (
+              <form onSubmit={handleCreateCsvEmbedding} style={{ marginTop: '1.5em', padding: '1.5em', backgroundColor: '#f8f9fa', borderRadius: '4px', border: '1px solid #dee2e6' }}>
+                <div style={{ marginBottom: '1em' }}>
+                  <label style={{ display: 'block', marginBottom: '0.5em', fontWeight: 'bold', color: '#333' }}>
+                    Select CSV File <span style={{ color: '#dc3545' }}>*</span>
+                  </label>
+                  <input
+                    id="csv-file-input"
+                    type="file"
+                    onChange={(e) => setCsvFile(e.target.files[0])}
+                    accept=".csv"
+                    disabled={csvEmbeddingLoading}
+                    style={{
+                      width: '100%',
+                      padding: '0.75em',
+                      fontSize: '1em',
+                      border: '1px solid #ddd',
+                      borderRadius: '4px',
+                      boxSizing: 'border-box',
+                      cursor: csvEmbeddingLoading ? 'not-allowed' : 'pointer'
+                    }}
+                    required
+                  />
+                  {csvFile && (
+                    <div style={{ marginTop: '0.5em', fontSize: '0.9em', color: '#666' }}>
+                      Selected: {csvFile.name} ({(csvFile.size / 1024).toFixed(2)} KB)
+                    </div>
+                  )}
+                </div>
+
+                {csvEmbeddingError && (
+                  <div style={{ backgroundColor: '#f8d7da', border: '1px solid #f5c6cb', borderRadius: '4px', padding: '0.75em', marginBottom: '1em', color: '#721c24' }}>
+                    <i className="fa-solid fa-exclamation-triangle" style={{ marginRight: '0.5em' }}></i>
+                    {csvEmbeddingError}
+                  </div>
+                )}
+
+                <div style={{ display: 'flex', gap: '1em' }}>
+                  <button
+                    type="submit"
+                    disabled={csvEmbeddingLoading || !csvFile}
+                    style={{
+                      padding: '0.75em 1.5em',
+                      fontSize: '1em',
+                      backgroundColor: csvEmbeddingLoading ? '#ccc' : '#17a2b8',
+                      color: 'white',
+                      border: 'none',
+                      borderRadius: '4px',
+                      cursor: csvEmbeddingLoading ? 'not-allowed' : 'pointer',
+                      fontWeight: 'bold'
+                    }}
+                  >
+                    {csvEmbeddingLoading ? (
+                      <>
+                        <i className="fa-solid fa-spinner fa-spin" style={{ marginRight: '0.5em' }}></i>
+                        Creating Embedding...
+                      </>
+                    ) : (
+                      <>
+                        <i className="fa-solid fa-upload" style={{ marginRight: '0.5em' }}></i>
+                        Upload CSV
+                      </>
+                    )}
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={(e) => { e.stopPropagation(); setShowAddCsvForm(false); setCsvFile(null); setCsvEmbeddingError(null); }}
+                    disabled={csvEmbeddingLoading}
+                    style={{
+                      padding: '0.75em 1.5em',
+                      fontSize: '1em',
+                      backgroundColor: '#6c757d',
+                      color: 'white',
+                      border: 'none',
+                      borderRadius: '4px',
+                      cursor: csvEmbeddingLoading ? 'not-allowed' : 'pointer',
+                      fontWeight: 'bold'
+                    }}
+                  >
+                    Cancel
+                  </button>
+                </div>
+              </form>
+            )}
+          </>
+        )}
+      </div>
 
       {/* Coming Soon Section */}
       <div style={{
