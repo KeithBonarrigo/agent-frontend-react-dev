@@ -1,5 +1,8 @@
 import { useState } from "react";
 
+// IntegrationsTab - Displays embed code and integration methods for the AI agent
+// Provides the script tag users need to embed the chatbot on their website
+// Future: Will include WhatsApp, Messenger, and other platform integrations
 export default function IntegrationsTab({ user, clientId }) {
   const [copied, setCopied] = useState(false);
 
@@ -11,10 +14,12 @@ export default function IntegrationsTab({ user, clientId }) {
     );
   }
 
+  // Determine the correct domain based on environment mode
+  // Used to generate the correct embed script URL for the chatbot
   const dashboardMode = import.meta.env.VITE_MODE || 'local';
   let webEmbedDomain;
   let webEmbedProtocol;
-  
+
   switch(dashboardMode){
     case "local":
         webEmbedDomain = 'localhost:3000';
@@ -37,8 +42,10 @@ export default function IntegrationsTab({ user, clientId }) {
         webEmbedProtocol = 'http';
   }
 
+  // Generate the embed code script tag with the client's unique ID
   const embedCode = `<script src='${webEmbedProtocol}://${webEmbedDomain}/chatbot.js?id=${clientId}'></script>`;
 
+  // Copy embed code to clipboard with visual feedback
   const handleCopy = () => {
     navigator.clipboard.writeText(embedCode);
     setCopied(true);
@@ -51,9 +58,9 @@ export default function IntegrationsTab({ user, clientId }) {
       <div style={{ marginBottom: "2em" }}>
         <h2 style={{ textAlign: "center", marginBottom: "1em" }}>Website Embed Code</h2>
         <div style={{ position: "relative", width: "70%", marginLeft: "auto", marginRight: "auto" }}>
-          <pre style={{ 
-            backgroundColor: "#fff", 
-            padding: "1em", 
+          <pre style={{
+            backgroundColor: "#fff",
+            padding: "1em",
             borderRadius: "4px",
             boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)",
             overflowX: "auto",

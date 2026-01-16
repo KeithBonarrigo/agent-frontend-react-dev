@@ -4,6 +4,7 @@ import { useUser } from '../contexts/UserContext';
 import ConfigurationsTab from '../components/ConfigurationsTab';
 import ModelsTab from '../components/ModelsTab';
 import IntegrationsTab from '../components/IntegrationsTab';
+import AddOnsTab from '../components/AddOnsTab';
 import ConversationsTab from '../components/ConversationsTab';
 import "../styles/Dashboard.css";
 
@@ -41,7 +42,7 @@ export default function Dashboard() {
   const [embeddingLoading, setEmbeddingLoading] = useState(false); // Loading state during API call
   const [embeddingError, setEmbeddingError] = useState(null);      // Error message from failed operations
   const [embeddingSuccess, setEmbeddingSuccess] = useState(null);  // Success message after operations
-  const [isEmbeddingSectionOpen, setIsEmbeddingSectionOpen] = useState(true);  // Collapsible section toggle
+  const [isEmbeddingSectionOpen, setIsEmbeddingSectionOpen] = useState(false);  // Collapsible section toggle
   const [showAddEmbeddingForm, setShowAddEmbeddingForm] = useState(false);     // Show/hide the add URL form
   const [embeddingsList, setEmbeddingsList] = useState([]);        // List of existing URL embeddings
   const [embeddingsLoading, setEmbeddingsLoading] = useState(false); // Loading state for fetching list
@@ -54,7 +55,7 @@ export default function Dashboard() {
   const [fileEmbeddingLoading, setFileEmbeddingLoading] = useState(false); // Loading during upload
   const [fileEmbeddingError, setFileEmbeddingError] = useState(null);      // Error message
   const [fileEmbeddingSuccess, setFileEmbeddingSuccess] = useState(null);  // Success message
-  const [isFileSectionOpen, setIsFileSectionOpen] = useState(true);    // Collapsible section toggle
+  const [isFileSectionOpen, setIsFileSectionOpen] = useState(false);    // Collapsible section toggle
   const [showAddFileForm, setShowAddFileForm] = useState(false);       // Show/hide the add file form
   const [fileEmbeddingsList, setFileEmbeddingsList] = useState([]);    // List of existing file embeddings
   const [fileEmbeddingsLoading, setFileEmbeddingsLoading] = useState(false); // Loading state for list
@@ -934,11 +935,12 @@ export default function Dashboard() {
       )}
 
       {/* Tabs - Navigation for different dashboard sections */}
-      {/* Training tab added to allow users to manage RAG embeddings for their agents */}
+      {/* Training tab: RAG embeddings, Add-Ons tab: selectable decorators/integrations */}
       <div style={{ display: 'flex', borderBottom: '2px solid #ddd', marginTop: '1.5em', marginBottom: '2em', flexWrap: 'wrap' }}>
         <button style={tabStyle(activeTab === 'configurations')} onClick={() => setActiveTab('configurations')}>Configurations</button>
         <button style={tabStyle(activeTab === 'training')} onClick={() => setActiveTab('training')}>Training</button>
         <button style={tabStyle(activeTab === 'models')} onClick={() => setActiveTab('models')}>Models</button>
+        <button style={tabStyle(activeTab === 'addons')} onClick={() => setActiveTab('addons')}>Add-Ons</button>
         <button style={tabStyle(activeTab === 'integrations')} onClick={() => setActiveTab('integrations')}>Integrations</button>
         <button style={tabStyle(activeTab === 'conversations')} onClick={() => setActiveTab('conversations')}>Conversations</button>
       </div>
@@ -976,6 +978,9 @@ export default function Dashboard() {
                   <h3 style={{ margin: 0, color: '#333', display: 'flex', alignItems: 'center', gap: '0.5em' }}>
                     <i className="fa-solid fa-globe" style={{ color: '#007bff' }}></i>
                     URL Embeddings
+                    <span style={{ fontSize: '0.75em', color: '#666', fontWeight: 'normal' }}>
+                      - {embeddingsList.length} {embeddingsList.length === 1 ? 'Embedding' : 'Embeddings'}
+                    </span>
                   </h3>
                   <i className={`fa-solid fa-chevron-${isEmbeddingSectionOpen ? 'up' : 'down'}`} style={{ color: '#666', fontSize: '0.9em' }}></i>
                 </div>
@@ -1178,6 +1183,9 @@ export default function Dashboard() {
                   <h3 style={{ margin: 0, color: '#333', display: 'flex', alignItems: 'center', gap: '0.5em' }}>
                     <i className="fa-solid fa-file-arrow-up" style={{ color: '#28a745' }}></i>
                     File Embeddings
+                    <span style={{ fontSize: '0.75em', color: '#666', fontWeight: 'normal' }}>
+                      - {fileEmbeddingsList.length} {fileEmbeddingsList.length === 1 ? 'Embedding' : 'Embeddings'}
+                    </span>
                   </h3>
                   <i className={`fa-solid fa-chevron-${isFileSectionOpen ? 'up' : 'down'}`} style={{ color: '#666', fontSize: '0.9em' }}></i>
                 </div>
@@ -1379,6 +1387,8 @@ export default function Dashboard() {
             </div>
           )}
           {activeTab === 'models' && <ModelsTab user={selectedClient} clientId={selectedClientId} />}
+          {/* Add-Ons Tab - Selectable decorators/integrations from server's decorator registry */}
+          {activeTab === 'addons' && <AddOnsTab user={selectedClient} clientId={selectedClientId} />}
           {activeTab === 'integrations' && <IntegrationsTab user={selectedClient} clientId={selectedClientId} />}
           {activeTab === 'conversations' && <ConversationsTab user={selectedClient} clientId={selectedClientId} />}
         </>
