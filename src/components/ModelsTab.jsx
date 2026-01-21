@@ -138,7 +138,7 @@ export default function ModelsTab({ user, clientId }) {
   }
 
   return (
-    <div style={{ padding: "2em", maxWidth: "600px", margin: "0 auto" }}>
+    <div style={{ padding: "2em", backgroundColor: "#f8f9fa", borderRadius: "8px", border: "1px solid #dee2e6" }}>
       <h2 style={{ marginBottom: "1em", color: "#333" }}>Model Configuration</h2>
       
       {fetchingCurrent ? (
@@ -147,97 +147,118 @@ export default function ModelsTab({ user, clientId }) {
         </div>
       ) : (
         <form onSubmit={handleSubmit}>
-          {/* Current Model Display */}
+          {/* Current Model and Model Selection - Side by side on larger screens */}
           <div style={{
-            padding: "20px",
-            backgroundColor: "#f8f9fa",
-            borderRadius: "8px",
+            display: "flex",
+            flexWrap: "wrap",
+            gap: "20px",
             marginBottom: "25px",
-            border: "2px solid #dee2e6",
-            textAlign: "center"
+            alignItems: "stretch"
           }}>
-            <div style={{ 
-              fontSize: "12px", 
-              color: "#6c757d", 
-              marginBottom: "8px",
-              textTransform: "uppercase",
-              letterSpacing: "0.5px",
-              fontWeight: "600"
+            {/* Current Model Display */}
+            <div style={{
+              flex: "1 1 280px",
+              padding: "20px",
+              backgroundColor: "#fff",
+              borderRadius: "8px",
+              border: "2px solid #dee2e6",
+              textAlign: "center",
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "center"
             }}>
-              Current Active Model
+              <div style={{
+                fontSize: "12px",
+                color: "#6c757d",
+                marginBottom: "12px",
+                textTransform: "uppercase",
+                letterSpacing: "0.5px",
+                fontWeight: "600"
+              }}>
+                Current Active Model
+              </div>
+              <div style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                gap: "12px",
+                flexWrap: "wrap"
+              }}>
+                {getModelLogo(currentModel) && (
+                  <img
+                    src={getModelLogo(currentModel)}
+                    alt="Model logo"
+                    style={{
+                      width: "36px",
+                      height: "36px",
+                      objectFit: "contain"
+                    }}
+                  />
+                )}
+                <span style={{
+                  color: "#007bff",
+                  fontWeight: "700",
+                  fontFamily: "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif",
+                  fontSize: "18px"
+                }}>
+                  {currentModel || 'Loading...'}
+                </span>
+              </div>
             </div>
-            <div style={{ 
-              color: "#007bff", 
-              fontWeight: "700",
-              fontFamily: "monospace",
-              fontSize: "18px"
+
+            {/* Model Selection */}
+            <div style={{
+              flex: "1 1 280px",
+              padding: "20px",
+              backgroundColor: "#fff",
+              borderRadius: "8px",
+              border: "2px solid #dee2e6"
             }}>
-              {currentModel || 'Loading...'}
-            </div>
-          </div>
+              <label
+                htmlFor="model-select"
+                style={{
+                  display: "block",
+                  marginBottom: "8px",
+                  fontWeight: "600",
+                  color: "#333",
+                  fontSize: "14px"
+                }}
+              >
+                Select Model:
+              </label>
+              <select
+                id="model-select"
+                value={selectedModel}
+                onChange={(e) => setSelectedModel(e.target.value)}
+                style={{
+                  width: "100%",
+                  padding: "12px",
+                  fontSize: "14px",
+                  border: "1px solid #ced4da",
+                  borderRadius: "4px",
+                  backgroundColor: "white",
+                  cursor: "pointer",
+                  fontFamily: "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif"
+                }}
+              >
+                <option value="">-- Select a Model --</option>
 
-          {/* Model Selection */}
-          <div style={{ marginBottom: "20px" }}>
-            <label 
-              htmlFor="model-select" 
-              style={{ 
-                display: "block", 
-                marginBottom: "8px",
-                fontWeight: "600",
-                color: "#333",
-                fontSize: "14px"
-              }}
-            >
-              Select Model:
-            </label>
-            <select
-              id="model-select"
-              value={selectedModel}
-              onChange={(e) => setSelectedModel(e.target.value)}
-              style={{
-                width: "100%",
-                padding: "12px",
-                fontSize: "14px",
-                border: "1px solid #ced4da",
-                borderRadius: "4px",
-                backgroundColor: "white",
-                cursor: "pointer",
-                fontFamily: "monospace"
-              }}
-            >
-              <option value="">-- Select a Model --</option>
-              
-              <optgroup label="Claude (Anthropic)">
-                <option value="claude-3-5-sonnet">claude-3-5-sonnet (Most Popular)</option>
-                <option value="claude-3-7-sonnet">claude-3-7-sonnet (Newest - Sonnet 4)</option>
-                <option value="claude-3-5-haiku">claude-3-5-haiku (Fast & Cheap)</option>
-                <option value="claude-3-opus">claude-3-opus (Most Capable)</option>
-              </optgroup>
+                <optgroup label="Claude (Anthropic)">
+                  <option value="claude-3-5-sonnet">claude-3-5-sonnet (Most Popular)</option>
+                  <option value="claude-3-7-sonnet">claude-3-7-sonnet (Newest - Sonnet 4)</option>
+                  <option value="claude-3-5-haiku">claude-3-5-haiku (Fast & Cheap)</option>
+                  <option value="claude-3-opus">claude-3-opus (Most Capable)</option>
+                </optgroup>
 
-              <optgroup label="OpenAI">
-                <option value="gpt-5">gpt-5</option>
-                <option value="gpt-4-turbo">gpt-4-turbo</option>
-                <option value="gpt-3.5-turbo-0125">gpt-3.5-turbo-0125</option>
+                <optgroup label="OpenAI">
+                  <option value="gpt-5">gpt-5</option>
+                  <option value="gpt-4-turbo">gpt-4-turbo</option>
+                  <option value="gpt-3.5-turbo-0125">gpt-3.5-turbo-0125</option>
                 <option value="gpt-3.5-turbo-1106">gpt-3.5-turbo-1106</option>
               </optgroup>
             </select>
-          </div>
-
-          {/* Model Description */}
-          {selectedModel && (
-            <div style={{
-              padding: "12px",
-              backgroundColor: "#e7f3ff",
-              borderRadius: "4px",
-              marginBottom: "20px",
-              fontSize: "13px",
-              color: "#004085",
-              border: "1px solid #bee5eb"
-            }}>
-              <strong>Selected:</strong> {selectedModel}
-              {getModelDescription(selectedModel)}
             </div>
-          )}
+          </div>
 
           {/* Error Message */}
           {error && (
@@ -269,9 +290,24 @@ export default function ModelsTab({ user, clientId }) {
             </div>
           )}
 
+          {/* Info Note */}
+          <div style={{
+            marginBottom: "20px",
+            padding: "12px",
+            backgroundColor: "#fff3cd",
+            borderRadius: "4px",
+            fontSize: "12px",
+            color: "#856404",
+            border: "1px solid #ffeeba",
+            textAlign: "center"
+          }}>
+            <strong>Note:</strong> Changing your model will affect all future conversations.
+            Your current conversations will not be affected.
+          </div>
+
           {/* Buttons */}
-          <div style={{ 
-            display: "flex", 
+          <div style={{
+            display: "flex",
             gap: "10px",
             justifyContent: "flex-end"
           }}>
@@ -311,20 +347,6 @@ export default function ModelsTab({ user, clientId }) {
               {loading ? "Updating..." : "Update Model"}
             </button>
           </div>
-
-          {/* Info Note */}
-          <div style={{
-            marginTop: "20px",
-            padding: "12px",
-            backgroundColor: "#fff3cd",
-            borderRadius: "4px",
-            fontSize: "12px",
-            color: "#856404",
-            border: "1px solid #ffeeba"
-          }}>
-            <strong>Note:</strong> Changing your model will affect all future conversations. 
-            Your current conversations will not be affected.
-          </div>
         </form>
       )}
     </div>
@@ -345,4 +367,18 @@ function getModelDescription(model) {
   };
 
   return descriptions[model] || '';
+}
+
+// Helper function to get the logo path for a model
+function getModelLogo(model) {
+  if (!model) return null;
+
+  if (model.toLowerCase().includes('claude')) {
+    return '/img/logos/claude.png';
+  }
+  if (model.toLowerCase().includes('gpt')) {
+    return '/img/logos/openAi.png';
+  }
+
+  return null;
 }

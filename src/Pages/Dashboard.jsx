@@ -6,6 +6,7 @@ import ModelsTab from '../components/ModelsTab';
 import IntegrationsTab from '../components/IntegrationsTab';
 import AddOnsTab from '../components/AddOnsTab';
 import ConversationsTab from '../components/ConversationsTab';
+import MetricsTab from '../components/MetricsTab';
 import "../styles/Dashboard.css";
 
 export default function Dashboard() {
@@ -102,7 +103,13 @@ export default function Dashboard() {
 
         const data = await response.json();
         console.log('✅ Data received:', data);
-        
+        console.log('📊 Client token fields:', data.clients?.map(c => ({
+          clientid: c.clientid,
+          tokens_used: c.tokens_used,
+          token_count: c.token_count,
+          total_tokens: c.total_tokens
+        })));
+
         setClients(data.clients || []);
         setSubscriptions(data.subscriptions || []);
         
@@ -151,6 +158,11 @@ export default function Dashboard() {
   const selectedSubscription = subscriptions.find(s => String(s.subscriptionid) === String(selectedSubscriptionId));
   const agentsInSubscription = clients.filter(c => String(c.subscriptionid) === String(selectedSubscriptionId));
   const selectedClient = clients.find(c => String(c.clientid) === String(selectedClientId));
+
+  // Calculate total token usage for the selected subscription by summing tokens from all agents
+  const subscriptionTokensUsed = agentsInSubscription.reduce((total, client) => {
+    return total + (client.tokens_used || 0);
+  }, 0);
   
   const canCreateAgentInSubscription = selectedSubscription && 
     selectedSubscription.plan_type === 'base' &&
@@ -830,14 +842,16 @@ export default function Dashboard() {
   // Styles
   const tabStyle = (isActive) => ({
     padding: '12px 24px',
-    backgroundColor: isActive ? '#007bff' : 'transparent',
+    backgroundColor: isActive ? '#007bff' : '#fff',
     color: isActive ? 'white' : '#333',
     border: 'none',
+    outline: 'none',
     borderRadius: '4px 4px 0 0',
     cursor: 'pointer',
     fontSize: '16px',
     fontWeight: isActive ? 'bold' : 'normal',
-    marginRight: '4px'
+    marginRight: '4px',
+    marginBottom: '-2px'
   });
 
   const inputStyle = {
@@ -986,183 +1000,228 @@ export default function Dashboard() {
         </div>
       )}
 
-      {/* Header */}
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "1.5em", flexWrap: "wrap", gap: "1em" }}>
-        <div>
-          <h1 style={{ margin: 0 }}>Dashboard</h1>
-          <p style={{ margin: "0.25em 0 0 0", color: "#666", fontSize: "0.95em" }}>
-            Welcome, {user.first_name || 'User'} {user.last_name || ''} ({user.email})
-          </p>
-        </div>
-        <button onClick={handleLogout}
-          style={{ padding: "0.5em 1.5em", backgroundColor: "#dc3545", color: "white", border: "none", borderRadius: "4px", cursor: "pointer" }}>
-          Logout
-        </button>
-      </div>
-
-      {/* Subscription Selector */}
-      <div style={{ backgroundColor: '#f0f4f8', padding: '1.25em 1.5em', borderRadius: '8px', marginBottom: '1.5em', border: '1px solid #d0d7de' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '1em', flexWrap: 'wrap' }}>
-          <label style={{ fontWeight: 'bold', color: '#24292f', fontSize: '1.1em' }}>Subscription:</label>
-          
-          {loadingData ? (
-            <span style={{ color: '#666' }}>Loading...</span>
-          ) : subscriptions.length === 0 ? (
-            <span style={{ color: '#dc3545' }}>No subscriptions found</span>
-          ) : (
-            <select value={selectedSubscriptionId || ''} onChange={handleSubscriptionChange}
-              style={{ padding: '0.6em 1em', fontSize: '1em', borderRadius: '4px', border: '1px solid #d0d7de', backgroundColor: 'white', minWidth: '250px', cursor: 'pointer' }}>
-              {subscriptions.map((sub) => (
-                <option key={sub.subscriptionid} value={sub.subscriptionid}>
-                  {getSubscriptionDisplayName(sub)} - {sub.agent_count || 0} agent(s)
-                </option>
-              ))}
-            </select>
-          )}
-          
-          <span style={{ color: '#666', fontSize: '0.9em', marginLeft: 'auto' }}>
-            {subscriptions.length} subscription{subscriptions.length !== 1 ? 's' : ''}
-          </span>
-        </div>
-      </div>
-
-      {/* Selected Subscription Details & Token Usage */}
-      {selectedSubscription && (
-        <div style={{ backgroundColor: '#fff', padding: '1.5em', borderRadius: '8px', marginBottom: '1.5em', border: '1px solid #dee2e6' }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '1.5em' }}>
-            {/* Subscription Info */}
+      {/* Combined Subscription Selector, Details & Agent Selector */}
+      <div style={{ backgroundColor: '#fff', borderRadius: '8px', marginBottom: '1.5em', border: '1px solid #dee2e6', overflow: 'hidden', boxShadow: '0 2px 8px rgba(0, 0, 0, 0.08)' }}>
+        {/* Header with Dashboard Title, Welcome Message, and Logout */}
+        <div style={{
+          padding: '1em 1.5em',
+          background: 'linear-gradient(135deg, #34495e 0%, #2c3e50 50%, #1a252f 100%)',
+          borderBottom: '1px solid #2c3e50'
+        }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1em' }}>
             <div>
-              <h3 style={{ margin: '0 0 0.5em 0', display: 'flex', alignItems: 'center', gap: '10px' }}>
-                {getSubscriptionDisplayName(selectedSubscription)}
-                <span style={{
-                  backgroundColor: getStatusColor(selectedSubscription.subscription_status),
-                  color: selectedSubscription.subscription_status === 'past_due' ? '#000' : 'white',
-                  padding: '2px 8px', borderRadius: '4px', fontSize: '0.7em', textTransform: 'capitalize'
-                }}>
-                  {selectedSubscription.subscription_status}
-                </span>
-              </h3>
-              <div style={{ display: 'flex', gap: '2em', flexWrap: 'wrap', fontSize: '0.9em', color: '#666' }}>
-                <span><strong>Plan Type:</strong> {selectedSubscription.plan_type === 'specialty' ? 'Single Agent' : 'Multi-Agent'}</span>
-                <span><strong>Agents:</strong> {agentsInSubscription.length}</span>
-                {selectedSubscription.trial_end && selectedSubscription.subscription_status === 'trialing' && (
-                  <span><strong>Trial Ends:</strong> {new Date(selectedSubscription.trial_end).toLocaleDateString()}</span>
+              <h1 style={{ margin: 0, color: '#fff', fontSize: '2.25em', textAlign: 'left' }}>My Dashboard</h1>
+              <p style={{ margin: '0.25em 0 0 0', color: '#bdc3c7', fontSize: '0.9em' }}>
+                Welcome, {user.first_name || 'User'} {user.last_name || ''} ({user.email})
+              </p>
+            </div>
+            <button onClick={handleLogout}
+              style={{ padding: "0.5em 1.5em", backgroundColor: "#dc3545", color: "white", border: "none", borderRadius: "4px", cursor: "pointer", display: "flex", alignItems: "center", gap: "0.5em" }}>
+              <span style={{ fontSize: "1.1em" }}>↩</span> Logout
+            </button>
+          </div>
+        </div>
+
+        {/* Subscription Selector */}
+        <div style={{
+          padding: '1em 1.5em',
+          background: 'linear-gradient(135deg, #34495e 0%, #2c3e50 50%, #1a252f 100%)'
+        }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '1em', flexWrap: 'wrap' }}>
+            <h3 style={{ margin: 0, color: '#fff' }}>Subscription:</h3>
+
+            {loadingData ? (
+              <span style={{ color: '#ecf0f1' }}>Loading...</span>
+            ) : subscriptions.length === 0 ? (
+              <span style={{ color: '#e74c3c' }}>No subscriptions found</span>
+            ) : (
+              <select value={selectedSubscriptionId || ''} onChange={handleSubscriptionChange}
+                style={{ padding: '0.5em 1em', fontSize: '1em', borderRadius: '4px', border: '1px solid #dee2e6', backgroundColor: 'white', minWidth: '250px', cursor: 'pointer' }}>
+                {subscriptions.map((sub) => (
+                  <option key={sub.subscriptionid} value={sub.subscriptionid}>
+                    {getSubscriptionDisplayName(sub)} - {sub.agent_count || 0} agent(s)
+                  </option>
+                ))}
+              </select>
+            )}
+
+            <span style={{ color: '#fff', fontSize: '0.85em', marginLeft: 'auto' }}>
+              {subscriptions.length} subscription{subscriptions.length !== 1 ? 's' : ''}
+            </span>
+          </div>
+        </div>
+
+        {/* Subscription Details */}
+        {selectedSubscription && (
+          <div style={{ padding: '1.25em 1.5em', borderBottom: '1px solid #b3d7ff', backgroundColor: '#e7f3ff' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1.5em' }}>
+              {/* Subscription Info */}
+              <div>
+                {/* Plan details and agent selector container */}
+                <div style={{ backgroundColor: '#fff', padding: '0.75em 1em', borderRadius: '6px', border: '1px solid #dee2e6' }}>
+                  <h3 style={{ margin: '0 0 0.5em 0', display: 'flex', alignItems: 'center', gap: '10px' }}>
+                    {getSubscriptionDisplayName(selectedSubscription)}
+                    <span style={{
+                      backgroundColor: getStatusColor(selectedSubscription.subscription_status),
+                      color: selectedSubscription.subscription_status === 'past_due' ? '#000' : 'white',
+                      padding: '2px 8px', borderRadius: '4px', fontSize: '0.7em', textTransform: 'capitalize'
+                    }}>
+                      {selectedSubscription.subscription_status}
+                    </span>
+                  </h3>
+                  <div style={{ display: 'flex', gap: '0.75em', flexWrap: 'wrap', fontSize: '0.85em' }}>
+                    <span style={{
+                      backgroundColor: '#f1f3f5',
+                      padding: '4px 10px',
+                      borderRadius: '4px',
+                      border: '1px solid #dee2e6',
+                      color: '#495057'
+                    }}>
+                      <strong>Plan Type:</strong> {selectedSubscription.plan_type === 'specialty' ? 'Single Agent' : 'Multi-Agent'}
+                    </span>
+                    <span style={{
+                      backgroundColor: '#f1f3f5',
+                      padding: '4px 10px',
+                      borderRadius: '4px',
+                      border: '1px solid #dee2e6',
+                      color: '#495057'
+                    }}>
+                      <strong>Agents:</strong> {agentsInSubscription.length}
+                    </span>
+                    {selectedSubscription.trial_end && selectedSubscription.subscription_status === 'trialing' && (
+                      <span style={{
+                        backgroundColor: '#f1f3f5',
+                        padding: '4px 10px',
+                        borderRadius: '4px',
+                        border: '1px solid #dee2e6',
+                        color: '#495057'
+                      }}>
+                        <strong>Trial Ends:</strong> {new Date(selectedSubscription.trial_end).toLocaleDateString()}
+                      </span>
+                    )}
+                  </div>
+
+                  {/* Agent Selector - inline */}
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.75em', flexWrap: 'wrap', marginTop: '0.75em' }}>
+                    <label style={{ fontWeight: '600', color: '#333', fontSize: '0.9em' }}>Select Agent:</label>
+                    {agentsInSubscription.length === 0 ? (
+                      <span style={{ color: '#666', fontSize: '0.9em' }}>No agents in this subscription</span>
+                    ) : (
+                      <select value={selectedClientId || ''} onChange={handleClientChange}
+                        style={{ padding: '0.4em 0.8em', fontSize: '0.9em', borderRadius: '4px', border: '1px solid #ced4da', backgroundColor: '#f1f3f5', minWidth: '200px', cursor: 'pointer' }}>
+                        {agentsInSubscription.map((client) => (
+                          <option key={client.clientid} value={client.clientid}>
+                            {getClientDisplayName(client)}
+                          </option>
+                        ))}
+                      </select>
+                    )}
+                    {canCreateAgentInSubscription && !specialtySubAtLimit ? (
+                      <button onClick={() => setShowNewAgentModal(true)}
+                        style={{ padding: '0.4em 0.8em', fontSize: '0.85em', backgroundColor: '#28a745',
+                          color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer',
+                          fontWeight: '600', display: 'flex', alignItems: 'center', gap: '4px' }}>
+                        <span style={{ fontSize: '1em' }}>+</span> New Agent
+                      </button>
+                    ) : specialtySubAtLimit ? (
+                      <span style={{ padding: '0.35em 0.6em', backgroundColor: '#fff3cd', color: '#856404',
+                        border: '1px solid #ffc107', borderRadius: '4px', fontSize: '0.8em' }}>
+                        ⚠️ Specialty plans allow 1 agent only
+                      </span>
+                    ) : null}
+                  </div>
+                </div>
+              </div>
+
+              {/* Token Usage & Cancel Button */}
+              <div style={{ minWidth: '220px', backgroundColor: '#fff', border: '1px solid #dee2e6', borderRadius: '6px', overflow: 'hidden', marginLeft: 'auto' }}>
+                <div style={{ fontSize: '1.17em', color: '#fff', background: 'linear-gradient(135deg, #34495e 0%, #2c3e50 50%, #1a252f 100%)', padding: '6px 10px', fontWeight: '600', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>Token Usage</div>
+                <div style={{ padding: '8px 10px 0 10px' }}>
+                  <div style={{ display: 'flex', alignItems: 'baseline', gap: '6px' }}>
+                    <span style={{ fontSize: '1.3em', fontWeight: 'bold', color: getUsageColor(getUsagePercentage(subscriptionTokensUsed, selectedSubscription.token_limit)) }}>
+                      {formatNumber(subscriptionTokensUsed)}
+                    </span>
+                    <span style={{ color: '#666', fontSize: '0.9em' }}>
+                      / {selectedSubscription.token_limit ? formatNumber(selectedSubscription.token_limit) : '∞'}
+                    </span>
+                  </div>
+                  {selectedSubscription.token_limit && (
+                    <div style={{ width: '100%', height: '6px', backgroundColor: '#e9ecef', borderRadius: '3px', marginTop: '6px', overflow: 'hidden' }}>
+                      <div style={{
+                        width: `${getUsagePercentage(subscriptionTokensUsed, selectedSubscription.token_limit)}%`,
+                        height: '100%',
+                        backgroundColor: getUsageColor(getUsagePercentage(subscriptionTokensUsed, selectedSubscription.token_limit)),
+                        transition: 'width 0.3s'
+                      }} />
+                    </div>
+                  )}
+                </div>
+                {/* Cancel Button */}
+                {selectedSubscription.subscription_id && selectedSubscription.subscription_status !== 'cancelled' && (
+                  <button onClick={() => setShowCancelModal(true)}
+                    style={{ width: '100%', padding: '0.5em', backgroundColor: '#dc3545', color: 'white',
+                      border: 'none', borderRadius: '0 0 6px 6px', cursor: 'pointer', fontSize: '0.85em', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.4em', borderTop: '1px solid #dee2e6' }}>
+                    <span style={{ fontSize: '1em' }}>✕</span> Cancel Subscription
+                  </button>
                 )}
               </div>
             </div>
 
-            {/* Token Usage */}
-            <div style={{ minWidth: '250px' }}>
-              <div style={{ fontSize: '0.85em', color: '#666', marginBottom: '4px' }}>Token Usage</div>
-              <div style={{ display: 'flex', alignItems: 'baseline', gap: '8px' }}>
-                <span style={{ fontSize: '1.5em', fontWeight: 'bold', color: getUsageColor(getUsagePercentage(selectedSubscription.tokens_used, selectedSubscription.token_limit)) }}>
-                  {formatNumber(selectedSubscription.tokens_used || 0)}
-                </span>
-                <span style={{ color: '#666' }}>
-                  / {selectedSubscription.token_limit ? formatNumber(selectedSubscription.token_limit) : '∞'}
-                </span>
+            {cancelSuccess && (
+              <div style={{ marginTop: '1em', padding: '1em', backgroundColor: '#d4edda', border: '1px solid #c3e6cb', borderRadius: '4px', color: '#155724' }}>
+                ✅ {cancelSuccess}
               </div>
-              {selectedSubscription.token_limit && (
-                <div style={{ width: '100%', height: '8px', backgroundColor: '#e9ecef', borderRadius: '4px', marginTop: '8px', overflow: 'hidden' }}>
-                  <div style={{
-                    width: `${getUsagePercentage(selectedSubscription.tokens_used, selectedSubscription.token_limit)}%`,
-                    height: '100%',
-                    backgroundColor: getUsageColor(getUsagePercentage(selectedSubscription.tokens_used, selectedSubscription.token_limit)),
-                    transition: 'width 0.3s'
-                  }} />
-                </div>
-              )}
-            </div>
-
-            {/* Cancel Button */}
-            {selectedSubscription.subscription_id && selectedSubscription.subscription_status !== 'cancelled' && (
-              <button onClick={() => setShowCancelModal(true)}
-                style={{ padding: '0.5em 1em', backgroundColor: 'transparent', color: '#dc3545',
-                  border: '1px solid #dc3545', borderRadius: '4px', cursor: 'pointer', fontSize: '0.9em' }}>
-                Cancel Subscription
-              </button>
             )}
           </div>
-          
-          {cancelSuccess && (
-            <div style={{ marginTop: '1em', padding: '1em', backgroundColor: '#d4edda', border: '1px solid #c3e6cb', borderRadius: '4px', color: '#155724' }}>
-              ✅ {cancelSuccess}
-            </div>
-          )}
-        </div>
-      )}
+        )}
 
-      {/* Agent Selector */}
-      <div style={{ backgroundColor: '#e7f3ff', padding: '1.25em 1.5em', borderRadius: '8px', marginBottom: '1.5em', border: '1px solid #b3d7ff' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '1em', flexWrap: 'wrap' }}>
-          <label style={{ fontWeight: 'bold', color: '#0056b3', fontSize: '1.1em' }}>Select Agent:</label>
-          
-          {agentsInSubscription.length === 0 ? (
-            <span style={{ color: '#666' }}>No agents in this subscription</span>
-          ) : (
-            <select value={selectedClientId || ''} onChange={handleClientChange}
-              style={{ padding: '0.6em 1em', fontSize: '1em', borderRadius: '4px', border: '1px solid #0056b3', backgroundColor: 'white', minWidth: '280px', cursor: 'pointer' }}>
-              {agentsInSubscription.map((client) => (
-                <option key={client.clientid} value={client.clientid}>
-                  {getClientDisplayName(client)}
-                </option>
-              ))}
-            </select>
-          )}
-
-          {/* New Agent Button */}
-          {canCreateAgentInSubscription && !specialtySubAtLimit ? (
-            <button onClick={() => setShowNewAgentModal(true)}
-              style={{ padding: '0.6em 1.2em', fontSize: '1em', backgroundColor: '#28a745',
-                color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer',
-                fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: '6px' }}>
-              <span style={{ fontSize: '1.2em' }}>+</span> New Agent
-            </button>
-          ) : specialtySubAtLimit ? (
-            <div style={{ padding: '0.6em 1em', backgroundColor: '#fff3cd', color: '#856404',
-              border: '1px solid #ffc107', borderRadius: '4px', fontSize: '0.9em' }}>
-              ⚠️ Specialty plans allow 1 agent only
-            </div>
-          ) : null}
-
-          <span style={{ color: '#666', fontSize: '0.9em', marginLeft: 'auto' }}>
-            {agentsInSubscription.length} agent{agentsInSubscription.length !== 1 ? 's' : ''} in this subscription
-          </span>
-        </div>
       </div>
 
-      {/* Selected Agent Details */}
+      {/* Agent Details + Tabs Container */}
       {selectedClient && (
-        <div style={{ backgroundColor: '#fff', padding: '1.5em', borderRadius: '8px', marginBottom: '1em', border: '1px solid #dee2e6' }}>
-          <h3 style={{ margin: '0 0 1em 0', color: '#333' }}>{getClientDisplayName(selectedClient)}</h3>
-          <div style={{ display: 'flex', gap: '2em', flexWrap: 'wrap', fontSize: '0.95em', color: '#666' }}>
-            <span><strong>Agent ID:</strong> {selectedClient.clientid}</span>
-            <span><strong>Level:</strong> <span style={{
+        <div style={{
+          backgroundColor: '#fff',
+          borderRadius: '8px',
+          border: '1px solid #dee2e6',
+          overflow: 'hidden',
+          boxShadow: '0 2px 8px rgba(0, 0, 0, 0.08)'
+        }}>
+          {/* Selected Agent Details */}
+          <div style={{
+            padding: '1em 1.5em',
+            background: 'linear-gradient(135deg, #34495e 0%, #2c3e50 50%, #1a252f 100%)',
+            display: 'flex',
+            flexWrap: 'wrap',
+            alignItems: 'center',
+            justifyContent: 'center',
+            gap: '1em 2em'
+          }}>
+            <span style={{ fontSize: '0.95em', color: '#ecf0f1' }}><strong>Agent:</strong> {getClientDisplayName(selectedClient)}</span>
+            <span style={{ fontSize: '0.95em', color: '#ecf0f1' }}><strong>Agent ID:</strong> {selectedClient.clientid}</span>
+            <span style={{ fontSize: '0.95em', color: '#ecf0f1' }}><strong>Level:</strong> <span style={{
               backgroundColor: getLevelColor(selectedClient.subscription_level || selectedClient.level),
               color: 'white', padding: '0.15em 0.5em', borderRadius: '3px', fontSize: '0.9em', textTransform: 'capitalize'
             }}>{selectedClient.subscription_level || selectedClient.level || 'basic'}</span></span>
-            {selectedClient.company && <span><strong>Company:</strong> {selectedClient.company}</span>}
-            {selectedClient.domain && <span><strong>Domain:</strong> {selectedClient.domain}</span>}
+            {selectedClient.company && <span style={{ fontSize: '0.95em', color: '#ecf0f1' }}><strong>Company:</strong> {selectedClient.company}</span>}
           </div>
-        </div>
-      )}
 
-      {/* Tabs - Navigation for different dashboard sections */}
-      {/* Training tab: RAG embeddings, Add-Ons tab: selectable decorators/integrations */}
-      <div style={{ display: 'flex', borderBottom: '2px solid #ddd', marginTop: '1.5em', marginBottom: '2em', flexWrap: 'wrap' }}>
-        <button style={tabStyle(activeTab === 'configurations')} onClick={() => setActiveTab('configurations')}>Configurations</button>
-        <button style={tabStyle(activeTab === 'training')} onClick={() => setActiveTab('training')}>Training</button>
-        <button style={tabStyle(activeTab === 'models')} onClick={() => setActiveTab('models')}>Models</button>
-        <button style={tabStyle(activeTab === 'addons')} onClick={() => setActiveTab('addons')}>Add-Ons</button>
-        <button style={tabStyle(activeTab === 'integrations')} onClick={() => setActiveTab('integrations')}>Integrations</button>
-        <button style={tabStyle(activeTab === 'conversations')} onClick={() => setActiveTab('conversations')}>Conversations</button>
-      </div>
+          {/* Tabs - Navigation for different dashboard sections */}
+          {/* Training tab: RAG embeddings, Add-Ons tab: selectable decorators/integrations */}
+          <div style={{ display: 'flex', justifyContent: 'center', borderBottom: '2px solid #ddd', marginBottom: '0', flexWrap: 'wrap', backgroundColor: '#e9ecef' }}>
+            <button className={`dashboard-tab ${activeTab === 'configurations' ? 'dashboard-tab-active' : ''}`} style={tabStyle(activeTab === 'configurations')} onClick={() => setActiveTab('configurations')}>⚙ Configurations</button>
+            <button className={`dashboard-tab ${activeTab === 'training' ? 'dashboard-tab-active' : ''}`} style={tabStyle(activeTab === 'training')} onClick={() => setActiveTab('training')}>☰ Training</button>
+            <button className={`dashboard-tab ${activeTab === 'models' ? 'dashboard-tab-active' : ''}`} style={tabStyle(activeTab === 'models')} onClick={() => setActiveTab('models')}>◈ Models</button>
+            <button className={`dashboard-tab ${activeTab === 'addons' ? 'dashboard-tab-active' : ''}`} style={tabStyle(activeTab === 'addons')} onClick={() => setActiveTab('addons')}>⊕ Add-Ons</button>
+            <button className={`dashboard-tab ${activeTab === 'integrations' ? 'dashboard-tab-active' : ''}`} style={tabStyle(activeTab === 'integrations')} onClick={() => setActiveTab('integrations')}>⇄ Integrations</button>
+            <button className={`dashboard-tab ${activeTab === 'conversations' ? 'dashboard-tab-active' : ''}`} style={tabStyle(activeTab === 'conversations')} onClick={() => setActiveTab('conversations')}>◐ Conversations</button>
+            <button className={`dashboard-tab ${activeTab === 'metrics' ? 'dashboard-tab-active' : ''}`} style={tabStyle(activeTab === 'metrics')} onClick={() => setActiveTab('metrics')}>▦ Metrics</button>
+          </div>
 
-      {/* Tab Content */}
-      {loadingData ? (
-        <div style={{ textAlign: 'center', padding: '2em' }}><p>Loading...</p></div>
-      ) : selectedClient ? (
-        <>
+          {/* Tab Content */}
+          {loadingData ? (
+            <div style={{ textAlign: 'center', padding: '2em' }}><p>Loading...</p></div>
+          ) : (
+            <>
           {activeTab === 'configurations' && <ConfigurationsTab user={selectedClient} clientId={selectedClientId} />}
           {/* Training Tab - RAG Embedding Management
               Allows users to add knowledge sources (URLs and files) to enhance their AI agent's responses
@@ -1807,10 +1866,9 @@ export default function Dashboard() {
           {activeTab === 'addons' && <AddOnsTab user={selectedClient} clientId={selectedClientId} />}
           {activeTab === 'integrations' && <IntegrationsTab user={selectedClient} clientId={selectedClientId} />}
           {activeTab === 'conversations' && <ConversationsTab user={selectedClient} clientId={selectedClientId} />}
-        </>
-      ) : (
-        <div style={{ textAlign: 'center', padding: '2em', color: '#666' }}>
-          <p>No agent selected. {agentsInSubscription.length === 0 && canCreateAgentInSubscription && 'Create one to get started!'}</p>
+          {activeTab === 'metrics' && <MetricsTab user={selectedClient} clientId={selectedClientId} />}
+            </>
+          )}
         </div>
       )}
     </div>

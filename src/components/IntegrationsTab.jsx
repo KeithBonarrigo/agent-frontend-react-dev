@@ -53,7 +53,7 @@ export default function IntegrationsTab({ user, clientId }) {
   };
 
   return (
-    <div>
+    <div style={{ padding: "2em", backgroundColor: "#f8f9fa", borderRadius: "8px", border: "1px solid #dee2e6" }}>
       {/* Website Embed Code Section */}
       <div style={{ marginBottom: "2em" }}>
         <h2 style={{ textAlign: "center", marginBottom: "1em" }}>Website Embed Code</h2>

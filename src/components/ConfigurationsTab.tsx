@@ -161,7 +161,7 @@ export default function ConfigurationsTab({ clientId }: ConfigurationsTabProps) 
   };
 
   return (
-    <div>
+    <div style={{ padding: "2em", backgroundColor: "#f8f9fa", borderRadius: "8px", border: "1px solid #dee2e6" }}>
       {/* Client Instructions Form */}
       <div>
         <h2>Add Your Agent Instructions</h2>
@@ -295,7 +295,7 @@ export default function ConfigurationsTab({ clientId }: ConfigurationsTabProps) 
               </div>
             ))}
 
-            <div style={{ display: "flex", gap: "10px", marginTop: "20px" }}>
+            <div style={{ display: "flex", gap: "10px", marginTop: "20px", marginLeft: "45px" }}>
               <button
                 type="button"
                 onClick={handleAddInstruction}
@@ -305,10 +305,14 @@ export default function ConfigurationsTab({ clientId }: ConfigurationsTabProps) 
                   color: "white",
                   border: "none",
                   borderRadius: "4px",
-                  cursor: "pointer"
+                  cursor: "pointer",
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "6px"
                 }}
               >
-                + Add Instruction
+                <i className="fa-solid fa-plus"></i>
+                Add Instruction
               </button>
 
               <button
@@ -320,10 +324,23 @@ export default function ConfigurationsTab({ clientId }: ConfigurationsTabProps) 
                   color: "white",
                   border: "none",
                   borderRadius: "4px",
-                  cursor: saving ? "not-allowed" : "pointer"
+                  cursor: saving ? "not-allowed" : "pointer",
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "6px"
                 }}
               >
-                {saving ? "Saving..." : "Save Instructions"}
+                {saving ? (
+                  <>
+                    <i className="fa-solid fa-spinner fa-spin"></i>
+                    Saving...
+                  </>
+                ) : (
+                  <>
+                    <i className="fa-solid fa-floppy-disk"></i>
+                    Save Instructions
+                  </>
+                )}
               </button>
             </div>
 

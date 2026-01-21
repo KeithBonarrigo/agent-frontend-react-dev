@@ -1,5 +1,35 @@
 import { useState, useEffect } from "react";
 
+// Helper function to calculate and format duration between two timestamps
+function formatDuration(firstTimestamp, lastTimestamp) {
+  if (!firstTimestamp || !lastTimestamp) return '—';
+
+  const first = new Date(firstTimestamp);
+  const last = new Date(lastTimestamp);
+  const diffMs = last - first;
+
+  if (diffMs < 0) return '—';
+
+  const seconds = Math.floor(diffMs / 1000);
+  const minutes = Math.floor(seconds / 60);
+  const hours = Math.floor(minutes / 60);
+  const days = Math.floor(hours / 24);
+
+  if (days > 0) {
+    const remainingHours = hours % 24;
+    return `${days}d ${remainingHours}h`;
+  }
+  if (hours > 0) {
+    const remainingMinutes = minutes % 60;
+    return `${hours}h ${remainingMinutes}m`;
+  }
+  if (minutes > 0) {
+    const remainingSeconds = seconds % 60;
+    return `${minutes}m ${remainingSeconds}s`;
+  }
+  return `${seconds}s`;
+}
+
 export default function ConversationsTab({ clientId }) {
   const [conversations, setConversations] = useState([]);
   const [loadingConversations, setLoadingConversations] = useState(false);
@@ -8,11 +38,40 @@ export default function ConversationsTab({ clientId }) {
   const [expandedChannels, setExpandedChannels] = useState(new Set());
   const [expandedUsers, setExpandedUsers] = useState(new Set());
   const [conversationSearch, setConversationSearch] = useState('');
+  const [activeSessions, setActiveSessions] = useState({});
+  const [showOnlyLive, setShowOnlyLive] = useState(false);
+
+  // Fetch active sessions from Redis
+  const fetchActiveSessions = async () => {
+    if (!clientId) return;
+
+    try {
+      const apiBaseUrl = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+      const response = await fetch(`${apiBaseUrl}/admin/active-sessions`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify({ clientId })
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        setActiveSessions(data.activeSessions || {});
+      }
+    } catch (error) {
+      console.error('Error fetching active sessions:', error);
+    }
+  };
 
   // Fetch conversations when clientId is available
   useEffect(() => {
     if (clientId) {
       fetchConversations();
+      fetchActiveSessions();
+
+      // Poll for active sessions every 30 seconds
+      const interval = setInterval(fetchActiveSessions, 30000);
+      return () => clearInterval(interval);
     }
   }, [clientId]);
 
@@ -110,18 +169,66 @@ export default function ConversationsTab({ clientId }) {
     setExpandedUsers(new Set());
   };
 
-  // Filter conversations based on search
-  const filteredConversations = conversations.filter(conv => {
-    const searchLower = conversationSearch.toLowerCase().trim();
-    if (!searchLower) return true;
-    
-    if (conv.domain.toLowerCase().includes(searchLower)) return true;
-    
-    return conv.channels.some(ch => 
-      ch.channel.toLowerCase().includes(searchLower) ||
-      ch.users.some(u => u.userid.toLowerCase().includes(searchLower))
-    );
-  });
+  const expandAllLive = () => {
+    const liveDomains = new Set();
+    const liveChannels = new Set();
+    const liveUsers = new Set();
+
+    conversations.forEach(conv => {
+      let domainHasLive = false;
+      conv.channels.forEach(ch => {
+        const liveUsersInChannel = ch.users.filter(u =>
+          !u.userid.startsWith('web:') && activeSessions[u.userid]
+        );
+        if (liveUsersInChannel.length > 0) {
+          domainHasLive = true;
+          liveChannels.add(`${conv.domain}|${ch.channel}`);
+          liveUsersInChannel.forEach(u => {
+            liveUsers.add(`${conv.domain}|${ch.channel}|${u.userid}`);
+          });
+        }
+      });
+      if (domainHasLive) {
+        liveDomains.add(conv.domain);
+      }
+    });
+
+    setExpandedDomains(liveDomains);
+    setExpandedChannels(liveChannels);
+    setExpandedUsers(liveUsers);
+  };
+
+  // Filter conversations based on search and live status
+  const filteredConversations = conversations
+    .map(conv => {
+      // If showing only live, filter channels and users
+      if (showOnlyLive) {
+        const filteredChannels = conv.channels
+          .map(ch => ({
+            ...ch,
+            users: ch.users.filter(u =>
+              !u.userid.startsWith('web:') && activeSessions[u.userid]
+            )
+          }))
+          .filter(ch => ch.users.length > 0);
+
+        if (filteredChannels.length === 0) return null;
+        return { ...conv, channels: filteredChannels };
+      }
+      return conv;
+    })
+    .filter(conv => conv !== null)
+    .filter(conv => {
+      const searchLower = conversationSearch.toLowerCase().trim();
+      if (!searchLower) return true;
+
+      if (conv.domain.toLowerCase().includes(searchLower)) return true;
+
+      return conv.channels.some(ch =>
+        ch.channel.toLowerCase().includes(searchLower) ||
+        ch.users.some(u => u.userid.toLowerCase().includes(searchLower))
+      );
+    });
 
   // Show message if no clientId available
   if (!clientId) {
@@ -133,74 +240,136 @@ export default function ConversationsTab({ clientId }) {
   }
 
   return (
-    <div>
-      <div style={{ 
-        display: 'flex', 
-        justifyContent: 'space-between', 
+    <div style={{ padding: "2em", backgroundColor: "#f8f9fa", borderRadius: "8px", border: "1px solid #dee2e6" }}>
+      <h2 style={{ margin: '0 0 1em 0', textAlign: 'center' }}>Conversation History</h2>
+
+      <div style={{
+        display: 'flex',
+        justifyContent: 'space-between',
         alignItems: 'center',
-        marginBottom: '1em'
+        marginBottom: '1em',
+        flexWrap: 'wrap',
+        gap: '10px'
       }}>
-        <h2 style={{ margin: 0 }}>Conversation History</h2>
-        <div style={{ display: 'flex', gap: '10px' }}>
+        <div style={{ position: 'relative', flex: '1 1 250px', minWidth: '200px', maxWidth: '400px' }}>
+          <i className="fa fa-search" style={{
+            position: 'absolute',
+            left: '12px',
+            top: '50%',
+            transform: 'translateY(-50%)',
+            color: '#999',
+            fontSize: '14px'
+          }}></i>
+          <input
+            type="text"
+            placeholder="Filter by domain, channel, or user..."
+            value={conversationSearch}
+            onChange={(e) => setConversationSearch(e.target.value)}
+            style={{
+              width: '100%',
+              padding: '8px 12px 8px 36px',
+              border: '1px solid #ddd',
+              borderRadius: '4px',
+              fontSize: '14px'
+            }}
+          />
+        </div>
+        <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
           <button
             onClick={expandAll}
             style={{
-              padding: '8px 16px',
+              padding: '8px 14px',
               backgroundColor: '#007bff',
               color: 'white',
               border: 'none',
               borderRadius: '4px',
               cursor: 'pointer',
-              fontSize: '14px'
+              fontSize: '13px',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '6px'
             }}
           >
+            <i className="fa-solid fa-angles-down"></i>
             Expand All
           </button>
           <button
-            onClick={collapseAll}
+            onClick={expandAllLive}
             style={{
-              padding: '8px 16px',
-              backgroundColor: '#6c757d',
-              color: 'white',
-              border: 'none',
-              borderRadius: '4px',
-              cursor: 'pointer',
-              fontSize: '14px'
-            }}
-          >
-            Collapse All
-          </button>
-          <button
-            onClick={fetchConversations}
-            style={{
-              padding: '8px 16px',
+              padding: '8px 14px',
               backgroundColor: '#28a745',
               color: 'white',
               border: 'none',
               borderRadius: '4px',
               cursor: 'pointer',
-              fontSize: '14px'
+              fontSize: '13px',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '6px'
             }}
           >
+            <i className="fa-solid fa-tower-broadcast"></i>
+            Expand All Live
+          </button>
+          <button
+            onClick={collapseAll}
+            style={{
+              padding: '8px 14px',
+              backgroundColor: '#6c757d',
+              color: 'white',
+              border: 'none',
+              borderRadius: '4px',
+              cursor: 'pointer',
+              fontSize: '13px',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '6px'
+            }}
+          >
+            <i className="fa-solid fa-angles-up"></i>
+            Collapse All
+          </button>
+          <button
+            onClick={fetchConversations}
+            style={{
+              padding: '8px 14px',
+              backgroundColor: '#28a745',
+              color: 'white',
+              border: 'none',
+              borderRadius: '4px',
+              cursor: 'pointer',
+              fontSize: '13px',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '6px'
+            }}
+          >
+            <i className="fa-solid fa-rotate"></i>
             Refresh
           </button>
+          <button
+            onClick={() => setShowOnlyLive(!showOnlyLive)}
+            style={{
+              padding: '8px 14px',
+              backgroundColor: showOnlyLive ? '#28a745' : '#17a2b8',
+              color: 'white',
+              border: 'none',
+              borderRadius: '4px',
+              cursor: 'pointer',
+              fontSize: '13px',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '6px'
+            }}
+          >
+            {showOnlyLive ? (
+              <i className="fa-solid fa-circle" style={{ fontSize: '8px' }}></i>
+            ) : (
+              <i className="fa-solid fa-list"></i>
+            )}
+            {showOnlyLive ? 'Live Only' : 'Show All'}
+          </button>
         </div>
-      </div>
-
-      <div style={{ marginBottom: '1em' }}>
-        <input
-          type="text"
-          placeholder="Filter by domain, channel, or user..."
-          value={conversationSearch}
-          onChange={(e) => setConversationSearch(e.target.value)}
-          style={{
-            width: '100%',
-            padding: '10px',
-            border: '1px solid #ddd',
-            borderRadius: '4px',
-            fontSize: '14px'
-          }}
-        />
       </div>
 
       {loadingConversations ? (
@@ -225,9 +394,17 @@ export default function ConversationsTab({ clientId }) {
         <div>
           {filteredConversations.map((conv, idx) => {
             const isDomainExpanded = expandedDomains.has(conv.domain);
-            
+
+            // Count total active users across all channels in this domain
+            const domainActiveCount = conv.channels.reduce((total, ch) => {
+              const channelActiveUsers = ch.users.filter(u =>
+                !u.userid.startsWith('web:') && activeSessions[u.userid]
+              );
+              return total + channelActiveUsers.length;
+            }, 0);
+
             return (
-              <div 
+              <div
                 key={idx}
                 style={{
                   border: '1px solid #ddd',
@@ -248,8 +425,32 @@ export default function ConversationsTab({ clientId }) {
                     fontWeight: 'bold'
                   }}
                 >
-                  <span>
-                    {isDomainExpanded ? '▼' : '►'} {conv.domain}
+                  <span style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    {isDomainExpanded ? '−' : '+'} {conv.domain}
+                    {domainActiveCount > 0 && (
+                      <span style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '4px',
+                        backgroundColor: '#d4edda',
+                        color: '#155724',
+                        padding: '2px 8px',
+                        borderRadius: '12px',
+                        fontSize: '12px',
+                        fontWeight: '600'
+                      }}>
+                        <span
+                          style={{
+                            width: '8px',
+                            height: '8px',
+                            backgroundColor: '#28a745',
+                            borderRadius: '50%',
+                            display: 'inline-block'
+                          }}
+                        />
+                        {domainActiveCount} online
+                      </span>
+                    )}
                   </span>
                   <span style={{ fontSize: '12px', fontWeight: 'normal', color: '#666' }}>
                     {conv.channels.length} channel{conv.channels.length !== 1 ? 's' : ''}
@@ -261,6 +462,10 @@ export default function ConversationsTab({ clientId }) {
                     {conv.channels.map((channel, chIdx) => {
                       const channelKey = `${conv.domain}|${channel.channel}`;
                       const isChannelExpanded = expandedChannels.has(channelKey);
+
+                      // Count active users in this channel
+                      const filteredUsers = channel.users.filter(u => !u.userid.startsWith('web:'));
+                      const activeCount = filteredUsers.filter(u => activeSessions[u.userid]).length;
 
                       return (
                         <div
@@ -276,24 +481,50 @@ export default function ConversationsTab({ clientId }) {
                             onClick={() => toggleChannel(channelKey)}
                             style={{
                               padding: '10px 14px',
-                              backgroundColor: '#f0f0f0',
+                              background: 'linear-gradient(135deg, #34495e 0%, #2c3e50 50%, #1a252f 100%)',
                               cursor: 'pointer',
                               display: 'flex',
                               justifyContent: 'space-between',
                               alignItems: 'center'
                             }}
                           >
-                            <span>
-                              {isChannelExpanded ? '▼' : '►'} <strong>Channel:</strong> {channel.channel}
+                            <span style={{ display: 'flex', alignItems: 'center', gap: '8px', color: '#fff' }}>
+                              {isChannelExpanded ? '−' : '+'} <strong>Channel:</strong> {channel.channel}
+                              {activeCount > 0 && (
+                                <span style={{
+                                  display: 'flex',
+                                  alignItems: 'center',
+                                  gap: '4px',
+                                  backgroundColor: '#d4edda',
+                                  color: '#155724',
+                                  padding: '2px 8px',
+                                  borderRadius: '12px',
+                                  fontSize: '12px',
+                                  fontWeight: '600'
+                                }}>
+                                  <span
+                                    style={{
+                                      width: '8px',
+                                      height: '8px',
+                                      backgroundColor: '#28a745',
+                                      borderRadius: '50%',
+                                      display: 'inline-block'
+                                    }}
+                                  />
+                                  {activeCount} online
+                                </span>
+                              )}
                             </span>
-                            <span style={{ fontSize: '12px', color: '#666' }}>
-                              {channel.users.length} user{channel.users.length !== 1 ? 's' : ''}
+                            <span style={{ fontSize: '12px', color: '#fff' }}>
+                              {filteredUsers.length} user{filteredUsers.length !== 1 ? 's' : ''}
                             </span>
                           </div>
 
                           {isChannelExpanded && (
-                            <div style={{ padding: '8px' }}>
-                              {channel.users.map((userConv, uIdx) => {
+                            <div>
+                              {channel.users
+                                .filter(u => !u.userid.startsWith('web:'))
+                                .map((userConv, uIdx) => {
                                 const userKey = `${conv.domain}|${channel.channel}|${userConv.userid}`;
                                 const isUserExpanded = expandedUsers.has(userKey);
 
@@ -301,9 +532,7 @@ export default function ConversationsTab({ clientId }) {
                                   <div
                                     key={uIdx}
                                     style={{
-                                      border: '1px solid #ddd',
-                                      borderRadius: '4px',
-                                      marginBottom: '6px',
+                                      borderTop: '1px solid #ddd',
                                       overflow: 'hidden'
                                     }}
                                   >
@@ -311,7 +540,7 @@ export default function ConversationsTab({ clientId }) {
                                       onClick={() => toggleUser(userKey)}
                                       style={{
                                         padding: '8px 12px',
-                                        backgroundColor: '#fafafa',
+                                        backgroundColor: '#e9ecef',
                                         cursor: 'pointer',
                                         display: 'flex',
                                         justifyContent: 'space-between',
@@ -319,8 +548,21 @@ export default function ConversationsTab({ clientId }) {
                                         fontSize: '14px'
                                       }}
                                     >
-                                      <span>
-                                        {isUserExpanded ? '▼' : '►'} <strong>User:</strong> {userConv.userid}
+                                      <span style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                                        {isUserExpanded ? '−' : '+'} <strong>User:</strong> {userConv.userid}
+                                        {activeSessions[userConv.userid] && (
+                                          <span
+                                            style={{
+                                              width: '10px',
+                                              height: '10px',
+                                              backgroundColor: '#28a745',
+                                              borderRadius: '50%',
+                                              display: 'inline-block',
+                                              boxShadow: '0 0 4px #28a745'
+                                            }}
+                                            title="User is currently online"
+                                          />
+                                        )}
                                       </span>
                                       <div style={{ display: 'flex', gap: '12px', fontSize: '12px', color: '#666' }}>
                                         <span>{userConv.messages.length} messages</span>
@@ -329,23 +571,24 @@ export default function ConversationsTab({ clientId }) {
                                     </div>
 
                                     {isUserExpanded && (
-                                      <div style={{ padding: '10px', backgroundColor: '#fff' }}>
-                                        <div style={{ 
-                                          fontSize: '12px', 
-                                          color: '#666', 
-                                          marginBottom: '8px',
+                                      <div style={{ backgroundColor: '#fff' }}>
+                                        <div style={{
+                                          fontSize: '12px',
+                                          color: '#666',
+                                          padding: '8px 12px',
                                           display: 'flex',
-                                          gap: '16px'
+                                          gap: '16px',
+                                          borderTop: '1px solid #e0e0e0'
                                         }}>
                                           <span><strong>First:</strong> {userConv.firstMessage}</span>
                                           <span><strong>Last:</strong> {userConv.lastMessage}</span>
+                                          <span><strong>Duration:</strong> {formatDuration(userConv.firstMessage, userConv.lastMessage)}</span>
                                         </div>
-                                        
-                                        <div style={{ 
-                                          maxHeight: '400px', 
+
+                                        <div style={{
+                                          maxHeight: '400px',
                                           overflowY: 'auto',
-                                          border: '1px solid #e0e0e0',
-                                          borderRadius: '4px'
+                                          borderTop: '1px solid #e0e0e0'
                                         }}>
                                           {userConv.messages.map((msg, mIdx) => (
                                             <div

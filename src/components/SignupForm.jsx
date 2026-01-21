@@ -118,6 +118,7 @@ export default function SignupForm({ isOpen }) {
     pro: { amount: 7900, name: "Pro" },
     enterprise: { amount: 19900, name: "Enterprise" },
     easybroker: { amount: 7900, name: "Real Estate Agent (EasyBroker)" },
+    mls: { amount: 7900, name: "Real Estate Agent (MLS)" },
   };
 
   useEffect(() => {
@@ -1049,6 +1050,7 @@ export default function SignupForm({ isOpen }) {
                       <option value="pro">Pro - $79/month</option>
                       <option value="enterprise">Enterprise - $199/month</option>
                       <option value="easybroker">Real Estate Agent (EasyBroker) - $79/month</option>
+                      <option value="mls">Real Estate Agent (MLS) - $79/month</option>
                     </select>
                   </div>
                 </div>

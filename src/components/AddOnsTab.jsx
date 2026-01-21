@@ -4,7 +4,7 @@ import { useSearchParams } from "react-router-dom";
 // AddOnsTab - Displays selectable decorators (integrations) that users can enable for their agent
 // Fetches available add-ons from the server's decorator registry (only those with selectable: true)
 // Allows users to toggle add-ons on/off for their specific agent
-// Also provides CSV file upload and embedding functionality for RAG training
+// Supports OAuth-based integrations (e.g., Google Calendar) and credential-based add-ons
 // Interacts with: /api/decorators/selectable, /api/clients/:clientId/decorators endpoints
 export default function AddOnsTab({ user, clientId }) {
   const [searchParams, setSearchParams] = useSearchParams();
