@@ -17,14 +17,44 @@ export default function Home() {
   const [formError, setFormError] = useState("");
   const [formSuccess, setFormSuccess] = useState(false);
   const [activeFaqIndex, setActiveFaqIndex] = useState(null);
-  const [isSignupFormOpen, setIsSignupFormOpen] = useState(false);
+  // const [isSignupFormOpen, setIsSignupFormOpen] = useState(false); // Commented out - form always visible
+
+  // Hero benefit items - displayed in the left column of the hero section
+  // These are the key value propositions shown alongside the signup form
+  const heroBenefits = [
+    {
+      title: "Zero-Code Implementation",
+      icon: "fa-wand-magic-sparkles",
+      description: "Launch your AI agent <strong>in minutes</strong>—no developers needed. Our intuitive interface lets anyone build <strong>powerful automation</strong> with simple point-and-click setup."
+    },
+    {
+      title: "Multi-Channel Communication",
+      icon: "fa-comments",
+      description: "Your AI agent works <strong>24/7</strong> across web, WhatsApp, Messenger, and Instagram—engaging customers <strong>wherever they are</strong>, whenever they need you. More channels coming soon."
+    },
+    {
+      title: "AI-Driven Insights",
+      icon: "fa-chart-line",
+      description: "Know <strong>who's contacting you</strong>, where they're coming from, and what interests them. AI-powered metrics give you <strong>visibility into your leads</strong> to sharpen marketing outreach and segmentation."
+    },
+    {
+      title: "Secure & PCI Compliant",
+      icon: "fa-shield-halved",
+      description: "Your data is protected with <strong>enterprise-grade security</strong>. We never store your credit card information, and all personal data is <strong>highly encrypted</strong> to keep your business and customers safe."
+    }
+  ];
 
   // Service items with detailed descriptions
   // Each item represents a key benefit/feature displayed in the Services section
   // Contains: title (heading), icon (FontAwesome class), description (HTML with <strong> tags for emphasis)
   // Rendered as expandable cards in a 2-column grid layout - hover reveals full description
-  // Changed: "Enhanced Customer Insights" replaced with "No-Code Integration" to highlight ease of setup
+  // AI-Driven Analytics added first, followed by 24/7 Support and Instant Response styled as cards
   const serviceItems = [
+    {
+      title: "AI-Driven Analytics",
+      icon: "fa-chart-pie",
+      description: "<strong>Unlock powerful insights into your customer behavior.</strong> Access custom AI-driven metrics that help you understand your users, track engagement patterns, and <strong>improve your audience segmentation.</strong> Our intelligent analytics dashboard surfaces actionable data, helping you identify high-value customers, optimize conversion funnels, and <strong>make data-backed decisions</strong> that drive growth."
+    },
     {
       title: "24/7 Customer Support",
       icon: "fa-clock",
@@ -49,13 +79,6 @@ export default function Home() {
       title: "Scalable Customer Engagement",
       icon: "fa-chart-line",
       description: "<strong>Handle thousands of simultaneous conversations without breaking a sweat.</strong> Unlike human teams that require hiring and training to scale, AI agents can <strong>instantly accommodate traffic spikes, seasonal surges, or rapid business growth.</strong> Whether you're handling 10 or 10,000 conversations, <strong>maintain the same high-quality experience for every customer</strong> without additional costs or delays."
-    },
-    {
-      // Changed from "Enhanced Customer Insights" with fa-lightbulb icon
-      // New focus on no-code setup to appeal to non-technical users
-      title: "No-Code Integration",
-      icon: "fa-wand-magic-sparkles",
-      description: "<strong>Set up your AI agent in minutes without writing a single line of code.</strong> Our intuitive visual interface lets you configure conversations, customize responses, and integrate with your existing tools through simple point-and-click actions. <strong>No technical expertise required—</strong> if you can use a web browser, you can build sophisticated AI agents. Drag-and-drop workflows, pre-built templates, and <strong>visual conversation designers</strong> empower anyone to create powerful automation without developers or IT support."
     }
   ];
 
@@ -216,113 +239,65 @@ export default function Home() {
 
   return (
     <div id="home-hero" className="home-page">
-      {/* Hero Section */}
+      {/* Hero Section - Redesigned with left/right layout */}
       <section className="home-hero">
         <div className="home-container">
           <h1 className="home-hero-title">AI Agents Turning Engagement Into Growth</h1>
-          <div className="home-video-container">
-            <video
-              id="autoplayVideo"
-              width="100%"
-              height="400"
-              muted
-              autoPlay
-              loop
-              playsInline
-            >
-              <source src="videos/hero-video.mp4" type="video/mp4" />
-              Your browser does not support the video tag.
-            </video>
+
+          {/* Two-column layout: Benefits on left, Form on right */}
+          <div className="home-hero-content">
+            {/* Left column - Benefits */}
+            <div className="home-hero-benefits">
+              {heroBenefits.map((benefit, index) => (
+                <div key={index} className="home-hero-benefit-item">
+                  <h3 className="home-hero-benefit-title">{benefit.title}</h3>
+                  <div className="home-hero-benefit-row">
+                    <i className={`fas ${benefit.icon} home-hero-benefit-icon`}></i>
+                    <p className="home-hero-benefit-description" dangerouslySetInnerHTML={{ __html: benefit.description }}></p>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {/* Right column - Signup Form */}
+            <div className="home-hero-form-container">
+              {/* Button commented out - form always visible
+              <button
+                type="button"
+                className="home-btn home-btn-green"
+                onClick={() => setIsSignupFormOpen((v) => !v)}
+                style={{ marginBottom: "1.5em", border: "none", outline: "none", width: "100%" }}
+              >
+                {isSignupFormOpen ? "Close Form" : "Build Your Agent Now"}
+              </button>
+              */}
+
+              {/* Signup Form Component - always open */}
+              <SignupForm
+                isOpen={true}
+                onClose={() => {}}
+              />
+            </div>
           </div>
-
-          <button
-            type="button"
-            className="home-btn home-btn-green"
-            onClick={() => setIsSignupFormOpen((v) => !v)}
-            style={{ marginTop: "2em", border: "none", outline: "none" }}
-          >
-            {isSignupFormOpen ? "Close Form" : "Build Your AI Agent Today"}
-          </button>
-
-          {/* Signup Form Component */}
-          <SignupForm 
-            isOpen={isSignupFormOpen} 
-            onClose={() => setIsSignupFormOpen(false)} 
-          />
         </div>
       </section>
 
-      {/* Cards Section */}
-      <section className="home-cards-section">
+      {/* Services Section - Card-based layout matching the hero benefits style */}
+      <section id="services" className="home-cards-section">
         <div className="home-container">
           <div className="home-cards-grid">
-            <div className="home-card">
-              <div className="home-black-bar"></div>
-              <div className="home-card-body">
-                <div className="home-card-upper">
-                  <i className="fas fa-tasks home-card-icon"></i>
-                  <h3 className="home-card-title">Always-On Productivity</h3>
-                </div>
-                <p className="home-card-text">
-                  A dedicated AI agent that works 24/7—handling conversations,
-                  capturing intent, and following up automatically—so your team
-                  stays focused on high-value work while nothing slips through the
-                  cracks.
-                </p>
-              </div>
-            </div>
-
-            <div className="home-card">
-              <div className="home-black-bar"></div>
-              <div className="home-card-body">
-                <div className="home-card-upper">
-                  <i className="fas fa-cogs home-card-icon"></i>
-                  <h3 className="home-card-title">Smarter Engagement</h3>
-                </div>
-                <p className="home-card-text">
-                  AI agents that connect every interaction to your CRM, remember context,
-                  and route leads intelligently—creating smoother handoffs, faster responses,
-                  and more meaningful engagement at scale.
-                </p>
-              </div>
-            </div>
-
-            <div className="home-card">
-              <div className="home-black-bar"></div>
-              <div className="home-card-body">
-                <div className="home-card-upper">
-                  <i className="fas fa-dollar-sign home-card-icon"></i>
-                  <h3 className="home-card-title">Low Cost, High Impact</h3>
-                </div>
-                <p className="home-card-text">
-                  Replace repetitive manual work with reliable and scalable AI agents,
-                  reducing operational overhead, and delivering consistent results without
-                  increasing headcount.
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Services Section - Redesigned from clickable list with modal to hover-expandable cards
-          Previous implementation: ul.home-services-list with li items that opened a modal on click
-          New implementation: 2-column grid of cards that expand on hover to reveal descriptions
-          This change improves UX by showing content inline without modal interruption
-          Uses dangerouslySetInnerHTML to render HTML formatting in descriptions (bold text)
-          Removed: activeServiceModal state and modal overlay component */}
-      <section id="services" className="home-services-section">
-        <div className="home-container">
-          <div className="home-services-grid">
             {serviceItems.map((service, index) => (
-              <div key={index} className="home-service-item">
-                {/* Header with icon and title - always visible */}
-                <div className="home-service-header">
-                  <i className={`fa-solid ${service.icon} home-service-icon`}></i>
-                  <h3 className="home-service-title">{service.title}</h3>
+              <div key={index} className="home-card">
+                <div className="home-card-body">
+                  <div className="home-black-bar"></div>
+                  <div className="home-card-upper">
+                    <div className="home-card-icon">
+                      <i className={`fa-solid ${service.icon}`}></i>
+                    </div>
+                    <h3 className="home-card-title">{service.title}</h3>
+                  </div>
+                  <p className="home-card-text" dangerouslySetInnerHTML={{ __html: service.description }}></p>
                 </div>
-                {/* Description - hidden by default, expands on hover via CSS max-height transition */}
-                <p className="home-service-description" dangerouslySetInnerHTML={{ __html: service.description }}></p>
               </div>
             ))}
           </div>

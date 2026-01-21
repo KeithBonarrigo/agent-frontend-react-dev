@@ -767,14 +767,14 @@ export default function SignupForm({ isOpen }) {
       )}
 
       {/* Signup Form */}
-      <div 
-        id="agent-form" 
-        style={{ 
-          marginTop: "2em",
+      <div
+        id="agent-form"
+        style={{
+          marginTop: 0,
           opacity: isOpen ? 1 : 0,
           maxHeight: isOpen ? "5000px" : "0px",
           overflow: "hidden",
-          transition: "opacity 0.5s ease-in-out, max-height 0.5s ease-in-out",
+          transition: "opacity 1.2s ease-in-out, max-height 1.2s ease-in-out",
           pointerEvents: isOpen ? "auto" : "none"
         }}
       >
@@ -789,7 +789,8 @@ export default function SignupForm({ isOpen }) {
           }}
         >
           <div style={{
-            background: "linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%)",
+            /* background: "linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%)", */
+            background: "linear-gradient(135deg, #15803d 0%, #22c55e 100%)",
             padding: "20px 10px",
             margin: 0
           }}>
@@ -800,25 +801,26 @@ export default function SignupForm({ isOpen }) {
 
           <div style={{
             background: "white",
-            padding: "20px",
+            padding: "10px 20px",
             margin: 0,
             borderBottom: "1px solid #ccc"
           }}>
             <p
               style={{
                 marginTop: 0,
-                marginBottom: "10px",
+                marginBottom: 0,
                 opacity: 0.85,
                 textAlign: "center",
-                color: "#333"
+                color: "#333",
+                lineHeight: "1.3"
               }}
             >
-              <strong>Create your account now</strong>, then <strong>log in anytime to complete or change the rest</strong>.
-              <br />
-              Only fields marked with an asterisk (<span style={requiredAsteriskStyle}>*</span>) are required.
-              <p style={{ marginTop: ".5em", marginBottom: "0", color: "#333" }}>
+              <strong>Create your account now</strong>, then <strong><a href="/login" style={{ color: "#1e3a8a", textDecoration: "underline" }}>log in anytime</a> to complete or change the rest</strong>.
+              {/* <br />
+              Only fields marked with an asterisk (<span style={requiredAsteriskStyle}>*</span>) are required. */}
+              {/* <p style={{ marginTop: ".25em", marginBottom: "0", color: "#333", lineHeight: "1.3" }}>
                 <i>Already have an account?</i> <a href="/login" style={{ color: "#1e3a8a", textDecoration: "underline" }}>Log in</a> here and manage your agent.
-              </p>
+              </p> */}
             </p>
           </div>
 
@@ -829,27 +831,37 @@ export default function SignupForm({ isOpen }) {
               ref={agentFormWrapperRef}
             >
               <div ref={agentFormInnerRef}>
-                {/* Agent Name Field */}
-                <div className="home-form-group" style={{ marginBottom: "16px" }}>
-                  <label htmlFor="agent_name" className="home-form-label">
-                    Agent Name:
-                  </label>
-                  <input
-                    type="text"
-                    id="agent_name"
-                    name="agent_name"
-                    value={agentForm.agent_name}
-                    onChange={handleAgentFormChange}
-                    placeholder="e.g., My Real Estate Bot, Customer Service Agent"
-                    className="home-form-input"
-                  />
-                  <p style={{ 
-                    margin: "6px 0 0 0", 
-                    fontSize: "12px", 
-                    color: "#666" 
-                  }}>
-                    A friendly name to identify your agent (you can change this later)
-                  </p>
+                {/* Agent Name and Company Row */}
+                <div style={rowWrapStyle}>
+                  <div className="home-form-group" style={{ flex: 1 }}>
+                    <label htmlFor="agent_name" className="home-form-label">
+                      Agent Name:
+                    </label>
+                    <input
+                      type="text"
+                      id="agent_name"
+                      name="agent_name"
+                      value={agentForm.agent_name}
+                      onChange={handleAgentFormChange}
+                      placeholder="(You can change this later)"
+                      className="home-form-input"
+                    />
+                  </div>
+
+                  <div className="home-form-group" style={{ flex: 1 }}>
+                    <label htmlFor="company" className="home-form-label">
+                      Company:
+                    </label>
+                    <input
+                      type="text"
+                      id="company"
+                      name="company"
+                      placeholder="Acme"
+                      value={agentForm.company}
+                      onChange={handleAgentFormChange}
+                      className="home-form-input"
+                    />
+                  </div>
                 </div>
 
                 <div style={rowWrapStyle}>
@@ -990,49 +1002,6 @@ export default function SignupForm({ isOpen }) {
                     />
                   </div>
 
-                  <div
-                    className="home-form-group"
-                    style={{
-                      flex: 1,
-                      display: "flex",
-                      alignItems: "center",
-                      gap: "10px",
-                      marginTop: isMobile ? "0" : "28px",
-                    }}
-                  >
-                    <input
-                      type="checkbox"
-                      id="contact_phone_wsp"
-                      name="contact_phone_wsp"
-                      checked={agentForm.contact_phone_wsp}
-                      onChange={handleAgentFormChange}
-                    />
-                    <label
-                      htmlFor="contact_phone_wsp"
-                      className="home-form-label"
-                      style={{ margin: 0, whiteSpace: "nowrap" }}
-                    >
-                      This phone is WhatsApp-enabled
-                    </label>
-                  </div>
-                </div>
-
-                <div style={rowWrapStyle}>
-                  <div className="home-form-group" style={{ flex: 1 }}>
-                    <label htmlFor="company" className="home-form-label">
-                      Company:
-                    </label>
-                    <input
-                      type="text"
-                      id="company"
-                      name="company"
-                      placeholder="Acme"
-                      value={agentForm.company}
-                      onChange={handleAgentFormChange}
-                      className="home-form-input"
-                    />
-                  </div>
-
                   <div className="home-form-group" style={{ flex: 1 }}>
                     <label htmlFor="level" className="home-form-label">
                       Service Level:<span style={requiredAsteriskStyle}>*</span>
@@ -1055,19 +1024,54 @@ export default function SignupForm({ isOpen }) {
                   </div>
                 </div>
 
-                <div style={{ marginTop: "20px", marginBottom: "10px" }}>
+                {/* WhatsApp and Terms checkboxes - centered row */}
+                <div
+                  style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
+                    gap: "10px",
+                    marginTop: "10px",
+                    marginBottom: "10px",
+                  }}
+                >
+                  <div
+                    style={{
+                      display: "flex",
+                      justifyContent: "center",
+                      alignItems: "center",
+                      gap: "30px",
+                      flexWrap: "wrap",
+                    }}
+                  >
                   <div
                     style={{
                       display: "flex",
                       alignItems: "center",
-                      gap: "10px",
-                      padding: "15px",
-                      backgroundColor: "#fff",
-                      borderRadius: "4px",
-                      border: "1px solid #dee2e6",
-                      maxWidth: "20em", 
-                      marginLeft: "auto", 
-                      marginRight: "auto",
+                      gap: "8px",
+                    }}
+                  >
+                    <input
+                      type="checkbox"
+                      id="contact_phone_wsp"
+                      name="contact_phone_wsp"
+                      checked={agentForm.contact_phone_wsp}
+                      onChange={handleAgentFormChange}
+                    />
+                    <label
+                      htmlFor="contact_phone_wsp"
+                      className="home-form-label"
+                      style={{ margin: 0, whiteSpace: "nowrap", fontWeight: "normal" }}
+                    >
+                      This phone is WhatsApp-enabled
+                    </label>
+                  </div>
+
+                  <div
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      gap: "8px",
                     }}
                   >
                     <input
@@ -1076,8 +1080,6 @@ export default function SignupForm({ isOpen }) {
                       checked={termsAccepted}
                       onChange={(e) => setTermsAccepted(e.target.checked)}
                       style={{
-                        width: "18px",
-                        height: "18px",
                         cursor: "pointer"
                       }}
                     />
@@ -1107,6 +1109,7 @@ export default function SignupForm({ isOpen }) {
                       </span>
                       <span style={requiredAsteriskStyle}> *</span>
                     </label>
+                  </div>
                   </div>
                 </div>
 
@@ -1144,11 +1147,15 @@ export default function SignupForm({ isOpen }) {
                   <button 
                     type="submit"
                     className="home-btn home-btn-green"
-                    style={{ 
-                      border: "none", 
+                    style={{
+                      border: "none",
                       outline: "none",
                       padding: "12px 30px",
-                      fontSize: "16px"
+                      fontSize: "16px",
+                      whiteSpace: "nowrap",
+                      display: "inline-flex",
+                      justifyContent: "center",
+                      alignItems: "center"
                     }}
                     disabled={emailExists || checkingEmail}
                   >

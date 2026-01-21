@@ -1006,7 +1006,7 @@ export default function Dashboard() {
         <div style={{
           padding: '1em 1.5em',
           background: 'linear-gradient(135deg, #34495e 0%, #2c3e50 50%, #1a252f 100%)',
-          borderBottom: '1px solid #2c3e50'
+          borderBottom: '1px solid rgb(44, 62, 80)'
         }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1em' }}>
             <div>
