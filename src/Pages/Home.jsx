@@ -422,12 +422,12 @@ export default function Home() {
               </div>
 
               <div className="home-form-group">
-                <label htmlFor="company" className="home-form-label">
+                <label htmlFor="contact-company" className="home-form-label">
                   Company:
                 </label>
                 <input
                   type="text"
-                  id="company"
+                  id="contact-company"
                   name="company"
                   value={contactForm.company}
                   onChange={handleFormChange}
