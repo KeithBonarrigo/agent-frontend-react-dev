@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 
 // IntegrationsTab - Displays embed code and integration methods for the AI agent
 // Provides the script tag users need to embed the chatbot on their website
@@ -7,6 +7,7 @@ export default function IntegrationsTab({ user, clientId }) {
   const [copied, setCopied] = useState(false);
   const [chatbotLoaded, setChatbotLoaded] = useState(false);
   const [chatbotLoading, setChatbotLoading] = useState(false);
+  const chatbotScriptRef = useRef(null);
 
   if (!clientId) {
     return (
@@ -60,14 +61,19 @@ export default function IntegrationsTab({ user, clientId }) {
 
     setChatbotLoading(true);
 
+    const chatbotUrl = `${webEmbedProtocol}://${webEmbedDomain}/chatbot.js?id=${clientId}`;
+    console.log('🤖 Loading chatbot from:', chatbotUrl);
+
     const script = document.createElement('script');
-    script.src = `${webEmbedProtocol}://${webEmbedDomain}/chatbot.js?id=${clientId}`;
+    script.src = chatbotUrl;
     script.async = true;
     script.onload = () => {
+      console.log('✅ Chatbot script loaded successfully');
       setChatbotLoading(false);
       setChatbotLoaded(true);
     };
-    script.onerror = () => {
+    script.onerror = (err) => {
+      console.error('❌ Chatbot script failed to load:', err);
       setChatbotLoading(false);
       alert('Failed to load chatbot. Please try again.');
     };
