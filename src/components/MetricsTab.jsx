@@ -1,9 +1,22 @@
 import { useState, useEffect } from "react";
 
-export default function MetricsTab({ clientId }) {
+export default function MetricsTab({ clientId, subscription, tokensUsed }) {
   const [metrics, setMetrics] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+
+  const formatNumber = (num) => num?.toLocaleString() || '0';
+
+  const getUsagePercentage = (used, limit) => {
+    if (!limit) return 0;
+    return Math.min((used / limit) * 100, 100);
+  };
+
+  const getUsageColor = (percentage) => {
+    if (percentage < 50) return '#28a745';
+    if (percentage < 80) return '#ffc107';
+    return '#dc3545';
+  };
 
   useEffect(() => {
     if (clientId) {
@@ -45,9 +58,73 @@ export default function MetricsTab({ clientId }) {
     );
   }
 
+  const usagePercentage = getUsagePercentage(tokensUsed, subscription?.token_limit);
+
   return (
     <div style={{ padding: "2em", backgroundColor: "#f8f9fa", borderRadius: "8px", border: "1px solid #dee2e6" }}>
       <h2 style={{ margin: '0 0 1em 0', textAlign: 'center' }}>Metrics</h2>
+
+      {/* Token Usage Section */}
+      {subscription && (
+        <div style={{
+          backgroundColor: '#fff',
+          border: '1px solid #dee2e6',
+          borderRadius: '8px',
+          overflow: 'hidden',
+          marginBottom: '1.5em'
+        }}>
+          <div style={{
+            fontSize: '1.17em',
+            color: '#fff',
+            background: 'linear-gradient(135deg, #34495e 0%, #2c3e50 50%, #1a252f 100%)',
+            padding: '10px 16px',
+            fontWeight: '600',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center'
+          }}>
+            Subscription Token Usage
+          </div>
+          <div style={{ padding: '1.5em' }}>
+            <div style={{ display: 'flex', alignItems: 'baseline', gap: '8px', justifyContent: 'center' }}>
+              <span style={{
+                fontSize: '2.5em',
+                fontWeight: 'bold',
+                color: getUsageColor(usagePercentage)
+              }}>
+                {formatNumber(tokensUsed)}
+              </span>
+              <span style={{ color: '#666', fontSize: '1.2em' }}>
+                / {subscription.token_limit ? formatNumber(subscription.token_limit) : '∞'}
+              </span>
+            </div>
+            {subscription.token_limit && (
+              <div style={{
+                width: '100%',
+                maxWidth: '400px',
+                height: '12px',
+                backgroundColor: '#e9ecef',
+                borderRadius: '6px',
+                marginTop: '12px',
+                overflow: 'hidden',
+                margin: '12px auto 0 auto'
+              }}>
+                <div style={{
+                  width: `${usagePercentage}%`,
+                  height: '100%',
+                  backgroundColor: getUsageColor(usagePercentage),
+                  transition: 'width 0.3s'
+                }} />
+              </div>
+            )}
+            <p style={{ textAlign: 'center', color: '#666', marginTop: '0.75em', marginBottom: 0, fontSize: '0.9em' }}>
+              {subscription.token_limit
+                ? `${usagePercentage.toFixed(1)}% of your monthly token limit used`
+                : 'Unlimited tokens available'}
+            </p>
+          </div>
+        </div>
+      )}
 
       {loading ? (
         <div style={{ textAlign: 'center', padding: '2em', color: '#666' }}>

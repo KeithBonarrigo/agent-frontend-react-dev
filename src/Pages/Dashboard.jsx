@@ -7,6 +7,7 @@ import IntegrationsTab from '../components/IntegrationsTab';
 import AddOnsTab from '../components/AddOnsTab';
 import ConversationsTab from '../components/ConversationsTab';
 import MetricsTab from '../components/MetricsTab';
+import LeadsTab from '../components/LeadsTab';
 import "../styles/Dashboard.css";
 
 export default function Dashboard() {
@@ -34,6 +35,25 @@ export default function Dashboard() {
   const [newAgentError, setNewAgentError] = useState(null);
   const [newAgentSuccess, setNewAgentSuccess] = useState(null);
   const [newAgentForm, setNewAgentForm] = useState({ name: '', company: '' });
+
+  // Agent Edit Form state
+  const [isEditingAgent, setIsEditingAgent] = useState(false);
+  const [agentEditForm, setAgentEditForm] = useState({
+    agent_name: '',
+    mls_token: '',
+    contact_email: '',
+    contact_phone: '',
+    contact_phone_wsp: false,
+    office_lat: '',
+    office_long: '',
+    office_address: '',
+    office_wsp_phone: '',
+    company: '',
+    timezone: 'America/Mazatlan'
+  });
+  const [agentEditLoading, setAgentEditLoading] = useState(false);
+  const [agentEditError, setAgentEditError] = useState(null);
+  const [agentEditSuccess, setAgentEditSuccess] = useState(null);
 
   // Training - URL Embedding state
   // These states manage the URL-based embedding feature in the Training tab
@@ -179,6 +199,28 @@ export default function Dashboard() {
       fetchFileEmbeddings();
     }
   }, [selectedClientId]);
+
+  // Populate agent edit form when selected client changes
+  useEffect(() => {
+    if (selectedClient) {
+      setAgentEditForm({
+        agent_name: selectedClient.agent_name || '',
+        mls_token: selectedClient.mls_token || '',
+        contact_email: selectedClient.contact_email || '',
+        contact_phone: selectedClient.contact_phone || '',
+        contact_phone_wsp: selectedClient.contact_phone_wsp || false,
+        office_lat: selectedClient.office_lat || '',
+        office_long: selectedClient.office_long || '',
+        office_address: selectedClient.office_address || '',
+        office_wsp_phone: selectedClient.office_wsp_phone || '',
+        company: selectedClient.company || '',
+        timezone: selectedClient.timezone || 'America/Mazatlan'
+      });
+      setIsEditingAgent(false);
+      setAgentEditError(null);
+      setAgentEditSuccess(null);
+    }
+  }, [selectedClient]);
 
   // Load Google API scripts when Google Drive is selected as file source
   useEffect(() => {
@@ -496,6 +538,76 @@ export default function Dashboard() {
     } finally {
       setNewAgentLoading(false);
     }
+  };
+
+  // handleUpdateAgent - Updates agent/client settings
+  // Called when user submits the agent edit form
+  // Updates bot_client_user table fields: agent_name, mls_token, contact_email, contact_phone,
+  // contact_phone_wsp, office_lat, office_long, office_address, office_wsp_phone, company
+  const handleUpdateAgent = async (e) => {
+    e.preventDefault();
+
+    if (!selectedClientId) {
+      setAgentEditError('No agent selected');
+      return;
+    }
+
+    setAgentEditLoading(true);
+    setAgentEditError(null);
+    setAgentEditSuccess(null);
+
+    try {
+      const apiBaseUrl = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+      const response = await fetch(
+        `${apiBaseUrl}/api/clients/${selectedClientId}`,
+        {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${import.meta.env.VITE_CREATE_USER_TOKEN}`
+          },
+          body: JSON.stringify({
+            agent_name: agentEditForm.agent_name.trim() || null,
+            mls_token: agentEditForm.mls_token.trim() || null,
+            contact_email: agentEditForm.contact_email.trim() || null,
+            contact_phone: agentEditForm.contact_phone.trim() || null,
+            contact_phone_wsp: agentEditForm.contact_phone_wsp,
+            office_lat: agentEditForm.office_lat ? parseFloat(agentEditForm.office_lat) : null,
+            office_long: agentEditForm.office_long ? parseFloat(agentEditForm.office_long) : null,
+            office_address: agentEditForm.office_address.trim() || null,
+            office_wsp_phone: agentEditForm.office_wsp_phone.trim() || null,
+            company: agentEditForm.company.trim() || null,
+            timezone: agentEditForm.timezone
+          }),
+          credentials: 'include'
+        }
+      );
+
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.error || 'Failed to update agent');
+
+      setAgentEditSuccess('Agent updated successfully!');
+      setIsEditingAgent(false);
+
+      // Refresh data to show updated values
+      setTimeout(() => {
+        window.location.reload();
+      }, 1500);
+
+    } catch (error) {
+      console.error('Update agent error:', error);
+      setAgentEditError(error.message);
+    } finally {
+      setAgentEditLoading(false);
+    }
+  };
+
+  const handleAgentEditChange = (e) => {
+    const { name, type, checked, value } = e.target;
+    setAgentEditForm(prev => ({
+      ...prev,
+      [name]: type === 'checkbox' ? checked : value
+    }));
   };
 
   // handleCreateEmbedding - Creates a new URL-based embedding
@@ -1054,12 +1166,12 @@ export default function Dashboard() {
         {/* Subscription Details */}
         {selectedSubscription && (
           <div style={{ padding: '1.25em 1.5em', borderBottom: '1px solid #b3d7ff', backgroundColor: '#e7f3ff' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1.5em' }}>
-              {/* Subscription Info */}
-              <div>
-                {/* Plan details and agent selector container */}
-                <div style={{ backgroundColor: '#fff', padding: '0.75em 1em', borderRadius: '6px', border: '1px solid #dee2e6' }}>
-                  <h3 style={{ margin: '0 0 0.5em 0', display: 'flex', alignItems: 'center', gap: '10px' }}>
+            {/* Plan details and agent selector container - full width */}
+            <div style={{ backgroundColor: '#fff', padding: '0.75em 1em', borderRadius: '6px', border: '1px solid #dee2e6' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '0.75em' }}>
+                {/* Subscription name, status, and plan details - inline on large screens */}
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.75em', flexWrap: 'wrap' }}>
+                  <h3 style={{ margin: 0, display: 'flex', alignItems: 'center', gap: '10px' }}>
                     {getSubscriptionDisplayName(selectedSubscription)}
                     <span style={{
                       backgroundColor: getStatusColor(selectedSubscription.subscription_status),
@@ -1069,7 +1181,8 @@ export default function Dashboard() {
                       {selectedSubscription.subscription_status}
                     </span>
                   </h3>
-                  <div style={{ display: 'flex', gap: '0.75em', flexWrap: 'wrap', fontSize: '0.85em' }}>
+                  <span style={{ color: '#ccc', fontSize: '1.2em', fontWeight: '300' }}>|</span>
+                  <div style={{ display: 'flex', gap: '0.5em', flexWrap: 'wrap', fontSize: '0.85em' }}>
                     <span style={{
                       backgroundColor: '#f1f3f5',
                       padding: '4px 10px',
@@ -1100,72 +1213,362 @@ export default function Dashboard() {
                       </span>
                     )}
                   </div>
-
-                  {/* Agent Selector - inline */}
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.75em', flexWrap: 'wrap', marginTop: '0.75em' }}>
-                    <label style={{ fontWeight: '600', color: '#333', fontSize: '0.9em' }}>Select Agent:</label>
-                    {agentsInSubscription.length === 0 ? (
-                      <span style={{ color: '#666', fontSize: '0.9em' }}>No agents in this subscription</span>
-                    ) : (
-                      <select value={selectedClientId || ''} onChange={handleClientChange}
-                        style={{ padding: '0.4em 0.8em', fontSize: '0.9em', borderRadius: '4px', border: '1px solid #ced4da', backgroundColor: '#f1f3f5', minWidth: '200px', cursor: 'pointer' }}>
-                        {agentsInSubscription.map((client) => (
-                          <option key={client.clientid} value={client.clientid}>
-                            {getClientDisplayName(client)}
-                          </option>
-                        ))}
-                      </select>
-                    )}
-                    {canCreateAgentInSubscription && !specialtySubAtLimit ? (
-                      <button onClick={() => setShowNewAgentModal(true)}
-                        style={{ padding: '0.4em 0.8em', fontSize: '0.85em', backgroundColor: '#28a745',
-                          color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer',
-                          fontWeight: '600', display: 'flex', alignItems: 'center', gap: '4px' }}>
-                        <span style={{ fontSize: '1em' }}>+</span> New Agent
-                      </button>
-                    ) : specialtySubAtLimit ? (
-                      <span style={{ padding: '0.35em 0.6em', backgroundColor: '#fff3cd', color: '#856404',
-                        border: '1px solid #ffc107', borderRadius: '4px', fontSize: '0.8em' }}>
-                        ⚠️ Specialty plans allow 1 agent only
-                      </span>
-                    ) : null}
-                  </div>
                 </div>
-              </div>
 
-              {/* Token Usage & Cancel Button */}
-              <div style={{ minWidth: '220px', backgroundColor: '#fff', border: '1px solid #dee2e6', borderRadius: '6px', overflow: 'hidden', marginLeft: 'auto' }}>
-                <div style={{ fontSize: '1.17em', color: '#fff', background: 'linear-gradient(135deg, #34495e 0%, #2c3e50 50%, #1a252f 100%)', padding: '6px 10px', fontWeight: '600', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>Token Usage</div>
-                <div style={{ padding: '8px 10px 0 10px' }}>
-                  <div style={{ display: 'flex', alignItems: 'baseline', gap: '6px' }}>
-                    <span style={{ fontSize: '1.3em', fontWeight: 'bold', color: getUsageColor(getUsagePercentage(subscriptionTokensUsed, selectedSubscription.token_limit)) }}>
-                      {formatNumber(subscriptionTokensUsed)}
-                    </span>
-                    <span style={{ color: '#666', fontSize: '0.9em' }}>
-                      / {selectedSubscription.token_limit ? formatNumber(selectedSubscription.token_limit) : '∞'}
-                    </span>
-                  </div>
-                  {selectedSubscription.token_limit && (
-                    <div style={{ width: '100%', height: '6px', backgroundColor: '#e9ecef', borderRadius: '3px', marginTop: '6px', overflow: 'hidden' }}>
-                      <div style={{
-                        width: `${getUsagePercentage(subscriptionTokensUsed, selectedSubscription.token_limit)}%`,
-                        height: '100%',
-                        backgroundColor: getUsageColor(getUsagePercentage(subscriptionTokensUsed, selectedSubscription.token_limit)),
-                        transition: 'width 0.3s'
-                      }} />
-                    </div>
-                  )}
-                </div>
-                {/* Cancel Button */}
+                {/* Cancel Button - top right */}
                 {selectedSubscription.subscription_id && selectedSubscription.subscription_status !== 'cancelled' && (
                   <button onClick={() => setShowCancelModal(true)}
-                    style={{ width: '100%', padding: '0.5em', backgroundColor: '#dc3545', color: 'white',
-                      border: 'none', borderRadius: '0 0 6px 6px', cursor: 'pointer', fontSize: '0.85em', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.4em', borderTop: '1px solid #dee2e6' }}>
+                    style={{ padding: '0.5em 1em', backgroundColor: '#dc3545', color: 'white',
+                      border: 'none', borderRadius: '4px', cursor: 'pointer', fontSize: '0.85em', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.4em', whiteSpace: 'nowrap' }}>
                     <span style={{ fontSize: '1em' }}>✕</span> Cancel Subscription
                   </button>
                 )}
               </div>
+
+              {/* Agent Selector - inline */}
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.75em', flexWrap: 'wrap', marginTop: '0.75em' }}>
+                <label style={{ fontWeight: '600', color: '#333', fontSize: '0.9em' }}>Select Agent:</label>
+                {agentsInSubscription.length === 0 ? (
+                  <span style={{ color: '#666', fontSize: '0.9em' }}>No agents in this subscription</span>
+                ) : (
+                  <select value={selectedClientId || ''} onChange={handleClientChange}
+                    style={{ padding: '0.4em 0.8em', fontSize: '0.9em', borderRadius: '4px', border: '1px solid #ced4da', backgroundColor: '#f1f3f5', minWidth: '200px', cursor: 'pointer' }}>
+                    {agentsInSubscription.map((client) => (
+                      <option key={client.clientid} value={client.clientid}>
+                        {getClientDisplayName(client)}
+                      </option>
+                    ))}
+                  </select>
+                )}
+                {canCreateAgentInSubscription && !specialtySubAtLimit ? (
+                  <button onClick={() => setShowNewAgentModal(true)}
+                    style={{ padding: '0.4em 0.8em', fontSize: '0.85em', backgroundColor: '#28a745',
+                      color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer',
+                      fontWeight: '600', display: 'flex', alignItems: 'center', gap: '4px' }}>
+                    <span style={{ fontSize: '1em' }}>+</span> New Agent
+                  </button>
+                ) : specialtySubAtLimit ? (
+                  <span style={{ padding: '0.35em 0.6em', backgroundColor: '#fff3cd', color: '#856404',
+                    border: '1px solid #ffc107', borderRadius: '4px', fontSize: '0.8em' }}>
+                    ⚠️ Specialty plans allow 1 agent only
+                  </span>
+                ) : null}
+              </div>
             </div>
+
+            {/* Agent Settings Form */}
+            {selectedClient && (
+              <div style={{ backgroundColor: '#fff', padding: '1em', borderRadius: '6px', border: '1px solid #dee2e6', marginTop: '1em' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: isEditingAgent ? '1em' : 0 }}>
+                  <h4 style={{ margin: 0, color: '#333', display: 'flex', alignItems: 'center', gap: '0.5em' }}>
+                    <span style={{ fontSize: '1.1em' }}>⚙</span> Agent Settings
+                  </h4>
+                  {!isEditingAgent && (
+                    <button
+                      onClick={() => setIsEditingAgent(true)}
+                      style={{
+                        padding: '0.4em 0.8em',
+                        fontSize: '0.85em',
+                        backgroundColor: '#007bff',
+                        color: 'white',
+                        border: 'none',
+                        borderRadius: '4px',
+                        cursor: 'pointer',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '0.4em'
+                      }}
+                    >
+                      <span>✎</span> Edit
+                    </button>
+                  )}
+                </div>
+
+                {isEditingAgent ? (
+                  <form onSubmit={handleUpdateAgent}>
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '1em' }}>
+                      {/* Agent Name */}
+                      <div>
+                        <label style={{ display: 'block', marginBottom: '0.25em', fontWeight: '600', color: '#333', fontSize: '0.85em' }}>
+                          Agent Name
+                        </label>
+                        <input
+                          type="text"
+                          name="agent_name"
+                          value={agentEditForm.agent_name}
+                          onChange={handleAgentEditChange}
+                          placeholder="My AI Agent"
+                          style={{ width: '100%', padding: '0.5em', fontSize: '0.9em', border: '1px solid #ced4da', borderRadius: '4px', boxSizing: 'border-box' }}
+                        />
+                      </div>
+
+                      {/* Company */}
+                      <div>
+                        <label style={{ display: 'block', marginBottom: '0.25em', fontWeight: '600', color: '#333', fontSize: '0.85em' }}>
+                          Company
+                        </label>
+                        <input
+                          type="text"
+                          name="company"
+                          value={agentEditForm.company}
+                          onChange={handleAgentEditChange}
+                          placeholder="Acme Inc"
+                          style={{ width: '100%', padding: '0.5em', fontSize: '0.9em', border: '1px solid #ced4da', borderRadius: '4px', boxSizing: 'border-box' }}
+                        />
+                      </div>
+
+                      {/* Timezone */}
+                      <div>
+                        <label style={{ display: 'block', marginBottom: '0.25em', fontWeight: '600', color: '#333', fontSize: '0.85em' }}>
+                          Timezone
+                        </label>
+                        <select
+                          name="timezone"
+                          value={agentEditForm.timezone}
+                          onChange={handleAgentEditChange}
+                          style={{ width: '100%', padding: '0.5em', fontSize: '0.9em', border: '1px solid #ced4da', borderRadius: '4px', boxSizing: 'border-box', backgroundColor: '#fff' }}
+                        >
+                          <option value="America/New_York">Eastern Time (America/New_York)</option>
+                          <option value="America/Chicago">Central Time (America/Chicago)</option>
+                          <option value="America/Denver">Mountain Time (America/Denver)</option>
+                          <option value="America/Phoenix">Arizona (America/Phoenix)</option>
+                          <option value="America/Los_Angeles">Pacific Time (America/Los_Angeles)</option>
+                          <option value="America/Anchorage">Alaska (America/Anchorage)</option>
+                          <option value="America/Honolulu">Hawaii (America/Honolulu)</option>
+                          <option value="America/Mexico_City">Mexico Central (America/Mexico_City)</option>
+                          <option value="America/Mazatlan">Mexico Mountain (America/Mazatlan)</option>
+                          <option value="America/Tijuana">Mexico Pacific (America/Tijuana)</option>
+                          <option value="UTC">UTC</option>
+                        </select>
+                      </div>
+
+                      {/* Contact Email */}
+                      <div>
+                        <label style={{ display: 'block', marginBottom: '0.25em', fontWeight: '600', color: '#333', fontSize: '0.85em' }}>
+                          Contact Email
+                        </label>
+                        <input
+                          type="email"
+                          name="contact_email"
+                          value={agentEditForm.contact_email}
+                          onChange={handleAgentEditChange}
+                          placeholder="contact@example.com"
+                          style={{ width: '100%', padding: '0.5em', fontSize: '0.9em', border: '1px solid #ced4da', borderRadius: '4px', boxSizing: 'border-box' }}
+                        />
+                      </div>
+
+                      {/* Contact Phone */}
+                      <div>
+                        <label style={{ display: 'block', marginBottom: '0.25em', fontWeight: '600', color: '#333', fontSize: '0.85em' }}>
+                          Contact Phone
+                        </label>
+                        <input
+                          type="tel"
+                          name="contact_phone"
+                          value={agentEditForm.contact_phone}
+                          onChange={handleAgentEditChange}
+                          placeholder="+1 234 567 8900"
+                          style={{ width: '100%', padding: '0.5em', fontSize: '0.9em', border: '1px solid #ced4da', borderRadius: '4px', boxSizing: 'border-box' }}
+                        />
+                      </div>
+
+                      {/* Office WhatsApp Phone */}
+                      <div>
+                        <label style={{ display: 'block', marginBottom: '0.25em', fontWeight: '600', color: '#333', fontSize: '0.85em' }}>
+                          Office WhatsApp Phone
+                        </label>
+                        <input
+                          type="tel"
+                          name="office_wsp_phone"
+                          value={agentEditForm.office_wsp_phone}
+                          onChange={handleAgentEditChange}
+                          placeholder="+1 234 567 8900"
+                          style={{ width: '100%', padding: '0.5em', fontSize: '0.9em', border: '1px solid #ced4da', borderRadius: '4px', boxSizing: 'border-box' }}
+                        />
+                      </div>
+
+                      {/* MLS Token */}
+                      <div>
+                        <label style={{ display: 'block', marginBottom: '0.25em', fontWeight: '600', color: '#333', fontSize: '0.85em' }}>
+                          MLS Token
+                        </label>
+                        <input
+                          type="text"
+                          name="mls_token"
+                          value={agentEditForm.mls_token}
+                          onChange={handleAgentEditChange}
+                          placeholder="MLS API Token"
+                          style={{ width: '100%', padding: '0.5em', fontSize: '0.9em', border: '1px solid #ced4da', borderRadius: '4px', boxSizing: 'border-box' }}
+                        />
+                      </div>
+
+                      {/* Office Address - Full Width */}
+                      <div style={{ gridColumn: '1 / -1' }}>
+                        <label style={{ display: 'block', marginBottom: '0.25em', fontWeight: '600', color: '#333', fontSize: '0.85em' }}>
+                          Office Address
+                        </label>
+                        <input
+                          type="text"
+                          name="office_address"
+                          value={agentEditForm.office_address}
+                          onChange={handleAgentEditChange}
+                          placeholder="123 Main St, City, State 12345"
+                          style={{ width: '100%', padding: '0.5em', fontSize: '0.9em', border: '1px solid #ced4da', borderRadius: '4px', boxSizing: 'border-box' }}
+                        />
+                      </div>
+
+                      {/* Office Latitude */}
+                      <div>
+                        <label style={{ display: 'block', marginBottom: '0.25em', fontWeight: '600', color: '#333', fontSize: '0.85em' }}>
+                          Office Latitude
+                        </label>
+                        <input
+                          type="number"
+                          step="any"
+                          name="office_lat"
+                          value={agentEditForm.office_lat}
+                          onChange={handleAgentEditChange}
+                          placeholder="40.7128"
+                          style={{ width: '100%', padding: '0.5em', fontSize: '0.9em', border: '1px solid #ced4da', borderRadius: '4px', boxSizing: 'border-box' }}
+                        />
+                      </div>
+
+                      {/* Office Longitude */}
+                      <div>
+                        <label style={{ display: 'block', marginBottom: '0.25em', fontWeight: '600', color: '#333', fontSize: '0.85em' }}>
+                          Office Longitude
+                        </label>
+                        <input
+                          type="number"
+                          step="any"
+                          name="office_long"
+                          value={agentEditForm.office_long}
+                          onChange={handleAgentEditChange}
+                          placeholder="-74.0060"
+                          style={{ width: '100%', padding: '0.5em', fontSize: '0.9em', border: '1px solid #ced4da', borderRadius: '4px', boxSizing: 'border-box' }}
+                        />
+                      </div>
+
+                      {/* Contact Phone is WhatsApp - Checkbox */}
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.5em' }}>
+                        <input
+                          type="checkbox"
+                          id="contact_phone_wsp"
+                          name="contact_phone_wsp"
+                          checked={agentEditForm.contact_phone_wsp}
+                          onChange={handleAgentEditChange}
+                          style={{ width: '18px', height: '18px', cursor: 'pointer' }}
+                        />
+                        <label htmlFor="contact_phone_wsp" style={{ fontWeight: '600', color: '#333', fontSize: '0.85em', cursor: 'pointer' }}>
+                          Contact phone is WhatsApp-enabled
+                        </label>
+                      </div>
+                    </div>
+
+                    {/* Error/Success Messages */}
+                    {agentEditError && (
+                      <div style={{ marginTop: '1em', padding: '0.75em', backgroundColor: '#f8d7da', border: '1px solid #f5c6cb', borderRadius: '4px', color: '#721c24', fontSize: '0.9em' }}>
+                        ❌ {agentEditError}
+                      </div>
+                    )}
+                    {agentEditSuccess && (
+                      <div style={{ marginTop: '1em', padding: '0.75em', backgroundColor: '#d4edda', border: '1px solid #c3e6cb', borderRadius: '4px', color: '#155724', fontSize: '0.9em' }}>
+                        ✅ {agentEditSuccess}
+                      </div>
+                    )}
+
+                    {/* Form Buttons */}
+                    <div style={{ display: 'flex', gap: '0.75em', marginTop: '1em' }}>
+                      <button
+                        type="submit"
+                        disabled={agentEditLoading}
+                        style={{
+                          padding: '0.5em 1.25em',
+                          fontSize: '0.9em',
+                          backgroundColor: agentEditLoading ? '#ccc' : '#28a745',
+                          color: 'white',
+                          border: 'none',
+                          borderRadius: '4px',
+                          cursor: agentEditLoading ? 'not-allowed' : 'pointer',
+                          fontWeight: '600'
+                        }}
+                      >
+                        {agentEditLoading ? 'Saving...' : 'Save Changes'}
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setIsEditingAgent(false);
+                          setAgentEditError(null);
+                          // Reset form to original values
+                          if (selectedClient) {
+                            setAgentEditForm({
+                              agent_name: selectedClient.agent_name || '',
+                              mls_token: selectedClient.mls_token || '',
+                              contact_email: selectedClient.contact_email || '',
+                              contact_phone: selectedClient.contact_phone || '',
+                              contact_phone_wsp: selectedClient.contact_phone_wsp || false,
+                              office_lat: selectedClient.office_lat || '',
+                              office_long: selectedClient.office_long || '',
+                              office_address: selectedClient.office_address || '',
+                              office_wsp_phone: selectedClient.office_wsp_phone || '',
+                              company: selectedClient.company || '',
+                              timezone: selectedClient.timezone || 'America/Mazatlan'
+                            });
+                          }
+                        }}
+                        disabled={agentEditLoading}
+                        style={{
+                          padding: '0.5em 1.25em',
+                          fontSize: '0.9em',
+                          backgroundColor: 'transparent',
+                          color: '#666',
+                          border: '1px solid #ced4da',
+                          borderRadius: '4px',
+                          cursor: agentEditLoading ? 'not-allowed' : 'pointer'
+                        }}
+                      >
+                        Cancel
+                      </button>
+                    </div>
+                  </form>
+                ) : (
+                  /* Read-only view */
+                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '0.5em 1.5em', marginTop: '0.75em', fontSize: '0.9em' }}>
+                    {agentEditForm.agent_name && (
+                      <div><strong style={{ color: '#666' }}>Agent Name:</strong> <span style={{ color: '#333' }}>{agentEditForm.agent_name}</span></div>
+                    )}
+                    {agentEditForm.company && (
+                      <div><strong style={{ color: '#666' }}>Company:</strong> <span style={{ color: '#333' }}>{agentEditForm.company}</span></div>
+                    )}
+                    {agentEditForm.timezone && (
+                      <div><strong style={{ color: '#666' }}>Timezone:</strong> <span style={{ color: '#333' }}>{agentEditForm.timezone}</span></div>
+                    )}
+                    {agentEditForm.contact_email && (
+                      <div><strong style={{ color: '#666' }}>Email:</strong> <span style={{ color: '#333' }}>{agentEditForm.contact_email}</span></div>
+                    )}
+                    {agentEditForm.contact_phone && (
+                      <div><strong style={{ color: '#666' }}>Phone:</strong> <span style={{ color: '#333' }}>{agentEditForm.contact_phone}</span> {agentEditForm.contact_phone_wsp && <span style={{ color: '#25D366', fontSize: '0.9em' }}>(WhatsApp)</span>}</div>
+                    )}
+                    {agentEditForm.office_wsp_phone && (
+                      <div><strong style={{ color: '#666' }}>Office WhatsApp:</strong> <span style={{ color: '#333' }}>{agentEditForm.office_wsp_phone}</span></div>
+                    )}
+                    {agentEditForm.office_address && (
+                      <div style={{ gridColumn: '1 / -1' }}><strong style={{ color: '#666' }}>Address:</strong> <span style={{ color: '#333' }}>{agentEditForm.office_address}</span></div>
+                    )}
+                    {(agentEditForm.office_lat || agentEditForm.office_long) && (
+                      <div><strong style={{ color: '#666' }}>Coordinates:</strong> <span style={{ color: '#333' }}>{agentEditForm.office_lat}, {agentEditForm.office_long}</span></div>
+                    )}
+                    {agentEditForm.mls_token && (
+                      <div><strong style={{ color: '#666' }}>MLS Token:</strong> <span style={{ color: '#333' }}>••••••••</span></div>
+                    )}
+                    {!agentEditForm.agent_name && !agentEditForm.company && !agentEditForm.contact_email && !agentEditForm.contact_phone && !agentEditForm.office_address && (
+                      <div style={{ color: '#999', fontStyle: 'italic' }}>No agent settings configured. Click Edit to add details.</div>
+                    )}
+                  </div>
+                )}
+              </div>
+            )}
 
             {cancelSuccess && (
               <div style={{ marginTop: '1em', padding: '1em', backgroundColor: '#d4edda', border: '1px solid #c3e6cb', borderRadius: '4px', color: '#155724' }}>
@@ -1215,6 +1618,7 @@ export default function Dashboard() {
             <button className={`dashboard-tab ${activeTab === 'integrations' ? 'dashboard-tab-active' : ''}`} style={tabStyle(activeTab === 'integrations')} onClick={() => setActiveTab('integrations')}>⇄ Integrations</button>
             <button className={`dashboard-tab ${activeTab === 'conversations' ? 'dashboard-tab-active' : ''}`} style={tabStyle(activeTab === 'conversations')} onClick={() => setActiveTab('conversations')}>◐ Conversations</button>
             <button className={`dashboard-tab ${activeTab === 'metrics' ? 'dashboard-tab-active' : ''}`} style={tabStyle(activeTab === 'metrics')} onClick={() => setActiveTab('metrics')}>▦ Metrics</button>
+            <button className={`dashboard-tab ${activeTab === 'leads' ? 'dashboard-tab-active' : ''}`} style={tabStyle(activeTab === 'leads')} onClick={() => setActiveTab('leads')}>⊛ Leads</button>
           </div>
 
           {/* Tab Content */}
@@ -1866,7 +2270,8 @@ export default function Dashboard() {
           {activeTab === 'addons' && <AddOnsTab user={selectedClient} clientId={selectedClientId} />}
           {activeTab === 'integrations' && <IntegrationsTab user={selectedClient} clientId={selectedClientId} />}
           {activeTab === 'conversations' && <ConversationsTab user={selectedClient} clientId={selectedClientId} />}
-          {activeTab === 'metrics' && <MetricsTab user={selectedClient} clientId={selectedClientId} />}
+          {activeTab === 'metrics' && <MetricsTab user={selectedClient} clientId={selectedClientId} subscription={selectedSubscription} tokensUsed={subscriptionTokensUsed} />}
+          {activeTab === 'leads' && <LeadsTab clientId={selectedClientId} />}
             </>
           )}
         </div>

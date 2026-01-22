@@ -31,3 +31,5 @@ package-lock.json
 
 server-routes/
 app-examples/
+data-examples/
+docs/
