@@ -26,7 +26,7 @@ export default function IntegrationsTab({ user, clientId }) {
         webEmbedProtocol = 'http';
     break;
     case "dev":
-        webEmbedDomain = 'chatdev.aibridge.global';
+        webEmbedDomain = 'chatdev.botwerx.ai';
         webEmbedProtocol = 'https';
     break;
     case "staging":
