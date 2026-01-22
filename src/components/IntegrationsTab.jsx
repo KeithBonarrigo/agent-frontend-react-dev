@@ -5,6 +5,8 @@ import { useState } from "react";
 // Future: Will include WhatsApp, Messenger, and other platform integrations
 export default function IntegrationsTab({ user, clientId }) {
   const [copied, setCopied] = useState(false);
+  const [chatbotLoaded, setChatbotLoaded] = useState(false);
+  const [chatbotLoading, setChatbotLoading] = useState(false);
 
   if (!clientId) {
     return (
@@ -52,6 +54,27 @@ export default function IntegrationsTab({ user, clientId }) {
     setTimeout(() => setCopied(false), 2000);
   };
 
+  // Load chatbot script for preview
+  const handleTryItOut = () => {
+    if (chatbotLoaded || chatbotLoading) return;
+
+    setChatbotLoading(true);
+
+    const script = document.createElement('script');
+    script.src = `${webEmbedProtocol}://${webEmbedDomain}/chatbot.js?id=${clientId}`;
+    script.async = true;
+    script.onload = () => {
+      setChatbotLoading(false);
+      setChatbotLoaded(true);
+    };
+    script.onerror = () => {
+      setChatbotLoading(false);
+      alert('Failed to load chatbot. Please try again.');
+    };
+
+    document.body.appendChild(script);
+  };
+
   return (
     <div style={{ padding: "2em", backgroundColor: "#f8f9fa", borderRadius: "8px", border: "1px solid #dee2e6" }}>
       {/* Website Embed Code Section */}
@@ -90,6 +113,23 @@ export default function IntegrationsTab({ user, clientId }) {
         <p style={{ fontSize: "0.9em", color: "#666", marginTop: "0.5em", textAlign: "center" }}>
           Copy this code and paste it in the &lt;head&gt; section of your website.
         </p>
+        <div style={{ textAlign: "center", marginTop: "1em" }}>
+          <button
+            onClick={handleTryItOut}
+            disabled={chatbotLoaded || chatbotLoading}
+            style={{
+              background: "none",
+              border: "none",
+              color: chatbotLoaded ? "#28a745" : "#007bff",
+              cursor: chatbotLoaded || chatbotLoading ? "default" : "pointer",
+              fontSize: "1em",
+              textDecoration: chatbotLoaded ? "none" : "underline",
+              padding: 0
+            }}
+          >
+            {chatbotLoading ? "Loading..." : chatbotLoaded ? "Chatbot loaded! Look for it in the corner." : "Try It Out!"}
+          </button>
+        </div>
       </div>
 
       {/* Other Integrations Coming Soon */}
