@@ -1079,7 +1079,7 @@ export default function Dashboard() {
                 <label style={{ display: 'block', marginBottom: '6px', fontWeight: 'bold' }}>
                   Company <span style={{ color: '#999', fontWeight: 'normal' }}>(optional)</span>
                 </label>
-                <input type="text" value={newAgentForm.company}
+                <input type="text" id="new-agent-company" value={newAgentForm.company}
                   onChange={(e) => setNewAgentForm(prev => ({ ...prev, company: e.target.value }))}
                   placeholder="e.g., Acme Inc" style={inputStyle} />
               </div>
@@ -1309,6 +1309,7 @@ export default function Dashboard() {
                         </label>
                         <input
                           type="text"
+                          id="edit-agent-company"
                           name="company"
                           value={agentEditForm.company}
                           onChange={handleAgentEditChange}
