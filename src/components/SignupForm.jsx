@@ -338,9 +338,11 @@ export default function SignupForm({ isOpen }) {
 
       const apiBaseUrl = import.meta.env.VITE_API_URL || 'http://localhost:3000';
       const apiUrl = `${apiBaseUrl}/api/create-subscription`; // CHANGED from create-payment-intent
-      
+
       const pricing = pricingMap[agentForm.level];
-      
+
+      console.log("🔗 API Base URL:", apiBaseUrl);
+      console.log("🔗 Full API URL:", apiUrl);
       console.log("🌐 Creating subscription for:", pricing);
 
       const res = await fetch(apiUrl, {
