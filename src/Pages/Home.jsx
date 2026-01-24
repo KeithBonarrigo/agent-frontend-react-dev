@@ -152,29 +152,54 @@ export default function Home() {
 
   const faqs = [
     {
-      question: "How can AI improve customer service in my business?",
+      question: "Can I try it before committing to a paid plan?",
       answer:
-        "AI can significantly enhance customer service by implementing chatbots and virtual assistants. These AI-driven tools can handle a large volume of customer inquiries efficiently and provide instant responses 24/7. They can also analyze customer queries to offer personalized solutions, track customer behavior to anticipate needs, and free up human agents to deal with more complex issues. This leads to faster response times, improved customer satisfaction, and reduced operational costs.",
+        "Absolutely. We offer a <strong>free trial</strong> so you can experience exactly how an AI agent works for your business <strong>before making any financial commitment</strong>. Set up your agent, test it with real scenarios, and see the results for yourself. We're confident that once you see the <strong>time saved and leads captured</strong>, you'll understand the value immediately.",
     },
     {
-      question: "Can AI help in making better business decisions?",
+      question: "Will AI agents make my customer interactions feel impersonal?",
       answer:
-        "Yes, AI can assist in making better business decisions by analyzing large datasets to uncover patterns and insights that might be missed by human analysis. AI-driven analytics tools can predict market trends, optimize pricing strategies, and identify potential risks. For instance, predictive analytics can forecast future sales, helping businesses to adjust their strategies proactively. AI can also enhance decision-making by providing real-time data and automated reporting, ensuring that business leaders have up-to-date information to base their decisions on.",
+        "<strong>Not at all</strong>. Modern AI agents are designed to provide <strong>warm, conversational experiences</strong> that feel natural and helpful. They can remember customer preferences, use friendly language, and <strong>seamlessly hand off to human agents</strong> when a personal touch is needed. Many customers actually prefer the <strong>instant, judgment-free assistance</strong> AI provides for routine questions, while your team remains available for complex situations.",
     },
     {
-      question: "How can AI streamline operations and increase efficiency?",
+      question: "What if the AI gives wrong information to my customers?",
       answer:
-        "AI can streamline operations by automating repetitive tasks and optimizing workflows. In manufacturing, AI can improve supply chain management by predicting demand and optimizing inventory levels. In administrative tasks, AI-powered tools can automate scheduling, data entry, and email management. This automation not only reduces human error but also allows employees to focus on higher-value tasks. AI can also optimize resource allocation and improve operational efficiency by analyzing process data to identify and eliminate bottlenecks.",
+        "AI agents are <strong>trained specifically on your business information</strong> and configured with guardrails to stay within their knowledge boundaries. When they encounter questions outside their scope, they're designed to <strong>acknowledge limitations and escalate to human support</strong> rather than guess. You maintain <strong>full control</strong> over the information they share, and continuous monitoring helps identify and correct any issues quickly.",
     },
     {
-      question: "What role can AI play in marketing and sales?",
+      question: "Is my business too small to benefit from AI agents?",
       answer:
-        "AI can revolutionize marketing and sales by providing deep insights into customer behavior and preferences. AI algorithms can analyze customer data to create highly personalized marketing campaigns that resonate with individual customers. In sales, AI can identify high-value leads, predict customer churn, and suggest the best times and methods for engagement. AI-powered tools can also automate email marketing, social media management, and content generation, ensuring consistent and effective communication with customers.",
+        "<strong>AI agents are particularly valuable for small businesses</strong> because they let you compete with larger companies without hiring additional staff. A solo entrepreneur can offer <strong>24/7 support</strong>, and a small team can handle inquiry volumes that would otherwise require multiple employees. Our <strong>tiered pricing</strong> means you only pay for what you need, making AI accessible regardless of your business size.",
     },
     {
-      question: "Is AI implementation cost-effective for small businesses?",
+      question: "How long does it take to set up an AI agent?",
       answer:
-        "AI implementation can be cost-effective for small businesses, especially with the availability of scalable and affordable AI solutions. Many AI tools offer tiered pricing models, allowing small businesses to start with basic features and expand as needed. The initial investment in AI can be offset by the long-term savings generated through increased efficiency, reduced labor costs, and improved customer retention. Additionally, cloud-based AI services reduce the need for extensive in-house infrastructure, making AI accessible even for businesses with limited budgets.",
+        "Most businesses have their AI agent <strong>live within minutes, not weeks</strong>. Our no-code platform lets you configure your agent by simply providing your business information and preferences. <strong>No technical expertise required</strong>, no developers to hire, and no complex integrations to manage. You can start capturing leads and answering customer questions <strong>the same day you sign up</strong>.",
+    },
+    {
+      question: "Will I lose control over my customer relationships?",
+      answer:
+        "You gain <strong>more control, not less</strong>. AI agents capture detailed information about every interaction, giving you insights into what customers are asking, what they need, and where they're coming from. <strong>You set the rules</strong> for how the AI responds, when it escalates, and what information it collects. <strong>Every conversation is logged and accessible</strong>, so you're always informed about what's happening with your customers.",
+    },
+    {
+      question: "What happens when the AI can't answer a question?",
+      answer:
+        "<strong>Smart escalation is built into every AI agent.</strong> When a question falls outside the AI's knowledge or a customer requests human assistance, the conversation is <strong>seamlessly handed off to your team with full context</strong>. The AI can collect contact information and schedule callbacks, ensuring <strong>no inquiry falls through the cracks</strong> even outside business hours.",
+    },
+    {
+      question: "Are AI agents secure? What about my customers' data?",
+      answer:
+        "Security is foundational to our platform. All data is <strong>encrypted in transit and at rest</strong>, we never store payment card information, and we maintain strict compliance with privacy regulations. <strong>Your customer data belongs to you</strong> and is never used to train models or shared with third parties. We undergo <strong>regular security audits</strong> to ensure your information stays protected.",
+    },
+    {
+      question: "Will my customers know they're talking to an AI?",
+      answer:
+        "<strong>Transparency builds trust.</strong> Our AI agents can introduce themselves honestly while still providing excellent service. Research shows customers appreciate knowing they're interacting with AI when it means <strong>faster responses and 24/7 availability</strong>. The key is delivering genuine value—customers care far more about <strong>getting their questions answered quickly</strong> than whether a human or AI is helping them.",
+    },
+    {
+      question: "What if AI technology changes and my investment becomes obsolete?",
+      answer:
+        "Our platform <strong>continuously evolves with AI advancements</strong>, and your subscription includes all updates automatically. As the technology improves, your AI agent gets smarter <strong>without any additional effort or cost</strong> on your part. You're not locked into outdated technology—you're partnering with a platform committed to keeping you <strong>at the forefront of AI capabilities</strong>.",
     },
   ];
 
@@ -242,7 +267,7 @@ export default function Home() {
       {/* Hero Section - Redesigned with left/right layout */}
       <section className="home-hero">
         <div className="home-container">
-          <h1 className="home-hero-title">AI Agents Turning Engagement Into Growth</h1>
+          <h1 className="home-hero-title">Capture More Leads with Advanced AI Agents</h1>
 
           {/* Two-column layout: Benefits on left, Form on right */}
           <div className="home-hero-content">
@@ -282,37 +307,9 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Services Section - Card-based layout matching the hero benefits style */}
-      <section id="services" className="home-cards-section">
-        <div className="home-container">
-          <div className="home-cards-grid">
-            {serviceItems.map((service, index) => (
-              <div key={index} className="home-card">
-                <div className="home-card-body">
-                  <div className="home-black-bar"></div>
-                  <div className="home-card-upper">
-                    <div className="home-card-icon">
-                      <i className={`fa-solid ${service.icon}`}></i>
-                    </div>
-                    <h3 className="home-card-title">{service.title}</h3>
-                  </div>
-                  <p className="home-card-text" dangerouslySetInnerHTML={{ __html: service.description }}></p>
-                </div>
-              </div>
-            ))}
-          </div>
-          <div className="home-services-cta">
-            <a href="#contact" className="home-btn" onClick={(e) => { e.preventDefault(); scrollToSection("contact"); }}>
-              Learn More
-            </a>
-          </div>
-        </div>
-      </section>
-
       {/* Slider Section */}
       <section id="solutions" className="home-slider-section">
-        <h2 className="home-section-title">What Can AI Agents Do For You?</h2>
-
+        <h2 className="home-section-title">What Can AI Agents Do For Your Business?</h2>
         <div className="home-container">
           <div ref={sliderRef} className="home-slider-container">
             {[
@@ -339,16 +336,38 @@ export default function Home() {
         </div>
       </section>
 
-      {/* FAQ Section */}
-      {/*<section id="faq" className="home-faq-section">
+      {/* Services Section - Card-based layout matching the hero benefits style */}
+      <section id="services" className="home-cards-section">
+        <h2 className="home-section-title inverted">Additional Benefits</h2>
         <div className="home-container">
-          <div className="home-faq-header">
-            <h2 className="home-faq-title">Frequently Asked Questions</h2>
-            <span className="home-faq-subtitle">
-              Common questions about AI solutions and how you can put them to use
-            </span>
+          <div className="home-cards-grid">
+            {serviceItems.map((service, index) => (
+              <div key={index} className="home-card">
+                <div className="home-card-body">
+                  <div className="home-black-bar"></div>
+                  <div className="home-card-upper">
+                    <div className="home-card-icon">
+                      <i className={`fa-solid ${service.icon}`}></i>
+                    </div>
+                    <h3 className="home-card-title">{service.title}</h3>
+                  </div>
+                  <p className="home-card-text" dangerouslySetInnerHTML={{ __html: service.description }}></p>
+                </div>
+              </div>
+            ))}
           </div>
+          <div className="home-services-cta">
+            <a href="#contact" className="home-btn" onClick={(e) => { e.preventDefault(); scrollToSection("contact"); }}>
+              Learn More
+            </a>
+          </div>
+        </div>
+      </section>
 
+      {/* FAQ Section */}
+      <section id="faq" className="home-faq-section">
+        <h2 className="home-section-title">Frequently Asked Questions</h2>
+        <div className="home-container">
           <div className="home-faq-list">
             {faqs.map((faq, index) => (
               <div
@@ -360,13 +379,13 @@ export default function Home() {
                   <span className="home-faq-icon">+</span>
                 </div>
                 <div className="home-faq-answer">
-                  <p>{faq.answer}</p>
+                  <p dangerouslySetInnerHTML={{ __html: faq.answer }}></p>
                 </div>
               </div>
             ))}
           </div>
         </div>
-      </section>*/}
+      </section>
 
       {/* Contact Section */}
       <section id="contact" className="home-contact-section">

@@ -188,12 +188,12 @@ body {
 }
 
 .home-hero-title {
-  font-family: 'Roboto', sans-serif;
-  font-size: 2.0rem;
-  letter-spacing: 0.01em;
+  font-family: 'Poppins', sans-serif;
+  font-size: 2.75rem;
+  letter-spacing: 0.02em;
   margin: 1em auto 1em;
   color: #fff;
-  font-weight: 700;
+  font-weight: 600;
   order: 1;
   animation: fadeIn 2s ease-in forwards;
 }
@@ -381,6 +381,9 @@ body {
 
 .home-card:hover {
   transform: scale(1.05);
+}
+
+.home-card:hover .home-card-body {
   box-shadow: 0 8px 20px rgba(49, 9, 86, 0.25);
 }
 
@@ -768,12 +771,22 @@ body {
 }
 
 .home-section-title {
-  font-size: 2rem;
+  font-family: 'Poppins', sans-serif;
+  font-size: 2.5rem;
   margin: 0;
-  padding: 2rem 20px;
+  padding: 2.5rem 20px;
   color: #ffffff;
-  background: #1e3a8a;
+  background: linear-gradient(135deg, rgb(52, 73, 94) 0%, rgb(44, 62, 80) 50%, rgb(26, 37, 47) 100%);
   font-weight: 600;
+  letter-spacing: 0.02em;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  text-align: center;
+}
+
+.home-section-title.inverted {
+  background: #ffffff;
+  color: rgb(44, 62, 80);
+  text-shadow: none;
 }
 
 .home-slider-container {
@@ -861,8 +874,14 @@ body {
    ============================================ */
 
 .home-faq-section {
-  padding: 60px 0;
+  padding: 0;
   background: #fff;
+  border-top: 3px solid #1e3a8a;
+  border-bottom: 3px solid #1e3a8a;
+}
+
+.home-faq-section .home-container {
+  padding: 60px 20px;
 }
 
 .home-faq-header {
@@ -961,6 +980,7 @@ body {
 
 .home-form {
   width: 100%;
+  max-width: 900px;
   margin: 0 auto 20px;
   padding: 20px;
   border: 1px solid #ccc;
