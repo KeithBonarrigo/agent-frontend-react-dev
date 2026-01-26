@@ -205,7 +205,7 @@ export default function Dashboard() {
     if (selectedClient) {
       setAgentEditForm({
         agent_name: selectedClient.agent_name || '',
-        mls_token: selectedClient.mls_token || '',
+        mls_token: selectedClient.mls_token ? '••••••••' : '',
         contact_email: selectedClient.contact_email || '',
         contact_phone: selectedClient.contact_phone || '',
         contact_phone_wsp: selectedClient.contact_phone_wsp || false,
@@ -1317,31 +1317,6 @@ export default function Dashboard() {
                         />
                       </div>
 
-                      {/* Timezone */}
-                      <div>
-                        <label style={{ display: 'block', marginBottom: '0.25em', fontWeight: '600', color: '#333', fontSize: '0.85em' }}>
-                          Timezone
-                        </label>
-                        <select
-                          name="timezone"
-                          value={agentEditForm.timezone}
-                          onChange={handleAgentEditChange}
-                          style={{ width: '100%', padding: '0.5em', fontSize: '0.9em', border: '1px solid #ced4da', borderRadius: '4px', boxSizing: 'border-box', backgroundColor: '#fff' }}
-                        >
-                          <option value="America/New_York">Eastern Time (America/New_York)</option>
-                          <option value="America/Chicago">Central Time (America/Chicago)</option>
-                          <option value="America/Denver">Mountain Time (America/Denver)</option>
-                          <option value="America/Phoenix">Arizona (America/Phoenix)</option>
-                          <option value="America/Los_Angeles">Pacific Time (America/Los_Angeles)</option>
-                          <option value="America/Anchorage">Alaska (America/Anchorage)</option>
-                          <option value="America/Honolulu">Hawaii (America/Honolulu)</option>
-                          <option value="America/Mexico_City">Mexico Central (America/Mexico_City)</option>
-                          <option value="America/Mazatlan">Mexico Mountain (America/Mazatlan)</option>
-                          <option value="America/Tijuana">Mexico Pacific (America/Tijuana)</option>
-                          <option value="UTC">UTC</option>
-                        </select>
-                      </div>
-
                       {/* Contact Email */}
                       <div>
                         <label style={{ display: 'block', marginBottom: '0.25em', fontWeight: '600', color: '#333', fontSize: '0.85em' }}>
@@ -1357,49 +1332,70 @@ export default function Dashboard() {
                         />
                       </div>
 
-                      {/* Contact Phone */}
-                      <div>
-                        <label style={{ display: 'block', marginBottom: '0.25em', fontWeight: '600', color: '#333', fontSize: '0.85em' }}>
-                          Contact Phone
-                        </label>
-                        <input
-                          type="tel"
-                          name="contact_phone"
-                          value={agentEditForm.contact_phone}
-                          onChange={handleAgentEditChange}
-                          placeholder="+1 234 567 8900"
-                          style={{ width: '100%', padding: '0.5em', fontSize: '0.9em', border: '1px solid #ced4da', borderRadius: '4px', boxSizing: 'border-box' }}
-                        />
-                      </div>
+                      {/* Phone Numbers Row */}
+                      <div style={{ gridColumn: '1 / -1', display: 'flex', gap: '1em', flexWrap: 'wrap', alignItems: 'flex-end' }}>
+                        {/* Contact Phone */}
+                        <div style={{ width: '160px' }}>
+                          <label style={{ display: 'block', marginBottom: '0.25em', fontWeight: '600', color: '#333', fontSize: '0.85em' }}>
+                            Contact Phone
+                          </label>
+                          <input
+                            type="tel"
+                            name="contact_phone"
+                            value={agentEditForm.contact_phone}
+                            onChange={handleAgentEditChange}
+                            placeholder="+1 234 567 8900"
+                            style={{ width: '100%', padding: '0.5em', fontSize: '0.9em', border: '1px solid #ced4da', borderRadius: '4px', boxSizing: 'border-box' }}
+                          />
+                        </div>
 
-                      {/* Office WhatsApp Phone */}
-                      <div>
-                        <label style={{ display: 'block', marginBottom: '0.25em', fontWeight: '600', color: '#333', fontSize: '0.85em' }}>
-                          Office WhatsApp Phone
-                        </label>
-                        <input
-                          type="tel"
-                          name="office_wsp_phone"
-                          value={agentEditForm.office_wsp_phone}
-                          onChange={handleAgentEditChange}
-                          placeholder="+1 234 567 8900"
-                          style={{ width: '100%', padding: '0.5em', fontSize: '0.9em', border: '1px solid #ced4da', borderRadius: '4px', boxSizing: 'border-box' }}
-                        />
-                      </div>
+                        {/* Office WhatsApp Phone */}
+                        <div style={{ width: '160px' }}>
+                          <label style={{ display: 'block', marginBottom: '0.25em', fontWeight: '600', color: '#333', fontSize: '0.85em' }}>
+                            Office WhatsApp Phone
+                          </label>
+                          <input
+                            type="tel"
+                            name="office_wsp_phone"
+                            value={agentEditForm.office_wsp_phone}
+                            onChange={handleAgentEditChange}
+                            placeholder="+1 234 567 8900"
+                            style={{ width: '100%', padding: '0.5em', fontSize: '0.9em', border: '1px solid #ced4da', borderRadius: '4px', boxSizing: 'border-box' }}
+                          />
+                        </div>
 
-                      {/* MLS Token */}
-                      <div>
-                        <label style={{ display: 'block', marginBottom: '0.25em', fontWeight: '600', color: '#333', fontSize: '0.85em' }}>
-                          MLS Token
-                        </label>
-                        <input
-                          type="text"
-                          name="mls_token"
-                          value={agentEditForm.mls_token}
-                          onChange={handleAgentEditChange}
-                          placeholder="MLS API Token"
-                          style={{ width: '100%', padding: '0.5em', fontSize: '0.9em', border: '1px solid #ced4da', borderRadius: '4px', boxSizing: 'border-box' }}
-                        />
+                        {/* Contact Phone is WhatsApp - Checkbox */}
+                        <div style={{ display: 'flex', alignItems: 'flex-end', paddingBottom: '0.5em' }}>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5em' }}>
+                            <input
+                              type="checkbox"
+                              id="contact_phone_wsp"
+                              name="contact_phone_wsp"
+                              checked={agentEditForm.contact_phone_wsp}
+                              onChange={handleAgentEditChange}
+                              style={{ width: '18px', height: '18px', cursor: 'pointer' }}
+                            />
+                            <label htmlFor="contact_phone_wsp" style={{ fontWeight: '600', color: '#333', fontSize: '0.85em', cursor: 'pointer', whiteSpace: 'nowrap' }}>
+                              WhatsApp-enabled
+                            </label>
+                          </div>
+                        </div>
+
+                        {/* MLS Token */}
+                        <div style={{ width: '220px' }}>
+                          <label style={{ display: 'block', marginBottom: '0.25em', fontWeight: '600', color: '#333', fontSize: '0.85em' }}>
+                            MLS Token
+                          </label>
+                          <input
+                            type="password"
+                            name="mls_token"
+                            value={agentEditForm.mls_token}
+                            onChange={handleAgentEditChange}
+                            placeholder="Enter MLS Token"
+                            autoComplete="off"
+                            style={{ width: '100%', padding: '0.5em', fontSize: '0.9em', border: '1px solid #ced4da', borderRadius: '4px', boxSizing: 'border-box' }}
+                          />
+                        </div>
                       </div>
 
                       {/* Office Address - Full Width */}
@@ -1449,19 +1445,29 @@ export default function Dashboard() {
                         />
                       </div>
 
-                      {/* Contact Phone is WhatsApp - Checkbox */}
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.5em' }}>
-                        <input
-                          type="checkbox"
-                          id="contact_phone_wsp"
-                          name="contact_phone_wsp"
-                          checked={agentEditForm.contact_phone_wsp}
-                          onChange={handleAgentEditChange}
-                          style={{ width: '18px', height: '18px', cursor: 'pointer' }}
-                        />
-                        <label htmlFor="contact_phone_wsp" style={{ fontWeight: '600', color: '#333', fontSize: '0.85em', cursor: 'pointer' }}>
-                          Contact phone is WhatsApp-enabled
+                      {/* Timezone */}
+                      <div>
+                        <label style={{ display: 'block', marginBottom: '0.25em', fontWeight: '600', color: '#333', fontSize: '0.85em' }}>
+                          Timezone
                         </label>
+                        <select
+                          name="timezone"
+                          value={agentEditForm.timezone}
+                          onChange={handleAgentEditChange}
+                          style={{ width: '100%', padding: '0.5em', fontSize: '0.9em', border: '1px solid #ced4da', borderRadius: '4px', boxSizing: 'border-box', backgroundColor: '#fff' }}
+                        >
+                          <option value="America/New_York">Eastern Time (America/New_York)</option>
+                          <option value="America/Chicago">Central Time (America/Chicago)</option>
+                          <option value="America/Denver">Mountain Time (America/Denver)</option>
+                          <option value="America/Phoenix">Arizona (America/Phoenix)</option>
+                          <option value="America/Los_Angeles">Pacific Time (America/Los_Angeles)</option>
+                          <option value="America/Anchorage">Alaska (America/Anchorage)</option>
+                          <option value="America/Honolulu">Hawaii (America/Honolulu)</option>
+                          <option value="America/Mexico_City">Mexico Central (America/Mexico_City)</option>
+                          <option value="America/Mazatlan">Mexico Mountain (America/Mazatlan)</option>
+                          <option value="America/Tijuana">Mexico Pacific (America/Tijuana)</option>
+                          <option value="UTC">UTC</option>
+                        </select>
                       </div>
                     </div>
 
@@ -1504,7 +1510,7 @@ export default function Dashboard() {
                           if (selectedClient) {
                             setAgentEditForm({
                               agent_name: selectedClient.agent_name || '',
-                              mls_token: selectedClient.mls_token || '',
+                              mls_token: selectedClient.mls_token ? '••••••••' : '',
                               contact_email: selectedClient.contact_email || '',
                               contact_phone: selectedClient.contact_phone || '',
                               contact_phone_wsp: selectedClient.contact_phone_wsp || false,
@@ -1533,37 +1539,38 @@ export default function Dashboard() {
                     </div>
                   </form>
                 ) : (
-                  /* Read-only view */
-                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '0.5em 1.5em', marginTop: '0.75em', fontSize: '0.9em' }}>
+                  /* Read-only view - compact single line */
+                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5em 1.5em', marginTop: '0.5em', fontSize: '0.85em', color: '#333' }}>
                     {agentEditForm.agent_name && (
-                      <div><strong style={{ color: '#666' }}>Agent Name:</strong> <span style={{ color: '#333' }}>{agentEditForm.agent_name}</span></div>
+                      <span><strong style={{ color: '#666' }}>Agent:</strong> {agentEditForm.agent_name}</span>
                     )}
                     {agentEditForm.company && (
-                      <div><strong style={{ color: '#666' }}>Company:</strong> <span style={{ color: '#333' }}>{agentEditForm.company}</span></div>
-                    )}
-                    {agentEditForm.timezone && (
-                      <div><strong style={{ color: '#666' }}>Timezone:</strong> <span style={{ color: '#333' }}>{agentEditForm.timezone}</span></div>
+                      <span><strong style={{ color: '#666' }}>Company:</strong> {agentEditForm.company}</span>
                     )}
                     {agentEditForm.contact_email && (
-                      <div><strong style={{ color: '#666' }}>Email:</strong> <span style={{ color: '#333' }}>{agentEditForm.contact_email}</span></div>
+                      <span><strong style={{ color: '#666' }}>Email:</strong> {agentEditForm.contact_email}</span>
                     )}
                     {agentEditForm.contact_phone && (
-                      <div><strong style={{ color: '#666' }}>Phone:</strong> <span style={{ color: '#333' }}>{agentEditForm.contact_phone}</span> {agentEditForm.contact_phone_wsp && <span style={{ color: '#25D366', fontSize: '0.9em' }}>(WhatsApp)</span>}</div>
+                      <span><strong style={{ color: '#666' }}>Office Phone:</strong> {agentEditForm.contact_phone}{agentEditForm.contact_phone_wsp && <span style={{ color: '#25D366' }}> (WhatsApp Enabled)</span>}</span>
                     )}
-                    {agentEditForm.office_wsp_phone && (
-                      <div><strong style={{ color: '#666' }}>Office WhatsApp:</strong> <span style={{ color: '#333' }}>{agentEditForm.office_wsp_phone}</span></div>
-                    )}
-                    {agentEditForm.office_address && (
-                      <div style={{ gridColumn: '1 / -1' }}><strong style={{ color: '#666' }}>Address:</strong> <span style={{ color: '#333' }}>{agentEditForm.office_address}</span></div>
-                    )}
-                    {(agentEditForm.office_lat || agentEditForm.office_long) && (
-                      <div><strong style={{ color: '#666' }}>Coordinates:</strong> <span style={{ color: '#333' }}>{agentEditForm.office_lat}, {agentEditForm.office_long}</span></div>
+                    {agentEditForm.office_wsp_phone && agentEditForm.office_wsp_phone !== agentEditForm.contact_phone && (
+                      <span><strong style={{ color: '#666' }}>WhatsApp:</strong> {agentEditForm.office_wsp_phone}</span>
                     )}
                     {agentEditForm.mls_token && (
-                      <div><strong style={{ color: '#666' }}>MLS Token:</strong> <span style={{ color: '#333' }}>••••••••</span></div>
+                      <span><strong style={{ color: '#666' }}>MLS:</strong> ••••••••</span>
+                    )}
+                    {(agentEditForm.office_address || agentEditForm.timezone) && (
+                      <div style={{ flexBasis: '100%', marginTop: '0.25em', display: 'flex', gap: '1.5em', flexWrap: 'wrap' }}>
+                        {agentEditForm.office_address && (
+                          <span><strong style={{ color: '#666' }}>Address:</strong> {agentEditForm.office_address}</span>
+                        )}
+                        {agentEditForm.timezone && (
+                          <span><strong style={{ color: '#666' }}>Timezone:</strong> {agentEditForm.timezone}</span>
+                        )}
+                      </div>
                     )}
                     {!agentEditForm.agent_name && !agentEditForm.company && !agentEditForm.contact_email && !agentEditForm.contact_phone && !agentEditForm.office_address && (
-                      <div style={{ color: '#999', fontStyle: 'italic' }}>No agent settings configured. Click Edit to add details.</div>
+                      <span style={{ color: '#999', fontStyle: 'italic' }}>No agent settings configured. Click Edit to add details.</span>
                     )}
                   </div>
                 )}

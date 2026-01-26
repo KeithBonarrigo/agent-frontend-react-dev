@@ -81,8 +81,28 @@ export default function IntegrationsTab({ user, clientId }) {
     document.body.appendChild(script);
   };
 
+  // Check if MLS token is missing for MLS domain
+  const isMlsDomain = user?.domain === 'mls.aibridge.global';
+  const hasMlsToken = user?.mls_token && user.mls_token.trim() !== '';
+
   return (
     <div style={{ padding: "2em", backgroundColor: "#f8f9fa", borderRadius: "8px", border: "1px solid #dee2e6" }}>
+      {/* MLS Token Warning */}
+      {isMlsDomain && !hasMlsToken && (
+        <div style={{
+          backgroundColor: '#f8d7da',
+          border: '1px solid #f5c6cb',
+          borderRadius: '4px',
+          padding: '1em',
+          marginBottom: '1.5em',
+          color: '#721c24',
+          textAlign: 'center'
+        }}>
+          <strong>⚠️ MLS Token Required:</strong> You must enter a valid MLS token for this service to work. You can do this above in your company settings.
+          <br /><span style={{ fontSize: '0.9em', fontStyle: 'italic' }}>Note: The token is encrypted upon entry and will not be viewable afterward.</span>
+        </div>
+      )}
+
       {/* Website Embed Code Section */}
       <div style={{ marginBottom: "2em" }}>
         <h2 style={{ textAlign: "center", marginBottom: "1em" }}>Website Embed Code</h2>
