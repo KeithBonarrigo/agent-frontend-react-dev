@@ -30,7 +30,7 @@ function formatDuration(firstTimestamp, lastTimestamp) {
   return `${seconds}s`;
 }
 
-export default function ConversationsTab({ clientId }) {
+export default function ConversationsTab({ clientId, user }) {
   const [conversations, setConversations] = useState([]);
   const [loadingConversations, setLoadingConversations] = useState(false);
   const [conversationsError, setConversationsError] = useState(null);
@@ -426,7 +426,7 @@ export default function ConversationsTab({ clientId }) {
                   }}
                 >
                   <span style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                    {isDomainExpanded ? '−' : '+'} {conv.domain}
+                    {isDomainExpanded ? '−' : '+'} {user?.agent_name || conv.domain}
                     {domainActiveCount > 0 && (
                       <span style={{
                         display: 'flex',
