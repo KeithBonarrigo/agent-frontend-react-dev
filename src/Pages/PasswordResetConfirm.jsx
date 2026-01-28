@@ -1,8 +1,7 @@
 // pages/PasswordResetConfirm.jsx
 import { useState } from "react";
 import { useSearchParams, Link, useNavigate } from "react-router-dom";
-
-const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3000";
+import { getApiUrl } from "../utils/getApiUrl";
 
 export default function PasswordResetConfirm() {
   const [searchParams] = useSearchParams();
@@ -46,7 +45,7 @@ export default function PasswordResetConfirm() {
     setLoading(true);
 
     try {
-      const res = await fetch(`${API_URL}/api/password-reset/confirm`, {
+      const res = await fetch(`${getApiUrl()}/api/password-reset/confirm`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, token, newPassword: password }),

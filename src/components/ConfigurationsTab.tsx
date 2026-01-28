@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { getApiUrl } from "../utils/getApiUrl";
 
 // TypeScript interfaces
 interface User {
@@ -33,7 +34,7 @@ export default function ConfigurationsTab({ clientId }: ConfigurationsTabProps) 
       }
 
       try {
-        const apiBaseUrl = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+        const apiBaseUrl = getApiUrl();
         const response = await fetch(`${apiBaseUrl}/api/client-instructions/${clientId}`, {
           credentials: 'include'
         });
@@ -136,7 +137,7 @@ export default function ConfigurationsTab({ clientId }: ConfigurationsTabProps) 
         }
       };
 
-      const apiBaseUrl = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+      const apiBaseUrl = getApiUrl();
       const response = await fetch(`${apiBaseUrl}/api/client-instructions/${clientId}`, {
         method: 'PUT',
         headers: {

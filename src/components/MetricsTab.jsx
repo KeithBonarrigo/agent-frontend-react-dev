@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { getApiUrl } from "../utils/getApiUrl";
 
 export default function MetricsTab({ clientId, subscription, tokensUsed }) {
   const [metrics, setMetrics] = useState(null);
@@ -31,7 +32,7 @@ export default function MetricsTab({ clientId, subscription, tokensUsed }) {
     setError(null);
 
     try {
-      const apiBaseUrl = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+      const apiBaseUrl = getApiUrl();
       const response = await fetch(`${apiBaseUrl}/admin/metrics?clientId=${clientId}`, {
         credentials: 'include'
       });

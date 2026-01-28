@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useSearchParams, useNavigate, useParams, useLocation } from 'react-router-dom';
+import { getApiUrl } from '../utils/getApiUrl';
 
 // OAuthCallback - Handles OAuth redirects from external providers (e.g., Google Calendar)
 // Captures the authorization code and state from URL, exchanges it for tokens via backend
@@ -66,7 +67,7 @@ export default function OAuthCallback() {
 
       try {
         // Exchange authorization code for tokens via backend
-        const apiBaseUrl = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+        const apiBaseUrl = getApiUrl();
         const response = await fetch(`${apiBaseUrl}/api/integrations/${provider}/oauth-callback`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },

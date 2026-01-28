@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { getApiUrl } from "../utils/getApiUrl";
 
 // Helper function to calculate and format duration between two timestamps
 function formatDuration(firstTimestamp, lastTimestamp) {
@@ -46,7 +47,7 @@ export default function ConversationsTab({ clientId, user }) {
     if (!clientId) return;
 
     try {
-      const apiBaseUrl = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+      const apiBaseUrl = getApiUrl();
       const response = await fetch(`${apiBaseUrl}/admin/active-sessions`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -85,7 +86,7 @@ export default function ConversationsTab({ clientId, user }) {
     setConversationsError(null);
 
     try {
-      const apiBaseUrl = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+      const apiBaseUrl = getApiUrl();
       const historyKey = import.meta.env.VITE_HISTORY_VIEW_KEY || '';
       
       const url = new URL(`${apiBaseUrl}/admin/history`);

@@ -121,7 +121,7 @@ export const UserProvider = ({ children }) => {
   // Logout function
   const logout = async () => {
     try {
-      const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3000";
+      const API_URL = getApiUrl();
       await fetch(`${API_URL}/api/logout`, {
         method: 'POST',
         credentials: 'include'
@@ -138,8 +138,8 @@ export const UserProvider = ({ children }) => {
 
   // Select which account to use (if multiple)
   const selectClient = async (client_id) => {
-    const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3000";
-    
+    const API_URL = getApiUrl();
+
     const res = await fetch(`${API_URL}/api/select-client`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },

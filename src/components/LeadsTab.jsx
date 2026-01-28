@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { getApiUrl } from "../utils/getApiUrl";
 
 export default function LeadsTab({ clientId }) {
   const [leads, setLeads] = useState([]);
@@ -19,7 +20,7 @@ export default function LeadsTab({ clientId }) {
     setError(null);
 
     try {
-      const apiBaseUrl = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+      const apiBaseUrl = getApiUrl();
       const response = await fetch(`${apiBaseUrl}/api/leads?clientId=${clientId}`, {
         headers: {
           'Authorization': `Bearer ${import.meta.env.VITE_CREATE_USER_TOKEN}`

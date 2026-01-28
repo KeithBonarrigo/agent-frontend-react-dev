@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useUser } from '../contexts/UserContext';
+import { getApiUrl } from '../utils/getApiUrl';
 import ConfigurationsTab from '../components/ConfigurationsTab';
 import ModelsTab from '../components/ModelsTab';
 import IntegrationsTab from '../components/IntegrationsTab';
@@ -114,7 +115,7 @@ export default function Dashboard() {
 
       setLoadingData(true);
       try {
-        const apiBaseUrl = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+        const apiBaseUrl = getApiUrl();
         const response = await fetch(`${apiBaseUrl}/api/account/${user.account_id}/clients`, {
           credentials: 'include'
         });
@@ -158,7 +159,7 @@ export default function Dashboard() {
   useEffect(() => {
     const fetchTokenLimits = async () => {
       try {
-        const apiBaseUrl = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+        const apiBaseUrl = getApiUrl();
         const response = await fetch(`${apiBaseUrl}/api/token/limits`, { credentials: 'include' });
         if (response.ok) {
           const data = await response.json();
@@ -387,7 +388,7 @@ export default function Dashboard() {
       const file = new File([blob], sanitizedFileName, { type: finalMimeType || blob.type });
 
       // Create FormData and upload to existing endpoint
-      const apiBaseUrl = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+      const apiBaseUrl = getApiUrl();
       const formData = new FormData();
       formData.append('file', file);
       formData.append('clientId', selectedClientId);
@@ -460,7 +461,7 @@ export default function Dashboard() {
 
     try {
       const token = import.meta.env.VITE_CREATE_USER_TOKEN;
-      const apiBaseUrl = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+      const apiBaseUrl = getApiUrl();
       const endpoint = immediate ? '/api/cancel-subscription-now' : '/api/cancel-subscription';
 
       const response = await fetch(`${apiBaseUrl}${endpoint}`, {
@@ -503,7 +504,7 @@ export default function Dashboard() {
     setNewAgentSuccess(null);
 
     try {
-      const apiBaseUrl = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+      const apiBaseUrl = getApiUrl();
       const response = await fetch(
         `${apiBaseUrl}/api/account/${user.account_id}/subscriptions/${selectedSubscriptionId}/clients`,
         {
@@ -557,7 +558,7 @@ export default function Dashboard() {
     setAgentEditSuccess(null);
 
     try {
-      const apiBaseUrl = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+      const apiBaseUrl = getApiUrl();
       const response = await fetch(
         `${apiBaseUrl}/api/clients/${selectedClientId}`,
         {
@@ -636,7 +637,7 @@ export default function Dashboard() {
     setEmbeddingSuccess(null);
 
     try {
-      const apiBaseUrl = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+      const apiBaseUrl = getApiUrl();
       const response = await fetch(
         `${apiBaseUrl}/api/embeddings/create-from-url`,
         {
@@ -688,7 +689,7 @@ export default function Dashboard() {
     console.log('📡 Fetching embeddings for clientId:', selectedClientId);
     setEmbeddingsLoading(true);
     try {
-      const apiBaseUrl = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+      const apiBaseUrl = getApiUrl();
       const url = `${apiBaseUrl}/api/embeddings/client/${selectedClientId}`;
       console.log('📡 Fetch URL:', url);
 
@@ -749,7 +750,7 @@ export default function Dashboard() {
     console.log('📄 Fetching file embeddings for clientId:', selectedClientId);
     setFileEmbeddingsLoading(true);
     try {
-      const apiBaseUrl = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+      const apiBaseUrl = getApiUrl();
       // Using same endpoint as URL embeddings - filtering by type happens on frontend
       const url = `${apiBaseUrl}/api/embeddings/client/${selectedClientId}`;
       console.log('📄 Fetch URL:', url);
@@ -815,7 +816,7 @@ export default function Dashboard() {
     setFileEmbeddingSuccess(null);
 
     try {
-      const apiBaseUrl = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+      const apiBaseUrl = getApiUrl();
       // Use FormData for multipart/form-data file upload (no Content-Type header needed)
       const formData = new FormData();
       formData.append('file', embeddingFile);
@@ -869,7 +870,7 @@ export default function Dashboard() {
     }
 
     try {
-      const apiBaseUrl = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+      const apiBaseUrl = getApiUrl();
       const response = await fetch(
         `${apiBaseUrl}/api/embeddings/${embeddingId}`,
         {

@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { getApiUrl } from "../utils/getApiUrl";
 
 export default function ModelsTab({ user, clientId }) {
   const [selectedModel, setSelectedModel] = useState("");
@@ -28,7 +29,7 @@ export default function ModelsTab({ user, clientId }) {
     setError("");
 
     try {
-      const apiBaseUrl = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+      const apiBaseUrl = getApiUrl();
       console.log(`📡 Fetching model for client ${clientId}`);
       const response = await fetch(`${apiBaseUrl}/api/model/${clientId}`, {
         credentials: 'include'
@@ -76,7 +77,7 @@ export default function ModelsTab({ user, clientId }) {
     }
 
     try {
-      const apiBaseUrl = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+      const apiBaseUrl = getApiUrl();
       const response = await fetch(`${apiBaseUrl}/api/model`, {
         method: 'PUT',
         headers: {

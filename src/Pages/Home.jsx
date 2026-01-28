@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import SignupForm from "../components/SignupForm";
 import { useDomain } from "../contexts/DomainContext";
+import { getApiUrl } from "../utils/getApiUrl";
 import "../styles/Home.css";
 
 export default function Home() {
@@ -216,7 +217,7 @@ export default function Home() {
     setFormSuccess(false);
 
     try {
-      const apiBaseUrl = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+      const apiBaseUrl = getApiUrl();
       const apiUrl = `${apiBaseUrl}/api/contact`;
       
       console.log("📡 Calling contact API:", apiUrl);

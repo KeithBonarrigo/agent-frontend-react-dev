@@ -1,8 +1,7 @@
 // pages/PasswordResetRequest.jsx
 import { useState } from "react";
 import { Link } from "react-router-dom";
-
-const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3000";
+import { getApiUrl } from "../utils/getApiUrl";
 
 export default function PasswordResetRequest() {
   const [email, setEmail] = useState("");
@@ -16,7 +15,7 @@ export default function PasswordResetRequest() {
     setLoading(true);
 
     try {
-      const res = await fetch(`${API_URL}/api/password-reset/request`, {
+      const res = await fetch(`${getApiUrl()}/api/password-reset/request`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email }),

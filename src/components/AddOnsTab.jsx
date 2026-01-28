@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
+import { getApiUrl } from "../utils/getApiUrl";
 
 // AddOnsTab - Displays selectable decorators (integrations) that users can enable for their agent
 // Fetches available add-ons from the server's decorator registry (only those with selectable: true)
@@ -47,7 +48,7 @@ export default function AddOnsTab({ user, clientId }) {
       setAddOnsError(null);
 
       try {
-        const apiBaseUrl = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+        const apiBaseUrl = getApiUrl();
         const response = await fetch(`${apiBaseUrl}/api/decorators/selectable`, {
           method: 'GET',
           credentials: 'include'
@@ -77,7 +78,7 @@ export default function AddOnsTab({ user, clientId }) {
       if (!clientId) return;
 
       try {
-        const apiBaseUrl = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+        const apiBaseUrl = getApiUrl();
         const response = await fetch(`${apiBaseUrl}/api/clients/${clientId}/decorators`, {
           method: 'GET',
           credentials: 'include'
@@ -141,7 +142,7 @@ export default function AddOnsTab({ user, clientId }) {
 
     setOauthStatusLoading(prev => ({ ...prev, [addOnKey]: true }));
     try {
-      const apiBaseUrl = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+      const apiBaseUrl = getApiUrl();
       const response = await fetch(`${apiBaseUrl}/api/integrations/${addOnKey}/status/${clientId}`, {
         method: 'GET',
         credentials: 'include'
@@ -169,7 +170,7 @@ export default function AddOnsTab({ user, clientId }) {
 
     setSavingAddOn(addOnKey);
     try {
-      const apiBaseUrl = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+      const apiBaseUrl = getApiUrl();
       const oauthUrlEndpoint = `${apiBaseUrl}/api/integrations/${addOnKey}/oauth-url?clientId=${clientId}`;
       console.log('🔐 OAuth: Requesting OAuth URL from:', oauthUrlEndpoint);
 
@@ -213,7 +214,7 @@ export default function AddOnsTab({ user, clientId }) {
 
     setSavingAddOn(addOnKey);
     try {
-      const apiBaseUrl = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+      const apiBaseUrl = getApiUrl();
       // Use the standard decorator disable endpoint
       const response = await fetch(`${apiBaseUrl}/api/clients/${clientId}/decorators/${addOnKey}`, {
         method: 'DELETE',
@@ -285,7 +286,7 @@ export default function AddOnsTab({ user, clientId }) {
     setSavingAddOn(decoratorKey);
 
     try {
-      const apiBaseUrl = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+      const apiBaseUrl = getApiUrl();
       const method = isCurrentlyEnabled ? 'DELETE' : 'POST';
 
       // Build request body for POST requests
