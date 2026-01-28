@@ -8,6 +8,20 @@ export default function SignupForm({ isOpen }) {
   // Get domain information from context
   const { domainInfo, getTargetDomain } = useDomain();
 
+  // Debug logging for environment configuration
+  useEffect(() => {
+    console.log('🔧 ============ SIGNUP FORM ENV CONFIG ============');
+    console.log('🔧 VITE_API_URL:', import.meta.env.VITE_API_URL || '❌ NOT SET (using localhost:3000)');
+    console.log('🔧 VITE_CREATE_USER_TOKEN:', import.meta.env.VITE_CREATE_USER_TOKEN ? '✅ SET' : '❌ NOT SET');
+    console.log('🔧 VITE_STRIPE_PUBLISHABLE_KEY:', import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY ? '✅ SET' : '❌ NOT SET');
+    console.log('🔧 Current hostname:', window.location.hostname);
+    console.log('🔧 Current origin:', window.location.origin);
+    console.log('🔧 MODE:', import.meta.env.MODE);
+    console.log('🔧 PROD:', import.meta.env.PROD);
+    console.log('🔧 DEV:', import.meta.env.DEV);
+    console.log('🔧 ================================================');
+  }, []);
+
   const [isMobile, setIsMobile] = useState(window.innerWidth < 640);
   const [stripePromise, setStripePromise] = useState(null);
   const [subscriptionData, setSubscriptionData] = useState(null);
@@ -402,6 +416,11 @@ export default function SignupForm({ isOpen }) {
 
       const apiBaseUrl = import.meta.env.VITE_API_URL || 'http://localhost:3000';
       const apiUrl = `${apiBaseUrl}/api/create_and_check_user`;
+
+      console.log('👤 ============ CREATE USER ============');
+      console.log('👤 API Base URL:', apiBaseUrl);
+      console.log('👤 Create User endpoint:', apiUrl);
+      console.log('👤 =====================================');
 
       const userPayload = {
         ...payload,

@@ -41,6 +41,7 @@ export const UserProvider = ({ children }) => {
 
     try {
       const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3000";
+      console.log('🔍 Checking session at:', `${API_URL}/api/check-session`);
       const res = await fetch(`${API_URL}/api/check-session`, {
         credentials: 'include'
       });
@@ -73,7 +74,13 @@ export const UserProvider = ({ children }) => {
   // Login function
   const login = async (email, password) => {
     const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3000";
-    
+
+    console.log('🔐 ============ LOGIN ATTEMPT ============');
+    console.log('🔐 API_URL:', API_URL);
+    console.log('🔐 Login endpoint:', `${API_URL}/api/login`);
+    console.log('🔐 Email:', email);
+    console.log('🔐 =======================================');
+
     const res = await fetch(`${API_URL}/api/login`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },

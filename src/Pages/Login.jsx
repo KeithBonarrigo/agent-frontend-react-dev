@@ -1,10 +1,23 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useUser } from "../contexts/UserContext";
 
 const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3000";
 
 export default function Login() {
+  // Debug logging for environment configuration
+  useEffect(() => {
+    console.log('🔧 ============ LOGIN PAGE ENV CONFIG ============');
+    console.log('🔧 VITE_API_URL:', import.meta.env.VITE_API_URL || '❌ NOT SET (using localhost:3000)');
+    console.log('🔧 API_URL being used:', API_URL);
+    console.log('🔧 Current hostname:', window.location.hostname);
+    console.log('🔧 Current origin:', window.location.origin);
+    console.log('🔧 MODE:', import.meta.env.MODE);
+    console.log('🔧 PROD:', import.meta.env.PROD);
+    console.log('🔧 DEV:', import.meta.env.DEV);
+    console.log('🔧 ==============================================');
+  }, []);
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
