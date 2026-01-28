@@ -2,6 +2,7 @@
 // Client-side user management with localStorage persistence
 
 import { createContext, useContext, useState, useEffect } from 'react';
+import { getApiUrl } from '../utils/getApiUrl';
 
 const UserContext = createContext(null);
 
@@ -40,7 +41,7 @@ export const UserProvider = ({ children }) => {
     }
 
     try {
-      const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3000";
+      const API_URL = getApiUrl();
       console.log('🔍 Checking session at:', `${API_URL}/api/check-session`);
       const res = await fetch(`${API_URL}/api/check-session`, {
         credentials: 'include'
@@ -73,7 +74,7 @@ export const UserProvider = ({ children }) => {
 
   // Login function
   const login = async (email, password) => {
-    const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3000";
+    const API_URL = getApiUrl();
 
     console.log('🔐 ============ LOGIN ATTEMPT ============');
     console.log('🔐 API_URL:', API_URL);

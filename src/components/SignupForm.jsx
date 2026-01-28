@@ -3,6 +3,7 @@ import { loadStripe } from "@stripe/stripe-js";
 import { Elements } from "@stripe/react-stripe-js";
 import StripePaymentForm from "./StripePaymentForm";
 import { useDomain } from "../contexts/DomainContext";
+import { getApiUrl } from "../utils/getApiUrl";
 
 export default function SignupForm({ isOpen }) {
   // Get domain information from context
@@ -45,7 +46,7 @@ export default function SignupForm({ isOpen }) {
         } else {
           // Fallback: fetch from backend (for Heroku environments)
           console.log('📡 Fetching Stripe key from backend...');
-          const apiBaseUrl = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+          const apiBaseUrl = getApiUrl();
           const response = await fetch(`${apiBaseUrl}/api/stripe-config`);
           const { publishableKey } = await response.json();
           
@@ -180,7 +181,7 @@ export default function SignupForm({ isOpen }) {
 
     try {
       setCheckingEmail(true);
-      const apiBaseUrl = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+      const apiBaseUrl = getApiUrl();
       const response = await fetch(`${apiBaseUrl}/api/check-email`, {
         method: 'POST',
         headers: {
@@ -351,7 +352,7 @@ export default function SignupForm({ isOpen }) {
         return;
       }
 
-      const apiBaseUrl = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+      const apiBaseUrl = getApiUrl();
       const apiUrl = `${apiBaseUrl}/api/create-subscription`; // CHANGED from create-payment-intent
 
       const pricing = pricingMap[agentForm.level];
@@ -414,7 +415,7 @@ export default function SignupForm({ isOpen }) {
         return;
       }
 
-      const apiBaseUrl = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+      const apiBaseUrl = getApiUrl();
       const apiUrl = `${apiBaseUrl}/api/create_and_check_user`;
 
       console.log('👤 ============ CREATE USER ============');

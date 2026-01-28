@@ -19,19 +19,23 @@ export const DomainProvider = ({ children }) => {
     const protocol = window.location.protocol;
     const port = window.location.port;
 
-    // Determine domain type - defaults to botwerx
+    // Determine domain type and API URL - defaults to botwerx
     let domainType = 'botwerx';
     let targetDomain = 'botwerx.ai';
+    let apiUrl = 'https://chat.botwerx.ai';
 
     if (currentDomain.includes('aibridge.global') || currentDomain.includes('base')) {
       domainType = 'base';
       targetDomain = 'base.aibridge.global';
+      apiUrl = 'https://chat.aibridge.global';
     } else if (currentDomain === 'localhost' || currentDomain === '127.0.0.1') {
       domainType = 'local';
       targetDomain = 'localhost';
+      apiUrl = 'http://localhost:3000';
     } else if (currentDomain === 'botwerx.ai' || currentDomain.includes('botwerx.ai')) {
       domainType = 'botwerx';
       targetDomain = 'botwerx.ai';
+      apiUrl = 'https://chat.botwerx.ai';
     }
     // Default case: uses botwerx (already set above)
 
@@ -42,6 +46,7 @@ export const DomainProvider = ({ children }) => {
       port,
       domainType,
       targetDomain,
+      apiUrl,
       timestamp: new Date().toISOString()
     };
 
@@ -49,6 +54,7 @@ export const DomainProvider = ({ children }) => {
     console.log("Current Domain:", currentDomain);
     console.log("Domain Type:", domainType);
     console.log("Target Domain:", targetDomain);
+    console.log("API URL:", apiUrl);
     console.log("Protocol:", protocol);
     console.log("Port:", port);
     console.log("Full URL:", fullUrl);
@@ -152,10 +158,17 @@ export const DomainProvider = ({ children }) => {
     return domainInfo?.domainType === 'botwerx' ? 'https://www.botwerx.ai' : 'https://aibridge.global';
   };
 
+  // Helper function to get the API URL
+  const getApiUrl = () => {
+    return domainInfo?.apiUrl || 'http://localhost:3000';
+  };
+
   const value = {
     domainInfo,
     isDomain,
     getTargetDomain,
+    getApiUrl,
+    apiUrl: domainInfo?.apiUrl || 'http://localhost:3000',
     isBotWerx: domainInfo?.domainType === 'botwerx',
     isBase: domainInfo?.domainType === 'base',
     isLocal: domainInfo?.domainType === 'local',
