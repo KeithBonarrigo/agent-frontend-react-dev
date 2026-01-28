@@ -17,32 +17,26 @@ export default function IntegrationsTab({ user, clientId }) {
     );
   }
 
-  // Determine the correct domain based on environment mode
+  // Determine the correct domain based on current hostname (runtime detection)
   // Used to generate the correct embed script URL for the chatbot
-  const dashboardMode = import.meta.env.VITE_MODE || 'local';
+  const hostname = window.location.hostname;
   let webEmbedDomain;
-  let webEmbedProtocol;
+  let webEmbedProtocol = 'https';
 
-  switch(dashboardMode){
-    case "local":
-        webEmbedDomain = 'localhost:3000';
-        webEmbedProtocol = 'http';
-    break;
-    case "dev":
-        webEmbedDomain = 'chatdev.botwerx.ai';
-        webEmbedProtocol = 'https';
-    break;
-    case "staging":
-        webEmbedDomain = 'chatstaging.aibridge.global';
-        webEmbedProtocol = 'https';
-    break;
-    case "production":
-        webEmbedDomain = 'chat.aibridge.global';
-        webEmbedProtocol = 'https';
-    break;
-    default:
-        webEmbedDomain = 'localhost:3000';
-        webEmbedProtocol = 'http';
+  if (hostname === 'localhost' || hostname === '127.0.0.1') {
+    webEmbedDomain = 'localhost:3000';
+    webEmbedProtocol = 'http';
+  } else if (hostname.includes('dev.botwerx.ai')) {
+    webEmbedDomain = 'chatdev.botwerx.ai';
+  } else if (hostname.includes('staging.botwerx.ai')) {
+    webEmbedDomain = 'chatstaging.botwerx.ai';
+  } else if (hostname.includes('botwerx.ai')) {
+    webEmbedDomain = 'chat.botwerx.ai';
+  } else if (hostname.includes('aibridge.global')) {
+    webEmbedDomain = 'chat.aibridge.global';
+  } else {
+    // Default fallback
+    webEmbedDomain = 'chat.botwerx.ai';
   }
 
   // Generate the embed code script tag with the client's unique ID
