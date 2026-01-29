@@ -308,28 +308,43 @@ export default function ModelsTab({ user, clientId }) {
 
           {/* Level-based Message Area - Hidden for specialty levels */}
           {!isSpecialtyLevel && (
-            <div style={{
-              marginBottom: "20px",
-              padding: "12px",
-              backgroundColor: isRestrictedLevel ? "#e7f3ff" : "#fff3cd",
-              borderRadius: "4px",
-              fontSize: "12px",
-              color: isRestrictedLevel ? "#0056b3" : "#856404",
-              border: isRestrictedLevel ? "1px solid #b8daff" : "1px solid #ffeeba",
-              textAlign: "center"
-            }}>
-              {isRestrictedLevel ? (
-                <>
-                  <strong>🔒 Restricted Access:</strong> Free and Basic Services have restricted model selection.
-                  Consider upgrading your plan to unlock more models and conversations.
-                </>
-              ) : (
-                <>
-                  <strong>Note:</strong> Changing your model will affect all future conversations.
-                  Your current conversations will not be affected.
-                </>
-              )}
-            </div>
+            isRestrictedLevel ? (
+              <div style={{
+                marginBottom: "20px",
+                padding: "16px 20px",
+                backgroundColor: "#fff3e0",
+                borderRadius: "8px",
+                fontSize: "14px",
+                color: "#e65100",
+                border: "2px solid #ffb74d",
+                textAlign: "center",
+                boxShadow: "0 2px 8px rgba(230, 81, 0, 0.15)"
+              }}>
+                <div style={{ fontSize: "24px", marginBottom: "8px" }}>🔒</div>
+                <div style={{ fontWeight: "700", fontSize: "16px", marginBottom: "6px" }}>
+                  Restricted Access
+                </div>
+                <div>
+                  Free and Basic Services have restricted model selection.
+                  <br />
+                  <strong>Consider upgrading your plan</strong> to unlock more models and conversations.
+                </div>
+              </div>
+            ) : (
+              <div style={{
+                marginBottom: "20px",
+                padding: "12px",
+                backgroundColor: "#fff3cd",
+                borderRadius: "4px",
+                fontSize: "12px",
+                color: "#856404",
+                border: "1px solid #ffeeba",
+                textAlign: "center"
+              }}>
+                <strong>Note:</strong> Changing your model will affect all future conversations.
+                Your current conversations will not be affected.
+              </div>
+            )
           )}
 
           {/* Buttons - Hidden for specialty levels */}
