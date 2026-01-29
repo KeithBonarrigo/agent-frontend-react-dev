@@ -50,7 +50,8 @@ export default function Dashboard() {
     office_address: '',
     office_wsp_phone: '',
     company: '',
-    timezone: 'America/Mazatlan'
+    timezone: 'America/Mazatlan',
+    domain_to_install_bot: ''
   });
   const [agentEditLoading, setAgentEditLoading] = useState(false);
   const [agentEditError, setAgentEditError] = useState(null);
@@ -216,7 +217,8 @@ export default function Dashboard() {
         office_address: selectedClient.office_address || '',
         office_wsp_phone: selectedClient.office_wsp_phone || '',
         company: selectedClient.company || '',
-        timezone: selectedClient.timezone || 'America/Mazatlan'
+        timezone: selectedClient.timezone || 'America/Mazatlan',
+        domain_to_install_bot: selectedClient.domain_to_install_bot || ''
       });
       setIsEditingAgent(false);
       setAgentEditError(null);
@@ -554,6 +556,11 @@ export default function Dashboard() {
       return;
     }
 
+    if (!agentEditForm.domain_to_install_bot?.trim()) {
+      setAgentEditError('Domain where agent is installed is required');
+      return;
+    }
+
     setAgentEditLoading(true);
     setAgentEditError(null);
     setAgentEditSuccess(null);
@@ -579,7 +586,8 @@ export default function Dashboard() {
             office_address: agentEditForm.office_address.trim() || null,
             office_wsp_phone: agentEditForm.office_wsp_phone.trim() || null,
             company: agentEditForm.company.trim() || null,
-            timezone: agentEditForm.timezone
+            timezone: agentEditForm.timezone,
+            domain_to_install_bot: agentEditForm.domain_to_install_bot.trim()
           }),
           credentials: 'include'
         }
@@ -1319,6 +1327,22 @@ export default function Dashboard() {
                         />
                       </div>
 
+                      {/* Domain to Install Bot */}
+                      <div>
+                        <label style={{ display: 'block', marginBottom: '0.25em', fontWeight: '600', color: '#333', fontSize: '0.85em' }}>
+                          Domain Where Agent Is Installed<span style={{ color: '#e74c3c' }}>*</span>
+                        </label>
+                        <input
+                          type="text"
+                          name="domain_to_install_bot"
+                          value={agentEditForm.domain_to_install_bot}
+                          onChange={handleAgentEditChange}
+                          placeholder="myexampledomain.com"
+                          required
+                          style={{ width: '100%', padding: '0.5em', fontSize: '0.9em', border: '1px solid #ced4da', borderRadius: '4px', boxSizing: 'border-box' }}
+                        />
+                      </div>
+
                       {/* Contact Email */}
                       <div>
                         <label style={{ display: 'block', marginBottom: '0.25em', fontWeight: '600', color: '#333', fontSize: '0.85em' }}>
@@ -1548,6 +1572,9 @@ export default function Dashboard() {
                     )}
                     {agentEditForm.company && (
                       <span><strong style={{ color: '#666' }}>Company:</strong> {agentEditForm.company}</span>
+                    )}
+                    {agentEditForm.domain_to_install_bot && (
+                      <span><strong style={{ color: '#666' }}>Install Domain:</strong> {agentEditForm.domain_to_install_bot}</span>
                     )}
                     {agentEditForm.contact_email && (
                       <span><strong style={{ color: '#666' }}>Email:</strong> {agentEditForm.contact_email}</span>

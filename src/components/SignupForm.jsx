@@ -110,6 +110,7 @@ export default function SignupForm({ isOpen }) {
     company: "",
     wsp_phone_number_id: "",
     messenger_access_token: "",
+    domain_to_install_bot: "",
   });
 
   const [agentFormError, setAgentFormError] = useState("");
@@ -275,6 +276,7 @@ export default function SignupForm({ isOpen }) {
       wsp_phone_number_id: toNullIfEmpty(raw.wsp_phone_number_id),
       messenger_access_token: toNullIfEmpty(raw.messenger_access_token),
       domain: assignedDomain,
+      domain_to_install_bot: toNullIfEmpty(raw.domain_to_install_bot),
     };
   };
 
@@ -323,6 +325,11 @@ export default function SignupForm({ isOpen }) {
 
     if (!agentForm.level) {
       setAgentFormError("Level is required.");
+      return;
+    }
+
+    if (!agentForm.domain_to_install_bot?.trim()) {
+      setAgentFormError("Domain where agent will be installed is required.");
       return;
     }
 
@@ -508,6 +515,7 @@ export default function SignupForm({ isOpen }) {
         company: "",
         wsp_phone_number_id: "",
         messenger_access_token: "",
+        domain_to_install_bot: "",
       });
 
       setTermsAccepted(false);
@@ -1045,6 +1053,23 @@ export default function SignupForm({ isOpen }) {
                       <option value="mls">Real Estate Agent (MLS) - $79/month</option>
                     </select>
                   </div>
+                </div>
+
+                {/* Domain to Install Bot */}
+                <div className="home-form-group">
+                  <label htmlFor="domain_to_install_bot" className="home-form-label">
+                    Domain Where Agent Will Be Installed:<span style={requiredAsteriskStyle}>*</span>
+                  </label>
+                  <input
+                    type="text"
+                    id="domain_to_install_bot"
+                    name="domain_to_install_bot"
+                    required
+                    value={agentForm.domain_to_install_bot}
+                    onChange={handleAgentFormChange}
+                    placeholder="myexampledomain.com"
+                    className="home-form-input"
+                  />
                 </div>
 
                 {/* WhatsApp and Terms checkboxes - centered row */}
