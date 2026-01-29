@@ -1,0 +1,74 @@
+{
+  "title": "Mi Panel de Control",
+  "welcome": "Bienvenido",
+  "loading": "Cargando...",
+  "logout": "Cerrar Sesión",
+  "agentSettings": "Configuración del Agente",
+  "companyInfo": "Información de la Empresa",
+  "subscription": {
+    "title": "Suscripción",
+    "noSubscriptions": "No se encontraron suscripciones",
+    "subscriptionCount": "{{count}} suscripción",
+    "subscriptionCount_plural": "{{count}} suscripciones",
+    "status": "Estado",
+    "planType": "Tipo de Plan",
+    "singleAgent": "Agente Único",
+    "multiAgent": "Multi-Agente",
+    "agents": "Agentes",
+    "trialEnds": "Prueba Termina",
+    "statuses": {
+      "active": "Activo",
+      "trialing": "En Prueba",
+      "past_due": "Vencido",
+      "cancelled": "Cancelado"
+    },
+    "cancelSubscription": "Cancelar Suscripción",
+    "cancelImmediately": "Cancelar Inmediatamente",
+    "cancelAtPeriodEnd": "Cancelar al Final del Período"
+  },
+  "agents": {
+    "title": "Agentes",
+    "newAgent": "Nuevo Agente",
+    "createAgent": "Crear Agente",
+    "noAgents": "No hay agentes en esta suscripción",
+    "selectAgent": "Seleccionar un agente",
+    "agentName": "Nombre del Agente",
+    "specialtyLimit": "Los planes especializados permiten solo 1 agente"
+  },
+  "form": {
+    "agentName": "Nombre del Agente",
+    "company": "Empresa",
+    "contactEmail": "Correo de Contacto",
+    "contactPhone": "Teléfono de Contacto",
+    "officePhone": "Teléfono de Oficina",
+    "whatsappPhone": "Teléfono WhatsApp",
+    "officeAddress": "Dirección de Oficina",
+    "latitude": "Latitud",
+    "longitude": "Longitud",
+    "timezone": "Zona Horaria",
+    "mlsToken": "Token MLS",
+    "domainToInstall": "Dominio Donde el Agente Está Instalado",
+    "saveChanges": "Guardar Cambios",
+    "editSettings": "Editar Configuración"
+  },
+  "summary": {
+    "noSettings": "No hay configuración de agente. Haga clic en Editar para agregar detalles."
+  },
+  "cancelModal": {
+    "title": "Cancelar Suscripción",
+    "warning": "Esto cancelará su suscripción {{level}} y deshabilitará su(s) agente(s).",
+    "immediateWarning": "La cancelación inmediata tendrá efecto de inmediato.",
+    "periodEndWarning": "La cancelación al final del período le permitirá usar el servicio hasta el final de su período de facturación actual.",
+    "confirmCancel": "Confirmar Cancelación"
+  },
+  "errors": {
+    "noAgentSelected": "Ningún agente seleccionado",
+    "domainRequired": "El dominio donde el agente está instalado es requerido",
+    "failedToUpdate": "Error al actualizar el agente",
+    "failedToLoad": "Error al cargar datos"
+  },
+  "success": {
+    "agentUpdated": "Agente actualizado exitosamente!",
+    "agentCreated": "Agente creado!"
+  }
+}

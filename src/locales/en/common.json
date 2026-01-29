@@ -1,0 +1,70 @@
+{
+  "buttons": {
+    "save": "Save",
+    "cancel": "Cancel",
+    "edit": "Edit",
+    "delete": "Delete",
+    "copy": "Copy",
+    "copied": "Copied!",
+    "submit": "Submit",
+    "loading": "Loading...",
+    "saving": "Saving...",
+    "tryItOut": "Try It Out",
+    "logout": "Logout",
+    "login": "Login",
+    "signup": "Sign Up"
+  },
+  "labels": {
+    "agent": "Agent",
+    "company": "Company",
+    "email": "Email",
+    "phone": "Phone",
+    "address": "Address",
+    "timezone": "Timezone",
+    "level": "Level",
+    "domain": "Domain",
+    "installDomain": "Install Domain",
+    "whatsapp": "WhatsApp",
+    "whatsappEnabled": "WhatsApp Enabled",
+    "mlsToken": "MLS Token",
+    "password": "Password",
+    "confirmPassword": "Confirm Password",
+    "firstName": "First Name",
+    "lastName": "Last Name",
+    "required": "Required"
+  },
+  "messages": {
+    "success": "Success!",
+    "error": "Error",
+    "noData": "No data available",
+    "pleaseWait": "Please wait...",
+    "changesNotSaved": "Changes not saved"
+  },
+  "navigation": {
+    "home": "Home",
+    "benefits": "Benefits",
+    "solutions": "Solutions",
+    "faq": "FAQ",
+    "contact": "Contact",
+    "contactUs": "Contact Us",
+    "myDashboard": "My Dashboard",
+    "logIn": "Log In",
+    "logOut": "Log Out",
+    "configurations": "Configurations",
+    "training": "Training",
+    "models": "Models",
+    "addons": "Add-Ons",
+    "integrations": "Integrations",
+    "conversations": "Conversations",
+    "metrics": "Metrics",
+    "leads": "Leads"
+  },
+  "language": {
+    "select": "Language",
+    "english": "English",
+    "spanish": "Spanish",
+    "portuguese": "Portuguese",
+    "french": "French",
+    "italian": "Italian"
+  }
+}

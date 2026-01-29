@@ -1,8 +1,10 @@
 import { Link, useLocation, useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { useUser } from "../contexts/UserContext";
 import { useDomain } from "../contexts/DomainContext";
 
 export default function HomeHeader() {
+  const { t } = useTranslation('common');
   const location = useLocation();
   const navigate = useNavigate();
   const { user, isLoggedIn, logout } = useUser();
@@ -74,29 +76,24 @@ export default function HomeHeader() {
         <ul className="home-nav-links">
           <li>
             <a href="/" onClick={(e) => handleNavClick(e, "home-hero")}>
-              Home
+              {t('navigation.home')}
             </a>
           </li>
           {/* Changed link text from "Services" to "Benefits" to better describe the section content
               The section showcases benefits of AI agents rather than listing services offered */}
           <li>
             <a href="#services" onClick={(e) => handleNavClick(e, "services")}>
-              Benefits
+              {t('navigation.benefits')}
             </a>
           </li>
           <li>
             <a href="#solutions" onClick={(e) => handleNavClick(e, "solutions")}>
-              Solutions
+              {t('navigation.solutions')}
             </a>
           </li>
           <li>
             <a href="#faq" onClick={(e) => handleNavClick(e, "faq")}>
-              FAQ
-            </a>
-          </li>
-          <li>
-            <a href="#contact" onClick={(e) => handleNavClick(e, "contact")}>
-              Contact
+              {t('navigation.faq')}
             </a>
           </li>
 
@@ -104,23 +101,23 @@ export default function HomeHeader() {
           {isLoggedIn ? (
             <>
               <li>
-                <Link to="/dashboard">My Dashboard</Link>
+                <Link to="/dashboard">{t('navigation.myDashboard')}</Link>
               </li>
               <li>
                 <a href="#" onClick={handleLogout} style={{ color: "#dc3545" }}>
-                  Log Out
+                  {t('navigation.logOut')}
                 </a>
               </li>
             </>
           ) : (
             <li>
-              <Link to="/login">Log In</Link>
+              <Link to="/login">{t('navigation.logIn')}</Link>
             </li>
           )}
         </ul>
 
         <a href="#contact" className="home-btn" onClick={(e) => handleNavClick(e, "contact")}>
-          Contact Us
+          {t('navigation.contactUs')}
         </a>
       </nav>
     </header>

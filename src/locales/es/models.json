@@ -1,0 +1,41 @@
+{
+  "title": "Configuración de Modelo",
+  "currentModel": "Modelo Activo Actual",
+  "selectModel": "Seleccionar Modelo",
+  "selectModelPlaceholder": "-- Selecciona un Modelo --",
+  "updateModel": "Actualizar Modelo",
+  "updating": "Actualizando...",
+  "modelGroups": {
+    "claude": "Claude (Anthropic)",
+    "openai": "OpenAI"
+  },
+  "models": {
+    "claude35sonnet": "claude-3-5-sonnet (Más Popular)",
+    "claude37sonnet": "claude-3-7-sonnet (Más Nuevo - Sonnet 4)",
+    "claude35haiku": "claude-3-5-haiku (Rápido y Económico)",
+    "claude3opus": "claude-3-opus (Más Capaz)",
+    "gpt5": "gpt-5",
+    "gpt4turbo": "gpt-4-turbo",
+    "gpt35turbo0125": "gpt-3.5-turbo-0125",
+    "gpt35turbo1106": "gpt-3.5-turbo-1106"
+  },
+  "restricted": {
+    "title": "Acceso Restringido",
+    "message": "Los servicios Gratis y Básicos tienen selección de modelos restringida.",
+    "upgradePrompt": "Considera actualizar tu plan para desbloquear más modelos y conversaciones."
+  },
+  "note": {
+    "title": "Nota:",
+    "message": "Cambiar tu modelo afectará todas las conversaciones futuras. Tus conversaciones actuales no se verán afectadas."
+  },
+  "success": {
+    "modelUpdated": "Modelo actualizado exitosamente!"
+  },
+  "errors": {
+    "noClient": "No hay ID de cliente disponible. Por favor inicia sesión.",
+    "selectModel": "Por favor selecciona un modelo.",
+    "failedToFetch": "Error al cargar el modelo actual",
+    "failedToUpdate": "Error al actualizar el modelo"
+  },
+  "noSubscription": "Por favor selecciona una suscripción para configurar modelos."
+}

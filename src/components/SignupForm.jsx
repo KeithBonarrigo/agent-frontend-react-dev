@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { loadStripe } from "@stripe/stripe-js";
 import { Elements } from "@stripe/react-stripe-js";
 import StripePaymentForm from "./StripePaymentForm";
@@ -6,6 +7,7 @@ import { useDomain } from "../contexts/DomainContext";
 import { getApiUrl } from "../utils/getApiUrl";
 
 export default function SignupForm({ isOpen }) {
+  const { t } = useTranslation('signup');
   // Get domain information from context
   const { domainInfo, getTargetDomain } = useDomain();
 
@@ -826,7 +828,7 @@ export default function SignupForm({ isOpen }) {
             margin: 0
           }}>
             <h2 style={{ margin: 0, color: "white", textAlign: "center" }}>
-              Start an Account and Build Your AI Agent in 30 Seconds
+              {t('title')}
             </h2>
           </div>
 
@@ -845,14 +847,8 @@ export default function SignupForm({ isOpen }) {
                 color: "#333",
                 lineHeight: "1.3"
               }}
-            >
-              <strong>Create your account now</strong>, then <strong><a href="/login" style={{ color: "#1e3a8a", textDecoration: "underline" }}>log in anytime</a> to complete or change the rest</strong>.
-              {/* <br />
-              Only fields marked with an asterisk (<span style={requiredAsteriskStyle}>*</span>) are required. */}
-              {/* <p style={{ marginTop: ".25em", marginBottom: "0", color: "#333", lineHeight: "1.3" }}>
-                <i>Already have an account?</i> <a href="/login" style={{ color: "#1e3a8a", textDecoration: "underline" }}>Log in</a> here and manage your agent.
-              </p> */}
-            </p>
+              dangerouslySetInnerHTML={{ __html: t('subtitle') }}
+            />
           </div>
 
           <div style={{ padding: "30px", background: "#f9f9f9" }}>
@@ -866,7 +862,7 @@ export default function SignupForm({ isOpen }) {
                 <div style={rowWrapStyle}>
                   <div className="home-form-group" style={{ flex: 1 }}>
                     <label htmlFor="agent_name" className="home-form-label">
-                      Agent Name:
+                      {t('form.agentName')}:
                     </label>
                     <input
                       type="text"
@@ -881,7 +877,7 @@ export default function SignupForm({ isOpen }) {
 
                   <div className="home-form-group" style={{ flex: 1 }}>
                     <label htmlFor="company" className="home-form-label">
-                      Company:
+                      {t('form.company')}:
                     </label>
                     <input
                       type="text"
@@ -898,7 +894,7 @@ export default function SignupForm({ isOpen }) {
                 <div style={rowWrapStyle}>
                   <div className="home-form-group" style={{ flex: 1 }}>
                     <label htmlFor="first_name" className="home-form-label">
-                      First Name:
+                      {t('form.firstName')}:
                     </label>
                     <input
                       type="text"
@@ -912,7 +908,7 @@ export default function SignupForm({ isOpen }) {
 
                   <div className="home-form-group" style={{ flex: 1 }}>
                     <label htmlFor="last_name" className="home-form-label">
-                      Last Name:
+                      {t('form.lastName')}:
                     </label>
                     <input
                       type="text"
@@ -928,7 +924,7 @@ export default function SignupForm({ isOpen }) {
                 <div style={rowWrapStyle}>
                   <div className="home-form-group" style={{ flex: 1 }}>
                     <label htmlFor="contact_email" className="home-form-label">
-                      Contact Email: <span style={requiredAsteriskStyle}>*</span>
+                      {t('form.email')}: <span style={requiredAsteriskStyle}>*</span>
                     </label>
                     <input
                       type="email"
@@ -969,7 +965,7 @@ export default function SignupForm({ isOpen }) {
 
                   <div className="home-form-group" style={{ flex: 1 }}>
                     <label htmlFor="confirm_contact_email" className="home-form-label">
-                      Confirm Email: <span style={requiredAsteriskStyle}>*</span>
+                      {t('form.confirmEmail')}: <span style={requiredAsteriskStyle}>*</span>
                     </label>
                     <input
                       type="email"
@@ -987,7 +983,7 @@ export default function SignupForm({ isOpen }) {
                 <div style={rowWrapStyle}>
                   <div className="home-form-group" style={{ flex: 1 }}>
                     <label htmlFor="password" className="home-form-label">
-                      Password: <span style={requiredAsteriskStyle}>*</span>
+                      {t('form.password')}: <span style={requiredAsteriskStyle}>*</span>
                     </label>
                     <input
                       type="password"
@@ -1003,7 +999,7 @@ export default function SignupForm({ isOpen }) {
 
                   <div className="home-form-group" style={{ flex: 1 }}>
                     <label htmlFor="confirm_password" className="home-form-label">
-                      Confirm Password: <span style={requiredAsteriskStyle}>*</span>
+                      {t('form.confirmPassword')}: <span style={requiredAsteriskStyle}>*</span>
                     </label>
                     <input
                       type="password"
@@ -1021,7 +1017,7 @@ export default function SignupForm({ isOpen }) {
                 <div style={rowWrapStyle}>
                   <div className="home-form-group" style={{ flex: 1 }}>
                     <label htmlFor="contact_phone" className="home-form-label">
-                      Contact Phone:
+                      {t('form.phone')}:
                     </label>
                     <input
                       type="tel"
@@ -1035,7 +1031,7 @@ export default function SignupForm({ isOpen }) {
 
                   <div className="home-form-group" style={{ flex: 1 }}>
                     <label htmlFor="level" className="home-form-label">
-                      Service Level:<span style={requiredAsteriskStyle}>*</span>
+                      {t('form.serviceLevel')}:<span style={requiredAsteriskStyle}>*</span>
                     </label>
                     <select
                       id="level"
@@ -1045,12 +1041,12 @@ export default function SignupForm({ isOpen }) {
                       onChange={handleAgentFormChange}
                       className="home-form-input"
                     >
-                      <option value="free">Trial/Free - $0/month</option>
-                      <option value="basic">Basic - $29/month</option>
-                      <option value="pro">Pro - $79/month</option>
-                      <option value="enterprise">Enterprise - $199/month</option>
-                      <option value="easybroker">Real Estate Agent (EasyBroker) - $79/month</option>
-                      <option value="mls">Real Estate Agent (MLS) - $79/month</option>
+                      <option value="free">{t('plans.free')}</option>
+                      <option value="basic">{t('plans.basic')}</option>
+                      <option value="pro">{t('plans.pro')}</option>
+                      <option value="enterprise">{t('plans.enterprise')}</option>
+                      <option value="easybroker">{t('plans.easybroker')}</option>
+                      <option value="mls">{t('plans.mls')}</option>
                     </select>
                   </div>
                 </div>
@@ -1058,7 +1054,7 @@ export default function SignupForm({ isOpen }) {
                 {/* Domain to Install Bot */}
                 <div className="home-form-group" style={{ maxWidth: '50%', margin: '0 auto' }}>
                   <label htmlFor="domain_to_install_bot" className="home-form-label">
-                    Domain Where Agent Will Be Installed:<span style={requiredAsteriskStyle}>*</span>
+                    {t('form.domainToInstall')}:<span style={requiredAsteriskStyle}>*</span>
                   </label>
                   <input
                     type="text"
@@ -1207,7 +1203,7 @@ export default function SignupForm({ isOpen }) {
                     }}
                     disabled={emailExists || checkingEmail}
                   >
-                    {agentForm.level === "free" ? "Let's Go!" : "Start Free Trial"}
+                    {agentForm.level === "free" ? t('buttons.letsGo') : t('buttons.startFreeTrial')}
                   </button>
                 </div>
               </div>

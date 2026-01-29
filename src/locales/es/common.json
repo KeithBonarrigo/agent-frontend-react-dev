@@ -1,0 +1,70 @@
+{
+  "buttons": {
+    "save": "Guardar",
+    "cancel": "Cancelar",
+    "edit": "Editar",
+    "delete": "Eliminar",
+    "copy": "Copiar",
+    "copied": "Copiado!",
+    "submit": "Enviar",
+    "loading": "Cargando...",
+    "saving": "Guardando...",
+    "tryItOut": "Probar",
+    "logout": "Cerrar Sesión",
+    "login": "Iniciar Sesión",
+    "signup": "Registrarse"
+  },
+  "labels": {
+    "agent": "Agente",
+    "company": "Empresa",
+    "email": "Correo Electrónico",
+    "phone": "Teléfono",
+    "address": "Dirección",
+    "timezone": "Zona Horaria",
+    "level": "Nivel",
+    "domain": "Dominio",
+    "installDomain": "Dominio de Instalación",
+    "whatsapp": "WhatsApp",
+    "whatsappEnabled": "WhatsApp Habilitado",
+    "mlsToken": "Token MLS",
+    "password": "Contraseña",
+    "confirmPassword": "Confirmar Contraseña",
+    "firstName": "Nombre",
+    "lastName": "Apellido",
+    "required": "Requerido"
+  },
+  "messages": {
+    "success": "Éxito!",
+    "error": "Error",
+    "noData": "No hay datos disponibles",
+    "pleaseWait": "Por favor espere...",
+    "changesNotSaved": "Cambios no guardados"
+  },
+  "navigation": {
+    "home": "Inicio",
+    "benefits": "Beneficios",
+    "solutions": "Soluciones",
+    "faq": "Preguntas Frecuentes",
+    "contact": "Contacto",
+    "contactUs": "Contáctanos",
+    "myDashboard": "Mi Panel",
+    "logIn": "Iniciar Sesión",
+    "logOut": "Cerrar Sesión",
+    "configurations": "Configuraciones",
+    "training": "Entrenamiento",
+    "models": "Modelos",
+    "addons": "Complementos",
+    "integrations": "Integraciones",
+    "conversations": "Conversaciones",
+    "metrics": "Métricas",
+    "leads": "Prospectos"
+  },
+  "language": {
+    "select": "Idioma",
+    "english": "Inglés",
+    "spanish": "Español",
+    "portuguese": "Portugués",
+    "french": "Francés",
+    "italian": "Italiano"
+  }
+}

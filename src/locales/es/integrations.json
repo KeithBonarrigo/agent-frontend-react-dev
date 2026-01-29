@@ -1,0 +1,22 @@
+{
+  "title": "Integraciones",
+  "webEmbed": {
+    "title": "Inserción Web",
+    "description": "Agrega el chatbot de IA a tu sitio web",
+    "copyInstruction": "Copia este código y pégalo en la sección <head> de tu sitio web en",
+    "yourDomain": "tu dominio",
+    "tryItOut": "Probar",
+    "chatbotLoaded": "Chatbot cargado! Búscalo en la esquina."
+  },
+  "whatsapp": {
+    "title": "WhatsApp",
+    "description": "Conecta tu cuenta de WhatsApp Business",
+    "comingSoon": "Próximamente"
+  },
+  "messenger": {
+    "title": "Facebook Messenger",
+    "description": "Conecta tu Página de Facebook",
+    "comingSoon": "Próximamente"
+  },
+  "noSubscription": "Por favor selecciona una suscripción para configurar integraciones."
+}

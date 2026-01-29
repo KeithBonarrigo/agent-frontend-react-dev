@@ -1,7 +1,9 @@
 import { useState, useEffect } from "react";
+import { useTranslation } from "react-i18next";
 import { getApiUrl } from "../utils/getApiUrl";
 
 export default function ModelsTab({ user, clientId }) {
+  const { t } = useTranslation('models');
   const [selectedModel, setSelectedModel] = useState("");
   const [currentModel, setCurrentModel] = useState("");
   const [loading, setLoading] = useState(false);
@@ -57,7 +59,7 @@ export default function ModelsTab({ user, clientId }) {
       }
     } catch (err) {
       console.error('Error fetching current model:', err);
-      setError('Failed to load current model');
+      setError(t('errors.failedToFetch'));
     } finally {
       setFetchingCurrent(false);
     }
@@ -70,13 +72,13 @@ export default function ModelsTab({ user, clientId }) {
     setSuccess(false);
 
     if (!clientId) {
-      setError("No client ID available. Please log in.");
+      setError(t('errors.noClient'));
       setLoading(false);
       return;
     }
 
     if (!selectedModel) {
-      setError("Please select a model.");
+      setError(t('errors.selectModel'));
       setLoading(false);
       return;
     }
@@ -138,18 +140,18 @@ export default function ModelsTab({ user, clientId }) {
   if (!clientId) {
     return (
       <div style={{ padding: "2em", textAlign: "center", color: "#666" }}>
-        <p>Please select a subscription to configure models.</p>
+        <p>{t('noSubscription')}</p>
       </div>
     );
   }
 
   return (
     <div style={{ padding: "2em", backgroundColor: "#f8f9fa", borderRadius: "8px", border: "1px solid #dee2e6" }}>
-      <h2 style={{ marginBottom: "1em", color: "#333" }}>Model Configuration</h2>
-      
+      <h2 style={{ marginBottom: "1em", color: "#333" }}>{t('title')}</h2>
+
       {fetchingCurrent ? (
         <div style={{ textAlign: "center", padding: "2em", color: "#666" }}>
-          <p>Loading current model...</p>
+          <p>{t('common:buttons.loading')}</p>
         </div>
       ) : (
         <form onSubmit={handleSubmit}>
@@ -181,7 +183,7 @@ export default function ModelsTab({ user, clientId }) {
                 letterSpacing: "0.5px",
                 fontWeight: "600"
               }}>
-                Current Active Model
+                {t('currentModel')}
               </div>
               <div style={{
                 display: "flex",
@@ -231,7 +233,7 @@ export default function ModelsTab({ user, clientId }) {
                     fontSize: "14px"
                   }}
                 >
-                  Select Model:
+                  {t('selectModel')}:
                 </label>
                 <select
                   id="model-select"
@@ -248,7 +250,7 @@ export default function ModelsTab({ user, clientId }) {
                     fontFamily: "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif"
                   }}
                 >
-                  <option value="">-- Select a Model --</option>
+                  <option value="">{t('selectModelPlaceholder')}</option>
 
                   <optgroup label="Claude (Anthropic)">
                     <option value="claude-3-5-sonnet" disabled={isRestrictedLevel} style={isRestrictedLevel ? { color: '#999', fontStyle: 'italic' } : {}}>
@@ -302,7 +304,7 @@ export default function ModelsTab({ user, clientId }) {
               border: "1px solid #c3e6cb",
               fontSize: "14px"
             }}>
-              ✅ Model updated successfully!
+              ✅ {t('success.modelUpdated')}
             </div>
           )}
 
@@ -322,12 +324,12 @@ export default function ModelsTab({ user, clientId }) {
               }}>
                 <div style={{ fontSize: "24px", marginBottom: "8px" }}>🔒</div>
                 <div style={{ fontWeight: "700", fontSize: "16px", marginBottom: "6px" }}>
-                  Restricted Access
+                  {t('restricted.title')}
                 </div>
                 <div>
-                  Free and Basic Services have restricted model selection.
+                  {t('restricted.message')}
                   <br />
-                  <strong>Consider upgrading your plan</strong> to unlock more models and conversations.
+                  <strong>{t('restricted.upgradePrompt')}</strong>
                 </div>
               </div>
             ) : (
@@ -341,8 +343,7 @@ export default function ModelsTab({ user, clientId }) {
                 border: "1px solid #ffeeba",
                 textAlign: "center"
               }}>
-                <strong>Note:</strong> Changing your model will affect all future conversations.
-                Your current conversations will not be affected.
+                <strong>{t('note.title')}</strong> {t('note.message')}
               </div>
             )
           )}
@@ -370,7 +371,7 @@ export default function ModelsTab({ user, clientId }) {
                   opacity: loading ? 0.6 : 1
                 }}
               >
-                Cancel
+                {t('common:buttons.cancel')}
               </button>
               <button
                 type="submit"
@@ -387,7 +388,7 @@ export default function ModelsTab({ user, clientId }) {
                   opacity: loading || !selectedModel || isModelUnchanged() ? 0.6 : 1
                 }}
               >
-                {loading ? "Updating..." : "Update Model"}
+                {loading ? t('updating') : t('updateModel')}
               </button>
             </div>
           )}
@@ -395,22 +396,6 @@ export default function ModelsTab({ user, clientId }) {
       )}
     </div>
   );
-}
-
-// Helper function to get model descriptions
-function getModelDescription(model) {
-  const descriptions = {
-    'claude-3-5-sonnet': ' - Balanced performance and speed',
-    'claude-3-7-sonnet': ' - Latest and most advanced',
-    'claude-3-5-haiku': ' - Optimized for speed and cost',
-    'claude-3-opus': ' - Highest intelligence and reasoning',
-    'gpt-5': ' - Latest OpenAI model',
-    'gpt-4-turbo': ' - Fast GPT-4 variant',
-    'gpt-3.5-turbo-0125': ' - Updated GPT-3.5',
-    'gpt-3.5-turbo-1106': ' - GPT-3.5 November 2023'
-  };
-
-  return descriptions[model] || '';
 }
 
 // Helper function to get the logo path for a model

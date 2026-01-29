@@ -1,6 +1,7 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import HomeLayout from "./components/HomeLayout";
 import Layout from "./components/Layout"; // Make sure the path is correct
+import LanguageSelector from "./components/LanguageSelector";
 
 import Home from "./Pages/Home";
 import DataDeletion from "./Pages/DataDeletion";
@@ -23,6 +24,7 @@ function App() {
     <DomainProvider>
       <UserProvider>
         <BrowserRouter>
+        <LanguageSelector fixed={true} />
         <Routes>
           <Route element={<HomeLayout />}>
             <Route path="/" element={<Home />} />

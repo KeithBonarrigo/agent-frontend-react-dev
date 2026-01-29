@@ -1,11 +1,11 @@
 import { useState, useEffect, useRef } from "react";
+import { useTranslation } from "react-i18next";
 import SignupForm from "../components/SignupForm";
-import { useDomain } from "../contexts/DomainContext";
 import { getApiUrl } from "../utils/getApiUrl";
 import "../styles/Home.css";
 
 export default function Home() {
-  const { domainInfo } = useDomain();
+  const { t } = useTranslation('home');
   const sliderRef = useRef(null);
   const [contactForm, setContactForm] = useState({
     name: "",
@@ -24,24 +24,24 @@ export default function Home() {
   // These are the key value propositions shown alongside the signup form
   const heroBenefits = [
     {
-      title: "Zero-Code Implementation",
+      title: t('hero.benefits.zeroCode.title'),
       icon: "fa-wand-magic-sparkles",
-      description: "Launch your AI agent <strong>in minutes</strong>—no developers needed. Our intuitive interface lets anyone build <strong>powerful automation</strong> with simple point-and-click setup."
+      description: t('hero.benefits.zeroCode.description')
     },
     {
-      title: "Multi-Channel Communication",
+      title: t('hero.benefits.multiChannel.title'),
       icon: "fa-comments",
-      description: "Your AI agent works <strong>24/7</strong> across web, WhatsApp, Messenger, and Instagram—engaging customers <strong>wherever they are</strong>, whenever they need you. More channels coming soon."
+      description: t('hero.benefits.multiChannel.description')
     },
     {
-      title: "AI-Driven Insights",
+      title: t('hero.benefits.insights.title'),
       icon: "fa-chart-line",
-      description: "Know <strong>who's contacting you</strong>, where they're coming from, and what interests them. AI-powered metrics give you <strong>visibility into your leads</strong> to sharpen marketing outreach and segmentation."
+      description: t('hero.benefits.insights.description')
     },
     {
-      title: "Secure & PCI Compliant",
+      title: t('hero.benefits.secure.title'),
       icon: "fa-shield-halved",
-      description: "Your data is protected with <strong>enterprise-grade security</strong>. We never store your credit card information, and all personal data is <strong>highly encrypted</strong> to keep your business and customers safe."
+      description: t('hero.benefits.secure.description')
     }
   ];
 
@@ -52,34 +52,34 @@ export default function Home() {
   // AI-Driven Analytics added first, followed by 24/7 Support and Instant Response styled as cards
   const serviceItems = [
     {
-      title: "AI-Driven Analytics",
+      title: t('services.items.analytics.title'),
       icon: "fa-chart-pie",
-      description: "<strong>Unlock powerful insights into your customer behavior.</strong> Access custom AI-driven metrics that help you understand your users, track engagement patterns, and <strong>improve your audience segmentation.</strong> Our intelligent analytics dashboard surfaces actionable data, helping you identify high-value customers, optimize conversion funnels, and <strong>make data-backed decisions</strong> that drive growth."
+      description: t('services.items.analytics.description')
     },
     {
-      title: "24/7 Customer Support",
+      title: t('services.items.support.title'),
       icon: "fa-clock",
-      description: "<strong>Never miss a customer inquiry again.</strong> Our AI agents work around the clock, providing instant responses to customer questions at any time of day or night. Whether it's 3 PM or 3 AM, your customers receive <strong>immediate, helpful assistance</strong> that keeps them engaged and satisfied. This continuous availability ensures you <strong>capture every opportunity</strong> and maintain customer trust, even outside business hours."
+      description: t('services.items.support.description')
     },
     {
-      title: "Instant Response Times",
+      title: t('services.items.instant.title'),
       icon: "fa-bolt",
-      description: "<strong>Say goodbye to long wait times.</strong> Our AI agents respond to customer inquiries in milliseconds, <strong>dramatically reducing response times from hours or days to seconds.</strong> This immediate engagement keeps customers interested, prevents them from bouncing to competitors, and creates a seamless experience that modern consumers expect. <strong>Fast responses lead to higher satisfaction rates and increased conversion.</strong>"
+      description: t('services.items.instant.description')
     },
     {
-      title: "Automated Lead Qualification",
+      title: t('services.items.qualification.title'),
       icon: "fa-filter",
-      description: "<strong>Let AI handle the heavy lifting of lead qualification.</strong> Our intelligent agents ask the right questions, gather essential information, and <strong>automatically score and route leads</strong> based on their potential value. This ensures your sales team <strong>focuses only on high-quality prospects,</strong> saving time and increasing close rates. The system learns from every interaction, continuously improving its qualification accuracy."
+      description: t('services.items.qualification.description')
     },
     {
-      title: "Reduced Operational Costs",
+      title: t('services.items.costs.title'),
       icon: "fa-piggy-bank",
-      description: "<strong>Significantly lower your customer service expenses while improving quality.</strong> AI agents handle routine inquiries at <strong>a fraction of the cost of human agents,</strong> allowing you to scale support without proportionally scaling headcount. <strong>Reduce overhead costs</strong> including training, benefits, and infrastructure while maintaining or even improving service quality. The savings compound as your business grows."
+      description: t('services.items.costs.description')
     },
     {
-      title: "Scalable Customer Engagement",
+      title: t('services.items.scalable.title'),
       icon: "fa-chart-line",
-      description: "<strong>Handle thousands of simultaneous conversations without breaking a sweat.</strong> Unlike human teams that require hiring and training to scale, AI agents can <strong>instantly accommodate traffic spikes, seasonal surges, or rapid business growth.</strong> Whether you're handling 10 or 10,000 conversations, <strong>maintain the same high-quality experience for every customer</strong> without additional costs or delays."
+      description: t('services.items.scalable.description')
     }
   ];
 
@@ -151,58 +151,8 @@ export default function Home() {
     };
   }, []);
 
-  const faqs = [
-    {
-      question: "Can I try it before committing to a paid plan?",
-      answer:
-        "Absolutely. We offer a <strong>free trial</strong> so you can experience exactly how an AI agent works for your business <strong>before making any financial commitment</strong>. Set up your agent, test it with real scenarios, and see the results for yourself. We're confident that once you see the <strong>time saved and leads captured</strong>, you'll understand the value immediately.",
-    },
-    {
-      question: "Will AI agents make my customer interactions feel impersonal?",
-      answer:
-        "<strong>Not at all</strong>. Modern AI agents are designed to provide <strong>warm, conversational experiences</strong> that feel natural and helpful. They can remember customer preferences, use friendly language, and <strong>seamlessly hand off to human agents</strong> when a personal touch is needed. Many customers actually prefer the <strong>instant, judgment-free assistance</strong> AI provides for routine questions, while your team remains available for complex situations.",
-    },
-    {
-      question: "What if the AI gives wrong information to my customers?",
-      answer:
-        "AI agents are <strong>trained specifically on your business information</strong> and configured with guardrails to stay within their knowledge boundaries. When they encounter questions outside their scope, they're designed to <strong>acknowledge limitations and escalate to human support</strong> rather than guess. You maintain <strong>full control</strong> over the information they share, and continuous monitoring helps identify and correct any issues quickly.",
-    },
-    {
-      question: "Is my business too small to benefit from AI agents?",
-      answer:
-        "<strong>AI agents are particularly valuable for small businesses</strong> because they let you compete with larger companies without hiring additional staff. A solo entrepreneur can offer <strong>24/7 support</strong>, and a small team can handle inquiry volumes that would otherwise require multiple employees. Our <strong>tiered pricing</strong> means you only pay for what you need, making AI accessible regardless of your business size.",
-    },
-    {
-      question: "How long does it take to set up an AI agent?",
-      answer:
-        "Most businesses have their AI agent <strong>live within minutes, not weeks</strong>. Our no-code platform lets you configure your agent by simply providing your business information and preferences. <strong>No technical expertise required</strong>, no developers to hire, and no complex integrations to manage. You can start capturing leads and answering customer questions <strong>the same day you sign up</strong>.",
-    },
-    {
-      question: "Will I lose control over my customer relationships?",
-      answer:
-        "You gain <strong>more control, not less</strong>. AI agents capture detailed information about every interaction, giving you insights into what customers are asking, what they need, and where they're coming from. <strong>You set the rules</strong> for how the AI responds, when it escalates, and what information it collects. <strong>Every conversation is logged and accessible</strong>, so you're always informed about what's happening with your customers.",
-    },
-    {
-      question: "What happens when the AI can't answer a question?",
-      answer:
-        "<strong>Smart escalation is built into every AI agent.</strong> When a question falls outside the AI's knowledge or a customer requests human assistance, the conversation is <strong>seamlessly handed off to your team with full context</strong>. The AI can collect contact information and schedule callbacks, ensuring <strong>no inquiry falls through the cracks</strong> even outside business hours.",
-    },
-    {
-      question: "Are AI agents secure? What about my customers' data?",
-      answer:
-        "Security is foundational to our platform. All data is <strong>encrypted in transit and at rest</strong>, we never store payment card information, and we maintain strict compliance with privacy regulations. <strong>Your customer data belongs to you</strong> and is never used to train models or shared with third parties. We undergo <strong>regular security audits</strong> to ensure your information stays protected.",
-    },
-    {
-      question: "Will my customers know they're talking to an AI?",
-      answer:
-        "<strong>Transparency builds trust.</strong> Our AI agents can introduce themselves honestly while still providing excellent service. Research shows customers appreciate knowing they're interacting with AI when it means <strong>faster responses and 24/7 availability</strong>. The key is delivering genuine value—customers care far more about <strong>getting their questions answered quickly</strong> than whether a human or AI is helping them.",
-    },
-    {
-      question: "What if AI technology changes and my investment becomes obsolete?",
-      answer:
-        "Our platform <strong>continuously evolves with AI advancements</strong>, and your subscription includes all updates automatically. As the technology improves, your AI agent gets smarter <strong>without any additional effort or cost</strong> on your part. You're not locked into outdated technology—you're partnering with a platform committed to keeping you <strong>at the forefront of AI capabilities</strong>.",
-    },
-  ];
+  // FAQs loaded from translations
+  const faqs = t('faq.items', { returnObjects: true });
 
   const handleFormChange = (e) => {
     setContactForm({
@@ -250,7 +200,7 @@ export default function Home() {
       }, 3000);
     } catch (err) {
       console.error("Contact form error:", err);
-      setFormError("❌ Server error. Please try again later.");
+      setFormError(`❌ ${t('contact.error')}`);
     }
   };
 
@@ -268,7 +218,7 @@ export default function Home() {
       {/* Hero Section - Redesigned with left/right layout */}
       <section className="home-hero">
         <div className="home-container">
-          <h1 className="home-hero-title">Capture More Leads with Advanced AI Agents</h1>
+          <h1 className="home-hero-title">{t('hero.title')}</h1>
 
           {/* Two-column layout: Benefits on left, Form on right */}
           <div className="home-hero-content">
@@ -310,23 +260,23 @@ export default function Home() {
 
       {/* Slider Section */}
       <section id="solutions" className="home-slider-section">
-        <h2 className="home-section-title">What Can AI Agents Do For Your Business?</h2>
+        <h2 className="home-section-title">{t('slider.title')}</h2>
         <div className="home-container">
           <div ref={sliderRef} className="home-slider-container">
             {[
-              { img: "/img/icon1.png", text: "Automate Conversations" },
-              { img: "/img/icon2.jpg", text: "Qualify Leads Instantly" },
-              { img: "/img/icon3.png", text: "Handle Inquiries" },
-              { img: "/img/icon4.png", text: "Scale Support Seamlessly" },
-              { img: "/img/icon5.png", text: "Personalize Interactions" },
-              { img: "/img/icon6.png", text: "Free Up Your Team" },
+              { img: "/img/icon1.png", text: t('slider.items.automate') },
+              { img: "/img/icon2.jpg", text: t('slider.items.qualify') },
+              { img: "/img/icon3.png", text: t('slider.items.handle') },
+              { img: "/img/icon4.png", text: t('slider.items.scale') },
+              { img: "/img/icon5.png", text: t('slider.items.personalize') },
+              { img: "/img/icon6.png", text: t('slider.items.freeUp') },
               // Duplicate items for infinite loop effect
-              { img: "/img/icon1.png", text: "Automate Conversations" },
-              { img: "/img/icon2.jpg", text: "Qualify Leads Instantly" },
-              { img: "/img/icon3.png", text: "Handle Inquiries" },
-              { img: "/img/icon4.png", text: "Scale Support Seamlessly" },
-              { img: "/img/icon5.png", text: "Personalize Interactions" },
-              { img: "/img/icon6.png", text: "Free Up Your Team" },
+              { img: "/img/icon1.png", text: t('slider.items.automate') },
+              { img: "/img/icon2.jpg", text: t('slider.items.qualify') },
+              { img: "/img/icon3.png", text: t('slider.items.handle') },
+              { img: "/img/icon4.png", text: t('slider.items.scale') },
+              { img: "/img/icon5.png", text: t('slider.items.personalize') },
+              { img: "/img/icon6.png", text: t('slider.items.freeUp') },
             ].map((item, index) => (
               <div key={index} className="home-slider-item">
                 <img src={item.img} alt={item.text} className="home-slider-image" />
@@ -339,7 +289,7 @@ export default function Home() {
 
       {/* Services Section - Card-based layout matching the hero benefits style */}
       <section id="services" className="home-cards-section">
-        <h2 className="home-section-title inverted">Additional Benefits</h2>
+        <h2 className="home-section-title inverted">{t('services.title')}</h2>
         <div className="home-container">
           <div className="home-cards-grid">
             {serviceItems.map((service, index) => (
@@ -359,7 +309,7 @@ export default function Home() {
           </div>
           <div className="home-services-cta">
             <a href="#contact" className="home-btn" onClick={(e) => { e.preventDefault(); scrollToSection("contact"); }}>
-              Learn More
+              {t('services.learnMore')}
             </a>
           </div>
         </div>
@@ -367,7 +317,7 @@ export default function Home() {
 
       {/* FAQ Section */}
       <section id="faq" className="home-faq-section">
-        <h2 className="home-section-title">Frequently Asked Questions</h2>
+        <h2 className="home-section-title">{t('faq.title')}</h2>
         <div className="home-container">
           <div className="home-faq-list">
             {faqs.map((faq, index) => (
@@ -392,12 +342,12 @@ export default function Home() {
       <section id="contact" className="home-contact-section">
         <div className="home-container">
           <form onSubmit={handleContactSubmit} className="home-form" id="contact-form">
-            <h2>Contact Us</h2>
+            <h2>{t('contact.title')}</h2>
 
             <div className="home-form-row">
               <div className="home-form-group">
                 <label htmlFor="name" className="home-form-label">
-                  Name:
+                  {t('contact.form.name')}:
                 </label>
                 <input
                   type="text"
@@ -412,7 +362,7 @@ export default function Home() {
 
               <div className="home-form-group">
                 <label htmlFor="email" className="home-form-label">
-                  Email:
+                  {t('contact.form.email')}:
                 </label>
                 <input
                   type="email"
@@ -429,7 +379,7 @@ export default function Home() {
             <div className="home-form-row">
               <div className="home-form-group">
                 <label htmlFor="phone" className="home-form-label">
-                  Phone:
+                  {t('contact.form.phone')}:
                 </label>
                 <input
                   type="tel"
@@ -443,7 +393,7 @@ export default function Home() {
 
               <div className="home-form-group">
                 <label htmlFor="contact-company" className="home-form-label">
-                  Company:
+                  {t('contact.form.company')}:
                 </label>
                 <input
                   type="text"
@@ -459,7 +409,7 @@ export default function Home() {
             <div className="home-form-row">
               <div className="home-form-group">
                 <label htmlFor="website" className="home-form-label">
-                  Website:
+                  {t('contact.form.website')}:
                 </label>
                 <input
                   type="url"
@@ -474,7 +424,7 @@ export default function Home() {
 
             <div className="home-form-group">
               <label htmlFor="comments" className="home-form-label">
-                Comments:
+                {t('contact.form.comments')}:
               </label>
               <textarea
                 id="comments"
@@ -487,9 +437,9 @@ export default function Home() {
             </div>
 
             {formError && <p className="home-form-error">{formError}</p>}
-            {formSuccess && <p className="home-form-success">✅ Message sent successfully!</p>}
+            {formSuccess && <p className="home-form-success">✅ {t('contact.success')}</p>}
 
-            <button type="submit">Submit</button>
+            <button type="submit">{t('contact.form.submit')}</button>
           </form>
         </div>
       </section>

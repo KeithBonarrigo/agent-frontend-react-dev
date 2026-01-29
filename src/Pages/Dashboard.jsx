@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { useUser } from '../contexts/UserContext';
 import { getApiUrl } from '../utils/getApiUrl';
 import ConfigurationsTab from '../components/ConfigurationsTab';
@@ -13,6 +14,7 @@ import "../styles/Dashboard.css";
 
 export default function Dashboard() {
   const navigate = useNavigate();
+  const { t } = useTranslation('dashboard');
   const { user, isLoggedIn, isLoading, logout } = useUser();
   const [activeTab, setActiveTab] = useState('configurations');
   const [tokenLimits, setTokenLimits] = useState(null);
@@ -1132,14 +1134,14 @@ export default function Dashboard() {
         }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1em' }}>
             <div>
-              <h1 style={{ margin: 0, color: '#fff', fontSize: '2.25em', textAlign: 'left' }}>My Dashboard</h1>
+              <h1 style={{ margin: 0, color: '#fff', fontSize: '2.25em', textAlign: 'left' }}>{t('title')}</h1>
               <p style={{ margin: '0.25em 0 0 0', color: '#bdc3c7', fontSize: '0.9em' }}>
                 Welcome, {user.first_name || 'User'} {user.last_name || ''} ({user.email})
               </p>
             </div>
             <button onClick={handleLogout}
               style={{ padding: "0.5em 1.5em", backgroundColor: "#dc3545", color: "white", border: "none", borderRadius: "4px", cursor: "pointer", display: "flex", alignItems: "center", gap: "0.5em" }}>
-              <span style={{ fontSize: "1.1em" }}>↩</span> Logout
+              <span style={{ fontSize: "1.1em" }}>↩</span> {t('logout')}
             </button>
           </div>
         </div>
@@ -1150,12 +1152,12 @@ export default function Dashboard() {
           background: 'linear-gradient(135deg, #34495e 0%, #2c3e50 50%, #1a252f 100%)'
         }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '1em', flexWrap: 'wrap' }}>
-            <h3 style={{ margin: 0, color: '#fff' }}>Subscription:</h3>
+            <h3 style={{ margin: 0, color: '#fff' }}>{t('subscription.title')}:</h3>
 
             {loadingData ? (
               <span style={{ color: '#ecf0f1' }}>Loading...</span>
             ) : subscriptions.length === 0 ? (
-              <span style={{ color: '#e74c3c' }}>No subscriptions found</span>
+              <span style={{ color: '#e74c3c' }}>{t('subscription.noSubscriptions')}</span>
             ) : (
               <select value={selectedSubscriptionId || ''} onChange={handleSubscriptionChange}
                 style={{ padding: '0.5em 1em', fontSize: '1em', borderRadius: '4px', border: '1px solid #dee2e6', backgroundColor: 'white', minWidth: '250px', cursor: 'pointer' }}>
@@ -1186,9 +1188,9 @@ export default function Dashboard() {
                     <span style={{
                       backgroundColor: getStatusColor(selectedSubscription.subscription_status),
                       color: selectedSubscription.subscription_status === 'past_due' ? '#000' : 'white',
-                      padding: '2px 8px', borderRadius: '4px', fontSize: '0.7em', textTransform: 'capitalize'
+                      padding: '2px 8px', borderRadius: '4px', fontSize: '0.7em'
                     }}>
-                      {selectedSubscription.subscription_status}
+                      {t(`subscription.statuses.${selectedSubscription.subscription_status}`)}
                     </span>
                   </h3>
                   <span style={{ color: '#ccc', fontSize: '1.2em', fontWeight: '300' }}>|</span>
@@ -1200,7 +1202,7 @@ export default function Dashboard() {
                       border: '1px solid #dee2e6',
                       color: '#495057'
                     }}>
-                      <strong>Plan Type:</strong> {selectedSubscription.plan_type === 'specialty' ? 'Single Agent' : 'Multi-Agent'}
+                      <strong>{t('subscription.planType')}:</strong> {selectedSubscription.plan_type === 'specialty' ? t('subscription.singleAgent') : t('subscription.multiAgent')}
                     </span>
                     <span style={{
                       backgroundColor: '#f1f3f5',
@@ -1209,7 +1211,7 @@ export default function Dashboard() {
                       border: '1px solid #dee2e6',
                       color: '#495057'
                     }}>
-                      <strong>Agents:</strong> {agentsInSubscription.length}
+                      <strong>{t('subscription.agents')}:</strong> {agentsInSubscription.length}
                     </span>
                     {selectedSubscription.trial_end && selectedSubscription.subscription_status === 'trialing' && (
                       <span style={{
@@ -1219,7 +1221,7 @@ export default function Dashboard() {
                         border: '1px solid #dee2e6',
                         color: '#495057'
                       }}>
-                        <strong>Trial Ends:</strong> {new Date(selectedSubscription.trial_end).toLocaleDateString()}
+                        <strong>{t('subscription.trialEnds')}:</strong> {new Date(selectedSubscription.trial_end).toLocaleDateString()}
                       </span>
                     )}
                   </div>
@@ -1230,16 +1232,16 @@ export default function Dashboard() {
                   <button onClick={() => setShowCancelModal(true)}
                     style={{ padding: '0.5em 1em', backgroundColor: '#dc3545', color: 'white',
                       border: 'none', borderRadius: '4px', cursor: 'pointer', fontSize: '0.85em', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.4em', whiteSpace: 'nowrap' }}>
-                    <span style={{ fontSize: '1em' }}>✕</span> Cancel Subscription
+                    <span style={{ fontSize: '1em' }}>✕</span> {t('subscription.cancelSubscription')}
                   </button>
                 )}
               </div>
 
               {/* Agent Selector - inline */}
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.75em', flexWrap: 'wrap', marginTop: '0.75em' }}>
-                <label style={{ fontWeight: '600', color: '#333', fontSize: '0.9em' }}>Select Agent:</label>
+                <label style={{ fontWeight: '600', color: '#333', fontSize: '0.9em' }}>{t('agents.selectAgent')}:</label>
                 {agentsInSubscription.length === 0 ? (
-                  <span style={{ color: '#666', fontSize: '0.9em' }}>No agents in this subscription</span>
+                  <span style={{ color: '#666', fontSize: '0.9em' }}>{t('agents.noAgents')}</span>
                 ) : (
                   <select value={selectedClientId || ''} onChange={handleClientChange}
                     style={{ padding: '0.4em 0.8em', fontSize: '0.9em', borderRadius: '4px', border: '1px solid #ced4da', backgroundColor: '#f1f3f5', minWidth: '200px', cursor: 'pointer' }}>
@@ -1255,12 +1257,12 @@ export default function Dashboard() {
                     style={{ padding: '0.4em 0.8em', fontSize: '0.85em', backgroundColor: '#28a745',
                       color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer',
                       fontWeight: '600', display: 'flex', alignItems: 'center', gap: '4px' }}>
-                    <span style={{ fontSize: '1em' }}>+</span> New Agent
+                    <span style={{ fontSize: '1em' }}>+</span> {t('agents.newAgent')}
                   </button>
                 ) : specialtySubAtLimit ? (
                   <span style={{ padding: '0.35em 0.6em', backgroundColor: '#fff3cd', color: '#856404',
                     border: '1px solid #ffc107', borderRadius: '4px', fontSize: '0.8em' }}>
-                    ⚠️ Specialty plans allow 1 agent only
+                    ⚠️ {t('agents.specialtyLimit')}
                   </span>
                 ) : null}
               </div>
@@ -1271,7 +1273,7 @@ export default function Dashboard() {
               <div style={{ backgroundColor: '#fff', padding: '1em', borderRadius: '6px', border: '1px solid #dee2e6', marginTop: '1em' }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: isEditingAgent ? '1em' : 0 }}>
                   <h4 style={{ margin: 0, color: '#333', display: 'flex', alignItems: 'center', gap: '0.5em' }}>
-                    <span style={{ fontSize: '1.1em' }}>⚙</span> Agent Settings
+                    <span style={{ fontSize: '1.1em' }}>⚙</span> {t('agentSettings')}
                   </h4>
                   {!isEditingAgent && (
                     <button
@@ -1289,7 +1291,7 @@ export default function Dashboard() {
                         gap: '0.4em'
                       }}
                     >
-                      <span>✎</span> Edit
+                      <span>✎</span> {t('common:buttons.edit')}
                     </button>
                   )}
                 </div>
@@ -1300,7 +1302,7 @@ export default function Dashboard() {
                       {/* Agent Name */}
                       <div>
                         <label style={{ display: 'block', marginBottom: '0.25em', fontWeight: '600', color: '#333', fontSize: '0.85em' }}>
-                          Agent Name
+                          {t('form.agentName')}
                         </label>
                         <input
                           type="text"
@@ -1315,7 +1317,7 @@ export default function Dashboard() {
                       {/* Company */}
                       <div>
                         <label style={{ display: 'block', marginBottom: '0.25em', fontWeight: '600', color: '#333', fontSize: '0.85em' }}>
-                          Company
+                          {t('form.company')}
                         </label>
                         <input
                           type="text"
@@ -1330,7 +1332,7 @@ export default function Dashboard() {
                       {/* Domain to Install Bot */}
                       <div>
                         <label style={{ display: 'block', marginBottom: '0.25em', fontWeight: '600', color: '#333', fontSize: '0.85em' }}>
-                          Domain Where Agent Is Installed<span style={{ color: '#e74c3c' }}>*</span>
+                          {t('form.domainToInstall')}<span style={{ color: '#e74c3c' }}>*</span>
                         </label>
                         <input
                           type="text"
@@ -1346,7 +1348,7 @@ export default function Dashboard() {
                       {/* Contact Email */}
                       <div>
                         <label style={{ display: 'block', marginBottom: '0.25em', fontWeight: '600', color: '#333', fontSize: '0.85em' }}>
-                          Contact Email
+                          {t('form.contactEmail')}
                         </label>
                         <input
                           type="email"
@@ -1363,7 +1365,7 @@ export default function Dashboard() {
                         {/* Contact Phone */}
                         <div style={{ width: '160px' }}>
                           <label style={{ display: 'block', marginBottom: '0.25em', fontWeight: '600', color: '#333', fontSize: '0.85em' }}>
-                            Contact Phone
+                            {t('form.contactPhone')}
                           </label>
                           <input
                             type="tel"
@@ -1378,7 +1380,7 @@ export default function Dashboard() {
                         {/* Office WhatsApp Phone */}
                         <div style={{ width: '160px' }}>
                           <label style={{ display: 'block', marginBottom: '0.25em', fontWeight: '600', color: '#333', fontSize: '0.85em' }}>
-                            Office WhatsApp Phone
+                            {t('form.whatsappPhone')}
                           </label>
                           <input
                             type="tel"
@@ -1402,7 +1404,7 @@ export default function Dashboard() {
                               style={{ width: '18px', height: '18px', cursor: 'pointer' }}
                             />
                             <label htmlFor="contact_phone_wsp" style={{ fontWeight: '600', color: '#333', fontSize: '0.85em', cursor: 'pointer', whiteSpace: 'nowrap' }}>
-                              WhatsApp-enabled
+                              {t('common:labels.whatsappEnabled')}
                             </label>
                           </div>
                         </div>
@@ -1411,7 +1413,7 @@ export default function Dashboard() {
                         {(selectedClient?.level === 'mls' || selectedClient?.subscription_level === 'mls') && (
                           <div style={{ width: '220px' }}>
                             <label style={{ display: 'block', marginBottom: '0.25em', fontWeight: '600', color: '#333', fontSize: '0.85em' }}>
-                              MLS Token
+                              {t('form.mlsToken')}
                             </label>
                             <input
                               type="password"
@@ -1429,7 +1431,7 @@ export default function Dashboard() {
                       {/* Office Address - Full Width */}
                       <div style={{ gridColumn: '1 / -1' }}>
                         <label style={{ display: 'block', marginBottom: '0.25em', fontWeight: '600', color: '#333', fontSize: '0.85em' }}>
-                          Office Address
+                          {t('form.officeAddress')}
                         </label>
                         <input
                           type="text"
@@ -1444,7 +1446,7 @@ export default function Dashboard() {
                       {/* Office Latitude */}
                       <div>
                         <label style={{ display: 'block', marginBottom: '0.25em', fontWeight: '600', color: '#333', fontSize: '0.85em' }}>
-                          Office Latitude
+                          {t('form.latitude')}
                         </label>
                         <input
                           type="number"
@@ -1460,7 +1462,7 @@ export default function Dashboard() {
                       {/* Office Longitude */}
                       <div>
                         <label style={{ display: 'block', marginBottom: '0.25em', fontWeight: '600', color: '#333', fontSize: '0.85em' }}>
-                          Office Longitude
+                          {t('form.longitude')}
                         </label>
                         <input
                           type="number"
@@ -1476,7 +1478,7 @@ export default function Dashboard() {
                       {/* Timezone */}
                       <div>
                         <label style={{ display: 'block', marginBottom: '0.25em', fontWeight: '600', color: '#333', fontSize: '0.85em' }}>
-                          Timezone
+                          {t('form.timezone')}
                         </label>
                         <select
                           name="timezone"
@@ -1527,7 +1529,7 @@ export default function Dashboard() {
                           fontWeight: '600'
                         }}
                       >
-                        {agentEditLoading ? 'Saving...' : 'Save Changes'}
+                        {agentEditLoading ? t('common:buttons.saving') : t('form.saveChanges')}
                       </button>
                       <button
                         type="button"
@@ -1562,7 +1564,7 @@ export default function Dashboard() {
                           cursor: agentEditLoading ? 'not-allowed' : 'pointer'
                         }}
                       >
-                        Cancel
+                        {t('common:buttons.cancel')}
                       </button>
                     </div>
                   </form>
@@ -1649,14 +1651,14 @@ export default function Dashboard() {
           {/* Tabs - Navigation for different dashboard sections */}
           {/* Training tab: RAG embeddings, Add-Ons tab: selectable decorators/integrations */}
           <div style={{ display: 'flex', justifyContent: 'center', borderBottom: '2px solid #ddd', marginBottom: '0', flexWrap: 'wrap', backgroundColor: '#e9ecef' }}>
-            <button className={`dashboard-tab ${activeTab === 'configurations' ? 'dashboard-tab-active' : ''}`} style={tabStyle(activeTab === 'configurations')} onClick={() => setActiveTab('configurations')}>⚙ Configurations</button>
-            <button className={`dashboard-tab ${activeTab === 'training' ? 'dashboard-tab-active' : ''}`} style={tabStyle(activeTab === 'training')} onClick={() => setActiveTab('training')}>☰ Training</button>
-            <button className={`dashboard-tab ${activeTab === 'models' ? 'dashboard-tab-active' : ''}`} style={tabStyle(activeTab === 'models')} onClick={() => setActiveTab('models')}>◈ Models</button>
-            <button className={`dashboard-tab ${activeTab === 'addons' ? 'dashboard-tab-active' : ''}`} style={tabStyle(activeTab === 'addons')} onClick={() => setActiveTab('addons')}>⊕ Add-Ons</button>
-            <button className={`dashboard-tab ${activeTab === 'integrations' ? 'dashboard-tab-active' : ''}`} style={tabStyle(activeTab === 'integrations')} onClick={() => setActiveTab('integrations')}>⇄ Integrations</button>
-            <button className={`dashboard-tab ${activeTab === 'conversations' ? 'dashboard-tab-active' : ''}`} style={tabStyle(activeTab === 'conversations')} onClick={() => setActiveTab('conversations')}>◐ Conversations</button>
-            <button className={`dashboard-tab ${activeTab === 'metrics' ? 'dashboard-tab-active' : ''}`} style={tabStyle(activeTab === 'metrics')} onClick={() => setActiveTab('metrics')}>▦ Metrics</button>
-            <button className={`dashboard-tab ${activeTab === 'leads' ? 'dashboard-tab-active' : ''}`} style={tabStyle(activeTab === 'leads')} onClick={() => setActiveTab('leads')}>⊛ Leads</button>
+            <button className={`dashboard-tab ${activeTab === 'configurations' ? 'dashboard-tab-active' : ''}`} style={tabStyle(activeTab === 'configurations')} onClick={() => setActiveTab('configurations')}>⚙ {t('common:navigation.configurations')}</button>
+            <button className={`dashboard-tab ${activeTab === 'training' ? 'dashboard-tab-active' : ''}`} style={tabStyle(activeTab === 'training')} onClick={() => setActiveTab('training')}>☰ {t('common:navigation.training')}</button>
+            <button className={`dashboard-tab ${activeTab === 'models' ? 'dashboard-tab-active' : ''}`} style={tabStyle(activeTab === 'models')} onClick={() => setActiveTab('models')}>◈ {t('common:navigation.models')}</button>
+            <button className={`dashboard-tab ${activeTab === 'addons' ? 'dashboard-tab-active' : ''}`} style={tabStyle(activeTab === 'addons')} onClick={() => setActiveTab('addons')}>⊕ {t('common:navigation.addons')}</button>
+            <button className={`dashboard-tab ${activeTab === 'integrations' ? 'dashboard-tab-active' : ''}`} style={tabStyle(activeTab === 'integrations')} onClick={() => setActiveTab('integrations')}>⇄ {t('common:navigation.integrations')}</button>
+            <button className={`dashboard-tab ${activeTab === 'conversations' ? 'dashboard-tab-active' : ''}`} style={tabStyle(activeTab === 'conversations')} onClick={() => setActiveTab('conversations')}>◐ {t('common:navigation.conversations')}</button>
+            <button className={`dashboard-tab ${activeTab === 'metrics' ? 'dashboard-tab-active' : ''}`} style={tabStyle(activeTab === 'metrics')} onClick={() => setActiveTab('metrics')}>▦ {t('common:navigation.metrics')}</button>
+            <button className={`dashboard-tab ${activeTab === 'leads' ? 'dashboard-tab-active' : ''}`} style={tabStyle(activeTab === 'leads')} onClick={() => setActiveTab('leads')}>⊛ {t('common:navigation.leads')}</button>
           </div>
 
           {/* Tab Content */}

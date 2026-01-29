@@ -1,0 +1,64 @@
+{
+  "title": "Start an Account and Build Your AI Agent in 30 Seconds",
+  "subtitle": "<strong>Create your account now</strong>, then <strong><a href=\"/login\" style=\"color: #1e3a8a; text-decoration: underline;\">log in anytime</a> to complete or change the rest</strong>.",
+  "form": {
+    "agentName": "Agent Name",
+    "agentNamePlaceholder": "My Assistant",
+    "firstName": "First Name",
+    "firstNamePlaceholder": "John",
+    "lastName": "Last Name",
+    "lastNamePlaceholder": "Doe",
+    "email": "Email",
+    "emailPlaceholder": "you@example.com",
+    "confirmEmail": "Confirm Email",
+    "confirmEmailPlaceholder": "Confirm your email",
+    "password": "Password",
+    "passwordPlaceholder": "Minimum 8 characters",
+    "confirmPassword": "Confirm Password",
+    "confirmPasswordPlaceholder": "Confirm your password",
+    "company": "Company",
+    "companyPlaceholder": "Your Company Name",
+    "phone": "Phone Number",
+    "phonePlaceholder": "Phone number",
+    "serviceLevel": "Service Level",
+    "domainToInstall": "Domain Where Agent Will Be Installed",
+    "domainPlaceholder": "myexampledomain.com",
+    "whatsappEnabled": "WhatsApp Enabled",
+    "termsAccept": "I accept the",
+    "termsAndConditions": "Terms and Conditions"
+  },
+  "plans": {
+    "free": "Trial/Free - $0/month",
+    "basic": "Basic - $29/month",
+    "pro": "Pro - $79/month",
+    "enterprise": "Enterprise - $199/month",
+    "easybroker": "Real Estate Agent (EasyBroker) - $79/month",
+    "mls": "Real Estate Agent (MLS) - $79/month"
+  },
+  "buttons": {
+    "startFreeTrial": "Start Free Trial",
+    "letsGo": "Let's Go!",
+    "processing": "Processing..."
+  },
+  "validation": {
+    "emailRequired": "Email is required to create an account.",
+    "emailConfirmRequired": "Please confirm your email.",
+    "emailMismatch": "Emails do not match.",
+    "passwordRequired": "Password is required to create an account.",
+    "passwordConfirmRequired": "Please confirm your password.",
+    "passwordMismatch": "Passwords do not match.",
+    "levelRequired": "Level is required.",
+    "domainRequired": "Domain where agent will be installed is required.",
+    "termsRequired": "You must accept the Terms and Conditions to create an account.",
+    "emailAlreadyRegistered": "This email is already registered. Please log in instead."
+  },
+  "success": {
+    "accountCreated": "Account created successfully!",
+    "welcomeMessage": "Welcome! Your agent is ready to configure."
+  },
+  "errors": {
+    "paymentFailed": "Payment failed",
+    "paymentCancelled": "Payment cancelled",
+    "creationFailed": "Failed to create account"
+  }
+}

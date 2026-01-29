@@ -1,0 +1,64 @@
+{
+  "title": "Crea una Cuenta y Construye tu Agente de IA en 30 Segundos",
+  "subtitle": "<strong>Crea tu cuenta ahora</strong>, luego <strong><a href=\"/login\" style=\"color: #1e3a8a; text-decoration: underline;\">inicia sesión cuando quieras</a> para completar o cambiar el resto</strong>.",
+  "form": {
+    "agentName": "Nombre del Agente",
+    "agentNamePlaceholder": "Mi Asistente",
+    "firstName": "Nombre",
+    "firstNamePlaceholder": "Juan",
+    "lastName": "Apellido",
+    "lastNamePlaceholder": "Pérez",
+    "email": "Correo Electrónico",
+    "emailPlaceholder": "tu@ejemplo.com",
+    "confirmEmail": "Confirmar Correo",
+    "confirmEmailPlaceholder": "Confirma tu correo",
+    "password": "Contraseña",
+    "passwordPlaceholder": "Mínimo 8 caracteres",
+    "confirmPassword": "Confirmar Contraseña",
+    "confirmPasswordPlaceholder": "Confirma tu contraseña",
+    "company": "Empresa",
+    "companyPlaceholder": "Nombre de tu Empresa",
+    "phone": "Número de Teléfono",
+    "phonePlaceholder": "Número de teléfono",
+    "serviceLevel": "Nivel de Servicio",
+    "domainToInstall": "Dominio Donde el Agente Será Instalado",
+    "domainPlaceholder": "midominio.com",
+    "whatsappEnabled": "WhatsApp Habilitado",
+    "termsAccept": "Acepto los",
+    "termsAndConditions": "Términos y Condiciones"
+  },
+  "plans": {
+    "free": "Prueba/Gratis - $0/mes",
+    "basic": "Básico - $29/mes",
+    "pro": "Pro - $79/mes",
+    "enterprise": "Empresarial - $199/mes",
+    "easybroker": "Agente Inmobiliario (EasyBroker) - $79/mes",
+    "mls": "Agente Inmobiliario (MLS) - $79/mes"
+  },
+  "buttons": {
+    "startFreeTrial": "Iniciar Prueba Gratis",
+    "letsGo": "Vamos!",
+    "processing": "Procesando..."
+  },
+  "validation": {
+    "emailRequired": "El correo electrónico es requerido para crear una cuenta.",
+    "emailConfirmRequired": "Por favor confirma tu correo electrónico.",
+    "emailMismatch": "Los correos electrónicos no coinciden.",
+    "passwordRequired": "La contraseña es requerida para crear una cuenta.",
+    "passwordConfirmRequired": "Por favor confirma tu contraseña.",
+    "passwordMismatch": "Las contraseñas no coinciden.",
+    "levelRequired": "El nivel es requerido.",
+    "domainRequired": "El dominio donde el agente será instalado es requerido.",
+    "termsRequired": "Debes aceptar los Términos y Condiciones para crear una cuenta.",
+    "emailAlreadyRegistered": "Este correo ya está registrado. Por favor inicia sesión."
+  },
+  "success": {
+    "accountCreated": "Cuenta creada exitosamente!",
+    "welcomeMessage": "Bienvenido! Tu agente está listo para configurar."
+  },
+  "errors": {
+    "paymentFailed": "Error en el pago",
+    "paymentCancelled": "Pago cancelado",
+    "creationFailed": "Error al crear la cuenta"
+  }
+}

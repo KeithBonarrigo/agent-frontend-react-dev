@@ -1,0 +1,74 @@
+{
+  "title": "My Dashboard",
+  "welcome": "Welcome",
+  "loading": "Loading...",
+  "logout": "Logout",
+  "agentSettings": "Agent Settings",
+  "companyInfo": "Company Information",
+  "subscription": {
+    "title": "Subscription",
+    "noSubscriptions": "No subscriptions found",
+    "subscriptionCount": "{{count}} subscription",
+    "subscriptionCount_plural": "{{count}} subscriptions",
+    "status": "Status",
+    "planType": "Plan Type",
+    "singleAgent": "Single Agent",
+    "multiAgent": "Multi-Agent",
+    "agents": "Agents",
+    "trialEnds": "Trial Ends",
+    "statuses": {
+      "active": "Active",
+      "trialing": "Trialing",
+      "past_due": "Past Due",
+      "cancelled": "Cancelled"
+    },
+    "cancelSubscription": "Cancel Subscription",
+    "cancelImmediately": "Cancel Immediately",
+    "cancelAtPeriodEnd": "Cancel at Period End"
+  },
+  "agents": {
+    "title": "Agents",
+    "newAgent": "New Agent",
+    "createAgent": "Create Agent",
+    "noAgents": "No agents in this subscription",
+    "selectAgent": "Select an agent",
+    "agentName": "Agent Name",
+    "specialtyLimit": "Specialty plans allow 1 agent only"
+  },
+  "form": {
+    "agentName": "Agent Name",
+    "company": "Company",
+    "contactEmail": "Contact Email",
+    "contactPhone": "Contact Phone",
+    "officePhone": "Office Phone",
+    "whatsappPhone": "WhatsApp Phone",
+    "officeAddress": "Office Address",
+    "latitude": "Latitude",
+    "longitude": "Longitude",
+    "timezone": "Timezone",
+    "mlsToken": "MLS Token",
+    "domainToInstall": "Domain Where Agent Is Installed",
+    "saveChanges": "Save Changes",
+    "editSettings": "Edit Settings"
+  },
+  "summary": {
+    "noSettings": "No agent settings configured. Click Edit to add details."
+  },
+  "cancelModal": {
+    "title": "Cancel Subscription",
+    "warning": "This will cancel your {{level}} subscription and disable your agent(s).",
+    "immediateWarning": "Immediate cancellation will take effect right away.",
+    "periodEndWarning": "Cancellation at period end will allow you to use the service until the end of your current billing period.",
+    "confirmCancel": "Confirm Cancellation"
+  },
+  "errors": {
+    "noAgentSelected": "No agent selected",
+    "domainRequired": "Domain where agent is installed is required",
+    "failedToUpdate": "Failed to update agent",
+    "failedToLoad": "Failed to load data"
+  },
+  "success": {
+    "agentUpdated": "Agent updated successfully!",
+    "agentCreated": "Agent created!"
+  }
+}

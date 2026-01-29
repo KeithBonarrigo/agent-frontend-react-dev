@@ -1,0 +1,22 @@
+{
+  "title": "Integrations",
+  "webEmbed": {
+    "title": "Web Embed",
+    "description": "Add the AI chatbot to your website",
+    "copyInstruction": "Copy this code and paste it in the <head> section of your website at",
+    "yourDomain": "your domain",
+    "tryItOut": "Try It Out",
+    "chatbotLoaded": "Chatbot loaded! Look for it in the corner."
+  },
+  "whatsapp": {
+    "title": "WhatsApp",
+    "description": "Connect your WhatsApp Business account",
+    "comingSoon": "Coming Soon"
+  },
+  "messenger": {
+    "title": "Facebook Messenger",
+    "description": "Connect your Facebook Page",
+    "comingSoon": "Coming Soon"
+  },
+  "noSubscription": "Please select a subscription to configure integrations."
+}

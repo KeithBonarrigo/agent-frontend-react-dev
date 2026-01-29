@@ -1,9 +1,11 @@
 import { useState, useRef } from "react";
+import { useTranslation } from "react-i18next";
 
 // IntegrationsTab - Displays embed code and integration methods for the AI agent
 // Provides the script tag users need to embed the chatbot on their website
 // Future: Will include WhatsApp, Messenger, and other platform integrations
 export default function IntegrationsTab({ user, clientId }) {
+  const { t } = useTranslation('integrations');
   const [copied, setCopied] = useState(false);
   const [chatbotLoaded, setChatbotLoaded] = useState(false);
   const [chatbotLoading, setChatbotLoading] = useState(false);
@@ -12,7 +14,7 @@ export default function IntegrationsTab({ user, clientId }) {
   if (!clientId) {
     return (
       <div style={{ padding: "2em", textAlign: "center", color: "#666" }}>
-        <p>Please select a subscription to configure integrations.</p>
+        <p>{t('noSubscription')}</p>
       </div>
     );
   }
@@ -99,7 +101,7 @@ export default function IntegrationsTab({ user, clientId }) {
 
       {/* Website Embed Code Section */}
       <div style={{ marginBottom: "2em" }}>
-        <h2 style={{ textAlign: "center", marginBottom: "1em" }}>Website Embed Code</h2>
+        <h2 style={{ textAlign: "center", marginBottom: "1em" }}>{t('webEmbed.title')}</h2>
         <div style={{ position: "relative", width: "70%", marginLeft: "auto", marginRight: "auto" }}>
           <pre style={{
             backgroundColor: "#fff",
@@ -127,7 +129,7 @@ export default function IntegrationsTab({ user, clientId }) {
               fontSize: "0.85em"
             }}
           >
-            {copied ? "✓ Copied!" : "Copy"}
+            {copied ? `✓ ${t('common:buttons.copied')}` : t('common:buttons.copy')}
           </button>
         </div>
         <p style={{ fontSize: "0.9em", color: "#666", marginTop: "0.5em", textAlign: "center" }}>
@@ -147,7 +149,7 @@ export default function IntegrationsTab({ user, clientId }) {
               padding: 0
             }}
           >
-            {chatbotLoading ? "Loading..." : chatbotLoaded ? "Chatbot loaded! Look for it in the corner." : "Try It Out!"}
+            {chatbotLoading ? t('common:buttons.loading') : chatbotLoaded ? t('webEmbed.chatbotLoaded') : t('webEmbed.tryItOut')}
           </button>
         </div>
       </div>
