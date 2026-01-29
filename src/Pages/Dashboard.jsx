@@ -33,6 +33,13 @@ export default function Dashboard() {
   const [cancelError, setCancelError] = useState(null);
   const [cancelSuccess, setCancelSuccess] = useState(null);
 
+  // Change Level Modal
+  const [showChangeLevelModal, setShowChangeLevelModal] = useState(false);
+  const [changeLevelLoading, setChangeLevelLoading] = useState(false);
+  const [changeLevelError, setChangeLevelError] = useState(null);
+  const [changeLevelSuccess, setChangeLevelSuccess] = useState(null);
+  const [selectedNewLevel, setSelectedNewLevel] = useState('');
+
   const [showNewAgentModal, setShowNewAgentModal] = useState(false);
   const [newAgentLoading, setNewAgentLoading] = useState(false);
   const [newAgentError, setNewAgentError] = useState(null);
@@ -493,6 +500,53 @@ export default function Dashboard() {
       setCancelError(error.message);
     } finally {
       setCancelLoading(false);
+    }
+  };
+
+  const handleChangeLevel = async () => {
+    if (!selectedSubscription?.subscription_id || !selectedNewLevel) {
+      setChangeLevelError('Please select a new level.');
+      return;
+    }
+
+    if (selectedNewLevel === selectedSubscription.level) {
+      setChangeLevelError('Please select a different level.');
+      return;
+    }
+
+    setChangeLevelLoading(true);
+    setChangeLevelError(null);
+    setChangeLevelSuccess(null);
+
+    try {
+      const token = import.meta.env.VITE_CREATE_USER_TOKEN;
+      const apiBaseUrl = getApiUrl();
+
+      const response = await fetch(`${apiBaseUrl}/api/update-subscription-level`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({
+          subscriptionId: selectedSubscription.subscription_id,
+          newLevel: selectedNewLevel
+        }),
+        credentials: 'include'
+      });
+
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.error || 'Failed to update subscription');
+
+      setChangeLevelSuccess(`Subscription updated to ${selectedNewLevel}!`);
+      setShowChangeLevelModal(false);
+      setTimeout(() => window.location.reload(), 2000);
+
+    } catch (error) {
+      console.error('Change level error:', error);
+      setChangeLevelError(error.message);
+    } finally {
+      setChangeLevelLoading(false);
     }
   };
 
@@ -1051,6 +1105,67 @@ export default function Dashboard() {
         </div>
       )}
 
+      {/* Change Level Modal */}
+      {showChangeLevelModal && selectedSubscription && (
+        <div style={{
+          position: 'fixed', top: 0, left: 0, right: 0, bottom: 0,
+          backgroundColor: 'rgba(0,0,0,0.5)', display: 'flex',
+          alignItems: 'center', justifyContent: 'center', zIndex: 10000, padding: '20px'
+        }} onClick={() => setShowChangeLevelModal(false)}>
+          <div style={{
+            backgroundColor: 'white', borderRadius: '8px', maxWidth: '500px', width: '100%'
+          }} onClick={(e) => e.stopPropagation()}>
+            <div style={{
+              background: 'linear-gradient(135deg, #007bff 0%, #0056b3 100%)',
+              padding: '20px', borderRadius: '8px 8px 0 0'
+            }}>
+              <h2 style={{ margin: 0, color: 'white' }}>{t('subscription.changeLevel')}</h2>
+              <p style={{ margin: '8px 0 0 0', color: 'rgba(255,255,255,0.8)', fontSize: '14px' }}>
+                {t('subscription.currentLevel')}: <strong>{selectedSubscription.level?.charAt(0).toUpperCase() + selectedSubscription.level?.slice(1)}</strong>
+              </p>
+            </div>
+            <div style={{ padding: '30px' }}>
+              <div style={{ backgroundColor: '#e7f3ff', border: '1px solid #b3d7ff', borderRadius: '8px', padding: '15px', marginBottom: '20px' }}>
+                <p style={{ margin: 0, color: '#0056b3', fontSize: '14px' }}>
+                  {t('subscription.changeLevelInfo')}
+                </p>
+              </div>
+
+              <label style={{ display: 'block', marginBottom: '8px', fontWeight: 'bold' }}>
+                {t('subscription.selectNewLevel')}:
+              </label>
+              <select
+                value={selectedNewLevel}
+                onChange={(e) => setSelectedNewLevel(e.target.value)}
+                style={{ width: '100%', padding: '12px', fontSize: '14px', borderRadius: '4px', border: '1px solid #ddd', marginBottom: '20px' }}
+              >
+                <option value="">{t('subscription.selectLevel')}</option>
+                <option value="basic" disabled={selectedSubscription.level === 'basic'}>Basic - $29/month</option>
+                <option value="pro" disabled={selectedSubscription.level === 'pro'}>Pro - $79/month</option>
+                <option value="enterprise" disabled={selectedSubscription.level === 'enterprise'}>Enterprise - $199/month</option>
+              </select>
+
+              {changeLevelError && <p style={{ color: '#dc3545', marginBottom: '15px' }}>❌ {changeLevelError}</p>}
+              {changeLevelSuccess && <p style={{ color: '#28a745', marginBottom: '15px' }}>✅ {changeLevelSuccess}</p>}
+
+              <div style={{ display: 'flex', gap: '10px' }}>
+                <button onClick={() => setShowChangeLevelModal(false)}
+                  style={{ flex: 1, padding: '12px', backgroundColor: 'transparent',
+                    color: '#666', border: '1px solid #ddd', borderRadius: '4px', cursor: 'pointer' }}>
+                  {t('common:buttons.cancel')}
+                </button>
+                <button onClick={handleChangeLevel} disabled={changeLevelLoading || !selectedNewLevel}
+                  style={{ flex: 2, padding: '12px', backgroundColor: (changeLevelLoading || !selectedNewLevel) ? '#ccc' : '#007bff',
+                    color: 'white', border: 'none', borderRadius: '4px', fontWeight: 'bold',
+                    cursor: (changeLevelLoading || !selectedNewLevel) ? 'not-allowed' : 'pointer' }}>
+                  {changeLevelLoading ? t('common:buttons.loading') : t('subscription.confirmChange')}
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* New Agent Modal */}
       {showNewAgentModal && (
         <div style={{
@@ -1227,13 +1342,22 @@ export default function Dashboard() {
                   </div>
                 </div>
 
-                {/* Cancel Button - top right */}
+                {/* Subscription Action Buttons - top right */}
                 {selectedSubscription.subscription_id && selectedSubscription.subscription_status !== 'cancelled' && (
-                  <button onClick={() => setShowCancelModal(true)}
-                    style={{ padding: '0.5em 1em', backgroundColor: '#dc3545', color: 'white',
-                      border: 'none', borderRadius: '4px', cursor: 'pointer', fontSize: '0.85em', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.4em', whiteSpace: 'nowrap' }}>
-                    <span style={{ fontSize: '1em' }}>✕</span> {t('subscription.cancelSubscription')}
-                  </button>
+                  <div style={{ display: 'flex', gap: '0.5em', flexWrap: 'wrap' }}>
+                    {!['easybroker', 'mls'].includes(selectedSubscription.level?.toLowerCase()) && (
+                      <button onClick={() => { setSelectedNewLevel(''); setChangeLevelError(null); setShowChangeLevelModal(true); }}
+                        style={{ padding: '0.5em 1em', backgroundColor: '#007bff', color: 'white',
+                          border: 'none', borderRadius: '4px', cursor: 'pointer', fontSize: '0.85em', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.4em', whiteSpace: 'nowrap' }}>
+                        <span style={{ fontSize: '1em' }}>↕</span> {t('subscription.changeLevel')}
+                      </button>
+                    )}
+                    <button onClick={() => setShowCancelModal(true)}
+                      style={{ padding: '0.5em 1em', backgroundColor: '#dc3545', color: 'white',
+                        border: 'none', borderRadius: '4px', cursor: 'pointer', fontSize: '0.85em', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.4em', whiteSpace: 'nowrap' }}>
+                      <span style={{ fontSize: '1em' }}>✕</span> {t('subscription.cancelSubscription')}
+                    </button>
+                  </div>
                 )}
               </div>
 

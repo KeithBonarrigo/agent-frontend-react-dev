@@ -24,7 +24,13 @@
     },
     "cancelSubscription": "Cancelar Suscripción",
     "cancelImmediately": "Cancelar Inmediatamente",
-    "cancelAtPeriodEnd": "Cancelar al Final del Período"
+    "cancelAtPeriodEnd": "Cancelar al Final del Período",
+    "changeLevel": "Cambiar Plan",
+    "currentLevel": "Plan actual",
+    "selectNewLevel": "Seleccionar nuevo plan",
+    "selectLevel": "-- Selecciona un plan --",
+    "changeLevelInfo": "Cambiar tu plan prorrateará la facturación. Las mejoras tienen efecto inmediato. Las reducciones se aplican en tu próximo ciclo de facturación.",
+    "confirmChange": "Confirmar Cambio"
   },
   "agents": {
     "title": "Agentes",

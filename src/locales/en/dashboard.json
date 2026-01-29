@@ -24,7 +24,13 @@
     },
     "cancelSubscription": "Cancel Subscription",
     "cancelImmediately": "Cancel Immediately",
-    "cancelAtPeriodEnd": "Cancel at Period End"
+    "cancelAtPeriodEnd": "Cancel at Period End",
+    "changeLevel": "Change Plan",
+    "currentLevel": "Current plan",
+    "selectNewLevel": "Select new plan",
+    "selectLevel": "-- Select a plan --",
+    "changeLevelInfo": "Changing your plan will prorate the billing. Upgrades take effect immediately. Downgrades apply at your next billing cycle.",
+    "confirmChange": "Confirm Change"
   },
   "agents": {
     "title": "Agents",
