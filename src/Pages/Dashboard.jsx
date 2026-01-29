@@ -1407,21 +1407,23 @@ export default function Dashboard() {
                           </div>
                         </div>
 
-                        {/* MLS Token */}
-                        <div style={{ width: '220px' }}>
-                          <label style={{ display: 'block', marginBottom: '0.25em', fontWeight: '600', color: '#333', fontSize: '0.85em' }}>
-                            MLS Token
-                          </label>
-                          <input
-                            type="password"
-                            name="mls_token"
-                            value={agentEditForm.mls_token}
-                            onChange={handleAgentEditChange}
-                            placeholder="Enter MLS Token"
-                            autoComplete="off"
-                            style={{ width: '100%', padding: '0.5em', fontSize: '0.9em', border: '1px solid #ced4da', borderRadius: '4px', boxSizing: 'border-box' }}
-                          />
-                        </div>
+                        {/* MLS Token - Only show for MLS level */}
+                        {(selectedClient?.level === 'mls' || selectedClient?.subscription_level === 'mls') && (
+                          <div style={{ width: '220px' }}>
+                            <label style={{ display: 'block', marginBottom: '0.25em', fontWeight: '600', color: '#333', fontSize: '0.85em' }}>
+                              MLS Token
+                            </label>
+                            <input
+                              type="password"
+                              name="mls_token"
+                              value={agentEditForm.mls_token}
+                              onChange={handleAgentEditChange}
+                              placeholder="Enter MLS Token"
+                              autoComplete="off"
+                              style={{ width: '100%', padding: '0.5em', fontSize: '0.9em', border: '1px solid #ced4da', borderRadius: '4px', boxSizing: 'border-box' }}
+                            />
+                          </div>
+                        )}
                       </div>
 
                       {/* Office Address - Full Width */}
@@ -1585,7 +1587,7 @@ export default function Dashboard() {
                     {agentEditForm.office_wsp_phone && agentEditForm.office_wsp_phone !== agentEditForm.contact_phone && (
                       <span><strong style={{ color: '#666' }}>WhatsApp:</strong> {agentEditForm.office_wsp_phone}</span>
                     )}
-                    {agentEditForm.mls_token && (
+                    {agentEditForm.mls_token && (selectedClient?.level === 'mls' || selectedClient?.subscription_level === 'mls') && (
                       <span><strong style={{ color: '#666' }}>MLS:</strong> ••••••••</span>
                     )}
                     {(agentEditForm.office_address || agentEditForm.timezone) && (
