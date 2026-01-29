@@ -1056,7 +1056,7 @@ export default function SignupForm({ isOpen }) {
                 </div>
 
                 {/* Domain to Install Bot */}
-                <div className="home-form-group">
+                <div className="home-form-group" style={{ maxWidth: '50%' }}>
                   <label htmlFor="domain_to_install_bot" className="home-form-label">
                     Domain Where Agent Will Be Installed:<span style={requiredAsteriskStyle}>*</span>
                   </label>
