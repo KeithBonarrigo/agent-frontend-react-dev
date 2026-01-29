@@ -131,7 +131,7 @@ export default function IntegrationsTab({ user, clientId }) {
           </button>
         </div>
         <p style={{ fontSize: "0.9em", color: "#666", marginTop: "0.5em", textAlign: "center" }}>
-          Copy this code and paste it in the &lt;head&gt; section of your website.
+          Copy this code and paste it in the &lt;head&gt; section of your website at <strong style={{ color: '#007bff' }}>{user?.domain_to_install_bot || 'your domain'}</strong>.
         </p>
         <div style={{ textAlign: "center", marginTop: "1em" }}>
           <button
