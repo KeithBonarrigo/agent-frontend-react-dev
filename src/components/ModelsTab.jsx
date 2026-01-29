@@ -9,6 +9,10 @@ export default function ModelsTab({ user, clientId }) {
   const [success, setSuccess] = useState(false);
   const [fetchingCurrent, setFetchingCurrent] = useState(true);
 
+  // Check if user is on a specialty level (mls or easybroker) - hide model selection for these
+  const userLevel = (user?.subscription_level || user?.level || '').toLowerCase();
+  const isSpecialtyLevel = userLevel === 'mls' || userLevel === 'easybroker';
+
   // Debug logging
   useEffect(() => {
     console.log('===== ModelsTab DEBUG =====');
@@ -207,58 +211,60 @@ export default function ModelsTab({ user, clientId }) {
               </div>
             </div>
 
-            {/* Model Selection */}
-            <div style={{
-              flex: "1 1 280px",
-              padding: "20px",
-              backgroundColor: "#fff",
-              borderRadius: "8px",
-              border: "2px solid #dee2e6"
-            }}>
-              <label
-                htmlFor="model-select"
-                style={{
-                  display: "block",
-                  marginBottom: "8px",
-                  fontWeight: "600",
-                  color: "#333",
-                  fontSize: "14px"
-                }}
-              >
-                Select Model:
-              </label>
-              <select
-                id="model-select"
-                value={selectedModel}
-                onChange={(e) => setSelectedModel(e.target.value)}
-                style={{
-                  width: "100%",
-                  padding: "12px",
-                  fontSize: "14px",
-                  border: "1px solid #ced4da",
-                  borderRadius: "4px",
-                  backgroundColor: "white",
-                  cursor: "pointer",
-                  fontFamily: "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif"
-                }}
-              >
-                <option value="">-- Select a Model --</option>
+            {/* Model Selection - Hidden for specialty levels (mls, easybroker) */}
+            {!isSpecialtyLevel && (
+              <div style={{
+                flex: "1 1 280px",
+                padding: "20px",
+                backgroundColor: "#fff",
+                borderRadius: "8px",
+                border: "2px solid #dee2e6"
+              }}>
+                <label
+                  htmlFor="model-select"
+                  style={{
+                    display: "block",
+                    marginBottom: "8px",
+                    fontWeight: "600",
+                    color: "#333",
+                    fontSize: "14px"
+                  }}
+                >
+                  Select Model:
+                </label>
+                <select
+                  id="model-select"
+                  value={selectedModel}
+                  onChange={(e) => setSelectedModel(e.target.value)}
+                  style={{
+                    width: "100%",
+                    padding: "12px",
+                    fontSize: "14px",
+                    border: "1px solid #ced4da",
+                    borderRadius: "4px",
+                    backgroundColor: "white",
+                    cursor: "pointer",
+                    fontFamily: "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif"
+                  }}
+                >
+                  <option value="">-- Select a Model --</option>
 
-                <optgroup label="Claude (Anthropic)">
-                  <option value="claude-3-5-sonnet">claude-3-5-sonnet (Most Popular)</option>
-                  <option value="claude-3-7-sonnet">claude-3-7-sonnet (Newest - Sonnet 4)</option>
-                  <option value="claude-3-5-haiku">claude-3-5-haiku (Fast & Cheap)</option>
-                  <option value="claude-3-opus">claude-3-opus (Most Capable)</option>
-                </optgroup>
+                  <optgroup label="Claude (Anthropic)">
+                    <option value="claude-3-5-sonnet">claude-3-5-sonnet (Most Popular)</option>
+                    <option value="claude-3-7-sonnet">claude-3-7-sonnet (Newest - Sonnet 4)</option>
+                    <option value="claude-3-5-haiku">claude-3-5-haiku (Fast & Cheap)</option>
+                    <option value="claude-3-opus">claude-3-opus (Most Capable)</option>
+                  </optgroup>
 
-                <optgroup label="OpenAI">
-                  <option value="gpt-5">gpt-5</option>
-                  <option value="gpt-4-turbo">gpt-4-turbo</option>
-                  <option value="gpt-3.5-turbo-0125">gpt-3.5-turbo-0125</option>
-                <option value="gpt-3.5-turbo-1106">gpt-3.5-turbo-1106</option>
-              </optgroup>
-            </select>
-            </div>
+                  <optgroup label="OpenAI">
+                    <option value="gpt-5">gpt-5</option>
+                    <option value="gpt-4-turbo">gpt-4-turbo</option>
+                    <option value="gpt-3.5-turbo-0125">gpt-3.5-turbo-0125</option>
+                    <option value="gpt-3.5-turbo-1106">gpt-3.5-turbo-1106</option>
+                  </optgroup>
+                </select>
+              </div>
+            )}
           </div>
 
           {/* Error Message */}
@@ -291,63 +297,67 @@ export default function ModelsTab({ user, clientId }) {
             </div>
           )}
 
-          {/* Info Note */}
-          <div style={{
-            marginBottom: "20px",
-            padding: "12px",
-            backgroundColor: "#fff3cd",
-            borderRadius: "4px",
-            fontSize: "12px",
-            color: "#856404",
-            border: "1px solid #ffeeba",
-            textAlign: "center"
-          }}>
-            <strong>Note:</strong> Changing your model will affect all future conversations.
-            Your current conversations will not be affected.
-          </div>
+          {/* Info Note - Hidden for specialty levels */}
+          {!isSpecialtyLevel && (
+            <div style={{
+              marginBottom: "20px",
+              padding: "12px",
+              backgroundColor: "#fff3cd",
+              borderRadius: "4px",
+              fontSize: "12px",
+              color: "#856404",
+              border: "1px solid #ffeeba",
+              textAlign: "center"
+            }}>
+              <strong>Note:</strong> Changing your model will affect all future conversations.
+              Your current conversations will not be affected.
+            </div>
+          )}
 
-          {/* Buttons */}
-          <div style={{
-            display: "flex",
-            gap: "10px",
-            justifyContent: "flex-end"
-          }}>
-            <button
-              type="button"
-              onClick={handleCancel}
-              disabled={loading}
-              style={{
-                padding: "10px 20px",
-                backgroundColor: "#6c757d",
-                color: "white",
-                border: "none",
-                borderRadius: "4px",
-                cursor: loading ? "not-allowed" : "pointer",
-                fontSize: "14px",
-                fontWeight: "500",
-                opacity: loading ? 0.6 : 1
-              }}
-            >
-              Cancel
-            </button>
-            <button
-              type="submit"
-              disabled={loading || !selectedModel || isModelUnchanged()}
-              style={{
-                padding: "10px 20px",
-                backgroundColor: selectedModel && !isModelUnchanged() ? "#007bff" : "#6c757d",
-                color: "white",
-                border: "none",
-                borderRadius: "4px",
-                cursor: loading || !selectedModel || isModelUnchanged() ? "not-allowed" : "pointer",
-                fontSize: "14px",
-                fontWeight: "500",
-                opacity: loading || !selectedModel || isModelUnchanged() ? 0.6 : 1
-              }}
-            >
-              {loading ? "Updating..." : "Update Model"}
-            </button>
-          </div>
+          {/* Buttons - Hidden for specialty levels */}
+          {!isSpecialtyLevel && (
+            <div style={{
+              display: "flex",
+              gap: "10px",
+              justifyContent: "flex-end"
+            }}>
+              <button
+                type="button"
+                onClick={handleCancel}
+                disabled={loading}
+                style={{
+                  padding: "10px 20px",
+                  backgroundColor: "#6c757d",
+                  color: "white",
+                  border: "none",
+                  borderRadius: "4px",
+                  cursor: loading ? "not-allowed" : "pointer",
+                  fontSize: "14px",
+                  fontWeight: "500",
+                  opacity: loading ? 0.6 : 1
+                }}
+              >
+                Cancel
+              </button>
+              <button
+                type="submit"
+                disabled={loading || !selectedModel || isModelUnchanged()}
+                style={{
+                  padding: "10px 20px",
+                  backgroundColor: selectedModel && !isModelUnchanged() ? "#007bff" : "#6c757d",
+                  color: "white",
+                  border: "none",
+                  borderRadius: "4px",
+                  cursor: loading || !selectedModel || isModelUnchanged() ? "not-allowed" : "pointer",
+                  fontSize: "14px",
+                  fontWeight: "500",
+                  opacity: loading || !selectedModel || isModelUnchanged() ? 0.6 : 1
+                }}
+              >
+                {loading ? "Updating..." : "Update Model"}
+              </button>
+            </div>
+          )}
         </form>
       )}
     </div>

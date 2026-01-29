@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useUser } from '../contexts/UserContext';
-import { useDomain } from '../contexts/DomainContext';
 import { getApiUrl } from '../utils/getApiUrl';
 import ConfigurationsTab from '../components/ConfigurationsTab';
 import ModelsTab from '../components/ModelsTab';
@@ -15,12 +14,7 @@ import "../styles/Dashboard.css";
 export default function Dashboard() {
   const navigate = useNavigate();
   const { user, isLoggedIn, isLoading, logout } = useUser();
-  const { domainInfo } = useDomain();
   const [activeTab, setActiveTab] = useState('configurations');
-
-  // Check if subdomain is easybroker or mls (hide models tab for these)
-  const hostname = domainInfo?.hostname || '';
-  const isSpecialtyDomain = hostname.includes('easybroker') || hostname.includes('mls');
   const [tokenLimits, setTokenLimits] = useState(null);
   const [loadingLimits, setLoadingLimits] = useState(true);
   
@@ -1628,9 +1622,7 @@ export default function Dashboard() {
           <div style={{ display: 'flex', justifyContent: 'center', borderBottom: '2px solid #ddd', marginBottom: '0', flexWrap: 'wrap', backgroundColor: '#e9ecef' }}>
             <button className={`dashboard-tab ${activeTab === 'configurations' ? 'dashboard-tab-active' : ''}`} style={tabStyle(activeTab === 'configurations')} onClick={() => setActiveTab('configurations')}>⚙ Configurations</button>
             <button className={`dashboard-tab ${activeTab === 'training' ? 'dashboard-tab-active' : ''}`} style={tabStyle(activeTab === 'training')} onClick={() => setActiveTab('training')}>☰ Training</button>
-            {!isSpecialtyDomain && (
-              <button className={`dashboard-tab ${activeTab === 'models' ? 'dashboard-tab-active' : ''}`} style={tabStyle(activeTab === 'models')} onClick={() => setActiveTab('models')}>◈ Models</button>
-            )}
+            <button className={`dashboard-tab ${activeTab === 'models' ? 'dashboard-tab-active' : ''}`} style={tabStyle(activeTab === 'models')} onClick={() => setActiveTab('models')}>◈ Models</button>
             <button className={`dashboard-tab ${activeTab === 'addons' ? 'dashboard-tab-active' : ''}`} style={tabStyle(activeTab === 'addons')} onClick={() => setActiveTab('addons')}>⊕ Add-Ons</button>
             <button className={`dashboard-tab ${activeTab === 'integrations' ? 'dashboard-tab-active' : ''}`} style={tabStyle(activeTab === 'integrations')} onClick={() => setActiveTab('integrations')}>⇄ Integrations</button>
             <button className={`dashboard-tab ${activeTab === 'conversations' ? 'dashboard-tab-active' : ''}`} style={tabStyle(activeTab === 'conversations')} onClick={() => setActiveTab('conversations')}>◐ Conversations</button>
