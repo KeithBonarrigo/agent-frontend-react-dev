@@ -9,9 +9,10 @@ export default function ModelsTab({ user, clientId }) {
   const [success, setSuccess] = useState(false);
   const [fetchingCurrent, setFetchingCurrent] = useState(true);
 
-  // Check if user is on a specialty level (mls or easybroker) - hide model selection for these
+  // Check user level for different restrictions
   const userLevel = (user?.subscription_level || user?.level || '').toLowerCase();
   const isSpecialtyLevel = userLevel === 'mls' || userLevel === 'easybroker';
+  const isRestrictedLevel = userLevel === 'free' || userLevel === 'basic';
 
   // Debug logging
   useEffect(() => {
@@ -250,14 +251,22 @@ export default function ModelsTab({ user, clientId }) {
                   <option value="">-- Select a Model --</option>
 
                   <optgroup label="Claude (Anthropic)">
-                    <option value="claude-3-5-sonnet">claude-3-5-sonnet (Most Popular)</option>
-                    <option value="claude-3-7-sonnet">claude-3-7-sonnet (Newest - Sonnet 4)</option>
+                    <option value="claude-3-5-sonnet" disabled={isRestrictedLevel} style={isRestrictedLevel ? { color: '#999', fontStyle: 'italic' } : {}}>
+                      claude-3-5-sonnet (Most Popular){isRestrictedLevel ? ' 🔒' : ''}
+                    </option>
+                    <option value="claude-3-7-sonnet" disabled={isRestrictedLevel} style={isRestrictedLevel ? { color: '#999', fontStyle: 'italic' } : {}}>
+                      claude-3-7-sonnet (Newest - Sonnet 4){isRestrictedLevel ? ' 🔒' : ''}
+                    </option>
                     <option value="claude-3-5-haiku">claude-3-5-haiku (Fast & Cheap)</option>
-                    <option value="claude-3-opus">claude-3-opus (Most Capable)</option>
+                    <option value="claude-3-opus" disabled={isRestrictedLevel} style={isRestrictedLevel ? { color: '#999', fontStyle: 'italic' } : {}}>
+                      claude-3-opus (Most Capable){isRestrictedLevel ? ' 🔒' : ''}
+                    </option>
                   </optgroup>
 
                   <optgroup label="OpenAI">
-                    <option value="gpt-5">gpt-5</option>
+                    <option value="gpt-5" disabled={isRestrictedLevel} style={isRestrictedLevel ? { color: '#999', fontStyle: 'italic' } : {}}>
+                      gpt-5{isRestrictedLevel ? ' 🔒' : ''}
+                    </option>
                     <option value="gpt-4-turbo">gpt-4-turbo</option>
                     <option value="gpt-3.5-turbo-0125">gpt-3.5-turbo-0125</option>
                     <option value="gpt-3.5-turbo-1106">gpt-3.5-turbo-1106</option>
@@ -297,20 +306,29 @@ export default function ModelsTab({ user, clientId }) {
             </div>
           )}
 
-          {/* Info Note - Hidden for specialty levels */}
+          {/* Level-based Message Area - Hidden for specialty levels */}
           {!isSpecialtyLevel && (
             <div style={{
               marginBottom: "20px",
               padding: "12px",
-              backgroundColor: "#fff3cd",
+              backgroundColor: isRestrictedLevel ? "#e7f3ff" : "#fff3cd",
               borderRadius: "4px",
               fontSize: "12px",
-              color: "#856404",
-              border: "1px solid #ffeeba",
+              color: isRestrictedLevel ? "#0056b3" : "#856404",
+              border: isRestrictedLevel ? "1px solid #b8daff" : "1px solid #ffeeba",
               textAlign: "center"
             }}>
-              <strong>Note:</strong> Changing your model will affect all future conversations.
-              Your current conversations will not be affected.
+              {isRestrictedLevel ? (
+                <>
+                  <strong>🔒 Restricted Access:</strong> Free and Basic Services have restricted model selection.
+                  Consider upgrading your plan to unlock more models and conversations.
+                </>
+              ) : (
+                <>
+                  <strong>Note:</strong> Changing your model will affect all future conversations.
+                  Your current conversations will not be affected.
+                </>
+              )}
             </div>
           )}
 
