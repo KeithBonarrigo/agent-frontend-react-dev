@@ -69,7 +69,6 @@ export default function LanguageSelector({ fixed = false }) {
               borderRadius: '2px'
             }}
           />
-          <span style={{ fontSize: '13px' }}>{lang.name}</span>
         </button>
       ))}
     </div>

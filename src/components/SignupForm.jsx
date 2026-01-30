@@ -5,11 +5,12 @@ import { Elements } from "@stripe/react-stripe-js";
 import StripePaymentForm from "./StripePaymentForm";
 import { useDomain } from "../contexts/DomainContext";
 import { getApiUrl } from "../utils/getApiUrl";
+import "../styles/SignupForm.css";
 
 export default function SignupForm({ isOpen }) {
   const { t } = useTranslation('signup');
   // Get domain information from context
-  const { domainInfo, getTargetDomain } = useDomain();
+  const { domainInfo } = useDomain();
 
   // Debug logging for environment configuration
   useEffect(() => {
@@ -25,15 +26,8 @@ export default function SignupForm({ isOpen }) {
     console.log('🔧 ================================================');
   }, []);
 
-  const [isMobile, setIsMobile] = useState(window.innerWidth < 640);
   const [stripePromise, setStripePromise] = useState(null);
   const [subscriptionData, setSubscriptionData] = useState(null);
-  
-  useEffect(() => {
-    const onResize = () => setIsMobile(window.innerWidth < 640);
-    window.addEventListener("resize", onResize);
-    return () => window.removeEventListener("resize", onResize);
-  }, []);
 
   // Initialize Stripe - try local env var first, then fetch from backend
   useEffect(() => {
@@ -546,144 +540,64 @@ export default function SignupForm({ isOpen }) {
     setSubscriptionData(null);
   };
 
-  const requiredAsteriskStyle = { color: "#d11", marginLeft: "0px" };
-
-  const rowWrapStyle = {
-    display: "flex",
-    gap: isMobile ? "10px" : "16px",
-    flexDirection: isMobile ? "column" : "row",
-  };
-
   return (
     <>
       {/* Terms and Conditions Modal */}
       {showTermsModal && (
-        <div
-          style={{
-            position: "fixed",
-            top: 0,
-            left: 0,
-            right: 0,
-            bottom: 0,
-            backgroundColor: "rgba(0, 0, 0, 0.5)",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            zIndex: 10000,
-            padding: "20px"
-          }}
-          onClick={() => setShowTermsModal(false)}
-        >
-          <div
-            style={{
-              backgroundColor: "white",
-              borderRadius: "8px",
-              maxWidth: "600px",
-              width: "100%",
-              maxHeight: "80vh",
-              overflow: "auto",
-              boxShadow: "0 4px 20px rgba(0, 0, 0, 0.3)"
-            }}
-            onClick={(e) => e.stopPropagation()}
-          >
-            <div
-              style={{
-                background: "linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%)",
-                padding: "20px",
-                borderRadius: "8px 8px 0 0",
-                display: "flex",
-                justifyContent: "space-between",
-                alignItems: "center"
-              }}
-            >
-              <h2 style={{ margin: 0, color: "white", fontSize: "20px" }}>
-                Terms and Conditions
-              </h2>
-              <button
-                onClick={() => setShowTermsModal(false)}
-                style={{
-                  background: "transparent",
-                  border: "none",
-                  color: "white",
-                  fontSize: "28px",
-                  cursor: "pointer",
-                  padding: "0",
-                  width: "30px",
-                  height: "30px",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center"
-                }}
-              >
+        <div className="signup-modal-overlay" onClick={() => setShowTermsModal(false)}>
+          <div className="signup-modal-container" onClick={(e) => e.stopPropagation()}>
+            <div className="signup-modal-header">
+              <h2 className="signup-modal-title">Terms and Conditions</h2>
+              <button onClick={() => setShowTermsModal(false)} className="signup-modal-close">
                 ×
               </button>
             </div>
 
-            <div style={{ padding: "30px", lineHeight: "1.6" }}>
+            <div className="signup-modal-body">
               <p style={{ marginTop: 0 }}>
                 <strong>Here are the terms and conditions</strong>
               </p>
-              
+
               <p>
-                By using our service, you agree to these terms and conditions. 
+                By using our service, you agree to these terms and conditions.
                 Please read them carefully before proceeding.
               </p>
 
-              <h3 style={{ marginTop: "20px", color: "#1e3a8a" }}>1. Acceptance of Terms</h3>
+              <h3 className="signup-terms-heading">1. Acceptance of Terms</h3>
               <p>
-                By accessing and using this service, you accept and agree to be bound by the terms 
+                By accessing and using this service, you accept and agree to be bound by the terms
                 and provision of this agreement.
               </p>
 
-              <h3 style={{ marginTop: "20px", color: "#1e3a8a" }}>2. Use of Service</h3>
+              <h3 className="signup-terms-heading">2. Use of Service</h3>
               <p>
-                You agree to use this service only for lawful purposes and in accordance with 
+                You agree to use this service only for lawful purposes and in accordance with
                 these terms and conditions.
               </p>
 
-              <h3 style={{ marginTop: "20px", color: "#1e3a8a" }}>3. Privacy Policy</h3>
+              <h3 className="signup-terms-heading">3. Privacy Policy</h3>
               <p>
-                Your privacy is important to us. We are committed to protecting your personal 
+                Your privacy is important to us. We are committed to protecting your personal
                 information and your right to privacy.
               </p>
 
-              <h3 style={{ marginTop: "20px", color: "#1e3a8a" }}>4. Changes to Terms</h3>
+              <h3 className="signup-terms-heading">4. Changes to Terms</h3>
               <p>
-                We reserve the right to modify these terms at any time. You should check this 
+                We reserve the right to modify these terms at any time. You should check this
                 page regularly to take notice of any changes we make.
               </p>
 
-              <div style={{ marginTop: "30px", textAlign: "center" }}>
+              <div className="signup-terms-buttons">
                 <button
                   onClick={() => {
                     setTermsAccepted(true);
                     setShowTermsModal(false);
                   }}
-                  style={{
-                    padding: "12px 30px",
-                    backgroundColor: "#28a745",
-                    color: "white",
-                    border: "none",
-                    borderRadius: "4px",
-                    fontSize: "16px",
-                    cursor: "pointer",
-                    marginRight: "10px"
-                  }}
+                  className="signup-btn-accept"
                 >
                   I Accept
                 </button>
-                <button
-                  onClick={() => setShowTermsModal(false)}
-                  style={{
-                    padding: "12px 30px",
-                    backgroundColor: "#6c757d",
-                    color: "white",
-                    border: "none",
-                    borderRadius: "4px",
-                    fontSize: "16px",
-                    cursor: "pointer"
-                  }}
-                >
+                <button onClick={() => setShowTermsModal(false)} className="signup-btn-close">
                   Close
                 </button>
               </div>
@@ -694,92 +608,36 @@ export default function SignupForm({ isOpen }) {
 
       {/* Stripe Payment Modal - UPDATED FOR SUBSCRIPTIONS */}
       {showPaymentForm && clientSecret && stripePromise && (
-        <div
-          style={{
-            position: "fixed",
-            top: 0,
-            left: 0,
-            right: 0,
-            bottom: 0,
-            backgroundColor: "rgba(0, 0, 0, 0.5)",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            zIndex: 10000,
-            padding: "20px"
-          }}
-        >
-          <div
-            style={{
-              backgroundColor: "white",
-              borderRadius: "8px",
-              maxWidth: "500px",
-              width: "100%",
-              maxHeight: "90vh",
-              overflow: "auto",
-              boxShadow: "0 4px 20px rgba(0, 0, 0, 0.3)"
-            }}
-            onClick={(e) => e.stopPropagation()}
-          >
-            <div
-              style={{
-                background: "linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%)",
-                padding: "20px",
-                borderRadius: "8px 8px 0 0",
-                display: "flex",
-                justifyContent: "space-between",
-                alignItems: "center"
-              }}
-            >
-              <h2 style={{ margin: 0, color: "white", fontSize: "20px" }}>
-                Start Your Free Trial
-              </h2>
+        <div className="signup-modal-overlay">
+          <div className="signup-modal-container signup-modal-container-narrow" onClick={(e) => e.stopPropagation()}>
+            <div className="signup-modal-header">
+              <h2 className="signup-modal-title">Start Your Free Trial</h2>
               <button
                 onClick={() => {
                   setShowPaymentForm(false);
                   setSubscriptionData(null);
                   setAgentFormError("Payment cancelled");
                 }}
-                style={{
-                  background: "transparent",
-                  border: "none",
-                  color: "white",
-                  fontSize: "28px",
-                  cursor: "pointer",
-                  padding: "0",
-                  width: "30px",
-                  height: "30px",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center"
-                }}
+                className="signup-modal-close"
               >
                 ×
               </button>
             </div>
 
-            <div style={{ padding: "30px" }}>
-              <div style={{ marginBottom: "20px", textAlign: "center" }}>
-                <p style={{ margin: 0, fontSize: "14px", color: "#666" }}>
+            <div className="signup-modal-body">
+              <div className="signup-payment-info">
+                <p className="signup-payment-plan">
                   {pricingMap[agentForm.level].name} Plan
                 </p>
-                <p style={{ margin: "5px 0", fontSize: "32px", fontWeight: "bold", color: "#1e3a8a" }}>
+                <p className="signup-payment-price">
                   ${(pricingMap[agentForm.level].amount / 100).toFixed(2)}
-                  <span style={{ fontSize: "16px", fontWeight: "normal" }}>/month</span>
+                  <span className="signup-payment-price-period">/month</span>
                 </p>
-                
+
                 {/* Trial info banner */}
-                <div style={{
-                  background: "#e8f5e9",
-                  border: "1px solid #4caf50",
-                  borderRadius: "8px",
-                  padding: "12px",
-                  marginTop: "15px"
-                }}>
-                  <p style={{ margin: 0, color: "#2e7d32", fontWeight: "bold" }}>
-                    🎉 30-Day Free Trial
-                  </p>
-                  <p style={{ margin: "5px 0 0 0", color: "#666", fontSize: "13px" }}>
+                <div className="signup-trial-banner">
+                  <p className="signup-trial-title">🎉 30-Day Free Trial</p>
+                  <p className="signup-trial-text">
                     You won't be charged today. Your card will be charged after the trial ends.
                     Cancel anytime during the trial.
                   </p>
@@ -802,56 +660,21 @@ export default function SignupForm({ isOpen }) {
       {/* Signup Form */}
       <div
         id="agent-form"
-        style={{
-          marginTop: 0,
-          opacity: isOpen ? 1 : 0,
-          maxHeight: isOpen ? "5000px" : "0px",
-          overflow: "hidden",
-          transition: "opacity 1.2s ease-in-out, max-height 1.2s ease-in-out",
-          pointerEvents: isOpen ? "auto" : "none"
-        }}
+        className={`signup-form-wrapper ${isOpen ? 'open' : 'closed'}`}
       >
-        <form 
-          onSubmit={handleAgentFormSubmit} 
-          className="home-form" 
-          style={{ 
-            padding: 0,
-            borderRadius: "8px",
-            boxShadow: "0 2px 10px rgba(0, 0, 0, 0.1)",
-            overflow: "hidden"
-          }}
+        <form
+          onSubmit={handleAgentFormSubmit}
+          className="home-form signup-form-container"
         >
-          <div style={{
-            /* background: "linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%)", */
-            background: "linear-gradient(135deg, #15803d 0%, #22c55e 100%)",
-            padding: "20px 10px",
-            margin: 0
-          }}>
-            <h2 style={{ margin: 0, color: "white", textAlign: "center" }}>
-              {t('title')}
-            </h2>
+          <div className="signup-form-header">
+            <h2>{t('title')}</h2>
           </div>
 
-          <div style={{
-            background: "white",
-            padding: "10px 20px",
-            margin: 0,
-            borderBottom: "1px solid #ccc"
-          }}>
-            <p
-              style={{
-                marginTop: 0,
-                marginBottom: 0,
-                opacity: 0.85,
-                textAlign: "center",
-                color: "#333",
-                lineHeight: "1.3"
-              }}
-              dangerouslySetInnerHTML={{ __html: t('subtitle') }}
-            />
+          <div className="signup-form-subtitle">
+            <p dangerouslySetInnerHTML={{ __html: t('subtitle') }} />
           </div>
 
-          <div style={{ padding: "30px", background: "#f9f9f9" }}>
+          <div className="signup-form-body">
             <div
               id="agent-collapsible"
               className="agent-collapsible open"
@@ -859,8 +682,8 @@ export default function SignupForm({ isOpen }) {
             >
               <div ref={agentFormInnerRef}>
                 {/* Agent Name and Company Row */}
-                <div style={rowWrapStyle}>
-                  <div className="home-form-group" style={{ flex: 1 }}>
+                <div className="signup-form-row">
+                  <div className="home-form-group">
                     <label htmlFor="agent_name" className="home-form-label">
                       {t('form.agentName')}:
                     </label>
@@ -875,7 +698,7 @@ export default function SignupForm({ isOpen }) {
                     />
                   </div>
 
-                  <div className="home-form-group" style={{ flex: 1 }}>
+                  <div className="home-form-group">
                     <label htmlFor="company" className="home-form-label">
                       {t('form.company')}:
                     </label>
@@ -891,8 +714,8 @@ export default function SignupForm({ isOpen }) {
                   </div>
                 </div>
 
-                <div style={rowWrapStyle}>
-                  <div className="home-form-group" style={{ flex: 1 }}>
+                <div className="signup-form-row">
+                  <div className="home-form-group">
                     <label htmlFor="first_name" className="home-form-label">
                       {t('form.firstName')}:
                     </label>
@@ -906,7 +729,7 @@ export default function SignupForm({ isOpen }) {
                     />
                   </div>
 
-                  <div className="home-form-group" style={{ flex: 1 }}>
+                  <div className="home-form-group">
                     <label htmlFor="last_name" className="home-form-label">
                       {t('form.lastName')}:
                     </label>
@@ -921,10 +744,10 @@ export default function SignupForm({ isOpen }) {
                   </div>
                 </div>
 
-                <div style={rowWrapStyle}>
-                  <div className="home-form-group" style={{ flex: 1 }}>
+                <div className="signup-form-row">
+                  <div className="home-form-group">
                     <label htmlFor="contact_email" className="home-form-label">
-                      {t('form.email')}: <span style={requiredAsteriskStyle}>*</span>
+                      {t('form.email')}: <span className="signup-required">*</span>
                     </label>
                     <input
                       type="email"
@@ -934,38 +757,23 @@ export default function SignupForm({ isOpen }) {
                       value={agentForm.contact_email}
                       onChange={handleAgentFormChange}
                       onBlur={(e) => checkEmailExists(e.target.value)}
-                      className="home-form-input"
+                      className={`home-form-input ${emailExists ? 'signup-email-error' : ''}`}
                       autoComplete="email"
-                      style={emailExists ? { borderColor: '#d11' } : {}}
                     />
                     {checkingEmail && (
-                      <p style={{ 
-                        color: '#666', 
-                        fontSize: '13px', 
-                        marginTop: '5px',
-                        marginBottom: 0 
-                      }}>
-                        Checking email...
-                      </p>
+                      <p className="signup-email-checking">Checking email...</p>
                     )}
                     {emailExists && (
-                      <p style={{ 
-                        color: '#d11', 
-                        fontSize: '13px', 
-                        marginTop: '5px',
-                        marginBottom: 0 
-                      }}>
+                      <p className="signup-email-exists">
                         This email is already registered.{' '}
-                        <a href="/login" style={{ color: '#1e3a8a', textDecoration: 'underline' }}>
-                          Log in here
-                        </a>
+                        <a href="/login">Log in here</a>
                       </p>
                     )}
                   </div>
 
-                  <div className="home-form-group" style={{ flex: 1 }}>
+                  <div className="home-form-group">
                     <label htmlFor="confirm_contact_email" className="home-form-label">
-                      {t('form.confirmEmail')}: <span style={requiredAsteriskStyle}>*</span>
+                      {t('form.confirmEmail')}: <span className="signup-required">*</span>
                     </label>
                     <input
                       type="email"
@@ -980,10 +788,10 @@ export default function SignupForm({ isOpen }) {
                   </div>
                 </div>
 
-                <div style={rowWrapStyle}>
-                  <div className="home-form-group" style={{ flex: 1 }}>
+                <div className="signup-form-row">
+                  <div className="home-form-group">
                     <label htmlFor="password" className="home-form-label">
-                      {t('form.password')}: <span style={requiredAsteriskStyle}>*</span>
+                      {t('form.password')}: <span className="signup-required">*</span>
                     </label>
                     <input
                       type="password"
@@ -997,9 +805,9 @@ export default function SignupForm({ isOpen }) {
                     />
                   </div>
 
-                  <div className="home-form-group" style={{ flex: 1 }}>
+                  <div className="home-form-group">
                     <label htmlFor="confirm_password" className="home-form-label">
-                      {t('form.confirmPassword')}: <span style={requiredAsteriskStyle}>*</span>
+                      {t('form.confirmPassword')}: <span className="signup-required">*</span>
                     </label>
                     <input
                       type="password"
@@ -1014,8 +822,8 @@ export default function SignupForm({ isOpen }) {
                   </div>
                 </div>
 
-                <div style={rowWrapStyle}>
-                  <div className="home-form-group" style={{ flex: 1 }}>
+                <div className="signup-form-row">
+                  <div className="home-form-group">
                     <label htmlFor="contact_phone" className="home-form-label">
                       {t('form.phone')}:
                     </label>
@@ -1029,9 +837,9 @@ export default function SignupForm({ isOpen }) {
                     />
                   </div>
 
-                  <div className="home-form-group" style={{ flex: 1 }}>
+                  <div className="home-form-group">
                     <label htmlFor="level" className="home-form-label">
-                      {t('form.serviceLevel')}:<span style={requiredAsteriskStyle}>*</span>
+                      {t('form.serviceLevel')}:<span className="signup-required">*</span>
                     </label>
                     <select
                       id="level"
@@ -1052,9 +860,9 @@ export default function SignupForm({ isOpen }) {
                 </div>
 
                 {/* Domain to Install Bot */}
-                <div className="home-form-group" style={{ maxWidth: '50%', margin: '0 auto' }}>
+                <div className="home-form-group signup-domain-field">
                   <label htmlFor="domain_to_install_bot" className="home-form-label">
-                    {t('form.domainToInstall')}:<span style={requiredAsteriskStyle}>*</span>
+                    {t('form.domainToInstall')}:<span className="signup-required">*</span>
                   </label>
                   <input
                     type="text"
@@ -1069,91 +877,45 @@ export default function SignupForm({ isOpen }) {
                 </div>
 
                 {/* WhatsApp and Terms checkboxes - centered row */}
-                <div
-                  style={{
-                    display: "flex",
-                    flexDirection: "column",
-                    alignItems: "center",
-                    gap: "10px",
-                    marginTop: "10px",
-                    marginBottom: "10px",
-                  }}
-                >
-                  <div
-                    style={{
-                      display: "flex",
-                      justifyContent: "center",
-                      alignItems: "center",
-                      gap: "30px",
-                      flexWrap: "wrap",
-                    }}
-                  >
-                  <div
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      gap: "8px",
-                    }}
-                  >
-                    <input
-                      type="checkbox"
-                      id="contact_phone_wsp"
-                      name="contact_phone_wsp"
-                      checked={agentForm.contact_phone_wsp}
-                      onChange={handleAgentFormChange}
-                    />
-                    <label
-                      htmlFor="contact_phone_wsp"
-                      className="home-form-label"
-                      style={{ margin: 0, whiteSpace: "nowrap", fontWeight: "normal" }}
-                    >
-                      This phone is WhatsApp-enabled
-                    </label>
-                  </div>
-
-                  <div
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      gap: "8px",
-                    }}
-                  >
-                    <input
-                      type="checkbox"
-                      id="terms_accepted"
-                      checked={termsAccepted}
-                      onChange={(e) => setTermsAccepted(e.target.checked)}
-                      style={{
-                        cursor: "pointer"
-                      }}
-                    />
-                    <label
-                      htmlFor="terms_accepted"
-                      style={{
-                        margin: 0,
-                        cursor: "pointer",
-                        fontSize: "14px",
-                        color: "#333"
-                      }}
-                    >
-                      I agree to all{" "}
-                      <span
-                        onClick={(e) => {
-                          e.preventDefault();
-                          setShowTermsModal(true);
-                        }}
-                        style={{
-                          color: "#1e3a8a",
-                          textDecoration: "underline",
-                          cursor: "pointer",
-                          fontWeight: "500"
-                        }}
+                <div className="signup-checkbox-container">
+                  <div className="signup-checkbox-row">
+                    <div className="signup-checkbox-item">
+                      <input
+                        type="checkbox"
+                        id="contact_phone_wsp"
+                        name="contact_phone_wsp"
+                        checked={agentForm.contact_phone_wsp}
+                        onChange={handleAgentFormChange}
+                      />
+                      <label
+                        htmlFor="contact_phone_wsp"
+                        className="home-form-label signup-checkbox-label-inline"
                       >
-                        Terms and Conditions
-                      </span>
-                      <span style={requiredAsteriskStyle}> *</span>
-                    </label>
-                  </div>
+                        This phone is WhatsApp-enabled
+                      </label>
+                    </div>
+
+                    <div className="signup-checkbox-item">
+                      <input
+                        type="checkbox"
+                        id="terms_accepted"
+                        checked={termsAccepted}
+                        onChange={(e) => setTermsAccepted(e.target.checked)}
+                      />
+                      <label htmlFor="terms_accepted" className="signup-checkbox-label">
+                        I agree to all{" "}
+                        <span
+                          onClick={(e) => {
+                            e.preventDefault();
+                            setShowTermsModal(true);
+                          }}
+                          className="signup-terms-link"
+                        >
+                          Terms and Conditions
+                        </span>
+                        <span className="signup-required"> *</span>
+                      </label>
+                    </div>
                   </div>
                 </div>
 
@@ -1163,44 +925,24 @@ export default function SignupForm({ isOpen }) {
                   value={agentForm.item}
                 />
 
-                <div style={{ minHeight: "60px", marginTop: "10px" }}>
+                <div className="signup-messages">
                   {agentFormError && <p className="home-form-error">{agentFormError}</p>}
                   {agentFormSuccess && (
                     <p className="home-form-success">
-                      ✅ Account created successfully! 
+                      ✅ Account created successfully!
                     </p>
                   )}
                   {showLoginLink && (
-                    <p style={{ textAlign: "center", marginTop: "10px" }}>
-                      <a 
-                        href="/login" 
-                        style={{ 
-                          color: '#310956', 
-                          textDecoration: 'underline',
-                          fontWeight: 'bold',
-                          fontSize: '16px'
-                        }}
-                      >
-                        Click here to log in
-                      </a>
+                    <p className="signup-login-link">
+                      <a href="/login">Click here to log in</a>
                     </p>
                   )}
                 </div>
 
-                <div style={{ display: "flex", justifyContent: "center", marginTop: "10px" }}>
-                  <button 
+                <div className="signup-submit-container">
+                  <button
                     type="submit"
-                    className="home-btn home-btn-green"
-                    style={{
-                      border: "none",
-                      outline: "none",
-                      padding: "12px 30px",
-                      fontSize: "16px",
-                      whiteSpace: "nowrap",
-                      display: "inline-flex",
-                      justifyContent: "center",
-                      alignItems: "center"
-                    }}
+                    className="home-btn home-btn-green signup-submit-btn"
                     disabled={emailExists || checkingEmail}
                   >
                     {agentForm.level === "free" ? t('buttons.letsGo') : t('buttons.startFreeTrial')}

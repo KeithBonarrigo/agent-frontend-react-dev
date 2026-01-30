@@ -1003,26 +1003,6 @@ export default function Dashboard() {
     return colors[level?.toLowerCase()] || '#6c757d';
   };
 
-  const getStatusColor = (status) => {
-    const colors = {
-      active: '#28a745',
-      trialing: '#17a2b8',
-      past_due: '#ffc107',
-      cancelled: '#dc3545'
-    };
-    return colors[status] || '#6c757d';
-  };
-
-  const getUsagePercentage = (used, limit) => {
-    if (!limit) return 0;
-    return Math.min((used / limit) * 100, 100);
-  };
-
-  const getUsageColor = (percentage) => {
-    if (percentage < 50) return '#28a745';
-    if (percentage < 80) return '#ffc107';
-    return '#dc3545';
-  };
 
   const getClientDisplayName = (client) => {
     return client.agent_name || client.company || `Agent ${client.item || client.clientid}`;
@@ -1034,87 +1014,52 @@ export default function Dashboard() {
     return `${levelName}${typeLabel}`;
   };
 
-  // Styles
-  const tabStyle = (isActive) => ({
-    padding: '12px 24px',
-    backgroundColor: isActive ? '#007bff' : '#fff',
-    color: isActive ? 'white' : '#333',
-    border: 'none',
-    outline: 'none',
-    borderRadius: '4px 4px 0 0',
-    cursor: 'pointer',
-    fontSize: '16px',
-    fontWeight: isActive ? 'bold' : 'normal',
-    marginRight: '4px',
-    marginBottom: '-2px'
-  });
-
-  const inputStyle = {
-    width: '100%',
-    padding: '12px',
-    fontSize: '14px',
-    border: '1px solid #ddd',
-    borderRadius: '4px',
-    boxSizing: 'border-box'
-  };
 
   if (isLoading) {
-    return <div style={{ padding: "2em", textAlign: "center" }}><p>Loading...</p></div>;
+    return <div className="dashboard-loading"><p>Loading...</p></div>;
   }
 
   if (!isLoggedIn || !user) return null;
 
   return (
-    <div style={{ padding: "2em", maxWidth: "1200px", margin: "0 auto" }}>
+    <div className="dashboard-container">
       {/* Cancel Modal */}
       {showCancelModal && selectedSubscription && (
-        <div style={{
-          position: 'fixed', top: 0, left: 0, right: 0, bottom: 0,
-          backgroundColor: 'rgba(0,0,0,0.5)', display: 'flex',
-          alignItems: 'center', justifyContent: 'center', zIndex: 10000, padding: '20px'
-        }} onClick={() => setShowCancelModal(false)}>
-          <div style={{
-            backgroundColor: 'white', borderRadius: '8px', maxWidth: '500px', width: '100%'
-          }} onClick={(e) => e.stopPropagation()}>
-            <div style={{
-              background: 'linear-gradient(135deg, #dc3545 0%, #c82333 100%)',
-              padding: '20px', borderRadius: '8px 8px 0 0'
-            }}>
-              <h2 style={{ margin: 0, color: 'white' }}>Cancel {getSubscriptionDisplayName(selectedSubscription)}</h2>
+        <div className="modal-overlay" onClick={() => setShowCancelModal(false)}>
+          <div className="modal-container" onClick={(e) => e.stopPropagation()}>
+            <div className="modal-header modal-header-danger">
+              <h2 className="modal-title">Cancel {getSubscriptionDisplayName(selectedSubscription)}</h2>
             </div>
-            <div style={{ padding: '30px' }}>
-              <p>This will cancel your <strong>{selectedSubscription.level}</strong> subscription 
+            <div className="modal-body">
+              <p>This will cancel your <strong>{selectedSubscription.level}</strong> subscription
                  and all {agentsInSubscription.length} agent(s) under it.</p>
-              
-              <div style={{ backgroundColor: '#fff3cd', border: '1px solid #ffc107', borderRadius: '8px', padding: '15px', marginBottom: '20px' }}>
-                <p style={{ margin: 0, color: '#856404', fontSize: '14px' }}>
+
+              <div className="alert alert-warning">
+                <p>
                   <strong>Cancel at period end:</strong> Keep access until billing period ends.
                 </p>
               </div>
-              
-              <div style={{ backgroundColor: '#f8d7da', border: '1px solid #f5c6cb', borderRadius: '8px', padding: '15px', marginBottom: '20px' }}>
-                <p style={{ margin: 0, color: '#721c24', fontSize: '14px' }}>
+
+              <div className="alert alert-danger">
+                <p>
                   <strong>Cancel immediately:</strong> Access ends now. No refunds.
                 </p>
               </div>
-              
-              {cancelError && <p style={{ color: '#dc3545' }}>❌ {cancelError}</p>}
-              
-              <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
+
+              {cancelError && <p className="error-text">❌ {cancelError}</p>}
+
+              <div className="flex gap-sm flex-wrap">
                 <button onClick={() => handleCancelSubscription(false)} disabled={cancelLoading}
-                  style={{ flex: 1, padding: '12px', backgroundColor: cancelLoading ? '#ccc' : '#ffc107',
-                    color: '#000', border: 'none', borderRadius: '4px', fontWeight: 'bold', cursor: cancelLoading ? 'not-allowed' : 'pointer' }}>
+                  className={`btn btn-flex ${cancelLoading ? '' : 'btn-warning'}`}>
                   {cancelLoading ? 'Processing...' : 'Cancel at Period End'}
                 </button>
                 <button onClick={() => handleCancelSubscription(true)} disabled={cancelLoading}
-                  style={{ flex: 1, padding: '12px', backgroundColor: cancelLoading ? '#ccc' : '#dc3545',
-                    color: 'white', border: 'none', borderRadius: '4px', fontWeight: 'bold', cursor: cancelLoading ? 'not-allowed' : 'pointer' }}>
+                  className={`btn btn-flex ${cancelLoading ? '' : 'btn-danger'}`}>
                   {cancelLoading ? 'Processing...' : 'Cancel Immediately'}
                 </button>
               </div>
               <button onClick={() => setShowCancelModal(false)}
-                style={{ width: '100%', padding: '12px', marginTop: '10px', backgroundColor: 'transparent',
-                  color: '#666', border: '1px solid #ddd', borderRadius: '4px', cursor: 'pointer' }}>
+                className="btn btn-secondary btn-full mt-sm">
                 Keep Subscription
               </button>
             </div>
@@ -1124,37 +1069,26 @@ export default function Dashboard() {
 
       {/* Change Level Modal */}
       {showChangeLevelModal && selectedSubscription && (
-        <div style={{
-          position: 'fixed', top: 0, left: 0, right: 0, bottom: 0,
-          backgroundColor: 'rgba(0,0,0,0.5)', display: 'flex',
-          alignItems: 'center', justifyContent: 'center', zIndex: 10000, padding: '20px'
-        }} onClick={() => setShowChangeLevelModal(false)}>
-          <div style={{
-            backgroundColor: 'white', borderRadius: '8px', maxWidth: '500px', width: '100%'
-          }} onClick={(e) => e.stopPropagation()}>
-            <div style={{
-              background: 'linear-gradient(135deg, #007bff 0%, #0056b3 100%)',
-              padding: '20px', borderRadius: '8px 8px 0 0'
-            }}>
-              <h2 style={{ margin: 0, color: 'white' }}>{t('subscription.changeLevel')}</h2>
-              <p style={{ margin: '8px 0 0 0', color: 'rgba(255,255,255,0.8)', fontSize: '14px' }}>
+        <div className="modal-overlay" onClick={() => setShowChangeLevelModal(false)}>
+          <div className="modal-container" onClick={(e) => e.stopPropagation()}>
+            <div className="modal-header modal-header-primary">
+              <h2 className="modal-title">{t('subscription.changeLevel')}</h2>
+              <p className="modal-subtitle">
                 {t('subscription.currentLevel')}: <strong>{selectedSubscription.level?.charAt(0).toUpperCase() + selectedSubscription.level?.slice(1)}</strong>
               </p>
             </div>
-            <div style={{ padding: '30px' }}>
-              <div style={{ backgroundColor: '#e7f3ff', border: '1px solid #b3d7ff', borderRadius: '8px', padding: '15px', marginBottom: '20px' }}>
-                <p style={{ margin: 0, color: '#0056b3', fontSize: '14px' }}>
-                  {t('subscription.changeLevelInfo')}
-                </p>
+            <div className="modal-body">
+              <div className="alert alert-info">
+                <p>{t('subscription.changeLevelInfo')}</p>
               </div>
 
-              <label style={{ display: 'block', marginBottom: '8px', fontWeight: 'bold' }}>
+              <label className="form-label mb-md">
                 {t('subscription.selectNewLevel')}:
               </label>
               <select
                 value={selectedNewLevel}
                 onChange={(e) => setSelectedNewLevel(e.target.value)}
-                style={{ width: '100%', padding: '12px', fontSize: '14px', borderRadius: '4px', border: '1px solid #ddd', marginBottom: '20px' }}
+                className="form-input mb-md"
               >
                 <option value="">{t('subscription.selectLevel')}</option>
                 <option value="basic" disabled={selectedSubscription.level === 'basic'}>Basic - $29/month</option>
@@ -1162,19 +1096,16 @@ export default function Dashboard() {
                 <option value="enterprise" disabled={selectedSubscription.level === 'enterprise'}>Enterprise - $199/month</option>
               </select>
 
-              {changeLevelError && <p style={{ color: '#dc3545', marginBottom: '15px' }}>❌ {changeLevelError}</p>}
-              {changeLevelSuccess && <p style={{ color: '#28a745', marginBottom: '15px' }}>✅ {changeLevelSuccess}</p>}
+              {changeLevelError && <p className="error-text mb-md">❌ {changeLevelError}</p>}
+              {changeLevelSuccess && <p className="success-text mb-md">✅ {changeLevelSuccess}</p>}
 
-              <div style={{ display: 'flex', gap: '10px' }}>
+              <div className="flex gap-sm">
                 <button onClick={() => setShowChangeLevelModal(false)}
-                  style={{ flex: 1, padding: '12px', backgroundColor: 'transparent',
-                    color: '#666', border: '1px solid #ddd', borderRadius: '4px', cursor: 'pointer' }}>
+                  className="btn btn-secondary btn-flex">
                   {t('common:buttons.cancel')}
                 </button>
                 <button onClick={handleChangeLevel} disabled={changeLevelLoading || !selectedNewLevel}
-                  style={{ flex: 2, padding: '12px', backgroundColor: (changeLevelLoading || !selectedNewLevel) ? '#ccc' : '#007bff',
-                    color: 'white', border: 'none', borderRadius: '4px', fontWeight: 'bold',
-                    cursor: (changeLevelLoading || !selectedNewLevel) ? 'not-allowed' : 'pointer' }}>
+                  className={`btn btn-flex-2 ${(changeLevelLoading || !selectedNewLevel) ? '' : 'btn-primary'}`}>
                   {changeLevelLoading ? t('common:buttons.loading') : t('subscription.confirmChange')}
                 </button>
               </div>
@@ -1185,69 +1116,54 @@ export default function Dashboard() {
 
       {/* New Agent Modal */}
       {showNewAgentModal && (
-        <div style={{
-          position: 'fixed', top: 0, left: 0, right: 0, bottom: 0,
-          backgroundColor: 'rgba(0,0,0,0.5)', display: 'flex',
-          alignItems: 'center', justifyContent: 'center', zIndex: 10000, padding: '20px'
-        }} onClick={() => setShowNewAgentModal(false)}>
-          <div style={{
-            backgroundColor: 'white', borderRadius: '8px', maxWidth: '500px', width: '100%'
-          }} onClick={(e) => e.stopPropagation()}>
-            <div style={{
-              background: 'linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%)',
-              padding: '20px', borderRadius: '8px 8px 0 0'
-            }}>
-              <h2 style={{ margin: 0, color: 'white' }}>Create New Agent</h2>
-              <p style={{ margin: '8px 0 0 0', color: 'rgba(255,255,255,0.8)', fontSize: '14px' }}>
+        <div className="modal-overlay" onClick={() => setShowNewAgentModal(false)}>
+          <div className="modal-container" onClick={(e) => e.stopPropagation()}>
+            <div className="modal-header modal-header-success">
+              <h2 className="modal-title">Create New Agent</h2>
+              <p className="modal-subtitle">
                 Adding to: <strong>{selectedSubscription ? getSubscriptionDisplayName(selectedSubscription) : ''}</strong>
               </p>
             </div>
-            <form onSubmit={handleCreateAgent} style={{ padding: '30px' }}>
-              <div style={{ backgroundColor: '#e7f3ff', border: '1px solid #b3d7ff', borderRadius: '8px', padding: '15px', marginBottom: '24px' }}>
-                <p style={{ margin: 0, color: '#0056b3', fontSize: '14px' }}>
-                  💡 Token usage will count toward this subscription's limit 
+            <form onSubmit={handleCreateAgent} className="modal-body">
+              <div className="alert alert-info">
+                <p>
+                  💡 Token usage will count toward this subscription's limit
                   ({selectedSubscription?.token_limit ? formatNumber(selectedSubscription.token_limit) : 'Unlimited'} tokens)
                 </p>
               </div>
-              
-              <div style={{ marginBottom: '20px' }}>
-                <label style={{ display: 'block', marginBottom: '6px', fontWeight: 'bold' }}>
-                  Agent Name <span style={{ color: '#dc3545' }}>*</span>
+
+              <div className="form-group">
+                <label className="form-label">
+                  Agent Name <span className="error-text">*</span>
                 </label>
                 <input type="text" value={newAgentForm.name}
                   onChange={(e) => setNewAgentForm(prev => ({ ...prev, name: e.target.value }))}
-                  placeholder="e.g., My Sales Bot" style={inputStyle} required />
+                  placeholder="e.g., My Sales Bot" className="form-input" required />
               </div>
-              
-              <div style={{ marginBottom: '24px' }}>
-                <label style={{ display: 'block', marginBottom: '6px', fontWeight: 'bold' }}>
-                  Company <span style={{ color: '#999', fontWeight: 'normal' }}>(optional)</span>
+
+              <div className="form-group">
+                <label className="form-label">
+                  Company <span className="text-muted" style={{ fontWeight: 'normal' }}>(optional)</span>
                 </label>
                 <input type="text" value={newAgentForm.company}
                   onChange={(e) => setNewAgentForm(prev => ({ ...prev, company: e.target.value }))}
-                  placeholder="e.g., Acme Inc" style={inputStyle} />
+                  placeholder="e.g., Acme Inc" className="form-input" />
               </div>
-              
+
               {newAgentError && (
-                <div style={{ backgroundColor: '#f8d7da', border: '1px solid #f5c6cb', borderRadius: '8px', padding: '12px', marginBottom: '16px', color: '#721c24' }}>
-                  ❌ {newAgentError}
-                </div>
+                <div className="alert alert-danger">❌ {newAgentError}</div>
               )}
               {newAgentSuccess && (
-                <div style={{ backgroundColor: '#d4edda', border: '1px solid #c3e6cb', borderRadius: '8px', padding: '12px', marginBottom: '16px', color: '#155724' }}>
-                  ✅ {newAgentSuccess}
-                </div>
+                <div className="alert alert-success">✅ {newAgentSuccess}</div>
               )}
-              
-              <div style={{ display: 'flex', gap: '12px' }}>
+
+              <div className="flex gap-md">
                 <button type="button" onClick={() => setShowNewAgentModal(false)}
-                  style={{ flex: 1, padding: '12px', backgroundColor: 'transparent', color: '#666', border: '1px solid #ddd', borderRadius: '4px', cursor: 'pointer' }}>
+                  className="btn btn-secondary btn-flex">
                   Cancel
                 </button>
                 <button type="submit" disabled={newAgentLoading || !newAgentForm.name.trim()}
-                  style={{ flex: 2, padding: '12px', backgroundColor: newAgentLoading ? '#ccc' : '#28a745',
-                    color: 'white', border: 'none', borderRadius: '4px', fontWeight: 'bold',
-                    cursor: newAgentLoading ? 'not-allowed' : 'pointer' }}>
+                  className={`btn btn-flex-2 ${newAgentLoading ? '' : 'btn-success'}`}>
                   {newAgentLoading ? 'Creating...' : 'Create Agent'}
                 </button>
               </div>
@@ -1257,42 +1173,34 @@ export default function Dashboard() {
       )}
 
       {/* Combined Subscription Selector, Details & Agent Selector */}
-      <div style={{ backgroundColor: '#fff', borderRadius: '8px', marginBottom: '1.5em', border: '1px solid #dee2e6', overflow: 'hidden', boxShadow: '0 2px 8px rgba(0, 0, 0, 0.08)' }}>
+      <div className="card" style={{ marginBottom: '1.5em' }}>
         {/* Header with Dashboard Title, Welcome Message, and Logout */}
-        <div style={{
-          padding: '1em 1.5em',
-          background: 'linear-gradient(135deg, #34495e 0%, #2c3e50 50%, #1a252f 100%)',
-          borderBottom: '1px solid rgb(44, 62, 80)'
-        }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1em' }}>
+        <div className="subscription-header" style={{ borderBottom: '1px solid rgb(44, 62, 80)' }}>
+          <div className="flex flex-between flex-align-center flex-wrap gap-md">
             <div>
-              <h1 style={{ margin: 0, color: '#fff', fontSize: '2.25em', textAlign: 'left' }}>{t('title')}</h1>
-              <p style={{ margin: '0.25em 0 0 0', color: '#bdc3c7', fontSize: '0.9em' }}>
+              <h1 className="subscription-title">{t('title')}</h1>
+              <p className="subscription-welcome">
                 Welcome, {user.first_name || 'User'} {user.last_name || ''} ({user.email})
               </p>
             </div>
-            <button onClick={handleLogout}
-              style={{ padding: "0.5em 1.5em", backgroundColor: "#dc3545", color: "white", border: "none", borderRadius: "4px", cursor: "pointer", display: "flex", alignItems: "center", gap: "0.5em" }}>
-              <span style={{ fontSize: "1.1em" }}>↩</span> {t('logout')}
+            <button onClick={handleLogout} className="btn btn-danger btn-sm btn-icon">
+              <span>↩</span> {t('logout')}
             </button>
           </div>
         </div>
 
         {/* Subscription Selector */}
-        <div style={{
-          padding: '1em 1.5em',
-          background: 'linear-gradient(135deg, #34495e 0%, #2c3e50 50%, #1a252f 100%)'
-        }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '1em', flexWrap: 'wrap' }}>
-            <h3 style={{ margin: 0, color: '#fff' }}>{t('subscription.title')}:</h3>
+        <div className="subscription-header">
+          <div className="flex flex-align-center gap-md flex-wrap">
+            <h3 className="m-0 text-white">{t('subscription.title')}:</h3>
 
             {loadingData ? (
-              <span style={{ color: '#ecf0f1' }}>Loading...</span>
+              <span className="text-white">Loading...</span>
             ) : subscriptions.length === 0 ? (
-              <span style={{ color: '#e74c3c' }}>{t('subscription.noSubscriptions')}</span>
+              <span className="error-text">{t('subscription.noSubscriptions')}</span>
             ) : (
               <select value={selectedSubscriptionId || ''} onChange={handleSubscriptionChange}
-                style={{ padding: '0.5em 1em', fontSize: '1em', borderRadius: '4px', border: '1px solid #dee2e6', backgroundColor: 'white', minWidth: '250px', cursor: 'pointer' }}>
+                className="form-select" style={{ width: 'auto', minWidth: '250px', maxWidth: '400px' }}>
                 {subscriptions.map((sub) => (
                   <option key={sub.subscriptionid} value={sub.subscriptionid}>
                     {getSubscriptionDisplayName(sub)} - {sub.agent_count || 0} agent(s)
@@ -1301,7 +1209,7 @@ export default function Dashboard() {
               </select>
             )}
 
-            <span style={{ color: '#fff', fontSize: '0.85em', marginLeft: 'auto' }}>
+            <span className="text-white text-sm" style={{ marginLeft: 'auto' }}>
               {subscriptions.length} subscription{subscriptions.length !== 1 ? 's' : ''}
             </span>
           </div>
@@ -1309,50 +1217,28 @@ export default function Dashboard() {
 
         {/* Subscription Details */}
         {selectedSubscription && (
-          <div style={{ padding: '1.25em 1.5em', borderBottom: '1px solid #b3d7ff', backgroundColor: '#e7f3ff' }}>
+          <div className="subscription-details">
             {/* Plan details and agent selector container - full width */}
-            <div style={{ backgroundColor: '#fff', padding: '0.75em 1em', borderRadius: '6px', border: '1px solid #dee2e6' }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '0.75em' }}>
+            <div className="box">
+              <div className="flex flex-between flex-align-center flex-wrap gap-sm">
                 {/* Subscription name, status, and plan details - inline on large screens */}
-                <div style={{ display: 'flex', alignItems: 'center', gap: '0.75em', flexWrap: 'wrap' }}>
-                  <h3 style={{ margin: 0, display: 'flex', alignItems: 'center', gap: '10px' }}>
+                <div className="flex flex-align-center gap-sm flex-wrap">
+                  <h3 className="m-0 flex flex-align-center gap-sm">
                     {getSubscriptionDisplayName(selectedSubscription)}
-                    <span style={{
-                      backgroundColor: getStatusColor(selectedSubscription.subscription_status),
-                      color: selectedSubscription.subscription_status === 'past_due' ? '#000' : 'white',
-                      padding: '2px 8px', borderRadius: '4px', fontSize: '0.7em'
-                    }}>
+                    <span className={`badge badge-${selectedSubscription.subscription_status === 'past_due' ? 'past-due' : selectedSubscription.subscription_status}`}>
                       {t(`subscription.statuses.${selectedSubscription.subscription_status}`)}
                     </span>
                   </h3>
-                  <span style={{ color: '#ccc', fontSize: '1.2em', fontWeight: '300' }}>|</span>
-                  <div style={{ display: 'flex', gap: '0.5em', flexWrap: 'wrap', fontSize: '0.85em' }}>
-                    <span style={{
-                      backgroundColor: '#f1f3f5',
-                      padding: '4px 10px',
-                      borderRadius: '4px',
-                      border: '1px solid #dee2e6',
-                      color: '#495057'
-                    }}>
+                  <span className="divider-vertical">|</span>
+                  <div className="flex gap-sm flex-wrap text-sm">
+                    <span className="info-pill">
                       <strong>{t('subscription.planType')}:</strong> {selectedSubscription.plan_type === 'specialty' ? t('subscription.singleAgent') : t('subscription.multiAgent')}
                     </span>
-                    <span style={{
-                      backgroundColor: '#f1f3f5',
-                      padding: '4px 10px',
-                      borderRadius: '4px',
-                      border: '1px solid #dee2e6',
-                      color: '#495057'
-                    }}>
+                    <span className="info-pill">
                       <strong>{t('subscription.agents')}:</strong> {agentsInSubscription.length}
                     </span>
                     {selectedSubscription.trial_end && selectedSubscription.subscription_status === 'trialing' && (
-                      <span style={{
-                        backgroundColor: '#f1f3f5',
-                        padding: '4px 10px',
-                        borderRadius: '4px',
-                        border: '1px solid #dee2e6',
-                        color: '#495057'
-                      }}>
+                      <span className="info-pill">
                         <strong>{t('subscription.trialEnds')}:</strong> {new Date(selectedSubscription.trial_end).toLocaleDateString()}
                       </span>
                     )}
@@ -1361,31 +1247,29 @@ export default function Dashboard() {
 
                 {/* Subscription Action Buttons - top right */}
                 {selectedSubscription.subscription_id && selectedSubscription.subscription_status !== 'cancelled' && (
-                  <div style={{ display: 'flex', gap: '0.5em', flexWrap: 'wrap' }}>
+                  <div className="flex gap-sm flex-wrap">
                     {!['easybroker', 'mls'].includes(selectedSubscription.level?.toLowerCase()) && (
                       <button onClick={() => { setSelectedNewLevel(''); setChangeLevelError(null); setShowChangeLevelModal(true); }}
-                        style={{ padding: '0.5em 1em', backgroundColor: '#007bff', color: 'white',
-                          border: 'none', borderRadius: '4px', cursor: 'pointer', fontSize: '0.85em', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.4em', whiteSpace: 'nowrap' }}>
-                        <span style={{ fontSize: '1em' }}>↕</span> {t('subscription.changeLevel')}
+                        className="btn btn-primary btn-sm btn-icon">
+                        <span>↕</span> {t('subscription.changeLevel')}
                       </button>
                     )}
                     <button onClick={() => setShowCancelModal(true)}
-                      style={{ padding: '0.5em 1em', backgroundColor: '#dc3545', color: 'white',
-                        border: 'none', borderRadius: '4px', cursor: 'pointer', fontSize: '0.85em', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.4em', whiteSpace: 'nowrap' }}>
-                      <span style={{ fontSize: '1em' }}>✕</span> {t('subscription.cancelSubscription')}
+                      className="btn btn-danger btn-sm btn-icon">
+                      <span>✕</span> {t('subscription.cancelSubscription')}
                     </button>
                   </div>
                 )}
               </div>
 
               {/* Agent Selector - inline */}
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.75em', flexWrap: 'wrap', marginTop: '0.75em' }}>
-                <label style={{ fontWeight: '600', color: '#333', fontSize: '0.9em' }}>{t('agents.selectAgent')}:</label>
+              <div className="flex flex-align-center gap-sm flex-wrap mt-sm">
+                <label className="form-label text-sm" style={{ marginBottom: 0 }}>{t('agents.selectAgent')}:</label>
                 {agentsInSubscription.length === 0 ? (
-                  <span style={{ color: '#666', fontSize: '0.9em' }}>{t('agents.noAgents')}</span>
+                  <span className="text-muted text-sm">{t('agents.noAgents')}</span>
                 ) : (
                   <select value={selectedClientId || ''} onChange={handleClientChange}
-                    style={{ padding: '0.4em 0.8em', fontSize: '0.9em', borderRadius: '4px', border: '1px solid #ced4da', backgroundColor: '#f1f3f5', minWidth: '200px', cursor: 'pointer' }}>
+                    className="form-select form-input-sm" style={{ width: 'auto', minWidth: '200px', maxWidth: '300px', backgroundColor: '#f1f3f5' }}>
                     {agentsInSubscription.map((client) => (
                       <option key={client.clientid} value={client.clientid}>
                         {getClientDisplayName(client)}
@@ -1395,14 +1279,11 @@ export default function Dashboard() {
                 )}
                 {canCreateAgentInSubscription && !specialtySubAtLimit ? (
                   <button onClick={() => setShowNewAgentModal(true)}
-                    style={{ padding: '0.4em 0.8em', fontSize: '0.85em', backgroundColor: '#28a745',
-                      color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer',
-                      fontWeight: '600', display: 'flex', alignItems: 'center', gap: '4px' }}>
-                    <span style={{ fontSize: '1em' }}>+</span> {t('agents.newAgent')}
+                    className="btn btn-success btn-sm btn-icon">
+                    <span>+</span> {t('agents.newAgent')}
                   </button>
                 ) : specialtySubAtLimit ? (
-                  <span style={{ padding: '0.35em 0.6em', backgroundColor: '#fff3cd', color: '#856404',
-                    border: '1px solid #ffc107', borderRadius: '4px', fontSize: '0.8em' }}>
+                  <span className="alert alert-warning text-xs" style={{ padding: '0.35em 0.6em', marginBottom: 0 }}>
                     ⚠️ {t('agents.specialtyLimit')}
                   </span>
                 ) : null}
@@ -1411,27 +1292,13 @@ export default function Dashboard() {
 
             {/* Agent Settings Form */}
             {selectedClient && (
-              <div style={{ backgroundColor: '#fff', padding: '1em', borderRadius: '6px', border: '1px solid #dee2e6', marginTop: '1em' }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: isEditingAgent ? '1em' : 0 }}>
-                  <h4 style={{ margin: 0, color: '#333', display: 'flex', alignItems: 'center', gap: '0.5em' }}>
-                    <span style={{ fontSize: '1.1em' }}>⚙</span> {t('agentSettings')}
+              <div className="box mt-md">
+                <div className="flex flex-between flex-align-center" style={{ marginBottom: isEditingAgent ? '1em' : 0 }}>
+                  <h4 className="m-0 flex flex-align-center gap-sm">
+                    <span>⚙</span> {t('agentSettings')}
                   </h4>
                   {!isEditingAgent && (
-                    <button
-                      onClick={() => setIsEditingAgent(true)}
-                      style={{
-                        padding: '0.4em 0.8em',
-                        fontSize: '0.85em',
-                        backgroundColor: '#007bff',
-                        color: 'white',
-                        border: 'none',
-                        borderRadius: '4px',
-                        cursor: 'pointer',
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: '0.4em'
-                      }}
-                    >
+                    <button onClick={() => setIsEditingAgent(true)} className="btn btn-primary btn-sm btn-icon">
                       <span>✎</span> {t('common:buttons.edit')}
                     </button>
                   )}
@@ -1442,38 +1309,34 @@ export default function Dashboard() {
                     <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '1em' }}>
                       {/* Agent Name */}
                       <div>
-                        <label style={{ display: 'block', marginBottom: '0.25em', fontWeight: '600', color: '#333', fontSize: '0.85em' }}>
-                          {t('form.agentName')}
-                        </label>
+                        <label className="form-label">{t('form.agentName')}</label>
                         <input
                           type="text"
                           name="agent_name"
                           value={agentEditForm.agent_name}
                           onChange={handleAgentEditChange}
                           placeholder="My AI Agent"
-                          style={{ width: '100%', padding: '0.5em', fontSize: '0.9em', border: '1px solid #ced4da', borderRadius: '4px', boxSizing: 'border-box' }}
+                          className="form-input form-input-sm"
                         />
                       </div>
 
                       {/* Company */}
                       <div>
-                        <label style={{ display: 'block', marginBottom: '0.25em', fontWeight: '600', color: '#333', fontSize: '0.85em' }}>
-                          {t('form.company')}
-                        </label>
+                        <label className="form-label">{t('form.company')}</label>
                         <input
                           type="text"
                           name="company"
                           value={agentEditForm.company}
                           onChange={handleAgentEditChange}
                           placeholder="Acme Inc"
-                          style={{ width: '100%', padding: '0.5em', fontSize: '0.9em', border: '1px solid #ced4da', borderRadius: '4px', boxSizing: 'border-box' }}
+                          className="form-input form-input-sm"
                         />
                       </div>
 
                       {/* Domain to Install Bot */}
                       <div>
-                        <label style={{ display: 'block', marginBottom: '0.25em', fontWeight: '600', color: '#333', fontSize: '0.85em' }}>
-                          {t('form.domainToInstall')}<span style={{ color: '#e74c3c' }}>*</span>
+                        <label className="form-label">
+                          {t('form.domainToInstall')}<span className="error-text">*</span>
                         </label>
                         <input
                           type="text"
@@ -1482,80 +1345,70 @@ export default function Dashboard() {
                           onChange={handleAgentEditChange}
                           placeholder="myexampledomain.com"
                           required
-                          style={{ width: '100%', padding: '0.5em', fontSize: '0.9em', border: '1px solid #ced4da', borderRadius: '4px', boxSizing: 'border-box' }}
+                          className="form-input form-input-sm"
                         />
                       </div>
 
                       {/* Contact Email */}
                       <div>
-                        <label style={{ display: 'block', marginBottom: '0.25em', fontWeight: '600', color: '#333', fontSize: '0.85em' }}>
-                          {t('form.contactEmail')}
-                        </label>
+                        <label className="form-label">{t('form.contactEmail')}</label>
                         <input
                           type="email"
                           name="contact_email"
                           value={agentEditForm.contact_email}
                           onChange={handleAgentEditChange}
                           placeholder="contact@example.com"
-                          style={{ width: '100%', padding: '0.5em', fontSize: '0.9em', border: '1px solid #ced4da', borderRadius: '4px', boxSizing: 'border-box' }}
+                          className="form-input form-input-sm"
                         />
                       </div>
 
                       {/* Phone Numbers Row */}
-                      <div style={{ gridColumn: '1 / -1', display: 'flex', gap: '1em', flexWrap: 'wrap', alignItems: 'flex-end' }}>
+                      <div className="flex gap-md flex-wrap" style={{ gridColumn: '1 / -1', alignItems: 'flex-end' }}>
                         {/* Contact Phone */}
                         <div style={{ width: '160px' }}>
-                          <label style={{ display: 'block', marginBottom: '0.25em', fontWeight: '600', color: '#333', fontSize: '0.85em' }}>
-                            {t('form.contactPhone')}
-                          </label>
+                          <label className="form-label">{t('form.contactPhone')}</label>
                           <input
                             type="tel"
                             name="contact_phone"
                             value={agentEditForm.contact_phone}
                             onChange={handleAgentEditChange}
                             placeholder="+1 234 567 8900"
-                            style={{ width: '100%', padding: '0.5em', fontSize: '0.9em', border: '1px solid #ced4da', borderRadius: '4px', boxSizing: 'border-box' }}
+                            className="form-input form-input-sm"
                           />
                         </div>
 
                         {/* Office WhatsApp Phone */}
                         <div style={{ width: '160px' }}>
-                          <label style={{ display: 'block', marginBottom: '0.25em', fontWeight: '600', color: '#333', fontSize: '0.85em' }}>
-                            {t('form.whatsappPhone')}
-                          </label>
+                          <label className="form-label">{t('form.whatsappPhone')}</label>
                           <input
                             type="tel"
                             name="office_wsp_phone"
                             value={agentEditForm.office_wsp_phone}
                             onChange={handleAgentEditChange}
                             placeholder="+1 234 567 8900"
-                            style={{ width: '100%', padding: '0.5em', fontSize: '0.9em', border: '1px solid #ced4da', borderRadius: '4px', boxSizing: 'border-box' }}
+                            className="form-input form-input-sm"
                           />
                         </div>
 
                         {/* Contact Phone is WhatsApp - Checkbox */}
-                        <div style={{ display: 'flex', alignItems: 'flex-end', paddingBottom: '0.5em' }}>
-                          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5em' }}>
-                            <input
-                              type="checkbox"
-                              id="contact_phone_wsp"
-                              name="contact_phone_wsp"
-                              checked={agentEditForm.contact_phone_wsp}
-                              onChange={handleAgentEditChange}
-                              style={{ width: '18px', height: '18px', cursor: 'pointer' }}
-                            />
-                            <label htmlFor="contact_phone_wsp" style={{ fontWeight: '600', color: '#333', fontSize: '0.85em', cursor: 'pointer', whiteSpace: 'nowrap' }}>
-                              {t('common:labels.whatsappEnabled')}
-                            </label>
-                          </div>
+                        <div className="flex flex-align-center gap-sm" style={{ paddingBottom: '0.5em' }}>
+                          <input
+                            type="checkbox"
+                            id="contact_phone_wsp"
+                            name="contact_phone_wsp"
+                            checked={agentEditForm.contact_phone_wsp}
+                            onChange={handleAgentEditChange}
+                            className="form-checkbox"
+                          />
+                          <label htmlFor="contact_phone_wsp" className="form-label text-nowrap" style={{ marginBottom: 0, cursor: 'pointer' }}>
+                            {t('common:labels.whatsappEnabled')}
+                          </label>
                         </div>
 
                         {/* MLS Token - Only show for MLS level */}
                         {(selectedClient?.level === 'mls' || selectedClient?.subscription_level === 'mls') && (
                           <div style={{ width: '220px' }}>
-                            <label style={{ display: 'block', marginBottom: '0.25em', fontWeight: '600', color: '#333', fontSize: '0.85em' }}>
-                              {t('form.mlsToken')}
-                            </label>
+                            <label className="form-label">{t('form.mlsToken')}</label>
                             <input
                               type="password"
                               name="mls_token"
@@ -1563,7 +1416,7 @@ export default function Dashboard() {
                               onChange={handleAgentEditChange}
                               placeholder="Enter MLS Token"
                               autoComplete="off"
-                              style={{ width: '100%', padding: '0.5em', fontSize: '0.9em', border: '1px solid #ced4da', borderRadius: '4px', boxSizing: 'border-box' }}
+                              className="form-input form-input-sm"
                             />
                           </div>
                         )}
@@ -1571,24 +1424,20 @@ export default function Dashboard() {
 
                       {/* Office Address - Full Width */}
                       <div style={{ gridColumn: '1 / -1' }}>
-                        <label style={{ display: 'block', marginBottom: '0.25em', fontWeight: '600', color: '#333', fontSize: '0.85em' }}>
-                          {t('form.officeAddress')}
-                        </label>
+                        <label className="form-label">{t('form.officeAddress')}</label>
                         <input
                           type="text"
                           name="office_address"
                           value={agentEditForm.office_address}
                           onChange={handleAgentEditChange}
                           placeholder="123 Main St, City, State 12345"
-                          style={{ width: '100%', padding: '0.5em', fontSize: '0.9em', border: '1px solid #ced4da', borderRadius: '4px', boxSizing: 'border-box' }}
+                          className="form-input form-input-sm"
                         />
                       </div>
 
                       {/* Office Latitude */}
                       <div>
-                        <label style={{ display: 'block', marginBottom: '0.25em', fontWeight: '600', color: '#333', fontSize: '0.85em' }}>
-                          {t('form.latitude')}
-                        </label>
+                        <label className="form-label">{t('form.latitude')}</label>
                         <input
                           type="number"
                           step="any"
@@ -1596,15 +1445,13 @@ export default function Dashboard() {
                           value={agentEditForm.office_lat}
                           onChange={handleAgentEditChange}
                           placeholder="40.7128"
-                          style={{ width: '100%', padding: '0.5em', fontSize: '0.9em', border: '1px solid #ced4da', borderRadius: '4px', boxSizing: 'border-box' }}
+                          className="form-input form-input-sm"
                         />
                       </div>
 
                       {/* Office Longitude */}
                       <div>
-                        <label style={{ display: 'block', marginBottom: '0.25em', fontWeight: '600', color: '#333', fontSize: '0.85em' }}>
-                          {t('form.longitude')}
-                        </label>
+                        <label className="form-label">{t('form.longitude')}</label>
                         <input
                           type="number"
                           step="any"
@@ -1612,20 +1459,18 @@ export default function Dashboard() {
                           value={agentEditForm.office_long}
                           onChange={handleAgentEditChange}
                           placeholder="-74.0060"
-                          style={{ width: '100%', padding: '0.5em', fontSize: '0.9em', border: '1px solid #ced4da', borderRadius: '4px', boxSizing: 'border-box' }}
+                          className="form-input form-input-sm"
                         />
                       </div>
 
                       {/* Timezone */}
                       <div>
-                        <label style={{ display: 'block', marginBottom: '0.25em', fontWeight: '600', color: '#333', fontSize: '0.85em' }}>
-                          {t('form.timezone')}
-                        </label>
+                        <label className="form-label">{t('form.timezone')}</label>
                         <select
                           name="timezone"
                           value={agentEditForm.timezone}
                           onChange={handleAgentEditChange}
-                          style={{ width: '100%', padding: '0.5em', fontSize: '0.9em', border: '1px solid #ced4da', borderRadius: '4px', boxSizing: 'border-box', backgroundColor: '#fff' }}
+                          className="form-select form-input-sm"
                         >
                           <option value="America/New_York">Eastern Time (America/New_York)</option>
                           <option value="America/Chicago">Central Time (America/Chicago)</option>
@@ -1643,46 +1488,42 @@ export default function Dashboard() {
                     </div>
 
                     {/* Response Restriction */}
-                    <div style={{ marginTop: '1em', padding: '0.75em 1em', backgroundColor: '#f8f9fa', borderRadius: '6px', border: '1px solid #dee2e6' }}>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '1em', flexWrap: 'wrap' }}>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5em' }}>
+                    <div className="restrict-response-section">
+                      <div className="flex flex-align-center gap-md flex-wrap">
+                        <div className="flex flex-align-center gap-sm">
                           <input
                             type="checkbox"
                             id="restrict_response"
                             name="restrict_response"
                             checked={agentEditForm.restrict_response}
                             onChange={(e) => setAgentEditForm(prev => ({ ...prev, restrict_response: e.target.checked }))}
-                            style={{ width: '16px', height: '16px', cursor: 'pointer' }}
+                            className="form-checkbox"
                           />
-                          <label htmlFor="restrict_response" style={{ fontWeight: '600', color: '#333', fontSize: '0.85em', cursor: 'pointer', whiteSpace: 'nowrap' }}>
+                          <label htmlFor="restrict_response" className="form-label text-nowrap" style={{ marginBottom: 0, cursor: 'pointer' }}>
                             {t('form.restrictResponse')}
                           </label>
                         </div>
 
                         {agentEditForm.restrict_response && (
                           <>
-                            <div style={{ display: 'flex', alignItems: 'center', gap: '0.4em' }}>
-                              <label style={{ fontWeight: '500', color: '#555', fontSize: '0.8em', whiteSpace: 'nowrap' }}>
-                                {t('form.restrictResponseStart')}:
-                              </label>
+                            <div className="flex flex-align-center gap-sm">
+                              <label className="form-label-inline">{t('form.restrictResponseStart')}:</label>
                               <input
                                 type="time"
                                 name="restrict_response_start"
                                 value={agentEditForm.restrict_response_start}
                                 onChange={handleAgentEditChange}
-                                style={{ padding: '0.3em 0.5em', fontSize: '0.85em', border: '1px solid #ced4da', borderRadius: '4px', width: '110px' }}
+                                className="form-time"
                               />
                             </div>
-                            <div style={{ display: 'flex', alignItems: 'center', gap: '0.4em' }}>
-                              <label style={{ fontWeight: '500', color: '#555', fontSize: '0.8em', whiteSpace: 'nowrap' }}>
-                                {t('form.restrictResponseEnd')}:
-                              </label>
+                            <div className="flex flex-align-center gap-sm">
+                              <label className="form-label-inline">{t('form.restrictResponseEnd')}:</label>
                               <input
                                 type="time"
                                 name="restrict_response_end"
                                 value={agentEditForm.restrict_response_end}
                                 onChange={handleAgentEditChange}
-                                style={{ padding: '0.3em 0.5em', fontSize: '0.85em', border: '1px solid #ced4da', borderRadius: '4px', width: '110px' }}
+                                className="form-time"
                               />
                             </div>
                           </>
@@ -1692,31 +1533,18 @@ export default function Dashboard() {
 
                     {/* Error/Success Messages */}
                     {agentEditError && (
-                      <div style={{ marginTop: '1em', padding: '0.75em', backgroundColor: '#f8d7da', border: '1px solid #f5c6cb', borderRadius: '4px', color: '#721c24', fontSize: '0.9em' }}>
-                        ❌ {agentEditError}
-                      </div>
+                      <div className="message-box message-error mt-md">❌ {agentEditError}</div>
                     )}
                     {agentEditSuccess && (
-                      <div style={{ marginTop: '1em', padding: '0.75em', backgroundColor: '#d4edda', border: '1px solid #c3e6cb', borderRadius: '4px', color: '#155724', fontSize: '0.9em' }}>
-                        ✅ {agentEditSuccess}
-                      </div>
+                      <div className="message-box message-success mt-md">✅ {agentEditSuccess}</div>
                     )}
 
                     {/* Form Buttons */}
-                    <div style={{ display: 'flex', gap: '0.75em', marginTop: '1em' }}>
+                    <div className="flex gap-sm mt-md">
                       <button
                         type="submit"
                         disabled={agentEditLoading}
-                        style={{
-                          padding: '0.5em 1.25em',
-                          fontSize: '0.9em',
-                          backgroundColor: agentEditLoading ? '#ccc' : '#28a745',
-                          color: 'white',
-                          border: 'none',
-                          borderRadius: '4px',
-                          cursor: agentEditLoading ? 'not-allowed' : 'pointer',
-                          fontWeight: '600'
-                        }}
+                        className={`btn btn-sm ${agentEditLoading ? '' : 'btn-success'}`}
                       >
                         {agentEditLoading ? t('common:buttons.saving') : t('form.saveChanges')}
                       </button>
@@ -1747,15 +1575,7 @@ export default function Dashboard() {
                           }
                         }}
                         disabled={agentEditLoading}
-                        style={{
-                          padding: '0.5em 1.25em',
-                          fontSize: '0.9em',
-                          backgroundColor: 'transparent',
-                          color: '#666',
-                          border: '1px solid #ced4da',
-                          borderRadius: '4px',
-                          cursor: agentEditLoading ? 'not-allowed' : 'pointer'
-                        }}
+                        className="btn btn-secondary btn-sm"
                       >
                         {t('common:buttons.cancel')}
                       </button>
@@ -1763,40 +1583,40 @@ export default function Dashboard() {
                   </form>
                 ) : (
                   /* Read-only view - compact single line */
-                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5em 1.5em', marginTop: '0.5em', fontSize: '0.85em', color: '#333' }}>
+                  <div className="flex flex-wrap gap-sm text-sm mt-sm">
                     {agentEditForm.agent_name && (
-                      <span><strong style={{ color: '#666' }}>Agent:</strong> {agentEditForm.agent_name}</span>
+                      <span><strong className="text-muted">Agent:</strong> {agentEditForm.agent_name}</span>
                     )}
                     {agentEditForm.company && (
-                      <span><strong style={{ color: '#666' }}>Company:</strong> {agentEditForm.company}</span>
+                      <span><strong className="text-muted">Company:</strong> {agentEditForm.company}</span>
                     )}
                     {agentEditForm.domain_to_install_bot && (
-                      <span><strong style={{ color: '#666' }}>Install Domain:</strong> {agentEditForm.domain_to_install_bot}</span>
+                      <span><strong className="text-muted">Install Domain:</strong> {agentEditForm.domain_to_install_bot}</span>
                     )}
                     {agentEditForm.contact_email && (
-                      <span><strong style={{ color: '#666' }}>Email:</strong> {agentEditForm.contact_email}</span>
+                      <span><strong className="text-muted">Email:</strong> {agentEditForm.contact_email}</span>
                     )}
                     {agentEditForm.contact_phone && (
-                      <span><strong style={{ color: '#666' }}>Office Phone:</strong> {agentEditForm.contact_phone}{agentEditForm.contact_phone_wsp && <span style={{ color: '#25D366' }}> (WhatsApp Enabled)</span>}</span>
+                      <span><strong className="text-muted">Office Phone:</strong> {agentEditForm.contact_phone}{agentEditForm.contact_phone_wsp && <span style={{ color: '#25D366' }}> (WhatsApp Enabled)</span>}</span>
                     )}
                     {agentEditForm.office_wsp_phone && agentEditForm.office_wsp_phone !== agentEditForm.contact_phone && (
-                      <span><strong style={{ color: '#666' }}>WhatsApp:</strong> {agentEditForm.office_wsp_phone}</span>
+                      <span><strong className="text-muted">WhatsApp:</strong> {agentEditForm.office_wsp_phone}</span>
                     )}
                     {agentEditForm.mls_token && (selectedClient?.level === 'mls' || selectedClient?.subscription_level === 'mls') && (
-                      <span><strong style={{ color: '#666' }}>MLS:</strong> ••••••••</span>
+                      <span><strong className="text-muted">MLS:</strong> ••••••••</span>
                     )}
                     {(agentEditForm.office_address || agentEditForm.timezone) && (
-                      <div style={{ flexBasis: '100%', marginTop: '0.25em', display: 'flex', gap: '1.5em', flexWrap: 'wrap' }}>
+                      <div className="flex gap-lg flex-wrap mt-sm" style={{ flexBasis: '100%' }}>
                         {agentEditForm.office_address && (
-                          <span><strong style={{ color: '#666' }}>Address:</strong> {agentEditForm.office_address}</span>
+                          <span><strong className="text-muted">Address:</strong> {agentEditForm.office_address}</span>
                         )}
                         {agentEditForm.timezone && (
-                          <span><strong style={{ color: '#666' }}>Timezone:</strong> {agentEditForm.timezone}</span>
+                          <span><strong className="text-muted">Timezone:</strong> {agentEditForm.timezone}</span>
                         )}
                       </div>
                     )}
                     {!agentEditForm.agent_name && !agentEditForm.company && !agentEditForm.contact_email && !agentEditForm.contact_phone && !agentEditForm.office_address && (
-                      <span style={{ color: '#999', fontStyle: 'italic' }}>No agent settings configured. Click Edit to add details.</span>
+                      <span className="text-muted" style={{ fontStyle: 'italic' }}>No agent settings configured. Click Edit to add details.</span>
                     )}
                   </div>
                 )}
@@ -1804,9 +1624,7 @@ export default function Dashboard() {
             )}
 
             {cancelSuccess && (
-              <div style={{ marginTop: '1em', padding: '1em', backgroundColor: '#d4edda', border: '1px solid #c3e6cb', borderRadius: '4px', color: '#155724' }}>
-                ✅ {cancelSuccess}
-              </div>
+              <div className="alert alert-success mt-md">✅ {cancelSuccess}</div>
             )}
           </div>
         )}
@@ -1815,48 +1633,34 @@ export default function Dashboard() {
 
       {/* Agent Details + Tabs Container */}
       {selectedClient && (
-        <div style={{
-          backgroundColor: '#fff',
-          borderRadius: '8px',
-          border: '1px solid #dee2e6',
-          overflow: 'hidden',
-          boxShadow: '0 2px 8px rgba(0, 0, 0, 0.08)'
-        }}>
+        <div className="card">
           {/* Selected Agent Details */}
-          <div style={{
-            padding: '1em 1.5em',
-            background: 'linear-gradient(135deg, #34495e 0%, #2c3e50 50%, #1a252f 100%)',
-            display: 'flex',
-            flexWrap: 'wrap',
-            alignItems: 'center',
-            justifyContent: 'center',
-            gap: '1em 2em'
-          }}>
-            <span style={{ fontSize: '0.95em', color: '#ecf0f1' }}><strong>Agent:</strong> {getClientDisplayName(selectedClient)}</span>
-            <span style={{ fontSize: '0.95em', color: '#ecf0f1' }}><strong>Agent ID:</strong> {selectedClient.clientid}</span>
-            <span style={{ fontSize: '0.95em', color: '#ecf0f1' }}><strong>Level:</strong> <span style={{
+          <div className="subscription-header flex flex-wrap flex-center gap-md" style={{ gap: '1em 2em' }}>
+            <span className="text-white"><strong>Agent:</strong> {getClientDisplayName(selectedClient)}</span>
+            <span className="text-white"><strong>Agent ID:</strong> {selectedClient.clientid}</span>
+            <span className="text-white"><strong>Level:</strong> <span className="capitalize" style={{
               backgroundColor: getLevelColor(selectedClient.subscription_level || selectedClient.level),
-              color: 'white', padding: '0.15em 0.5em', borderRadius: '3px', fontSize: '0.9em', textTransform: 'capitalize'
+              color: 'white', padding: '0.15em 0.5em', borderRadius: '3px', fontSize: '0.9em'
             }}>{selectedClient.subscription_level || selectedClient.level || 'basic'}</span></span>
-            {selectedClient.company && <span style={{ fontSize: '0.95em', color: '#ecf0f1' }}><strong>Company:</strong> {selectedClient.company}</span>}
+            {selectedClient.company && <span className="text-white"><strong>Company:</strong> {selectedClient.company}</span>}
           </div>
 
           {/* Tabs - Navigation for different dashboard sections */}
           {/* Training tab: RAG embeddings, Add-Ons tab: selectable decorators/integrations */}
-          <div style={{ display: 'flex', justifyContent: 'center', borderBottom: '2px solid #ddd', marginBottom: '0', flexWrap: 'wrap', backgroundColor: '#e9ecef' }}>
-            <button className={`dashboard-tab ${activeTab === 'configurations' ? 'dashboard-tab-active' : ''}`} style={tabStyle(activeTab === 'configurations')} onClick={() => setActiveTab('configurations')}>⚙ {t('common:navigation.configurations')}</button>
-            <button className={`dashboard-tab ${activeTab === 'training' ? 'dashboard-tab-active' : ''}`} style={tabStyle(activeTab === 'training')} onClick={() => setActiveTab('training')}>☰ {t('common:navigation.training')}</button>
-            <button className={`dashboard-tab ${activeTab === 'models' ? 'dashboard-tab-active' : ''}`} style={tabStyle(activeTab === 'models')} onClick={() => setActiveTab('models')}>◈ {t('common:navigation.models')}</button>
-            <button className={`dashboard-tab ${activeTab === 'addons' ? 'dashboard-tab-active' : ''}`} style={tabStyle(activeTab === 'addons')} onClick={() => setActiveTab('addons')}>⊕ {t('common:navigation.addons')}</button>
-            <button className={`dashboard-tab ${activeTab === 'integrations' ? 'dashboard-tab-active' : ''}`} style={tabStyle(activeTab === 'integrations')} onClick={() => setActiveTab('integrations')}>⇄ {t('common:navigation.integrations')}</button>
-            <button className={`dashboard-tab ${activeTab === 'conversations' ? 'dashboard-tab-active' : ''}`} style={tabStyle(activeTab === 'conversations')} onClick={() => setActiveTab('conversations')}>◐ {t('common:navigation.conversations')}</button>
-            <button className={`dashboard-tab ${activeTab === 'metrics' ? 'dashboard-tab-active' : ''}`} style={tabStyle(activeTab === 'metrics')} onClick={() => setActiveTab('metrics')}>▦ {t('common:navigation.metrics')}</button>
-            <button className={`dashboard-tab ${activeTab === 'leads' ? 'dashboard-tab-active' : ''}`} style={tabStyle(activeTab === 'leads')} onClick={() => setActiveTab('leads')}>⊛ {t('common:navigation.leads')}</button>
+          <div className="flex flex-center flex-wrap" style={{ borderBottom: '2px solid #ddd', backgroundColor: '#e9ecef' }}>
+            <button className={`dashboard-tab ${activeTab === 'configurations' ? 'dashboard-tab-active' : ''}`} onClick={() => setActiveTab('configurations')}>⚙ {t('common:navigation.configurations')}</button>
+            <button className={`dashboard-tab ${activeTab === 'training' ? 'dashboard-tab-active' : ''}`} onClick={() => setActiveTab('training')}>☰ {t('common:navigation.training')}</button>
+            <button className={`dashboard-tab ${activeTab === 'models' ? 'dashboard-tab-active' : ''}`} onClick={() => setActiveTab('models')}>◈ {t('common:navigation.models')}</button>
+            <button className={`dashboard-tab ${activeTab === 'addons' ? 'dashboard-tab-active' : ''}`} onClick={() => setActiveTab('addons')}>⊕ {t('common:navigation.addons')}</button>
+            <button className={`dashboard-tab ${activeTab === 'integrations' ? 'dashboard-tab-active' : ''}`} onClick={() => setActiveTab('integrations')}>⇄ {t('common:navigation.integrations')}</button>
+            <button className={`dashboard-tab ${activeTab === 'conversations' ? 'dashboard-tab-active' : ''}`} onClick={() => setActiveTab('conversations')}>◐ {t('common:navigation.conversations')}</button>
+            <button className={`dashboard-tab ${activeTab === 'metrics' ? 'dashboard-tab-active' : ''}`} onClick={() => setActiveTab('metrics')}>▦ {t('common:navigation.metrics')}</button>
+            <button className={`dashboard-tab ${activeTab === 'leads' ? 'dashboard-tab-active' : ''}`} onClick={() => setActiveTab('leads')}>⊛ {t('common:navigation.leads')}</button>
           </div>
 
           {/* Tab Content */}
           {loadingData ? (
-            <div style={{ textAlign: 'center', padding: '2em' }}><p>Loading...</p></div>
+            <div className="dashboard-loading"><p>Loading...</p></div>
           ) : (
             <>
           {activeTab === 'configurations' && <ConfigurationsTab user={selectedClient} clientId={selectedClientId} />}
