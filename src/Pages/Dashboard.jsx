@@ -60,7 +60,10 @@ export default function Dashboard() {
     office_wsp_phone: '',
     company: '',
     timezone: 'America/Mazatlan',
-    domain_to_install_bot: ''
+    domain_to_install_bot: '',
+    restrict_response: false,
+    restrict_response_start: '',
+    restrict_response_end: ''
   });
   const [agentEditLoading, setAgentEditLoading] = useState(false);
   const [agentEditError, setAgentEditError] = useState(null);
@@ -227,7 +230,10 @@ export default function Dashboard() {
         office_wsp_phone: selectedClient.office_wsp_phone || '',
         company: selectedClient.company || '',
         timezone: selectedClient.timezone || 'America/Mazatlan',
-        domain_to_install_bot: selectedClient.domain_to_install_bot || ''
+        domain_to_install_bot: selectedClient.domain_to_install_bot || '',
+        restrict_response: selectedClient.restrict_response || false,
+        restrict_response_start: parseTimeForInput(selectedClient.restrict_response_start),
+        restrict_response_end: parseTimeForInput(selectedClient.restrict_response_end)
       });
       setIsEditingAgent(false);
       setAgentEditError(null);
@@ -643,7 +649,10 @@ export default function Dashboard() {
             office_wsp_phone: agentEditForm.office_wsp_phone.trim() || null,
             company: agentEditForm.company.trim() || null,
             timezone: agentEditForm.timezone,
-            domain_to_install_bot: agentEditForm.domain_to_install_bot.trim()
+            domain_to_install_bot: agentEditForm.domain_to_install_bot.trim(),
+            restrict_response: agentEditForm.restrict_response,
+            restrict_response_start: agentEditForm.restrict_response_start || null,
+            restrict_response_end: agentEditForm.restrict_response_end || null
           }),
           credentials: 'include'
         }
@@ -974,6 +983,14 @@ export default function Dashboard() {
 
   // Utility functions
   const formatNumber = (num) => num?.toLocaleString() || '0';
+
+  // Parse time from database format (e.g., "09:00:00-07" or "14:30:00+00") to HTML time input format ("HH:MM")
+  const parseTimeForInput = (timeStr) => {
+    if (!timeStr) return '';
+    // Extract just the HH:MM part from formats like "09:00:00", "09:00:00-07", "09:00:00+00:00"
+    const match = timeStr.match(/^(\d{2}:\d{2})/);
+    return match ? match[1] : '';
+  };
   
   const getLevelColor = (level) => {
     const colors = {
@@ -1625,6 +1642,54 @@ export default function Dashboard() {
                       </div>
                     </div>
 
+                    {/* Response Restriction */}
+                    <div style={{ marginTop: '1em', padding: '0.75em 1em', backgroundColor: '#f8f9fa', borderRadius: '6px', border: '1px solid #dee2e6' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '1em', flexWrap: 'wrap' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5em' }}>
+                          <input
+                            type="checkbox"
+                            id="restrict_response"
+                            name="restrict_response"
+                            checked={agentEditForm.restrict_response}
+                            onChange={(e) => setAgentEditForm(prev => ({ ...prev, restrict_response: e.target.checked }))}
+                            style={{ width: '16px', height: '16px', cursor: 'pointer' }}
+                          />
+                          <label htmlFor="restrict_response" style={{ fontWeight: '600', color: '#333', fontSize: '0.85em', cursor: 'pointer', whiteSpace: 'nowrap' }}>
+                            {t('form.restrictResponse')}
+                          </label>
+                        </div>
+
+                        {agentEditForm.restrict_response && (
+                          <>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '0.4em' }}>
+                              <label style={{ fontWeight: '500', color: '#555', fontSize: '0.8em', whiteSpace: 'nowrap' }}>
+                                {t('form.restrictResponseStart')}:
+                              </label>
+                              <input
+                                type="time"
+                                name="restrict_response_start"
+                                value={agentEditForm.restrict_response_start}
+                                onChange={handleAgentEditChange}
+                                style={{ padding: '0.3em 0.5em', fontSize: '0.85em', border: '1px solid #ced4da', borderRadius: '4px', width: '110px' }}
+                              />
+                            </div>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '0.4em' }}>
+                              <label style={{ fontWeight: '500', color: '#555', fontSize: '0.8em', whiteSpace: 'nowrap' }}>
+                                {t('form.restrictResponseEnd')}:
+                              </label>
+                              <input
+                                type="time"
+                                name="restrict_response_end"
+                                value={agentEditForm.restrict_response_end}
+                                onChange={handleAgentEditChange}
+                                style={{ padding: '0.3em 0.5em', fontSize: '0.85em', border: '1px solid #ced4da', borderRadius: '4px', width: '110px' }}
+                              />
+                            </div>
+                          </>
+                        )}
+                      </div>
+                    </div>
+
                     {/* Error/Success Messages */}
                     {agentEditError && (
                       <div style={{ marginTop: '1em', padding: '0.75em', backgroundColor: '#f8d7da', border: '1px solid #f5c6cb', borderRadius: '4px', color: '#721c24', fontSize: '0.9em' }}>
@@ -1673,7 +1738,11 @@ export default function Dashboard() {
                               office_address: selectedClient.office_address || '',
                               office_wsp_phone: selectedClient.office_wsp_phone || '',
                               company: selectedClient.company || '',
-                              timezone: selectedClient.timezone || 'America/Mazatlan'
+                              timezone: selectedClient.timezone || 'America/Mazatlan',
+                              domain_to_install_bot: selectedClient.domain_to_install_bot || '',
+                              restrict_response: selectedClient.restrict_response || false,
+                              restrict_response_start: parseTimeForInput(selectedClient.restrict_response_start),
+                              restrict_response_end: parseTimeForInput(selectedClient.restrict_response_end)
                             });
                           }
                         }}

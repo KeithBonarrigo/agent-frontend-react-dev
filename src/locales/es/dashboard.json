@@ -55,7 +55,10 @@
     "mlsToken": "Token MLS",
     "domainToInstall": "Dominio Donde el Agente Está Instalado",
     "saveChanges": "Guardar Cambios",
-    "editSettings": "Editar Configuración"
+    "editSettings": "Editar Configuración",
+    "restrictResponse": "Restringir Respuesta por Horario",
+    "restrictResponseStart": "Restringir Respuesta Desde",
+    "restrictResponseEnd": "Restringir Respuesta Hasta"
   },
   "summary": {
     "noSettings": "No hay configuración de agente. Haga clic en Editar para agregar detalles."
