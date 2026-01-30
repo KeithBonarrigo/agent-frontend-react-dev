@@ -113,6 +113,7 @@ export default function SignupForm({ isOpen }) {
   const [agentFormSuccess, setAgentFormSuccess] = useState(false);
   const [showLoginLink, setShowLoginLink] = useState(false);
   const [termsAccepted, setTermsAccepted] = useState(false);
+  const [mlsAcknowledged, setMlsAcknowledged] = useState(false);
   const [showTermsModal, setShowTermsModal] = useState(false);
   const [showPaymentForm, setShowPaymentForm] = useState(false);
   const [clientSecret, setClientSecret] = useState("");
@@ -138,14 +139,21 @@ export default function SignupForm({ isOpen }) {
     const inner = agentFormInnerRef.current;
     if (!wrapper || !inner) return;
 
-    if (isOpen) {
-      wrapper.style.maxHeight = inner.scrollHeight + "px";
-      wrapper.style.opacity = "1";
-    } else {
-      wrapper.style.maxHeight = "0px";
-      wrapper.style.opacity = "0";
-    }
-  }, [isOpen]);
+    const updateHeight = () => {
+      if (isOpen) {
+        wrapper.style.maxHeight = inner.scrollHeight + "px";
+        wrapper.style.opacity = "1";
+      } else {
+        wrapper.style.maxHeight = "0px";
+        wrapper.style.opacity = "0";
+      }
+    };
+
+    // Use requestAnimationFrame to wait for DOM to update after level change
+    requestAnimationFrame(() => {
+      requestAnimationFrame(updateHeight);
+    });
+  }, [isOpen, agentForm.level]);
 
   useEffect(() => {
     const wrapper = agentFormWrapperRef.current;
@@ -331,6 +339,11 @@ export default function SignupForm({ isOpen }) {
 
     if (!termsAccepted) {
       setAgentFormError("You must accept the Terms and Conditions to create an account.");
+      return;
+    }
+
+    if ((agentForm.level === 'mls' || agentForm.level === 'easybroker') && !mlsAcknowledged) {
+      setAgentFormError("You must acknowledge the MLS token requirement to continue.");
       return;
     }
 
@@ -917,6 +930,24 @@ export default function SignupForm({ isOpen }) {
                       </label>
                     </div>
                   </div>
+
+                  {/* MLS acknowledgment checkbox - shown for MLS and EasyBroker levels */}
+                  {(agentForm.level === 'mls' || agentForm.level === 'easybroker') && (
+                    <div className="signup-checkbox-row" style={{ marginTop: '10px' }}>
+                      <div className="signup-checkbox-item">
+                        <input
+                          type="checkbox"
+                          id="mls_acknowledged"
+                          checked={mlsAcknowledged}
+                          onChange={(e) => setMlsAcknowledged(e.target.checked)}
+                        />
+                        <label htmlFor="mls_acknowledged" className="signup-checkbox-label">
+                          {t(agentForm.level === 'easybroker' ? 'form.easybrokerAcknowledgment' : 'form.mlsAcknowledgment')}
+                          <span className="signup-required"> *</span>
+                        </label>
+                      </div>
+                    </div>
+                  )}
                 </div>
 
                 <input

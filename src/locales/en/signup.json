@@ -25,7 +25,9 @@
     "domainPlaceholder": "myexampledomain.com",
     "whatsappEnabled": "WhatsApp Enabled",
     "termsAccept": "I accept the",
-    "termsAndConditions": "Terms and Conditions"
+    "termsAndConditions": "Terms and Conditions",
+    "mlsAcknowledgment": "I understand that I must provide a working MLS token for this service to work",
+    "easybrokerAcknowledgment": "I understand that I must provide a working EasyBroker API key for this service to work"
   },
   "plans": {
     "free": "Trial/Free - $0/month",

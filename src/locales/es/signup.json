@@ -25,7 +25,9 @@
     "domainPlaceholder": "midominio.com",
     "whatsappEnabled": "WhatsApp Habilitado",
     "termsAccept": "Acepto los",
-    "termsAndConditions": "Términos y Condiciones"
+    "termsAndConditions": "Términos y Condiciones",
+    "mlsAcknowledgment": "Entiendo que debo proporcionar un token MLS funcional para que este servicio funcione",
+    "easybrokerAcknowledgment": "Entiendo que necesito una clave API de EasyBroker válida"
   },
   "plans": {
     "free": "Prueba/Gratis - $0/mes",
