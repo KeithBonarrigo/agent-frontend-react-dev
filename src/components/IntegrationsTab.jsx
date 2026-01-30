@@ -1,5 +1,6 @@
 import { useState, useRef } from "react";
 import { useTranslation } from "react-i18next";
+import { getApiUrl } from "../utils/getApiUrl";
 
 // IntegrationsTab - Displays embed code and integration methods for the AI agent
 // Provides the script tag users need to embed the chatbot on their website
@@ -10,6 +11,7 @@ export default function IntegrationsTab({ user, clientId }) {
   const [chatbotLoaded, setChatbotLoaded] = useState(false);
   const [chatbotLoading, setChatbotLoading] = useState(false);
   const chatbotScriptRef = useRef(null);
+  const customCssRef = useRef(null);
 
   if (!clientId) {
     return (
@@ -52,10 +54,37 @@ export default function IntegrationsTab({ user, clientId }) {
   };
 
   // Load chatbot script for preview
-  const handleTryItOut = () => {
+  const handleTryItOut = async () => {
     if (chatbotLoaded || chatbotLoading) return;
 
     setChatbotLoading(true);
+
+    // Fetch and inject custom CSS first
+    try {
+      const apiBaseUrl = getApiUrl();
+      const cssResponse = await fetch(`${apiBaseUrl}/api/client-styling/${clientId}`, {
+        credentials: 'include'
+      });
+
+      if (cssResponse.ok) {
+        const cssData = await cssResponse.json();
+        if (cssData.custom_css) {
+          // Remove old custom CSS if exists
+          if (customCssRef.current) {
+            customCssRef.current.remove();
+          }
+          // Inject new custom CSS
+          const styleEl = document.createElement('style');
+          styleEl.id = `custom-css-${clientId}`;
+          styleEl.textContent = cssData.custom_css;
+          document.head.appendChild(styleEl);
+          customCssRef.current = styleEl;
+          console.log('🎨 Custom CSS injected');
+        }
+      }
+    } catch (error) {
+      console.error('Error fetching custom CSS:', error);
+    }
 
     const chatbotUrl = `${webEmbedProtocol}://${webEmbedDomain}/chatbot.js?id=${clientId}`;
     console.log('🤖 Loading chatbot from:', chatbotUrl);

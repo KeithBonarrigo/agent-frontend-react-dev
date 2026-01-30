@@ -57,7 +57,8 @@
     "integrations": "Integrations",
     "conversations": "Conversations",
     "metrics": "Metrics",
-    "leads": "Leads"
+    "leads": "Leads",
+    "styling": "Styling"
   },
   "language": {
     "select": "Language",

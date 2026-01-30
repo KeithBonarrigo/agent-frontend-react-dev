@@ -57,7 +57,8 @@
     "integrations": "Integraciones",
     "conversations": "Conversaciones",
     "metrics": "Métricas",
-    "leads": "Prospectos"
+    "leads": "Prospectos",
+    "styling": "Estilos"
   },
   "language": {
     "select": "Idioma",

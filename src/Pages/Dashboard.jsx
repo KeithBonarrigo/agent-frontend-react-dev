@@ -10,6 +10,7 @@ import AddOnsTab from '../components/AddOnsTab';
 import ConversationsTab from '../components/ConversationsTab';
 import MetricsTab from '../components/MetricsTab';
 import LeadsTab from '../components/LeadsTab';
+import StylingTab from '../components/StylingTab';
 import "../styles/Dashboard.css";
 
 export default function Dashboard() {
@@ -1656,6 +1657,7 @@ export default function Dashboard() {
             <button className={`dashboard-tab ${activeTab === 'conversations' ? 'dashboard-tab-active' : ''}`} onClick={() => setActiveTab('conversations')}>◐ {t('common:navigation.conversations')}</button>
             <button className={`dashboard-tab ${activeTab === 'metrics' ? 'dashboard-tab-active' : ''}`} onClick={() => setActiveTab('metrics')}>▦ {t('common:navigation.metrics')}</button>
             <button className={`dashboard-tab ${activeTab === 'leads' ? 'dashboard-tab-active' : ''}`} onClick={() => setActiveTab('leads')}>⊛ {t('common:navigation.leads')}</button>
+            <button className={`dashboard-tab ${activeTab === 'styling' ? 'dashboard-tab-active' : ''}`} onClick={() => setActiveTab('styling')}>◉ {t('common:navigation.styling')}</button>
           </div>
 
           {/* Tab Content */}
@@ -2309,6 +2311,7 @@ export default function Dashboard() {
           {activeTab === 'conversations' && <ConversationsTab user={selectedClient} clientId={selectedClientId} />}
           {activeTab === 'metrics' && <MetricsTab user={selectedClient} clientId={selectedClientId} subscription={selectedSubscription} tokensUsed={subscriptionTokensUsed} />}
           {activeTab === 'leads' && <LeadsTab clientId={selectedClientId} />}
+          {activeTab === 'styling' && <StylingTab user={selectedClient} clientId={selectedClientId} />}
             </>
           )}
         </div>
