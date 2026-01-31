@@ -120,6 +120,7 @@ export default function SignupForm({ isOpen }) {
   const [validatedFormData, setValidatedFormData] = useState(null);
   const [emailExists, setEmailExists] = useState(false);
   const [checkingEmail, setCheckingEmail] = useState(false);
+  const [honeypot, setHoneypot] = useState("");
 
   const agentFormWrapperRef = useRef(null);
   const agentFormInnerRef = useRef(null);
@@ -288,6 +289,14 @@ export default function SignupForm({ isOpen }) {
     e.preventDefault();
     setAgentFormError("");
     setAgentFormSuccess(false);
+
+    // Honeypot check - if filled, silently reject (bots fill hidden fields)
+    if (honeypot) {
+      console.log("🤖 Bot detected via honeypot field");
+      // Simulate success to not alert the bot
+      setAgentFormSuccess(true);
+      return;
+    }
 
     if (emailExists) {
       setAgentFormError("This email is already registered. Please log in instead.");
@@ -529,6 +538,7 @@ export default function SignupForm({ isOpen }) {
 
       setTermsAccepted(false);
       setEmailExists(false);
+      setHoneypot("");
       setTimeout(() => setAgentFormSuccess(false), 5000);
     } catch (err) {
       console.error("❌ User creation error:", err);
@@ -955,6 +965,30 @@ export default function SignupForm({ isOpen }) {
                   name="item"
                   value={agentForm.item}
                 />
+
+                {/* Honeypot field - hidden from real users, bots will fill it */}
+                <div
+                  aria-hidden="true"
+                  style={{
+                    position: 'absolute',
+                    left: '-9999px',
+                    top: '-9999px',
+                    opacity: 0,
+                    height: 0,
+                    overflow: 'hidden'
+                  }}
+                >
+                  <label htmlFor="website_url">Leave this field empty</label>
+                  <input
+                    type="text"
+                    id="website_url"
+                    name="website_url"
+                    value={honeypot}
+                    onChange={(e) => setHoneypot(e.target.value)}
+                    tabIndex={-1}
+                    autoComplete="off"
+                  />
+                </div>
 
                 <div className="signup-messages">
                   {agentFormError && <p className="home-form-error">{agentFormError}</p>}
