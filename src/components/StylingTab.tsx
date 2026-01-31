@@ -14,6 +14,7 @@ interface User {
 interface StylingTabProps {
   user: User;
   clientId: number;
+  onNavigateToIntegrations?: () => void;
 }
 
 const CSS_REFERENCE = `/* =============================================
@@ -211,7 +212,7 @@ const CSS_REFERENCE = `/* =============================================
   max-width: 90%;
 }`;
 
-export default function StylingTab({ clientId }: StylingTabProps) {
+export default function StylingTab({ clientId, onNavigateToIntegrations }: StylingTabProps) {
   const [customCss, setCustomCss] = useState("");
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -463,6 +464,26 @@ export default function StylingTab({ clientId }: StylingTabProps) {
                 fontWeight: "bold"
               }}>
                 {saveMessage.includes('successfully') ? '✅' : '❌'} {saveMessage}
+                {saveMessage.includes('successfully') && onNavigateToIntegrations && (
+                  <>
+                    {' '}
+                    <button
+                      onClick={onNavigateToIntegrations}
+                      style={{
+                        background: 'none',
+                        border: 'none',
+                        color: '#007bff',
+                        textDecoration: 'underline',
+                        cursor: 'pointer',
+                        padding: 0,
+                        font: 'inherit',
+                        fontWeight: 'normal'
+                      }}
+                    >
+                      Test it in Integrations
+                    </button>
+                  </>
+                )}
               </span>
             )}
           </div>

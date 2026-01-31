@@ -2311,7 +2311,7 @@ export default function Dashboard() {
           {activeTab === 'conversations' && <ConversationsTab user={selectedClient} clientId={selectedClientId} />}
           {activeTab === 'metrics' && <MetricsTab user={selectedClient} clientId={selectedClientId} subscription={selectedSubscription} tokensUsed={subscriptionTokensUsed} />}
           {activeTab === 'leads' && <LeadsTab clientId={selectedClientId} />}
-          {activeTab === 'styling' && <StylingTab user={selectedClient} clientId={selectedClientId} />}
+          {activeTab === 'styling' && <StylingTab user={selectedClient} clientId={selectedClientId} onNavigateToIntegrations={() => setActiveTab('integrations')} />}
             </>
           )}
         </div>
