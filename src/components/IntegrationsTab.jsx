@@ -100,7 +100,7 @@ export default function IntegrationsTab({ user, clientId }) {
     script.onerror = (err) => {
       console.error('❌ Chatbot script failed to load:', err);
       setChatbotLoading(false);
-      alert('Failed to load chatbot. Please try again.');
+      alert(t('webEmbed.loadFailed'));
     };
 
     document.body.appendChild(script);
@@ -123,8 +123,8 @@ export default function IntegrationsTab({ user, clientId }) {
           color: '#721c24',
           textAlign: 'center'
         }}>
-          <strong>⚠️ MLS Token Required:</strong> You must enter a valid MLS token for this service to work. You can do this above in your company settings.
-          <br /><span style={{ fontSize: '0.9em', fontStyle: 'italic' }}>Note: The token is encrypted upon entry and will not be viewable afterward.</span>
+          <strong>⚠️ {t('mlsWarning.title')}</strong> {t('mlsWarning.message')}
+          <br /><span style={{ fontSize: '0.9em', fontStyle: 'italic' }}>{t('mlsWarning.note')}</span>
         </div>
       )}
 
@@ -162,7 +162,7 @@ export default function IntegrationsTab({ user, clientId }) {
           </button>
         </div>
         <p style={{ fontSize: "0.9em", color: "#666", marginTop: "0.5em", textAlign: "center" }}>
-          Copy this code and paste it in the &lt;head&gt; section of your website at <strong style={{ color: '#007bff' }}>{user?.domain_to_install_bot || 'your domain'}</strong>.
+          {t('webEmbed.copyInstruction')} <strong style={{ color: '#007bff' }}>{user?.domain_to_install_bot || t('webEmbed.yourDomain')}</strong>.
         </p>
         <div style={{ textAlign: "center", marginTop: "1em" }}>
           <button
@@ -185,8 +185,8 @@ export default function IntegrationsTab({ user, clientId }) {
 
       {/* Other Integrations Coming Soon */}
       <div style={{ marginTop: "2em", paddingTop: "2em", borderTop: "1px solid #ddd", textAlign: "center", color: "#666" }}>
-        <h3>Other Integrations</h3>
-        <p>WhatsApp, Messenger, and other integrations coming soon...</p>
+        <h3>{t('otherIntegrations.title')}</h3>
+        <p>{t('otherIntegrations.comingSoon')}</p>
       </div>
     </div>
   );

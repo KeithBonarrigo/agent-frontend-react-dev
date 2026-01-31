@@ -1,6 +1,8 @@
 import { useState, useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { getApiUrl } from "../utils/getApiUrl";
+import "./Tabs.css";
 
 // AddOnsTab - Displays selectable decorators (integrations) that users can enable for their agent
 // Fetches available add-ons from the server's decorator registry (only those with selectable: true)
@@ -8,6 +10,7 @@ import { getApiUrl } from "../utils/getApiUrl";
 // Supports OAuth-based integrations (e.g., Google Calendar) and credential-based add-ons
 // Interacts with: /api/decorators/selectable, /api/clients/:clientId/decorators endpoints
 export default function AddOnsTab({ user, clientId }) {
+  const { t } = useTranslation('addons');
   const [searchParams, setSearchParams] = useSearchParams();
 
   // Selectable Decorators (Add-Ons) state
@@ -108,7 +111,7 @@ export default function AddOnsTab({ user, clientId }) {
 
     if (oauthResult) {
       if (oauthResult === 'success') {
-        setOauthMessage({ type: 'success', text: `Successfully connected ${provider || 'integration'}!` });
+        setOauthMessage({ type: 'success', text: t('oauth.successConnected', { provider: provider || 'integration' }) });
         // Refresh OAuth status for all add-ons
         availableAddOns.forEach(addOn => {
           if (addOn.authType === 'oauth') {
@@ -116,7 +119,7 @@ export default function AddOnsTab({ user, clientId }) {
           }
         });
       } else if (oauthResult === 'error') {
-        setOauthMessage({ type: 'error', text: message || 'Failed to connect integration' });
+        setOauthMessage({ type: 'error', text: message || t('oauth.failedConnect') });
       }
       // Clear URL params after processing
       setSearchParams({});
@@ -210,7 +213,7 @@ export default function AddOnsTab({ user, clientId }) {
   // disconnectOAuth - Disconnects an OAuth-based add-on
   const disconnectOAuth = async (addOnKey) => {
     if (!clientId) return;
-    if (!confirm('Are you sure you want to disconnect this integration?')) return;
+    if (!confirm(t('oauth.confirmDisconnect'))) return;
 
     setSavingAddOn(addOnKey);
     try {
@@ -229,7 +232,7 @@ export default function AddOnsTab({ user, clientId }) {
       // Update local state
       setOauthStatus(prev => ({ ...prev, [addOnKey]: { connected: false } }));
       setEnabledAddOns(prev => prev.filter(key => key !== addOnKey));
-      setOauthMessage({ type: 'success', text: 'Integration disconnected successfully' });
+      setOauthMessage({ type: 'success', text: t('oauth.disconnectSuccess') });
       setTimeout(() => setOauthMessage(null), 3000);
     } catch (error) {
       console.error('Error disconnecting OAuth:', error);
@@ -343,7 +346,7 @@ export default function AddOnsTab({ user, clientId }) {
     try {
       parsedCreds = JSON.parse(credentialsInput);
     } catch {
-      setCredentialsError('Invalid JSON format. Please paste valid JSON credentials.');
+      setCredentialsError(t('modal.invalidJson'));
       return;
     }
 
@@ -367,17 +370,17 @@ export default function AddOnsTab({ user, clientId }) {
 
   if (!clientId) {
     return (
-      <div style={{ padding: "2em", textAlign: "center", color: "#666" }}>
-        <p>Please select an agent to configure add-ons.</p>
+      <div className="tab-empty-state">
+        <p>{t('noClient')}</p>
       </div>
     );
   }
 
   return (
-    <div style={{ padding: "2em", backgroundColor: "#f8f9fa", borderRadius: "8px", border: "1px solid #dee2e6" }}>
-      <h2 style={{ marginTop: 0, color: "#333", textAlign: "center" }}>Add-Ons</h2>
-      <p style={{ textAlign: "center", color: "#666", marginBottom: "1.5em" }}>
-        Enhance your AI agent with additional features and integrations. Some add-ons may require additional configuration.
+    <div className="tab-container">
+      <h2 className="tab-title mt-0">{t('title')}</h2>
+      <p className="tab-description">
+        {t('description')}
       </p>
 
       {/* OAuth Success/Error Message */}
@@ -400,24 +403,15 @@ export default function AddOnsTab({ user, clientId }) {
 
       {/* Loading State */}
       {addOnsLoading && (
-        <div style={{ textAlign: "center", padding: "2em", color: "#666" }}>
+        <div className="tab-loading-state">
           <i className="fa-solid fa-spinner fa-spin" style={{ marginRight: "0.5em" }}></i>
-          Loading available add-ons...
+          {t('loading')}
         </div>
       )}
 
       {/* Error State */}
       {addOnsError && !addOnsLoading && (
-        <div style={{
-          textAlign: "center",
-          padding: "1.5em",
-          backgroundColor: "#f8d7da",
-          border: "1px solid #f5c6cb",
-          borderRadius: "8px",
-          color: "#721c24",
-          maxWidth: "600px",
-          margin: "0 auto"
-        }}>
+        <div className="alert alert-error alert-centered">
           <i className="fa-solid fa-exclamation-triangle" style={{ marginRight: "0.5em" }}></i>
           {addOnsError}
         </div>
@@ -425,20 +419,14 @@ export default function AddOnsTab({ user, clientId }) {
 
       {/* Empty State */}
       {!addOnsLoading && !addOnsError && availableAddOns.length === 0 && (
-        <div style={{ textAlign: "center", padding: "2em", color: "#999" }}>
-          No add-ons available at this time.
+        <div className="tab-no-data">
+          {t('noAddOns')}
         </div>
       )}
 
       {/* Add-Ons Grid - Server-side decorators and Frontend integrations */}
       {!addOnsLoading && !addOnsError && (
-        <div style={{
-          display: "grid",
-          gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))",
-          gap: "1rem",
-          maxWidth: "900px",
-          margin: "0 auto"
-        }}>
+        <div className="grid grid-cards">
           {/* Server-side Add-Ons */}
           {availableAddOns.map((addOn) => {
             const isEnabled = enabledAddOns.includes(addOn.key);
@@ -502,12 +490,12 @@ export default function AddOnsTab({ user, clientId }) {
                       ) : oauthConnected ? (
                         <>
                           <i className="fa-solid fa-unlink"></i>
-                          Disconnect
+                          {t('buttons.disconnect')}
                         </>
                       ) : (
                         <>
                           <i className="fa-solid fa-link"></i>
-                          Connect
+                          {t('buttons.connect')}
                         </>
                       )}
                     </button>
@@ -568,7 +556,7 @@ export default function AddOnsTab({ user, clientId }) {
                       marginRight: "0.5em"
                     }}>
                       <i className="fa-brands fa-google" style={{ marginRight: "0.3em" }}></i>
-                      Sign in with Google
+                      {t('badges.signInWithGoogle')}
                     </span>
                   )}
 
@@ -584,7 +572,7 @@ export default function AddOnsTab({ user, clientId }) {
                       marginBottom: "0.5em"
                     }}>
                       <i className="fa-solid fa-key" style={{ marginRight: "0.3em" }}></i>
-                      Requires Setup
+                      {t('badges.requiresSetup')}
                     </span>
                   )}
 
@@ -610,13 +598,13 @@ export default function AddOnsTab({ user, clientId }) {
                       isOAuthLoading ? (
                         <span style={{ color: "#666" }}>
                           <i className="fa-solid fa-spinner fa-spin" style={{ marginRight: "0.4em" }}></i>
-                          Checking connection...
+                          {t('status.checkingConnection')}
                         </span>
                       ) : oauthConnected ? (
                         <div>
                           <span style={{ color: "#28a745", fontWeight: "600" }}>
                             <i className="fa-solid fa-check-circle" style={{ marginRight: "0.4em" }}></i>
-                            Connected
+                            {t('status.connected')}
                           </span>
                           {oauthEmail && (
                             <span style={{ color: "#666", marginLeft: "0.5em", fontSize: "0.9em" }}>
@@ -627,7 +615,7 @@ export default function AddOnsTab({ user, clientId }) {
                       ) : (
                         <span style={{ color: "#999" }}>
                           <i className="fa-solid fa-circle" style={{ marginRight: "0.4em" }}></i>
-                          Not connected
+                          {t('status.notConnected')}
                         </span>
                       )
                     ) : (
@@ -637,7 +625,7 @@ export default function AddOnsTab({ user, clientId }) {
                         fontWeight: isEnabled ? "600" : "400"
                       }}>
                         <i className={`fa-solid ${isEnabled ? "fa-check-circle" : "fa-circle"}`} style={{ marginRight: "0.4em" }}></i>
-                        {isEnabled ? "Enabled" : "Disabled"}
+                        {isEnabled ? t('status.enabled') : t('status.disabled')}
                       </span>
                     )}
                   </div>
@@ -649,49 +637,22 @@ export default function AddOnsTab({ user, clientId }) {
       )}
 
       {/* Coming Soon Section */}
-      <div style={{
-        marginTop: "2em",
-        padding: "1.5em",
-        backgroundColor: "#fff3cd",
-        border: "1px solid #ffc107",
-        borderRadius: "8px",
-        textAlign: "center"
-      }}>
-        <p style={{ margin: 0, color: "#856404" }}>
-          <strong>More Add-Ons Coming Soon:</strong> Additional integrations and features are in development.
+      <div className="info-box info-box-warning">
+        <p>
+          <strong>{t('comingSoon.title')}</strong> {t('comingSoon.message')}
         </p>
       </div>
 
       {/* Credentials Modal - Displayed when enabling add-ons that require credentials */}
       {credentialsModal.isOpen && (
-        <div style={{
-          position: "fixed",
-          top: 0,
-          left: 0,
-          right: 0,
-          bottom: 0,
-          backgroundColor: "rgba(0, 0, 0, 0.5)",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          zIndex: 1000
-        }}>
-          <div style={{
-            backgroundColor: "#fff",
-            borderRadius: "8px",
-            padding: "2em",
-            maxWidth: "600px",
-            width: "90%",
-            maxHeight: "80vh",
-            overflow: "auto",
-            boxShadow: "0 4px 20px rgba(0, 0, 0, 0.2)"
-          }}>
-            <h3 style={{ margin: "0 0 0.5em 0", color: "#333" }}>
+        <div className="modal-overlay">
+          <div className="modal-content">
+            <h3 className="modal-header">
               <i className="fa-solid fa-key" style={{ marginRight: "0.5em", color: "#856404" }}></i>
-              Configure {credentialsModal.addOnName}
+              {t('modal.configure', { addOnName: credentialsModal.addOnName })}
             </h3>
-            <p style={{ color: "#666", marginBottom: "1.5em", fontSize: "0.9em" }}>
-              {credentialsModal.credsInstructions || 'This add-on requires credentials to function. Paste your JSON credentials below (e.g., Google service account JSON).'}
+            <p className="modal-body">
+              {credentialsModal.credsInstructions || t('modal.defaultInstructions')}
             </p>
 
             <form onSubmit={handleCredentialsSubmit}>
@@ -699,52 +660,22 @@ export default function AddOnsTab({ user, clientId }) {
                 value={credentialsInput}
                 onChange={(e) => setCredentialsInput(e.target.value)}
                 placeholder={'{"type": "service_account", "project_id": "...", ...}'}
-                style={{
-                  width: "100%",
-                  minHeight: "200px",
-                  padding: "1em",
-                  fontFamily: "monospace",
-                  fontSize: "0.85em",
-                  border: "1px solid #ddd",
-                  borderRadius: "4px",
-                  resize: "vertical",
-                  boxSizing: "border-box"
-                }}
+                className="textarea"
               />
 
               {/* Collapsible "Where do I find this?" Section */}
               {credentialsModal.credsWhereFind && (
-                <div style={{ marginTop: "1em" }}>
+                <div className="mt-2">
                   <button
                     type="button"
                     onClick={() => setShowWhereFind(!showWhereFind)}
-                    style={{
-                      background: "none",
-                      border: "none",
-                      padding: 0,
-                      cursor: "pointer",
-                      color: "#007bff",
-                      fontSize: "0.9em",
-                      display: "flex",
-                      alignItems: "center",
-                      gap: "0.4em"
-                    }}
+                    className="btn-link"
                   >
                     <i className={`fa-solid fa-chevron-${showWhereFind ? 'down' : 'right'}`} style={{ fontSize: "0.8em" }}></i>
-                    Where do I find this?
+                    {t('modal.whereFind')}
                   </button>
                   {showWhereFind && (
-                    <div style={{
-                      marginTop: "0.75em",
-                      padding: "1em",
-                      backgroundColor: "#f8f9fa",
-                      border: "1px solid #e9ecef",
-                      borderRadius: "4px",
-                      fontSize: "0.85em",
-                      lineHeight: "1.6",
-                      whiteSpace: "pre-wrap",
-                      color: "#495057"
-                    }}>
+                    <div className="collapsible-content">
                       {credentialsModal.credsWhereFind}
                     </div>
                   )}
@@ -753,57 +684,33 @@ export default function AddOnsTab({ user, clientId }) {
 
               {/* Error Message */}
               {credentialsError && (
-                <div style={{
-                  marginTop: "1em",
-                  padding: "0.75em",
-                  backgroundColor: "#f8d7da",
-                  border: "1px solid #f5c6cb",
-                  borderRadius: "4px",
-                  color: "#721c24",
-                  fontSize: "0.9em"
-                }}>
+                <div className="alert alert-error mt-2 text-small">
                   <i className="fa-solid fa-exclamation-triangle" style={{ marginRight: "0.5em" }}></i>
                   {credentialsError}
                 </div>
               )}
 
               {/* Modal Buttons */}
-              <div style={{ display: "flex", gap: "1em", marginTop: "1.5em", justifyContent: "flex-end" }}>
+              <div className="modal-footer mt-3">
                 <button
                   type="button"
                   onClick={handleCloseCredentialsModal}
-                  style={{
-                    padding: "0.75em 1.5em",
-                    backgroundColor: "#6c757d",
-                    color: "#fff",
-                    border: "none",
-                    borderRadius: "4px",
-                    cursor: "pointer",
-                    fontSize: "0.9em"
-                  }}
+                  className="btn btn-secondary btn-lg"
                 >
-                  Cancel
+                  {t('modal.cancel')}
                 </button>
                 <button
                   type="submit"
                   disabled={savingAddOn === credentialsModal.addOnKey}
-                  style={{
-                    padding: "0.75em 1.5em",
-                    backgroundColor: savingAddOn === credentialsModal.addOnKey ? "#ccc" : "#28a745",
-                    color: "#fff",
-                    border: "none",
-                    borderRadius: "4px",
-                    cursor: savingAddOn === credentialsModal.addOnKey ? "not-allowed" : "pointer",
-                    fontSize: "0.9em"
-                  }}
+                  className="btn btn-success btn-lg"
                 >
                   {savingAddOn === credentialsModal.addOnKey ? (
                     <>
                       <i className="fa-solid fa-spinner fa-spin" style={{ marginRight: "0.5em" }}></i>
-                      Saving...
+                      {t('modal.saving')}
                     </>
                   ) : (
-                    "Enable Add-On"
+                    t('modal.enableAddOn')
                   )}
                 </button>
               </div>

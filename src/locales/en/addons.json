@@ -1,0 +1,41 @@
+{
+  "title": "Add-Ons",
+  "description": "Enhance your AI agent with additional features and integrations. Some add-ons may require additional configuration.",
+  "noClient": "Please select an agent to configure add-ons.",
+  "loading": "Loading available add-ons...",
+  "noAddOns": "No add-ons available at this time.",
+  "comingSoon": {
+    "title": "More Add-Ons Coming Soon:",
+    "message": "Additional integrations and features are in development."
+  },
+  "buttons": {
+    "disconnect": "Disconnect",
+    "connect": "Connect"
+  },
+  "badges": {
+    "signInWithGoogle": "Sign in with Google",
+    "requiresSetup": "Requires Setup"
+  },
+  "status": {
+    "checkingConnection": "Checking connection...",
+    "connected": "Connected",
+    "notConnected": "Not connected",
+    "enabled": "Enabled",
+    "disabled": "Disabled"
+  },
+  "oauth": {
+    "successConnected": "Successfully connected {{provider}}!",
+    "failedConnect": "Failed to connect integration",
+    "disconnectSuccess": "Integration disconnected successfully",
+    "confirmDisconnect": "Are you sure you want to disconnect this integration?"
+  },
+  "modal": {
+    "configure": "Configure {{addOnName}}",
+    "defaultInstructions": "This add-on requires credentials to function. Paste your JSON credentials below (e.g., Google service account JSON).",
+    "whereFind": "Where do I find this?",
+    "cancel": "Cancel",
+    "saving": "Saving...",
+    "enableAddOn": "Enable Add-On",
+    "invalidJson": "Invalid JSON format. Please paste valid JSON credentials."
+  }
+}

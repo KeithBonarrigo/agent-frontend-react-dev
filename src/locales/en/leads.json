@@ -1,0 +1,26 @@
+{
+  "title": "Leads",
+  "noSubscription": "Please select a subscription to view leads.",
+  "searchPlaceholder": "Search leads...",
+  "buttons": {
+    "loading": "Loading...",
+    "refresh": "Refresh"
+  },
+  "loadingLeads": "Loading leads...",
+  "error": "Error:",
+  "empty": {
+    "noMatch": "No leads match your search.",
+    "noLeads": "No leads yet.",
+    "hint": "Leads will appear here when captured by your agent."
+  },
+  "table": {
+    "name": "Name",
+    "email": "Email",
+    "phone": "Phone",
+    "preferredContact": "Preferred Contact",
+    "serviceDesired": "Service Desired",
+    "created": "Created",
+    "notes": "Notes"
+  },
+  "showingCount": "Showing {{filtered}} of {{total}} leads"
+}

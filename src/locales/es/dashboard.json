@@ -61,7 +61,19 @@
     "restrictResponseEnd": "Restringir Respuesta Hasta"
   },
   "summary": {
-    "noSettings": "No hay configuración de agente. Haga clic en Editar para agregar detalles."
+    "noSettings": "No hay configuración de agente. Haga clic en Editar para agregar detalles.",
+    "agent": "Agente",
+    "company": "Empresa",
+    "installDomain": "Dominio de Instalación",
+    "email": "Correo",
+    "officePhone": "Teléfono de Oficina",
+    "whatsappEnabled": "WhatsApp Habilitado",
+    "whatsapp": "WhatsApp",
+    "mls": "MLS",
+    "address": "Dirección",
+    "timezone": "Zona Horaria",
+    "agentId": "ID del Agente",
+    "level": "Nivel"
   },
   "cancelModal": {
     "title": "Cancelar Suscripción",

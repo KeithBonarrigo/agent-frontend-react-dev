@@ -1,6 +1,8 @@
+import { useTranslation } from "react-i18next";
 import { useDomain } from "../contexts/DomainContext";
 
 function HomeFooter() {
+  const { t } = useTranslation();
   const currentYear = new Date().getFullYear();
   const { domainInfo, companyName } = useDomain();
 
@@ -34,22 +36,22 @@ function HomeFooter() {
           </div>
 
           <div className="home-copyright">
-            <p>© {currentYear}. All Rights Reserved.</p>
+            <p>© {currentYear}. {t('footer.allRightsReserved')}.</p>
             <p className="home-footer-links">
               <a href="/data-deletion" className="home-footer-link">
-                Our Data Deletion Policy
+                {t('footer.dataDeletionPolicy')}
               </a>{" "}
               |{" "}
               <a href="/cookies" className="home-footer-link">
-                Our Cookie Policy
+                {t('footer.cookiePolicy')}
               </a>{" "}
               <br />{" "}
               <a href="/terms-and-conditions" className="home-footer-link">
-                Terms and Conditions
+                {t('footer.termsAndConditions')}
               </a>{" "}
               |{" "}
               <a href="/privacy" className="home-footer-link">
-                Privacy
+                {t('footer.privacy')}
               </a>
             </p>
             <p>{getCompanyAddress()}</p>

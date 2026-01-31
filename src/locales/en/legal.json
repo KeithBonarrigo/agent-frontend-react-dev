@@ -1,0 +1,293 @@
+{
+  "privacy": {
+    "title": "Our Privacy Policy",
+    "lastUpdated": "Last Updated: August 3, 2025",
+    "sections": {
+      "dataController": {
+        "title": "1. Data Controller Information",
+        "intro": "This Privacy Policy governs the website {{websiteUrl}}, operated by:",
+        "legalName": "Legal Name: Keith Andrew Bonarrigo",
+        "tradeName": "Registered Trade Name: {{companyName}}",
+        "address": "Business Address: 45 S 3rd St, Pacific Beach, WA 98571-5017, United States",
+        "email": "Email Contact: {{infoEmail}}",
+        "ubi": "Unified Business ID (UBI): 602491939"
+      },
+      "dataGathered": {
+        "title": "2. Data We Gather",
+        "intro": "{{companyName}} may capture, retain, and handle the following categories of personal information:",
+        "items": {
+          "identifiers": "Personal identifiers: full name, email address, telephone number (provided voluntarily by you);",
+          "system": "System data: IP address, browser specifications, operating system details, time zone settings, cookies, and navigation patterns;",
+          "activity": "Activity data: your engagement with our website, submission forms, APIs, or integrated systems;",
+          "submitted": "Submitted information: including correspondence, demonstration inquiries, or service requests.",
+          "sensitive": "We deliberately avoid collecting sensitive personal details (such as medical records, religious affiliations, etc.). Please refrain from providing such information through our services."
+        }
+      },
+      "processing": {
+        "title": "3. Why We Process Your Data",
+        "intro": "Personal information is gathered and utilized exclusively for these objectives:",
+        "items": {
+          "access": "Enabling access to our technological solutions;",
+          "questions": "Addressing your questions and correspondence;",
+          "relationships": "Administering client relationships and user profiles;",
+          "performance": "Evaluating platform performance and enhancing user satisfaction;",
+          "promotional": "Delivering promotional or informational content, with your explicit approval;",
+          "statutory": "Meeting statutory and fiscal requirements."
+        }
+      },
+      "legalFoundation": {
+        "title": "4. Legal Foundation for Data Processing",
+        "intro": "Our data processing activities rest upon these legal justifications:",
+        "items": {
+          "consent": "Your direct consent, obtained through voluntary form submissions or platform engagement;",
+          "contractual": "Contractual fulfillment, when delivering requested services;",
+          "legitimate": "Legitimate business interests, including service quality maintenance and security protection;",
+          "regulatory": "Regulatory compliance, as mandated by relevant U.S. legislation."
+        }
+      },
+      "thirdParty": {
+        "title": "5. Third-Party Data Disclosure",
+        "never": "{{companyName}} never sells, leases, or distributes your personal information to unauthorized external entities.",
+        "disclosure": "Information may be disclosed to service vendors supporting our website operations (including hosting providers, analytics platforms, cloud infrastructure, and email delivery services), bound by confidentiality agreements and privacy law compliance requirements."
+      },
+      "crossBorder": {
+        "title": "6. Cross-Border Data Handling",
+        "content": "Given our U.S.-based operations, your information may undergo processing and storage beyond your country's borders. We implement appropriate safeguards to secure your data irrespective of geographic location."
+      },
+      "retention": {
+        "title": "7. Information Retention Period",
+        "content": "Personal data remains in our possession only for durations required to achieve collection objectives or throughout active business relationships. Certain circumstances may necessitate extended retention to satisfy legal mandates or settle disputes."
+      },
+      "security": {
+        "title": "8. Security Measures",
+        "measures": "We deploy appropriate technical, administrative, and organizational controls to shield your personal information from unauthorized intrusion, data loss, or improper use.",
+        "caveat": "Nonetheless, recognize that perfect security remains unattainable, and we cannot promise absolute safeguarding of data transmitted via internet channels."
+      },
+      "rights": {
+        "title": "9. Your Privacy Rights",
+        "intro": "Subject to your jurisdiction, you may be entitled to:",
+        "items": {
+          "view": "View your stored personal information;",
+          "correction": "Submit correction or update requests;",
+          "erasure": "Demand data erasure (\"right to be forgotten\");",
+          "challenge": "Challenge data processing activities;",
+          "portable": "Obtain portable copies of your data;",
+          "restrict": "Restrict processing under specific conditions."
+        },
+        "invoke": "To invoke these rights, reach out via {{infoEmail}} with a detailed description of your request. Legitimate requests receive responses within reasonable timeframes."
+      },
+      "cookies": {
+        "title": "10. Cookie Usage",
+        "usage": "Both first-party and third-party cookies may be deployed on our platform to examine traffic patterns, enhance functionality, and refine user experiences.",
+        "control": "Cookie preferences remain under your control via browser configurations. Additional information appears in our Cookie Policy (coming soon)."
+      },
+      "external": {
+        "title": "11. External Platform Integration",
+        "content": "Certain offerings from {{companyName}} incorporate third-party platforms through APIs or similar technical connections. Engagement with these external services remains completely optional and user-directed. {{companyName}} bears no responsibility for external platform privacy approaches and advises consulting their individual policies."
+      },
+      "updates": {
+        "title": "12. Policy Updates",
+        "revise": "We maintain the prerogative to revise or amend this Privacy Policy at our discretion. Substantial modifications will be published on this page.",
+        "acceptance": "Ongoing site usage following such revisions signifies your acceptance of modified terms."
+      },
+      "contact": {
+        "title": "13. Contact Information",
+        "content": "For inquiries or concerns about this Privacy Policy or our personal data handling practices, contact us at:"
+      }
+    }
+  },
+  "cookies": {
+    "title": "Cookie Policy",
+    "lastUpdated": "Last Updated: August 3, 2025",
+    "sections": {
+      "understanding": {
+        "title": "1. Understanding Cookies",
+        "intro": "Cookies represent tiny text files that get saved to your device (including computers, smartphones, and tablets) during website visits. Websites commonly employ them to maintain functionality, improve browsing experiences, and gather analytics or promotional insights.",
+        "types": "These files can originate from the site you're currently viewing (first-party cookies) or from external parties (third-party cookies) whose features or services are embedded within the website."
+      },
+      "categories": {
+        "title": "2. Cookie Categories on Our Platform",
+        "intro": "Our website at {{websiteUrl}} may utilize the following cookie categories:",
+        "essential": {
+          "title": "Essential Cookies",
+          "content": "Required for core site functionality, these cookies cannot be turned off. They facilitate critical features like secure login, site navigation, and correct page rendering."
+        },
+        "performance": {
+          "title": "Performance & Analytics Cookies",
+          "content": "These gather anonymized metrics that reveal user engagement patterns on our platform. Examples include which pages attract visitors, how long sessions last, and visitor drop-off points."
+        },
+        "functional": {
+          "title": "Functional & Preference Cookies",
+          "content": "These retain your customized settings and choices, including language selection, regional preferences, and interface layout, to provide a personalized experience on return visits."
+        },
+        "advertising": {
+          "title": "Advertising & Targeting Cookies (when applicable)",
+          "content": "These monitor your browsing patterns across multiple sites to deliver advertising tailored to your interests. Implementation requires your explicit consent."
+        }
+      },
+      "thirdParty": {
+        "title": "3. External Service Cookies",
+        "intro": "Our platform integrates third-party services that may install cookies on your device. Such services encompass:",
+        "items": {
+          "analytics": "Analytics and web tracking platforms;",
+          "cloud": "Cloud-hosted automation solutions;",
+          "ai": "Artificial intelligence integrations and conversational agents;",
+          "social": "Social network widgets and monitoring tools."
+        },
+        "note": "Since these cookies fall outside our direct control, we encourage you to consult the privacy and cookie documentation provided by these external vendors."
+      },
+      "controlling": {
+        "title": "4. Controlling Your Cookie Settings",
+        "intro": "You maintain complete control over cookie preferences through your browser configuration. Access detailed guidance for popular browsers below:",
+        "warning": "Be aware that blocking specific cookies could impact website functionality and overall user experience."
+      },
+      "modifications": {
+        "title": "5. Policy Modifications",
+        "content": "{{companyName}} retains the authority to modify this Cookie Policy as circumstances require. Material revisions will be reflected on this page."
+      },
+      "contact": {
+        "title": "6. Reach Out to Us",
+        "content": "For inquiries regarding this Cookie Policy or our cookie implementation, please contact us at:"
+      }
+    }
+  },
+  "terms": {
+    "title": "Terms and Conditions",
+    "lastUpdated": "Effective Date: January 1, 2025",
+    "sections": {
+      "serviceOverview": {
+        "title": "1. Service Overview",
+        "content": "Our conversational agent delivers automated replies to user inquiries using natural language understanding technology. It offers assistance through information delivery, directional guidance, and fundamental support capabilities. This chatbot serves general informational needs and cannot guarantee the accuracy or currency of all provided information."
+      },
+      "eligibility": {
+        "title": "2. Who May Use This Service",
+        "content": "Your use of the Service constitutes confirmation that you have reached 18 years of age or your jurisdiction's legal age of majority. When accessing the Service as an organizational representative, you affirm possessing proper authorization to accept these Terms for that entity."
+      },
+      "usage": {
+        "title": "3. Permitted Usage Guidelines",
+        "intro": "You commit to:",
+        "items": {
+          "legitimate": "Employ the Service exclusively for legitimate purposes.",
+          "integrity": "Refrain from compromising the chatbot's operational integrity or performance.",
+          "malware": "Avoid transmitting malicious software, viruses, or damaging content.",
+          "harassment": "Never leverage the Service for harassment, abuse, or inflicting harm upon others."
+        },
+        "authority": "We maintain authority to restrict or revoke access for users who breach these guidelines."
+      },
+      "privacy": {
+        "title": "4. Information Gathering & Privacy",
+        "intro": "Our chatbot may capture and retain various data points, including:",
+        "items": {
+          "communications": "Communications you submit to the chatbot",
+          "metadata": "System metadata (such as IP addresses and device specifications)",
+          "behavioral": "Behavioral patterns used to refine our service"
+        },
+        "seePolicy": "Consult our Privacy Policy for comprehensive information about data handling practices."
+      },
+      "aiConstraints": {
+        "title": "5. Artificial Intelligence Constraints",
+        "intro": "Our chatbot employs automated intelligence systems to formulate responses. These outputs:",
+        "items": {
+          "accuracy": "Cannot be warranted for accuracy, completeness, or relevance to your particular circumstances.",
+          "professional": "Must not be interpreted as legal, medical, financial, or expert professional counsel.",
+          "inaccuracies": "May occasionally include inaccuracies or unsuitable material, despite our ongoing efforts to reduce such occurrences."
+        },
+        "responsibility": "You assume full responsibility when acting on chatbot-provided information."
+      },
+      "ownership": {
+        "title": "6. Ownership Rights",
+        "content": "Every element of content, source code, and intellectual property associated with the chatbot belongs to {{companyName}} or its authorized licensors. Reproduction, distribution, or derivative creation requires explicit written consent."
+      },
+      "disclaimers": {
+        "title": "7. Service Disclaimers",
+        "intro": "This Service operates on an \"as is\" and \"as available\" basis. We provide no guarantees, whether stated or implied, concerning:",
+        "items": {
+          "suitability": "Suitability for your specific use case",
+          "uptime": "Continuous accessibility or operational uptime",
+          "precision": "Precision or thoroughness of generated responses"
+        },
+        "noLiability": "No liability attaches to us for damages stemming from Service usage."
+      },
+      "modifications": {
+        "title": "8. Terms Modifications",
+        "content": "These Terms may be revised at our discretion. Modifications will appear on this page alongside an updated effective date. Your continued Service usage following changes indicates acceptance of the revised Terms."
+      },
+      "termination": {
+        "title": "9. Service Termination",
+        "content": "We hold the right to discontinue or suspend the Service at our discretion, whether or not advance notice is provided. Access privileges may be withdrawn if you breach these Terms."
+      },
+      "revisions": {
+        "title": "10. Policy Revisions",
+        "content": "This policy may undergo updates as needed. Changes will be communicated through revision of the \"Effective Date\" displayed at the page header."
+      },
+      "contact": {
+        "title": "11. Contact Information",
+        "intro": "For questions about this policy or our data management practices, please reach out:",
+        "address": "3242 NE 3rd Ave. Camas, WA 98607"
+      }
+    }
+  },
+  "dataDeletion": {
+    "title": "User Data Deletion Policy",
+    "lastUpdated": "Effective Date: August 3, 2025",
+    "intro": "{{companyName}} prioritizes your privacy and empowers you with complete control over your personal information. This policy details the process for requesting deletion of data gathered through our Facebook or Instagram application integrations.",
+    "sections": {
+      "whatWeCollect": {
+        "title": "1. Information We Collect",
+        "intro": "Through your authorized Meta login, our application may gather the following information when you connect via Facebook or Instagram:",
+        "items": {
+          "profile": "Publicly available profile details (display name, avatar image, etc.)",
+          "email": "Your email address",
+          "userId": "Unique user identifier from Facebook or Instagram",
+          "additional": "Additional information you've specifically authorized via Facebook Login permissions"
+        }
+      },
+      "howWeUse": {
+        "title": "2. How We Use Your Information",
+        "intro": "Your data enables us to:",
+        "items": {
+          "access": "Grant you access to our platform's functionality",
+          "personalize": "Tailor and enhance your experience",
+          "contact": "Reach out to you when you've provided consent"
+        }
+      },
+      "requesting": {
+        "title": "3. Requesting Data Removal",
+        "intro": "Should you choose to remove your information from our platform, you have two convenient options:",
+        "optionA": {
+          "title": "Option A: Self-Service Deletion",
+          "items": {
+            "step1": "Access your Facebook Account Settings.",
+            "step2": "Select Apps and Websites from the menu.",
+            "step3": "Locate our application in your connected apps.",
+            "step4": "Remove the application to automatically initiate data deletion."
+          }
+        },
+        "optionB": {
+          "title": "Option B: Email Request",
+          "send": "Send your deletion request directly to:",
+          "include": "Your email should contain:",
+          "items": {
+            "subject": "Subject line: User Data Deletion Request",
+            "name": "Your complete name",
+            "userId": "Your Facebook/Instagram User ID (alternatively, provide a screenshot showing your app profile)"
+          },
+          "processing": "Your request will be handled within 7 business days, and you'll receive email confirmation once the deletion is complete."
+        }
+      },
+      "retention": {
+        "title": "4. Data Retention Timeline",
+        "content": "Your information is stored only as long as needed to serve the purposes described in this policy or to meet legal obligations. Upon deletion, your personal information is permanently erased from our infrastructure."
+      },
+      "contact": {
+        "title": "5. Get in Touch",
+        "content": "For questions or concerns regarding this Data Deletion Policy or our data handling practices, reach out to us:",
+        "address": "3242 NE 3rd Ave Camas, WA 98607"
+      },
+      "updates": {
+        "title": "6. Updates to This Policy",
+        "content": "This policy may be revised to accommodate legal or operational changes. Updates will appear on this page with a new \"Effective Date\" noted at the top."
+      }
+    }
+  }
+}

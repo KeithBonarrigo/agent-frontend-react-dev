@@ -1,0 +1,28 @@
+{
+  "title": "Historial de Conversaciones",
+  "noSubscription": "Por favor selecciona una suscripción para ver conversaciones.",
+  "searchPlaceholder": "Filtrar por dominio, canal o usuario...",
+  "buttons": {
+    "expandAll": "Expandir Todo",
+    "expandAllLive": "Expandir Todo En Vivo",
+    "collapseAll": "Colapsar Todo",
+    "refresh": "Actualizar",
+    "liveOnly": "Solo En Vivo",
+    "showAll": "Mostrar Todo"
+  },
+  "loading": "Cargando conversaciones...",
+  "error": "Error:",
+  "noConversations": "No se encontraron conversaciones para esta suscripción.",
+  "online": "en línea",
+  "channel": "Canal:",
+  "user": "Usuario:",
+  "channels": "canal",
+  "channels_plural": "canales",
+  "users": "usuario",
+  "users_plural": "usuarios",
+  "messages": "mensajes",
+  "tokens": "tokens",
+  "first": "Primero:",
+  "last": "Último:",
+  "duration": "Duración:"
+}

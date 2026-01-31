@@ -1,0 +1,20 @@
+{
+  "title": "Métricas",
+  "noSubscription": "Por favor selecciona una suscripción para ver métricas.",
+  "tokenUsage": {
+    "title": "Uso de Tokens de Suscripción",
+    "percentUsed": "{{percent}}% de tu límite mensual de tokens usado",
+    "unlimited": "Tokens ilimitados disponibles"
+  },
+  "loading": "Cargando métricas...",
+  "error": "Error:",
+  "cards": {
+    "totalConversations": "Conversaciones Totales",
+    "totalMessages": "Mensajes Totales",
+    "totalTokens": "Tokens Totales Usados",
+    "activeUsers": "Usuarios Activos (Ahora)",
+    "avgMessagesPerConversation": "Promedio de Mensajes por Conversación",
+    "avgTokensPerMessage": "Promedio de Tokens por Mensaje"
+  },
+  "comingSoon": "Más métricas y análisis detallados próximamente."
+}

@@ -1,0 +1,22 @@
+{
+  "title": "Custom CSS Styling",
+  "loading": "Loading...",
+  "description": "Add custom CSS to style your chat widget. These styles will be injected into the widget.",
+  "buttons": {
+    "suggestColors": "Suggest Colors",
+    "analyzing": "Analyzing...",
+    "copyCurrentStyling": "Copy Current Styling",
+    "copied": "Copied!",
+    "save": "Save CSS",
+    "saving": "Saving..."
+  },
+  "messages": {
+    "colorsSuggested": "Colors suggested! Review and save when ready.",
+    "colorsFailed": "Failed to analyze colors. Please try again.",
+    "copiedMessage": "Current styling copied! Paste it in the text field below to edit.",
+    "saveSuccess": "Styling saved successfully!",
+    "saveFailed": "Failed to save styling",
+    "testInIntegrations": "Test it in Integrations"
+  },
+  "placeholder": "Enter your custom CSS here..."
+}

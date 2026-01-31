@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useTranslation } from "react-i18next";
 import { getApiUrl } from "../utils/getApiUrl";
 
 // TypeScript interfaces
@@ -49,6 +50,8 @@ interface GoogleDriveFile {
 }
 
 export default function ConfigurationsTab({ user, clientId }: ConfigurationsTabProps) {
+  const { t } = useTranslation('configurations');
+
   // Instructions state
   const [instructions, setInstructions] = useState<string[]>(['']);
   const [loadingInstructions, setLoadingInstructions] = useState(true);
@@ -743,7 +746,7 @@ export default function ConfigurationsTab({ user, clientId }: ConfigurationsTabP
               marginBottom: isInstructionsCollapsed ? 0 : "1em"
             }}
           >
-            <h2 style={{ margin: 0 }}>Add Your Agent Instructions</h2>
+            <h2 style={{ margin: 0 }}>{t('instructions.title')}</h2>
             <i
               className={`fa-solid fa-chevron-${isInstructionsCollapsed ? 'down' : 'up'}`}
               style={{ fontSize: "1.2em", color: "#666" }}
@@ -752,12 +755,12 @@ export default function ConfigurationsTab({ user, clientId }: ConfigurationsTabP
 
           {!isInstructionsCollapsed && (
             loadingInstructions ? (
-              <p>Loading instructions...</p>
+              <p>{t('instructions.loading')}</p>
             ) : (
               <form onSubmit={handleSubmit}>
                 <div style={{ marginBottom: "1em" }}>
                   <p style={{ color: "#666", fontSize: "0.9em", textAlign: "center" }}>
-                    Add custom instructions for your AI agent. Drag to reorder, or use arrow buttons.
+                    {t('instructions.description')}
                   </p>
                 </div>
 
@@ -897,7 +900,7 @@ export default function ConfigurationsTab({ user, clientId }: ConfigurationsTabP
                     }}
                   >
                     <i className="fa-solid fa-plus"></i>
-                    Add Instruction
+                    {t('instructions.addButton')}
                   </button>
 
                   <button
@@ -918,12 +921,12 @@ export default function ConfigurationsTab({ user, clientId }: ConfigurationsTabP
                     {saving ? (
                       <>
                         <i className="fa-solid fa-spinner fa-spin"></i>
-                        Saving...
+                        {t('instructions.saving')}
                       </>
                     ) : (
                       <>
                         <i className="fa-solid fa-floppy-disk"></i>
-                        Save Instructions
+                        {t('instructions.saveButton')}
                       </>
                     )}
                   </button>
@@ -957,7 +960,7 @@ export default function ConfigurationsTab({ user, clientId }: ConfigurationsTabP
             marginBottom: isTrainingCollapsed ? 0 : "1em"
           }}
         >
-          <h2 style={{ margin: 0 }}>Training</h2>
+          <h2 style={{ margin: 0 }}>{t('training.title')}</h2>
           <i
             className={`fa-solid fa-chevron-${isTrainingCollapsed ? 'down' : 'up'}`}
             style={{ fontSize: "1.2em", color: "#666" }}
@@ -984,7 +987,7 @@ export default function ConfigurationsTab({ user, clientId }: ConfigurationsTabP
               >
                 <h3 style={{ margin: 0, color: '#333', display: 'flex', alignItems: 'center', gap: '0.5em' }}>
                   <i className="fa-solid fa-globe" style={{ color: '#007bff' }}></i>
-                  URL Embeddings
+                  {t('training.urlEmbeddings.title')}
                   <span style={{ fontSize: '0.75em', color: '#666', fontWeight: 'normal' }}>
                     - {embeddingsList.length} {embeddingsList.length === 1 ? 'Embedding' : 'Embeddings'}
                   </span>
@@ -1591,7 +1594,7 @@ export default function ConfigurationsTab({ user, clientId }: ConfigurationsTabP
             marginBottom: isModelsCollapsed ? 0 : "1em"
           }}
         >
-          <h2 style={{ margin: 0 }}>Models</h2>
+          <h2 style={{ margin: 0 }}>{t('models.title')}</h2>
           <i
             className={`fa-solid fa-chevron-${isModelsCollapsed ? 'down' : 'up'}`}
             style={{ fontSize: "1.2em", color: "#666" }}
@@ -1633,7 +1636,7 @@ export default function ConfigurationsTab({ user, clientId }: ConfigurationsTabP
                     letterSpacing: "0.5px",
                     fontWeight: "600"
                   }}>
-                    Current Model
+                    {t('models.currentModel')}
                   </div>
                   <div style={{
                     display: "flex",
@@ -1683,7 +1686,7 @@ export default function ConfigurationsTab({ user, clientId }: ConfigurationsTabP
                         fontSize: "14px"
                       }}
                     >
-                      Select Model:
+                      {t('models.selectModel')}
                     </label>
                     <select
                       id="model-select"
@@ -1700,7 +1703,7 @@ export default function ConfigurationsTab({ user, clientId }: ConfigurationsTabP
                         fontFamily: "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif"
                       }}
                     >
-                      <option value="">-- Select a model --</option>
+                      <option value="">{t('models.selectPlaceholder')}</option>
 
                       <optgroup label="Claude (Anthropic)">
                         <option value="claude-3-5-sonnet" disabled={isRestrictedLevel} style={isRestrictedLevel ? { color: '#999', fontStyle: 'italic' } : {}}>
@@ -1754,7 +1757,7 @@ export default function ConfigurationsTab({ user, clientId }: ConfigurationsTabP
                   border: "1px solid #c3e6cb",
                   fontSize: "14px"
                 }}>
-                  Model updated successfully!
+                  {t('models.success')}
                 </div>
               )}
 
@@ -1774,12 +1777,12 @@ export default function ConfigurationsTab({ user, clientId }: ConfigurationsTabP
                   }}>
                     <div style={{ fontSize: "24px", marginBottom: "8px" }}>🔒</div>
                     <div style={{ fontWeight: "700", fontSize: "16px", marginBottom: "6px" }}>
-                      Premium Models Locked
+                      {t('models.restricted.title')}
                     </div>
                     <div>
-                      Your current plan only allows access to basic models.
+                      {t('models.restricted.message')}
                       <br />
-                      <strong>Upgrade to Pro or Enterprise to unlock all models!</strong>
+                      <strong>{t('models.restricted.upgrade')}</strong>
                     </div>
                   </div>
                 ) : (
@@ -1793,7 +1796,7 @@ export default function ConfigurationsTab({ user, clientId }: ConfigurationsTabP
                     border: "1px solid #ffeeba",
                     textAlign: "center"
                   }}>
-                    <strong>Note:</strong> Different models have different capabilities and pricing. Choose based on your needs.
+                    <strong>{t('models:note.title')}</strong> {t('models.note')}
                   </div>
                 )
               )}
@@ -1821,7 +1824,7 @@ export default function ConfigurationsTab({ user, clientId }: ConfigurationsTabP
                       opacity: modelLoading ? 0.6 : 1
                     }}
                   >
-                    Cancel
+                    {t('common:buttons.cancel')}
                   </button>
                   <button
                     type="submit"
@@ -1838,7 +1841,7 @@ export default function ConfigurationsTab({ user, clientId }: ConfigurationsTabP
                       opacity: modelLoading || !selectedModel || isModelUnchanged() ? 0.6 : 1
                     }}
                   >
-                    {modelLoading ? 'Updating...' : 'Update Model'}
+                    {modelLoading ? t('models.updating') : t('models.updateButton')}
                   </button>
                 </div>
               )}

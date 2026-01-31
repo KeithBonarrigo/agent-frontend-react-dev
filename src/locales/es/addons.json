@@ -1,0 +1,41 @@
+{
+  "title": "Complementos",
+  "description": "Mejora tu agente de IA con funciones e integraciones adicionales. Algunos complementos pueden requerir configuración adicional.",
+  "noClient": "Por favor selecciona un agente para configurar complementos.",
+  "loading": "Cargando complementos disponibles...",
+  "noAddOns": "No hay complementos disponibles en este momento.",
+  "comingSoon": {
+    "title": "Más Complementos Próximamente:",
+    "message": "Integraciones y funciones adicionales están en desarrollo."
+  },
+  "buttons": {
+    "disconnect": "Desconectar",
+    "connect": "Conectar"
+  },
+  "badges": {
+    "signInWithGoogle": "Iniciar sesión con Google",
+    "requiresSetup": "Requiere Configuración"
+  },
+  "status": {
+    "checkingConnection": "Verificando conexión...",
+    "connected": "Conectado",
+    "notConnected": "No conectado",
+    "enabled": "Habilitado",
+    "disabled": "Deshabilitado"
+  },
+  "oauth": {
+    "successConnected": "¡{{provider}} conectado exitosamente!",
+    "failedConnect": "Error al conectar la integración",
+    "disconnectSuccess": "Integración desconectada exitosamente",
+    "confirmDisconnect": "¿Estás seguro de que deseas desconectar esta integración?"
+  },
+  "modal": {
+    "configure": "Configurar {{addOnName}}",
+    "defaultInstructions": "Este complemento requiere credenciales para funcionar. Pega tus credenciales JSON a continuación (ej: JSON de cuenta de servicio de Google).",
+    "whereFind": "¿Dónde encuentro esto?",
+    "cancel": "Cancelar",
+    "saving": "Guardando...",
+    "enableAddOn": "Habilitar Complemento",
+    "invalidJson": "Formato JSON inválido. Por favor pega credenciales JSON válidas."
+  }
+}

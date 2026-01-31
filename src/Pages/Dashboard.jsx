@@ -1180,7 +1180,7 @@ export default function Dashboard() {
             <div>
               <h1 className="subscription-title">{t('title')}</h1>
               <p className="subscription-welcome">
-                Welcome, {user.first_name || 'User'} {user.last_name || ''} ({user.email})
+                {t('welcome')}, {user.first_name || 'User'} {user.last_name || ''} ({user.email})
               </p>
             </div>
             <button onClick={handleLogout} className="btn btn-danger btn-sm btn-icon">
@@ -1585,38 +1585,38 @@ export default function Dashboard() {
                   /* Read-only view - compact single line */
                   <div className="flex flex-wrap gap-sm text-sm mt-sm">
                     {agentEditForm.agent_name && (
-                      <span><strong className="text-muted">Agent:</strong> {agentEditForm.agent_name}</span>
+                      <span><strong className="text-muted">{t('dashboard:summary.agent')}:</strong> {agentEditForm.agent_name}</span>
                     )}
                     {agentEditForm.company && (
-                      <span><strong className="text-muted">Company:</strong> {agentEditForm.company}</span>
+                      <span><strong className="text-muted">{t('dashboard:summary.company')}:</strong> {agentEditForm.company}</span>
                     )}
                     {agentEditForm.domain_to_install_bot && (
-                      <span><strong className="text-muted">Install Domain:</strong> {agentEditForm.domain_to_install_bot}</span>
+                      <span><strong className="text-muted">{t('dashboard:summary.installDomain')}:</strong> {agentEditForm.domain_to_install_bot}</span>
                     )}
                     {agentEditForm.contact_email && (
-                      <span><strong className="text-muted">Email:</strong> {agentEditForm.contact_email}</span>
+                      <span><strong className="text-muted">{t('dashboard:summary.email')}:</strong> {agentEditForm.contact_email}</span>
                     )}
                     {agentEditForm.contact_phone && (
-                      <span><strong className="text-muted">Office Phone:</strong> {agentEditForm.contact_phone}{agentEditForm.contact_phone_wsp && <span style={{ color: '#25D366' }}> (WhatsApp Enabled)</span>}</span>
+                      <span><strong className="text-muted">{t('dashboard:summary.officePhone')}:</strong> {agentEditForm.contact_phone}{agentEditForm.contact_phone_wsp && <span style={{ color: '#25D366' }}> ({t('dashboard:summary.whatsappEnabled')})</span>}</span>
                     )}
                     {agentEditForm.office_wsp_phone && agentEditForm.office_wsp_phone !== agentEditForm.contact_phone && (
-                      <span><strong className="text-muted">WhatsApp:</strong> {agentEditForm.office_wsp_phone}</span>
+                      <span><strong className="text-muted">{t('dashboard:summary.whatsapp')}:</strong> {agentEditForm.office_wsp_phone}</span>
                     )}
                     {agentEditForm.mls_token && (selectedClient?.level === 'mls' || selectedClient?.subscription_level === 'mls') && (
-                      <span><strong className="text-muted">MLS:</strong> ••••••••</span>
+                      <span><strong className="text-muted">{t('dashboard:summary.mls')}:</strong> ••••••••</span>
                     )}
                     {(agentEditForm.office_address || agentEditForm.timezone) && (
                       <div className="flex gap-lg flex-wrap mt-sm" style={{ flexBasis: '100%' }}>
                         {agentEditForm.office_address && (
-                          <span><strong className="text-muted">Address:</strong> {agentEditForm.office_address}</span>
+                          <span><strong className="text-muted">{t('dashboard:summary.address')}:</strong> {agentEditForm.office_address}</span>
                         )}
                         {agentEditForm.timezone && (
-                          <span><strong className="text-muted">Timezone:</strong> {agentEditForm.timezone}</span>
+                          <span><strong className="text-muted">{t('dashboard:summary.timezone')}:</strong> {agentEditForm.timezone}</span>
                         )}
                       </div>
                     )}
                     {!agentEditForm.agent_name && !agentEditForm.company && !agentEditForm.contact_email && !agentEditForm.contact_phone && !agentEditForm.office_address && (
-                      <span className="text-muted" style={{ fontStyle: 'italic' }}>No agent settings configured. Click Edit to add details.</span>
+                      <span className="text-muted" style={{ fontStyle: 'italic' }}>{t('dashboard:summary.noSettings')}</span>
                     )}
                   </div>
                 )}
@@ -1636,13 +1636,13 @@ export default function Dashboard() {
         <div className="card">
           {/* Selected Agent Details */}
           <div className="subscription-header flex flex-wrap flex-center gap-md" style={{ gap: '1em 2em' }}>
-            <span className="text-white"><strong>Agent:</strong> {getClientDisplayName(selectedClient)}</span>
-            <span className="text-white"><strong>Agent ID:</strong> {selectedClient.clientid}</span>
-            <span className="text-white"><strong>Level:</strong> <span className="capitalize" style={{
+            <span className="text-white"><strong>{t('dashboard:summary.agent')}:</strong> {getClientDisplayName(selectedClient)}</span>
+            <span className="text-white"><strong>{t('dashboard:summary.agentId')}:</strong> {selectedClient.clientid}</span>
+            <span className="text-white"><strong>{t('dashboard:summary.level')}:</strong> <span className="capitalize" style={{
               backgroundColor: getLevelColor(selectedClient.subscription_level || selectedClient.level),
               color: 'white', padding: '0.15em 0.5em', borderRadius: '3px', fontSize: '0.9em'
             }}>{selectedClient.subscription_level || selectedClient.level || 'basic'}</span></span>
-            {selectedClient.company && <span className="text-white"><strong>Company:</strong> {selectedClient.company}</span>}
+            {selectedClient.company && <span className="text-white"><strong>{t('dashboard:summary.company')}:</strong> {selectedClient.company}</span>}
           </div>
 
           {/* Tabs - Navigation for different dashboard sections */}

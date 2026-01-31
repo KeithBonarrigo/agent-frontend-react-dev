@@ -1,0 +1,97 @@
+{
+  "title": "Configurations",
+  "instructions": {
+    "title": "Add Your Agent Instructions",
+    "description": "Add custom instructions for your AI agent. Drag to reorder, or use arrow buttons.",
+    "placeholder": "Enter instruction...",
+    "addButton": "Add Another Instruction",
+    "saveButton": "Save Instructions",
+    "saving": "Saving...",
+    "loading": "Loading instructions...",
+    "success": "Instructions saved successfully!",
+    "error": "Failed to save instructions"
+  },
+  "training": {
+    "title": "Training",
+    "urlEmbeddings": {
+      "title": "URL Embeddings",
+      "description": "Add URLs to train your agent with web content",
+      "addButton": "Add URL Embedding",
+      "urlPlaceholder": "https://example.com/page",
+      "urlLabel": "Website URL",
+      "createButton": "Create Embedding",
+      "creating": "Creating Embedding...",
+      "cancel": "Cancel",
+      "noEmbeddings": "No URL embeddings yet",
+      "loading": "Loading embeddings...",
+      "success": "Embedding created successfully!",
+      "deleteSuccess": "Embedding deleted successfully!",
+      "errors": {
+        "invalidUrl": "Please enter a valid URL (e.g., https://example.com)",
+        "required": "Please enter a valid URL"
+      }
+    },
+    "fileEmbeddings": {
+      "title": "File Embeddings",
+      "description": "Upload documents to train your agent",
+      "addButton": "Add File Embedding",
+      "fileLabel": "Select File",
+      "supportedFormats": "Supported formats: PDF, TXT, DOC, DOCX, CSV",
+      "createButton": "Create Embedding",
+      "creating": "Creating Embedding...",
+      "cancel": "Cancel",
+      "noEmbeddings": "No file embeddings yet",
+      "loading": "Loading file embeddings...",
+      "success": "File embedding created successfully!",
+      "deleteSuccess": "Embedding deleted successfully!",
+      "fileSource": {
+        "label": "File Source:",
+        "local": "Local File",
+        "googleDrive": "Google Drive"
+      },
+      "googleDrive": {
+        "selectFile": "Select from Google Drive",
+        "selectedFile": "Selected file:",
+        "signIn": "Sign in with Google",
+        "importButton": "Import from Google Drive",
+        "notConfigured": "Google Drive is not configured. Please contact your administrator."
+      },
+      "errors": {
+        "noFile": "Please select a file"
+      }
+    }
+  },
+  "models": {
+    "title": "Models",
+    "currentModel": "Current Model",
+    "selectModel": "Select Model:",
+    "selectPlaceholder": "-- Select a model --",
+    "loading": "Loading...",
+    "updateButton": "Update Model",
+    "updating": "Updating...",
+    "cancelButton": "Cancel",
+    "success": "Model updated successfully!",
+    "note": "Different models have different capabilities and pricing. Choose based on your needs.",
+    "restricted": {
+      "title": "Premium Models Locked",
+      "message": "Your current plan only allows access to basic models.",
+      "upgrade": "Upgrade to Pro or Enterprise to unlock all models!"
+    },
+    "groups": {
+      "claude": "Claude (Anthropic)",
+      "openai": "OpenAI"
+    },
+    "descriptions": {
+      "mostPopular": "Most Popular",
+      "newest": "Newest - Sonnet 4",
+      "fastCheap": "Fast & Cheap",
+      "mostCapable": "Most Capable"
+    },
+    "errors": {
+      "noClient": "No client selected",
+      "selectModel": "Please select a model",
+      "fetchFailed": "Failed to fetch current model",
+      "updateFailed": "Failed to update model"
+    }
+  }
+}

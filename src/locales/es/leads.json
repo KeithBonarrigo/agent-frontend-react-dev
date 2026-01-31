@@ -1,0 +1,26 @@
+{
+  "title": "Prospectos",
+  "noSubscription": "Por favor selecciona una suscripción para ver prospectos.",
+  "searchPlaceholder": "Buscar prospectos...",
+  "buttons": {
+    "loading": "Cargando...",
+    "refresh": "Actualizar"
+  },
+  "loadingLeads": "Cargando prospectos...",
+  "error": "Error:",
+  "empty": {
+    "noMatch": "Ningún prospecto coincide con tu búsqueda.",
+    "noLeads": "Aún no hay prospectos.",
+    "hint": "Los prospectos aparecerán aquí cuando sean capturados por tu agente."
+  },
+  "table": {
+    "name": "Nombre",
+    "email": "Correo Electrónico",
+    "phone": "Teléfono",
+    "preferredContact": "Contacto Preferido",
+    "serviceDesired": "Servicio Deseado",
+    "created": "Creado",
+    "notes": "Notas"
+  },
+  "showingCount": "Mostrando {{filtered}} de {{total}} prospectos"
+}

@@ -67,5 +67,12 @@
     "portuguese": "Portuguese",
     "french": "French",
     "italian": "Italian"
+  },
+  "footer": {
+    "allRightsReserved": "All Rights Reserved",
+    "dataDeletionPolicy": "Our Data Deletion Policy",
+    "cookiePolicy": "Our Cookie Policy",
+    "termsAndConditions": "Terms and Conditions",
+    "privacy": "Privacy"
   }
 }

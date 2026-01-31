@@ -6,7 +6,17 @@
     "copyInstruction": "Copia este código y pégalo en la sección <head> de tu sitio web en",
     "yourDomain": "tu dominio",
     "tryItOut": "Probar",
-    "chatbotLoaded": "Chatbot cargado! Búscalo en la esquina."
+    "chatbotLoaded": "Chatbot cargado! Búscalo en la esquina.",
+    "loadFailed": "Error al cargar el chatbot. Por favor intenta de nuevo."
+  },
+  "mlsWarning": {
+    "title": "Token MLS Requerido:",
+    "message": "Debes ingresar un token MLS válido para que este servicio funcione. Puedes hacerlo arriba en la configuración de tu empresa.",
+    "note": "Nota: El token se encripta al ingresarlo y no será visible después."
+  },
+  "otherIntegrations": {
+    "title": "Otras Integraciones",
+    "comingSoon": "WhatsApp, Messenger y otras integraciones próximamente..."
   },
   "whatsapp": {
     "title": "WhatsApp",

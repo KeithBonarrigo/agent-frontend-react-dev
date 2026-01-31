@@ -1,0 +1,97 @@
+{
+  "title": "Configuraciones",
+  "instructions": {
+    "title": "Agrega Instrucciones para tu Agente",
+    "description": "Agrega instrucciones personalizadas para tu agente de IA. Arrastra para reordenar o usa los botones de flecha.",
+    "placeholder": "Ingresa instrucción...",
+    "addButton": "Agregar Otra Instrucción",
+    "saveButton": "Guardar Instrucciones",
+    "saving": "Guardando...",
+    "loading": "Cargando instrucciones...",
+    "success": "Instrucciones guardadas exitosamente!",
+    "error": "Error al guardar instrucciones"
+  },
+  "training": {
+    "title": "Entrenamiento",
+    "urlEmbeddings": {
+      "title": "Embeddings de URL",
+      "description": "Agrega URLs para entrenar a tu agente con contenido web",
+      "addButton": "Agregar Embedding de URL",
+      "urlPlaceholder": "https://ejemplo.com/pagina",
+      "urlLabel": "URL del Sitio Web",
+      "createButton": "Crear Embedding",
+      "creating": "Creando Embedding...",
+      "cancel": "Cancelar",
+      "noEmbeddings": "Aún no hay embeddings de URL",
+      "loading": "Cargando embeddings...",
+      "success": "Embedding creado exitosamente!",
+      "deleteSuccess": "Embedding eliminado exitosamente!",
+      "errors": {
+        "invalidUrl": "Por favor ingresa una URL válida (ej: https://ejemplo.com)",
+        "required": "Por favor ingresa una URL válida"
+      }
+    },
+    "fileEmbeddings": {
+      "title": "Embeddings de Archivos",
+      "description": "Sube documentos para entrenar a tu agente",
+      "addButton": "Agregar Embedding de Archivo",
+      "fileLabel": "Seleccionar Archivo",
+      "supportedFormats": "Formatos soportados: PDF, TXT, DOC, DOCX, CSV",
+      "createButton": "Crear Embedding",
+      "creating": "Creando Embedding...",
+      "cancel": "Cancelar",
+      "noEmbeddings": "Aún no hay embeddings de archivos",
+      "loading": "Cargando embeddings de archivos...",
+      "success": "Embedding de archivo creado exitosamente!",
+      "deleteSuccess": "Embedding eliminado exitosamente!",
+      "fileSource": {
+        "label": "Origen del Archivo:",
+        "local": "Archivo Local",
+        "googleDrive": "Google Drive"
+      },
+      "googleDrive": {
+        "selectFile": "Seleccionar de Google Drive",
+        "selectedFile": "Archivo seleccionado:",
+        "signIn": "Iniciar sesión con Google",
+        "importButton": "Importar desde Google Drive",
+        "notConfigured": "Google Drive no está configurado. Por favor contacta a tu administrador."
+      },
+      "errors": {
+        "noFile": "Por favor selecciona un archivo"
+      }
+    }
+  },
+  "models": {
+    "title": "Modelos",
+    "currentModel": "Modelo Actual",
+    "selectModel": "Seleccionar Modelo:",
+    "selectPlaceholder": "-- Selecciona un modelo --",
+    "loading": "Cargando...",
+    "updateButton": "Actualizar Modelo",
+    "updating": "Actualizando...",
+    "cancelButton": "Cancelar",
+    "success": "Modelo actualizado exitosamente!",
+    "note": "Diferentes modelos tienen diferentes capacidades y precios. Elige según tus necesidades.",
+    "restricted": {
+      "title": "Modelos Premium Bloqueados",
+      "message": "Tu plan actual solo permite acceso a modelos básicos.",
+      "upgrade": "Actualiza a Pro o Enterprise para desbloquear todos los modelos!"
+    },
+    "groups": {
+      "claude": "Claude (Anthropic)",
+      "openai": "OpenAI"
+    },
+    "descriptions": {
+      "mostPopular": "Más Popular",
+      "newest": "Más Nuevo - Sonnet 4",
+      "fastCheap": "Rápido y Económico",
+      "mostCapable": "Más Capaz"
+    },
+    "errors": {
+      "noClient": "No hay cliente seleccionado",
+      "selectModel": "Por favor selecciona un modelo",
+      "fetchFailed": "Error al obtener el modelo actual",
+      "updateFailed": "Error al actualizar el modelo"
+    }
+  }
+}

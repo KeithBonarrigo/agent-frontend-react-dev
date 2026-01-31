@@ -9,6 +9,13 @@ import enSignup from './locales/en/signup.json';
 import enModels from './locales/en/models.json';
 import enIntegrations from './locales/en/integrations.json';
 import enHome from './locales/en/home.json';
+import enConfigurations from './locales/en/configurations.json';
+import enStyling from './locales/en/styling.json';
+import enAddons from './locales/en/addons.json';
+import enConversations from './locales/en/conversations.json';
+import enMetrics from './locales/en/metrics.json';
+import enLeads from './locales/en/leads.json';
+import enLegal from './locales/en/legal.json';
 
 import esCommon from './locales/es/common.json';
 import esDashboard from './locales/es/dashboard.json';
@@ -16,6 +23,13 @@ import esSignup from './locales/es/signup.json';
 import esModels from './locales/es/models.json';
 import esIntegrations from './locales/es/integrations.json';
 import esHome from './locales/es/home.json';
+import esConfigurations from './locales/es/configurations.json';
+import esStyling from './locales/es/styling.json';
+import esAddons from './locales/es/addons.json';
+import esConversations from './locales/es/conversations.json';
+import esMetrics from './locales/es/metrics.json';
+import esLeads from './locales/es/leads.json';
+import esLegal from './locales/es/legal.json';
 
 const resources = {
   en: {
@@ -24,7 +38,14 @@ const resources = {
     signup: enSignup,
     models: enModels,
     integrations: enIntegrations,
-    home: enHome
+    home: enHome,
+    configurations: enConfigurations,
+    styling: enStyling,
+    addons: enAddons,
+    conversations: enConversations,
+    metrics: enMetrics,
+    leads: enLeads,
+    legal: enLegal
   },
   es: {
     common: esCommon,
@@ -32,7 +53,14 @@ const resources = {
     signup: esSignup,
     models: esModels,
     integrations: esIntegrations,
-    home: esHome
+    home: esHome,
+    configurations: esConfigurations,
+    styling: esStyling,
+    addons: esAddons,
+    conversations: esConversations,
+    metrics: esMetrics,
+    leads: esLeads,
+    legal: esLegal
   }
 };
 
@@ -43,7 +71,7 @@ i18n
     resources,
     fallbackLng: 'en',
     defaultNS: 'common',
-    ns: ['common', 'dashboard', 'signup', 'models', 'integrations', 'home'],
+    ns: ['common', 'dashboard', 'signup', 'models', 'integrations', 'home', 'configurations', 'styling', 'addons', 'conversations', 'metrics', 'leads', 'legal'],
 
     detection: {
       order: ['localStorage', 'navigator', 'htmlTag'],

@@ -1,0 +1,22 @@
+{
+  "title": "Estilos CSS Personalizados",
+  "loading": "Cargando...",
+  "description": "Agrega CSS personalizado para estilizar tu widget de chat. Estos estilos se inyectarán en el widget.",
+  "buttons": {
+    "suggestColors": "Sugerir Colores",
+    "analyzing": "Analizando...",
+    "copyCurrentStyling": "Copiar Estilo Actual",
+    "copied": "Copiado!",
+    "save": "Guardar CSS",
+    "saving": "Guardando..."
+  },
+  "messages": {
+    "colorsSuggested": "Colores sugeridos! Revisa y guarda cuando estés listo.",
+    "colorsFailed": "Error al analizar colores. Por favor intenta de nuevo.",
+    "copiedMessage": "Estilo actual copiado! Pégalo en el campo de texto para editarlo.",
+    "saveSuccess": "Estilos guardados exitosamente!",
+    "saveFailed": "Error al guardar estilos",
+    "testInIntegrations": "Probar en Integraciones"
+  },
+  "placeholder": "Ingresa tu CSS personalizado aquí..."
+}

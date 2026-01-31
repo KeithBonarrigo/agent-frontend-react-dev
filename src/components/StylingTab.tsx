@@ -1,5 +1,7 @@
 import { useState, useEffect } from "react";
+import { useTranslation } from "react-i18next";
 import { getApiUrl } from "../utils/getApiUrl";
+import "./Tabs.css";
 
 interface User {
   clientid?: number;
@@ -213,6 +215,7 @@ const CSS_REFERENCE = `/* =============================================
 }`;
 
 export default function StylingTab({ clientId, onNavigateToIntegrations }: StylingTabProps) {
+  const { t } = useTranslation('styling');
   const [customCss, setCustomCss] = useState("");
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -324,163 +327,87 @@ export default function StylingTab({ clientId, onNavigateToIntegrations }: Styli
   };
 
   return (
-    <div style={{ padding: "2em", backgroundColor: "#f8f9fa", borderRadius: "8px", border: "1px solid #dee2e6" }}>
-      <h2>Custom CSS</h2>
+    <div className="tab-container">
+      <h2>{t('title')}</h2>
 
       {loading ? (
-        <p>Loading...</p>
+        <p>{t('loading')}</p>
       ) : (
         <div>
-          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "1em" }}>
-            <p style={{ color: "#666", fontSize: "0.9em", margin: 0 }}>
-              Add custom CSS to style your chat widget. These styles will be injected into the widget.
+          <div className="toolbar">
+            <p className="text-muted text-small mb-0">
+              {t('description')}
             </p>
-            <div style={{ display: "flex", gap: "0.5em" }}>
+            <div className="btn-group">
               <button
                 onClick={handleSuggestColors}
                 disabled={analyzing}
-                style={{
-                  padding: "6px 12px",
-                  backgroundColor: analyzing ? "#6c757d" : "#6f42c1",
-                  color: "white",
-                  border: "none",
-                  borderRadius: "4px",
-                  cursor: analyzing ? "not-allowed" : "pointer",
-                  fontSize: "0.85em",
-                  display: "flex",
-                  alignItems: "center",
-                  gap: "6px"
-                }}
+                className={`btn ${analyzing ? 'btn-secondary' : 'btn-purple'}`}
               >
                 <i className={analyzing ? "fa-solid fa-spinner fa-spin" : "fa-solid fa-palette"}></i>
-                {analyzing ? "Analyzing..." : "Suggest Colors"}
+                {analyzing ? t('buttons.analyzing') : t('buttons.suggestColors')}
               </button>
               <button
                 onClick={handleCopyReference}
-                style={{
-                  padding: "6px 12px",
-                  backgroundColor: copied ? "#28a745" : "#6c757d",
-                  color: "white",
-                  border: "none",
-                  borderRadius: "4px",
-                  cursor: "pointer",
-                  fontSize: "0.85em",
-                  display: "flex",
-                  alignItems: "center",
-                  gap: "6px"
-                }}
+                className={`btn ${copied ? 'btn-success' : 'btn-secondary'}`}
               >
                 <i className={copied ? "fa-solid fa-check" : "fa-solid fa-copy"}></i>
-                {copied ? "Copied!" : "Copy Current Styling"}
+                {copied ? t('buttons.copied') : t('buttons.copyCurrentStyling')}
               </button>
             </div>
           </div>
 
           {suggestMessage && (
-            <p style={{
-              margin: "0 0 1em 0",
-              padding: "8px 12px",
-              borderRadius: "4px",
-              backgroundColor: suggestMessage === "success" ? "#d4edda" : "#f8d7da",
-              color: suggestMessage === "success" ? "#155724" : "#721c24",
-              fontSize: "0.9em",
-              display: "flex",
-              alignItems: "center",
-              gap: "6px"
-            }}>
+            <div className={`alert-inline ${suggestMessage === "success" ? 'alert-success' : 'alert-error'}`}>
               <i className={suggestMessage === "success" ? "fa-solid fa-wand-magic-sparkles" : "fa-solid fa-exclamation-circle"}></i>
-              {suggestMessage === "success" ? "Colors suggested! Review and save when ready." : "Failed to analyze colors. Please try again."}
-            </p>
+              {suggestMessage === "success" ? t('messages.colorsSuggested') : t('messages.colorsFailed')}
+            </div>
           )}
 
           {copyMessage && (
-            <p style={{
-              margin: "0 0 1em 0",
-              padding: "8px 12px",
-              borderRadius: "4px",
-              backgroundColor: "#d1ecf1",
-              color: "#0c5460",
-              fontSize: "0.9em",
-              display: "flex",
-              alignItems: "center",
-              gap: "6px"
-            }}>
+            <div className="alert-inline alert-info">
               <i className="fa-solid fa-clipboard-check"></i>
-              Current styling copied! Paste it in the text field below to edit.
-            </p>
+              {t('messages.copiedMessage')}
+            </div>
           )}
 
           <textarea
             value={customCss}
             onChange={(e) => setCustomCss(e.target.value)}
             placeholder={CSS_REFERENCE}
-            style={{
-              width: "100%",
-              minHeight: "500px",
-              padding: "12px",
-              fontFamily: "monospace",
-              fontSize: "14px",
-              border: "1px solid #ddd",
-              borderRadius: "4px",
-              resize: "vertical",
-              backgroundColor: "#1e1e1e",
-              color: "#d4d4d4",
-              lineHeight: "1.5"
-            }}
+            className="textarea-code"
           />
 
-          <div style={{ marginTop: "1em", display: "flex", alignItems: "center", gap: "1em" }}>
+          <div className="flex flex-center gap-md mt-2">
             <button
               onClick={handleSave}
               disabled={saving}
-              style={{
-                padding: "10px 20px",
-                backgroundColor: saving ? "#6c757d" : "#007bff",
-                color: "white",
-                border: "none",
-                borderRadius: "4px",
-                cursor: saving ? "not-allowed" : "pointer",
-                display: "flex",
-                alignItems: "center",
-                gap: "6px"
-              }}
+              className={`btn btn-lg ${saving ? 'btn-secondary' : 'btn-primary'}`}
             >
               {saving ? (
                 <>
                   <i className="fa-solid fa-spinner fa-spin"></i>
-                  Saving...
+                  {t('buttons.saving')}
                 </>
               ) : (
                 <>
                   <i className="fa-solid fa-floppy-disk"></i>
-                  Save CSS
+                  {t('buttons.save')}
                 </>
               )}
             </button>
 
             {saveMessage && (
-              <span style={{
-                color: saveMessage.includes('successfully') ? '#28a745' : '#dc3545',
-                fontWeight: "bold"
-              }}>
+              <span className={`save-message ${saveMessage.includes('successfully') ? 'save-message-success' : 'save-message-error'}`}>
                 {saveMessage.includes('successfully') ? '✅' : '❌'} {saveMessage}
                 {saveMessage.includes('successfully') && onNavigateToIntegrations && (
                   <>
                     {' '}
                     <button
                       onClick={onNavigateToIntegrations}
-                      style={{
-                        background: 'none',
-                        border: 'none',
-                        color: '#007bff',
-                        textDecoration: 'underline',
-                        cursor: 'pointer',
-                        padding: 0,
-                        font: 'inherit',
-                        fontWeight: 'normal'
-                      }}
+                      className="btn-text-link"
                     >
-                      Test it in Integrations
+                      {t('messages.testInIntegrations')}
                     </button>
                   </>
                 )}

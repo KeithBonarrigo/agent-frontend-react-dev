@@ -6,7 +6,17 @@
     "copyInstruction": "Copy this code and paste it in the <head> section of your website at",
     "yourDomain": "your domain",
     "tryItOut": "Try It Out",
-    "chatbotLoaded": "Chatbot loaded! Look for it in the corner."
+    "chatbotLoaded": "Chatbot loaded! Look for it in the corner.",
+    "loadFailed": "Failed to load chatbot. Please try again."
+  },
+  "mlsWarning": {
+    "title": "MLS Token Required:",
+    "message": "You must enter a valid MLS token for this service to work. You can do this above in your company settings.",
+    "note": "Note: The token is encrypted upon entry and will not be viewable afterward."
+  },
+  "otherIntegrations": {
+    "title": "Other Integrations",
+    "comingSoon": "WhatsApp, Messenger, and other integrations coming soon..."
   },
   "whatsapp": {
     "title": "WhatsApp",

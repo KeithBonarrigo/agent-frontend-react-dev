@@ -1,7 +1,10 @@
 import { useState, useEffect } from "react";
+import { useTranslation } from "react-i18next";
 import { getApiUrl } from "../utils/getApiUrl";
+import "./Tabs.css";
 
 export default function MetricsTab({ clientId, subscription, tokensUsed }) {
+  const { t } = useTranslation('metrics');
   const [metrics, setMetrics] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -53,8 +56,8 @@ export default function MetricsTab({ clientId, subscription, tokensUsed }) {
 
   if (!clientId) {
     return (
-      <div style={{ padding: '2em', textAlign: 'center', color: '#666' }}>
-        <p>Please select a subscription to view metrics.</p>
+      <div className="tab-empty-state">
+        <p>{t('noSubscription')}</p>
       </div>
     );
   }
@@ -62,189 +65,112 @@ export default function MetricsTab({ clientId, subscription, tokensUsed }) {
   const usagePercentage = getUsagePercentage(tokensUsed, subscription?.token_limit);
 
   return (
-    <div style={{ padding: "2em", backgroundColor: "#f8f9fa", borderRadius: "8px", border: "1px solid #dee2e6" }}>
-      <h2 style={{ margin: '0 0 1em 0', textAlign: 'center' }}>Metrics</h2>
+    <div className="tab-container">
+      <h2 className="tab-title">{t('title')}</h2>
 
       {/* Token Usage Section */}
       {subscription && (
-        <div style={{
-          backgroundColor: '#fff',
-          border: '1px solid #dee2e6',
-          borderRadius: '8px',
-          overflow: 'hidden',
-          marginBottom: '1.5em'
-        }}>
-          <div style={{
-            fontSize: '1.17em',
-            color: '#fff',
-            background: 'linear-gradient(135deg, #34495e 0%, #2c3e50 50%, #1a252f 100%)',
-            padding: '10px 16px',
-            fontWeight: '600',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center'
-          }}>
-            Subscription Token Usage
+        <div className="card" style={{ marginBottom: '1.5em' }}>
+          <div className="card-header">
+            {t('tokenUsage.title')}
           </div>
-          <div style={{ padding: '1.5em' }}>
-            <div style={{ display: 'flex', alignItems: 'baseline', gap: '8px', justifyContent: 'center' }}>
-              <span style={{
-                fontSize: '2.5em',
-                fontWeight: 'bold',
-                color: getUsageColor(usagePercentage)
-              }}>
+          <div className="card-body">
+            <div className="token-usage-display">
+              <span className="token-usage-value" style={{ color: getUsageColor(usagePercentage) }}>
                 {formatNumber(tokensUsed)}
               </span>
-              <span style={{ color: '#666', fontSize: '1.2em' }}>
+              <span className="token-usage-limit">
                 / {subscription.token_limit ? formatNumber(subscription.token_limit) : '∞'}
               </span>
             </div>
             {subscription.token_limit && (
-              <div style={{
-                width: '100%',
-                maxWidth: '400px',
-                height: '12px',
-                backgroundColor: '#e9ecef',
-                borderRadius: '6px',
-                marginTop: '12px',
-                overflow: 'hidden',
-                margin: '12px auto 0 auto'
-              }}>
-                <div style={{
-                  width: `${usagePercentage}%`,
-                  height: '100%',
-                  backgroundColor: getUsageColor(usagePercentage),
-                  transition: 'width 0.3s'
-                }} />
+              <div className="progress-bar">
+                <div
+                  className="progress-bar-fill"
+                  style={{
+                    width: `${usagePercentage}%`,
+                    backgroundColor: getUsageColor(usagePercentage)
+                  }}
+                />
               </div>
             )}
-            <p style={{ textAlign: 'center', color: '#666', marginTop: '0.75em', marginBottom: 0, fontSize: '0.9em' }}>
+            <p className="text-center text-muted text-small mt-1 mb-0">
               {subscription.token_limit
-                ? `${usagePercentage.toFixed(1)}% of your monthly token limit used`
-                : 'Unlimited tokens available'}
+                ? t('tokenUsage.percentUsed', { percent: usagePercentage.toFixed(1) })
+                : t('tokenUsage.unlimited')}
             </p>
           </div>
         </div>
       )}
 
       {loading ? (
-        <div style={{ textAlign: 'center', padding: '2em', color: '#666' }}>
-          <p>Loading metrics...</p>
+        <div className="tab-loading-state">
+          <p>{t('loading')}</p>
         </div>
       ) : error ? (
-        <div style={{
-          padding: '1em',
-          backgroundColor: '#f8d7da',
-          color: '#721c24',
-          border: '1px solid #f5c6cb',
-          borderRadius: '4px'
-        }}>
-          <strong>Error:</strong> {error}
+        <div className="alert alert-error">
+          <strong>{t('error')}</strong> {error}
         </div>
       ) : (
-        <div style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))',
-          gap: '1em'
-        }}>
-          {/* Placeholder metrics cards */}
-          <div style={{
-            padding: '1.5em',
-            backgroundColor: '#f8f9fa',
-            borderRadius: '8px',
-            border: '1px solid #ddd'
-          }}>
-            <h3 style={{ margin: '0 0 0.5em 0', color: '#333', fontSize: '14px', fontWeight: '600' }}>
-              Total Conversations
+        <div className="grid grid-metrics">
+          <div className="metric-card">
+            <h3 className="metric-label">
+              {t('cards.totalConversations')}
             </h3>
-            <p style={{ margin: 0, fontSize: '2em', fontWeight: 'bold', color: '#007bff' }}>
+            <p className="metric-value metric-value-blue">
               {metrics?.totalConversations ?? '—'}
             </p>
           </div>
 
-          <div style={{
-            padding: '1.5em',
-            backgroundColor: '#f8f9fa',
-            borderRadius: '8px',
-            border: '1px solid #ddd'
-          }}>
-            <h3 style={{ margin: '0 0 0.5em 0', color: '#333', fontSize: '14px', fontWeight: '600' }}>
-              Total Messages
+          <div className="metric-card">
+            <h3 className="metric-label">
+              {t('cards.totalMessages')}
             </h3>
-            <p style={{ margin: 0, fontSize: '2em', fontWeight: 'bold', color: '#28a745' }}>
+            <p className="metric-value metric-value-green">
               {metrics?.totalMessages ?? '—'}
             </p>
           </div>
 
-          <div style={{
-            padding: '1.5em',
-            backgroundColor: '#f8f9fa',
-            borderRadius: '8px',
-            border: '1px solid #ddd'
-          }}>
-            <h3 style={{ margin: '0 0 0.5em 0', color: '#333', fontSize: '14px', fontWeight: '600' }}>
-              Total Tokens Used
+          <div className="metric-card">
+            <h3 className="metric-label">
+              {t('cards.totalTokens')}
             </h3>
-            <p style={{ margin: 0, fontSize: '2em', fontWeight: 'bold', color: '#6f42c1' }}>
+            <p className="metric-value metric-value-purple">
               {metrics?.totalTokens?.toLocaleString() ?? '—'}
             </p>
           </div>
 
-          <div style={{
-            padding: '1.5em',
-            backgroundColor: '#f8f9fa',
-            borderRadius: '8px',
-            border: '1px solid #ddd'
-          }}>
-            <h3 style={{ margin: '0 0 0.5em 0', color: '#333', fontSize: '14px', fontWeight: '600' }}>
-              Active Users (Now)
+          <div className="metric-card">
+            <h3 className="metric-label">
+              {t('cards.activeUsers')}
             </h3>
-            <p style={{ margin: 0, fontSize: '2em', fontWeight: 'bold', color: '#fd7e14' }}>
+            <p className="metric-value metric-value-orange">
               {metrics?.activeUsers ?? '—'}
             </p>
           </div>
 
-          <div style={{
-            padding: '1.5em',
-            backgroundColor: '#f8f9fa',
-            borderRadius: '8px',
-            border: '1px solid #ddd'
-          }}>
-            <h3 style={{ margin: '0 0 0.5em 0', color: '#333', fontSize: '14px', fontWeight: '600' }}>
-              Avg. Messages per Conversation
+          <div className="metric-card">
+            <h3 className="metric-label">
+              {t('cards.avgMessagesPerConversation')}
             </h3>
-            <p style={{ margin: 0, fontSize: '2em', fontWeight: 'bold', color: '#17a2b8' }}>
+            <p className="metric-value metric-value-cyan">
               {metrics?.avgMessagesPerConversation?.toFixed(1) ?? '—'}
             </p>
           </div>
 
-          <div style={{
-            padding: '1.5em',
-            backgroundColor: '#f8f9fa',
-            borderRadius: '8px',
-            border: '1px solid #ddd'
-          }}>
-            <h3 style={{ margin: '0 0 0.5em 0', color: '#333', fontSize: '14px', fontWeight: '600' }}>
-              Avg. Tokens per Message
+          <div className="metric-card">
+            <h3 className="metric-label">
+              {t('cards.avgTokensPerMessage')}
             </h3>
-            <p style={{ margin: 0, fontSize: '2em', fontWeight: 'bold', color: '#dc3545' }}>
+            <p className="metric-value metric-value-red">
               {metrics?.avgTokensPerMessage?.toFixed(0) ?? '—'}
             </p>
           </div>
         </div>
       )}
 
-      <div style={{
-        marginTop: '2em',
-        padding: '1.5em',
-        backgroundColor: '#e7f3ff',
-        border: '1px solid #b8daff',
-        borderRadius: '8px',
-        textAlign: 'center'
-      }}>
-        <p style={{ margin: 0, color: '#004085' }}>
-          More detailed metrics and analytics coming soon.
-        </p>
+      <div className="info-box info-box-info">
+        <p>{t('comingSoon')}</p>
       </div>
     </div>
   );

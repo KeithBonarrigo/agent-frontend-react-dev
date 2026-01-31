@@ -1,0 +1,293 @@
+{
+  "privacy": {
+    "title": "Nuestra Política de Privacidad",
+    "lastUpdated": "Última Actualización: 3 de Agosto, 2025",
+    "sections": {
+      "dataController": {
+        "title": "1. Información del Controlador de Datos",
+        "intro": "Esta Política de Privacidad rige el sitio web {{websiteUrl}}, operado por:",
+        "legalName": "Nombre Legal: Keith Andrew Bonarrigo",
+        "tradeName": "Nombre Comercial Registrado: {{companyName}}",
+        "address": "Dirección Comercial: 45 S 3rd St, Pacific Beach, WA 98571-5017, Estados Unidos",
+        "email": "Correo de Contacto: {{infoEmail}}",
+        "ubi": "ID de Negocio Unificado (UBI): 602491939"
+      },
+      "dataGathered": {
+        "title": "2. Datos que Recopilamos",
+        "intro": "{{companyName}} puede capturar, retener y manejar las siguientes categorías de información personal:",
+        "items": {
+          "identifiers": "Identificadores personales: nombre completo, dirección de correo electrónico, número de teléfono (proporcionados voluntariamente por usted);",
+          "system": "Datos del sistema: dirección IP, especificaciones del navegador, detalles del sistema operativo, configuración de zona horaria, cookies y patrones de navegación;",
+          "activity": "Datos de actividad: su interacción con nuestro sitio web, formularios de envío, APIs o sistemas integrados;",
+          "submitted": "Información enviada: incluyendo correspondencia, consultas de demostración o solicitudes de servicio.",
+          "sensitive": "Evitamos deliberadamente recopilar datos personales sensibles (como registros médicos, afiliaciones religiosas, etc.). Por favor, absténgase de proporcionar dicha información a través de nuestros servicios."
+        }
+      },
+      "processing": {
+        "title": "3. Por Qué Procesamos Sus Datos",
+        "intro": "La información personal se recopila y utiliza exclusivamente para estos objetivos:",
+        "items": {
+          "access": "Permitir acceso a nuestras soluciones tecnológicas;",
+          "questions": "Responder a sus preguntas y correspondencia;",
+          "relationships": "Administrar relaciones con clientes y perfiles de usuario;",
+          "performance": "Evaluar el rendimiento de la plataforma y mejorar la satisfacción del usuario;",
+          "promotional": "Entregar contenido promocional o informativo, con su aprobación explícita;",
+          "statutory": "Cumplir con requisitos legales y fiscales."
+        }
+      },
+      "legalFoundation": {
+        "title": "4. Fundamento Legal para el Procesamiento de Datos",
+        "intro": "Nuestras actividades de procesamiento de datos se basan en estas justificaciones legales:",
+        "items": {
+          "consent": "Su consentimiento directo, obtenido a través de envíos voluntarios de formularios o interacción con la plataforma;",
+          "contractual": "Cumplimiento contractual, al entregar servicios solicitados;",
+          "legitimate": "Intereses comerciales legítimos, incluyendo mantenimiento de calidad de servicio y protección de seguridad;",
+          "regulatory": "Cumplimiento regulatorio, según lo exigido por la legislación estadounidense aplicable."
+        }
+      },
+      "thirdParty": {
+        "title": "5. Divulgación de Datos a Terceros",
+        "never": "{{companyName}} nunca vende, alquila o distribuye su información personal a entidades externas no autorizadas.",
+        "disclosure": "La información puede ser divulgada a proveedores de servicios que apoyan nuestras operaciones del sitio web (incluyendo proveedores de hosting, plataformas de análisis, infraestructura en la nube y servicios de entrega de correo electrónico), sujetos a acuerdos de confidencialidad y requisitos de cumplimiento de leyes de privacidad."
+      },
+      "crossBorder": {
+        "title": "6. Manejo de Datos Transfronterizo",
+        "content": "Dadas nuestras operaciones con sede en EE.UU., su información puede ser procesada y almacenada fuera de las fronteras de su país. Implementamos salvaguardas apropiadas para asegurar sus datos independientemente de la ubicación geográfica."
+      },
+      "retention": {
+        "title": "7. Período de Retención de Información",
+        "content": "Los datos personales permanecen en nuestra posesión solo durante los períodos necesarios para lograr los objetivos de recopilación o durante las relaciones comerciales activas. Ciertas circunstancias pueden requerir retención extendida para satisfacer mandatos legales o resolver disputas."
+      },
+      "security": {
+        "title": "8. Medidas de Seguridad",
+        "measures": "Implementamos controles técnicos, administrativos y organizacionales apropiados para proteger su información personal contra intrusiones no autorizadas, pérdida de datos o uso indebido.",
+        "caveat": "Sin embargo, reconozca que la seguridad perfecta permanece inalcanzable, y no podemos prometer salvaguarda absoluta de datos transmitidos a través de canales de internet."
+      },
+      "rights": {
+        "title": "9. Sus Derechos de Privacidad",
+        "intro": "Sujeto a su jurisdicción, puede tener derecho a:",
+        "items": {
+          "view": "Ver su información personal almacenada;",
+          "correction": "Enviar solicitudes de corrección o actualización;",
+          "erasure": "Exigir eliminación de datos (\"derecho al olvido\");",
+          "challenge": "Impugnar actividades de procesamiento de datos;",
+          "portable": "Obtener copias portátiles de sus datos;",
+          "restrict": "Restringir el procesamiento bajo condiciones específicas."
+        },
+        "invoke": "Para invocar estos derechos, comuníquese a través de {{infoEmail}} con una descripción detallada de su solicitud. Las solicitudes legítimas reciben respuestas dentro de plazos razonables."
+      },
+      "cookies": {
+        "title": "10. Uso de Cookies",
+        "usage": "Tanto cookies propias como de terceros pueden ser desplegadas en nuestra plataforma para examinar patrones de tráfico, mejorar la funcionalidad y refinar las experiencias de usuario.",
+        "control": "Las preferencias de cookies permanecen bajo su control a través de las configuraciones del navegador. Información adicional aparece en nuestra Política de Cookies (próximamente)."
+      },
+      "external": {
+        "title": "11. Integración con Plataformas Externas",
+        "content": "Ciertas ofertas de {{companyName}} incorporan plataformas de terceros a través de APIs o conexiones técnicas similares. El compromiso con estos servicios externos permanece completamente opcional y dirigido por el usuario. {{companyName}} no asume responsabilidad por los enfoques de privacidad de plataformas externas y aconseja consultar sus políticas individuales."
+      },
+      "updates": {
+        "title": "12. Actualizaciones de la Política",
+        "revise": "Mantenemos la prerrogativa de revisar o enmendar esta Política de Privacidad a nuestra discreción. Las modificaciones sustanciales serán publicadas en esta página.",
+        "acceptance": "El uso continuo del sitio después de tales revisiones significa su aceptación de los términos modificados."
+      },
+      "contact": {
+        "title": "13. Información de Contacto",
+        "content": "Para consultas o inquietudes sobre esta Política de Privacidad o nuestras prácticas de manejo de datos personales, contáctenos en:"
+      }
+    }
+  },
+  "cookies": {
+    "title": "Política de Cookies",
+    "lastUpdated": "Última Actualización: 3 de Agosto, 2025",
+    "sections": {
+      "understanding": {
+        "title": "1. Entendiendo las Cookies",
+        "intro": "Las cookies son pequeños archivos de texto que se guardan en su dispositivo (incluyendo computadoras, smartphones y tablets) durante las visitas a sitios web. Los sitios web comúnmente las emplean para mantener la funcionalidad, mejorar las experiencias de navegación y recopilar información analítica o promocional.",
+        "types": "Estos archivos pueden originarse del sitio que está visitando actualmente (cookies de primera parte) o de partes externas (cookies de terceros) cuyas características o servicios están integrados en el sitio web."
+      },
+      "categories": {
+        "title": "2. Categorías de Cookies en Nuestra Plataforma",
+        "intro": "Nuestro sitio web en {{websiteUrl}} puede utilizar las siguientes categorías de cookies:",
+        "essential": {
+          "title": "Cookies Esenciales",
+          "content": "Requeridas para la funcionalidad principal del sitio, estas cookies no pueden desactivarse. Facilitan características críticas como inicio de sesión seguro, navegación del sitio y renderizado correcto de páginas."
+        },
+        "performance": {
+          "title": "Cookies de Rendimiento y Análisis",
+          "content": "Estas recopilan métricas anonimizadas que revelan patrones de interacción de usuarios en nuestra plataforma. Ejemplos incluyen qué páginas atraen visitantes, cuánto duran las sesiones y puntos de abandono de visitantes."
+        },
+        "functional": {
+          "title": "Cookies Funcionales y de Preferencias",
+          "content": "Estas retienen sus configuraciones y opciones personalizadas, incluyendo selección de idioma, preferencias regionales y diseño de interfaz, para proporcionar una experiencia personalizada en visitas posteriores."
+        },
+        "advertising": {
+          "title": "Cookies de Publicidad y Segmentación (cuando aplique)",
+          "content": "Estas monitorean sus patrones de navegación a través de múltiples sitios para entregar publicidad adaptada a sus intereses. La implementación requiere su consentimiento explícito."
+        }
+      },
+      "thirdParty": {
+        "title": "3. Cookies de Servicios Externos",
+        "intro": "Nuestra plataforma integra servicios de terceros que pueden instalar cookies en su dispositivo. Tales servicios incluyen:",
+        "items": {
+          "analytics": "Plataformas de análisis y seguimiento web;",
+          "cloud": "Soluciones de automatización alojadas en la nube;",
+          "ai": "Integraciones de inteligencia artificial y agentes conversacionales;",
+          "social": "Widgets de redes sociales y herramientas de monitoreo."
+        },
+        "note": "Dado que estas cookies están fuera de nuestro control directo, le animamos a consultar la documentación de privacidad y cookies proporcionada por estos proveedores externos."
+      },
+      "controlling": {
+        "title": "4. Controlando su Configuración de Cookies",
+        "intro": "Usted mantiene control completo sobre las preferencias de cookies a través de la configuración de su navegador. Acceda a guías detalladas para navegadores populares a continuación:",
+        "warning": "Tenga en cuenta que bloquear cookies específicas podría afectar la funcionalidad del sitio web y la experiencia general del usuario."
+      },
+      "modifications": {
+        "title": "5. Modificaciones de la Política",
+        "content": "{{companyName}} se reserva la autoridad de modificar esta Política de Cookies según las circunstancias lo requieran. Las revisiones materiales se reflejarán en esta página."
+      },
+      "contact": {
+        "title": "6. Comuníquese con Nosotros",
+        "content": "Para consultas sobre esta Política de Cookies o nuestra implementación de cookies, contáctenos en:"
+      }
+    }
+  },
+  "terms": {
+    "title": "Términos y Condiciones",
+    "lastUpdated": "Fecha de Vigencia: 1 de Enero, 2025",
+    "sections": {
+      "serviceOverview": {
+        "title": "1. Descripción del Servicio",
+        "content": "Nuestro agente conversacional ofrece respuestas automatizadas a consultas de usuarios utilizando tecnología de comprensión de lenguaje natural. Proporciona asistencia a través de entrega de información, orientación direccional y capacidades de soporte fundamental. Este chatbot sirve necesidades informativas generales y no puede garantizar la precisión o actualidad de toda la información proporcionada."
+      },
+      "eligibility": {
+        "title": "2. Quién Puede Usar Este Servicio",
+        "content": "Su uso del Servicio constituye confirmación de que ha alcanzado los 18 años de edad o la edad legal de mayoría de su jurisdicción. Al acceder al Servicio como representante organizacional, usted afirma poseer autorización adecuada para aceptar estos Términos en nombre de esa entidad."
+      },
+      "usage": {
+        "title": "3. Directrices de Uso Permitido",
+        "intro": "Usted se compromete a:",
+        "items": {
+          "legitimate": "Emplear el Servicio exclusivamente para propósitos legítimos.",
+          "integrity": "Abstenerse de comprometer la integridad operativa o el rendimiento del chatbot.",
+          "malware": "Evitar transmitir software malicioso, virus o contenido dañino.",
+          "harassment": "Nunca aprovechar el Servicio para acoso, abuso o causar daño a otros."
+        },
+        "authority": "Mantenemos la autoridad de restringir o revocar el acceso a usuarios que incumplan estas directrices."
+      },
+      "privacy": {
+        "title": "4. Recopilación de Información y Privacidad",
+        "intro": "Nuestro chatbot puede capturar y retener varios puntos de datos, incluyendo:",
+        "items": {
+          "communications": "Comunicaciones que envía al chatbot",
+          "metadata": "Metadatos del sistema (como direcciones IP y especificaciones del dispositivo)",
+          "behavioral": "Patrones de comportamiento utilizados para refinar nuestro servicio"
+        },
+        "seePolicy": "Consulte nuestra Política de Privacidad para información completa sobre prácticas de manejo de datos."
+      },
+      "aiConstraints": {
+        "title": "5. Limitaciones de la Inteligencia Artificial",
+        "intro": "Nuestro chatbot emplea sistemas de inteligencia automatizada para formular respuestas. Estas salidas:",
+        "items": {
+          "accuracy": "No pueden garantizarse en cuanto a precisión, completitud o relevancia para sus circunstancias particulares.",
+          "professional": "No deben interpretarse como asesoramiento legal, médico, financiero o de expertos profesionales.",
+          "inaccuracies": "Pueden ocasionalmente incluir inexactitudes o material inadecuado, a pesar de nuestros esfuerzos continuos para reducir tales ocurrencias."
+        },
+        "responsibility": "Usted asume plena responsabilidad al actuar basándose en información proporcionada por el chatbot."
+      },
+      "ownership": {
+        "title": "6. Derechos de Propiedad",
+        "content": "Cada elemento de contenido, código fuente y propiedad intelectual asociada con el chatbot pertenece a {{companyName}} o sus licenciantes autorizados. La reproducción, distribución o creación de derivados requiere consentimiento escrito explícito."
+      },
+      "disclaimers": {
+        "title": "7. Descargos de Responsabilidad del Servicio",
+        "intro": "Este Servicio opera sobre una base \"tal cual\" y \"según disponibilidad\". No proporcionamos garantías, ya sean expresas o implícitas, respecto a:",
+        "items": {
+          "suitability": "Idoneidad para su caso de uso específico",
+          "uptime": "Accesibilidad continua o tiempo de funcionamiento operativo",
+          "precision": "Precisión o exhaustividad de las respuestas generadas"
+        },
+        "noLiability": "No asumimos responsabilidad por daños derivados del uso del Servicio."
+      },
+      "modifications": {
+        "title": "8. Modificaciones de los Términos",
+        "content": "Estos Términos pueden revisarse a nuestra discreción. Las modificaciones aparecerán en esta página junto con una fecha de vigencia actualizada. Su uso continuado del Servicio después de los cambios indica aceptación de los Términos revisados."
+      },
+      "termination": {
+        "title": "9. Terminación del Servicio",
+        "content": "Nos reservamos el derecho de discontinuar o suspender el Servicio a nuestra discreción, con o sin aviso previo. Los privilegios de acceso pueden retirarse si incumple estos Términos."
+      },
+      "revisions": {
+        "title": "10. Revisiones de la Política",
+        "content": "Esta política puede someterse a actualizaciones según sea necesario. Los cambios se comunicarán mediante la revisión de la \"Fecha de Vigencia\" mostrada en el encabezado de la página."
+      },
+      "contact": {
+        "title": "11. Información de Contacto",
+        "intro": "Para preguntas sobre esta política o nuestras prácticas de gestión de datos, comuníquese:",
+        "address": "3242 NE 3rd Ave. Camas, WA 98607"
+      }
+    }
+  },
+  "dataDeletion": {
+    "title": "Política de Eliminación de Datos de Usuario",
+    "lastUpdated": "Fecha de Vigencia: 3 de Agosto, 2025",
+    "intro": "{{companyName}} prioriza su privacidad y le brinda control completo sobre su información personal. Esta política detalla el proceso para solicitar la eliminación de datos recopilados a través de nuestras integraciones de aplicaciones de Facebook o Instagram.",
+    "sections": {
+      "whatWeCollect": {
+        "title": "1. Información que Recopilamos",
+        "intro": "A través de su inicio de sesión autorizado de Meta, nuestra aplicación puede recopilar la siguiente información cuando se conecta a través de Facebook o Instagram:",
+        "items": {
+          "profile": "Detalles de perfil públicamente disponibles (nombre para mostrar, imagen de avatar, etc.)",
+          "email": "Su dirección de correo electrónico",
+          "userId": "Identificador único de usuario de Facebook o Instagram",
+          "additional": "Información adicional que ha autorizado específicamente a través de los permisos de inicio de sesión de Facebook"
+        }
+      },
+      "howWeUse": {
+        "title": "2. Cómo Usamos Su Información",
+        "intro": "Sus datos nos permiten:",
+        "items": {
+          "access": "Otorgarle acceso a la funcionalidad de nuestra plataforma",
+          "personalize": "Personalizar y mejorar su experiencia",
+          "contact": "Contactarlo cuando ha proporcionado su consentimiento"
+        }
+      },
+      "requesting": {
+        "title": "3. Solicitud de Eliminación de Datos",
+        "intro": "Si elige eliminar su información de nuestra plataforma, tiene dos opciones convenientes:",
+        "optionA": {
+          "title": "Opción A: Eliminación de Autoservicio",
+          "items": {
+            "step1": "Acceda a la Configuración de su cuenta de Facebook.",
+            "step2": "Seleccione Aplicaciones y sitios web del menú.",
+            "step3": "Localice nuestra aplicación en sus aplicaciones conectadas.",
+            "step4": "Elimine la aplicación para iniciar automáticamente la eliminación de datos."
+          }
+        },
+        "optionB": {
+          "title": "Opción B: Solicitud por Correo Electrónico",
+          "send": "Envíe su solicitud de eliminación directamente a:",
+          "include": "Su correo electrónico debe contener:",
+          "items": {
+            "subject": "Línea de asunto: Solicitud de Eliminación de Datos de Usuario",
+            "name": "Su nombre completo",
+            "userId": "Su ID de usuario de Facebook/Instagram (alternativamente, proporcione una captura de pantalla que muestre su perfil de la aplicación)"
+          },
+          "processing": "Su solicitud será procesada dentro de 7 días hábiles, y recibirá confirmación por correo electrónico una vez que se complete la eliminación."
+        }
+      },
+      "retention": {
+        "title": "4. Cronograma de Retención de Datos",
+        "content": "Su información se almacena solo mientras sea necesario para cumplir los propósitos descritos en esta política o para cumplir con obligaciones legales. Tras la eliminación, su información personal se borra permanentemente de nuestra infraestructura."
+      },
+      "contact": {
+        "title": "5. Póngase en Contacto",
+        "content": "Para preguntas o inquietudes sobre esta Política de Eliminación de Datos o nuestras prácticas de manejo de datos, comuníquese con nosotros:",
+        "address": "3242 NE 3rd Ave Camas, WA 98607"
+      },
+      "updates": {
+        "title": "6. Actualizaciones de Esta Política",
+        "content": "Esta política puede revisarse para acomodar cambios legales u operativos. Las actualizaciones aparecerán en esta página con una nueva \"Fecha de Vigencia\" indicada en la parte superior."
+      }
+    }
+  }
+}

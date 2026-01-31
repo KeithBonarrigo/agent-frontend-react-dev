@@ -1,98 +1,70 @@
+import { useTranslation } from "react-i18next";
 import "../styles/ContentStyles.css";
 import { useDomain } from "../contexts/DomainContext";
 
 export default function CookiePolicy() {
+  const { t } = useTranslation('legal');
   const { infoEmail, companyName, websiteUrl } = useDomain();
 
   return (
     <div className="policy-page">
       <section className="policy-header">
         <div className="home-container">
-          <h1>Cookie Policy</h1>
-          <h4>Last Updated: August 3, 2025</h4>
+          <h1>{t('cookies.title')}</h1>
+          <h4>{t('cookies.lastUpdated')}</h4>
         </div>
       </section>
 
       <section className="policy-content-section">
         <div className="home-container">
           <div className="policy-section">
-            <h2>1. Understanding Cookies</h2>
-            <p>
-              Cookies represent tiny text files that get saved to your device
-              (including computers, smartphones, and tablets) during website visits.
-              Websites commonly employ them to maintain functionality, improve
-              browsing experiences, and gather analytics or promotional insights.
-            </p>
-            <p>
-              These files can originate from the site you're currently viewing
-              (first-party cookies) or from external parties (third-party cookies)
-              whose features or services are embedded within the website.
-            </p>
+            <h2>{t('cookies.sections.understanding.title')}</h2>
+            <p>{t('cookies.sections.understanding.intro')}</p>
+            <p>{t('cookies.sections.understanding.types')}</p>
           </div>
 
           <div className="policy-section">
-            <h2>2. Cookie Categories on Our Platform</h2>
-            <p>
-              Our website at {websiteUrl} may utilize the following cookie
-              categories:
-            </p>
+            <h2>{t('cookies.sections.categories.title')}</h2>
+            <p>{t('cookies.sections.categories.intro', { websiteUrl })}</p>
             <ul>
               <li>
-                <strong>Essential Cookies</strong>
+                <strong>{t('cookies.sections.categories.essential.title')}</strong>
                 <br />
-                Required for core site functionality, these cookies cannot be
-                turned off. They facilitate critical features like secure login,
-                site navigation, and correct page rendering.
+                {t('cookies.sections.categories.essential.content')}
               </li>
               <li>
-                <strong>Performance & Analytics Cookies</strong>
+                <strong>{t('cookies.sections.categories.performance.title')}</strong>
                 <br />
-                These gather anonymized metrics that reveal user engagement
-                patterns on our platform. Examples include which pages attract
-                visitors, how long sessions last, and visitor drop-off points.
+                {t('cookies.sections.categories.performance.content')}
               </li>
               <li>
-                <strong>Functional & Preference Cookies</strong>
+                <strong>{t('cookies.sections.categories.functional.title')}</strong>
                 <br />
-                These retain your customized settings and choices, including
-                language selection, regional preferences, and interface layout,
-                to provide a personalized experience on return visits.
+                {t('cookies.sections.categories.functional.content')}
               </li>
               <li>
-                <strong>Advertising & Targeting Cookies (when applicable)</strong>
+                <strong>{t('cookies.sections.categories.advertising.title')}</strong>
                 <br />
-                These monitor your browsing patterns across multiple sites to
-                deliver advertising tailored to your interests. Implementation
-                requires your explicit consent.
+                {t('cookies.sections.categories.advertising.content')}
               </li>
             </ul>
           </div>
 
           <div className="policy-section">
-            <h2>3. External Service Cookies</h2>
-            <p>
-              Our platform integrates third-party services that may install
-              cookies on your device. Such services encompass:
-            </p>
+            <h2>{t('cookies.sections.thirdParty.title')}</h2>
+            <p>{t('cookies.sections.thirdParty.intro')}</p>
             <ul>
-              <li>Analytics and web tracking platforms;</li>
-              <li>Cloud-hosted automation solutions;</li>
-              <li>Artificial intelligence integrations and conversational agents;</li>
-              <li>Social network widgets and monitoring tools.</li>
+              <li>{t('cookies.sections.thirdParty.items.analytics')}</li>
+              <li>{t('cookies.sections.thirdParty.items.cloud')}</li>
+              <li>{t('cookies.sections.thirdParty.items.ai')}</li>
+              <li>{t('cookies.sections.thirdParty.items.social')}</li>
             </ul>
-            <p>
-              Since these cookies fall outside our direct control, we encourage
-              you to consult the privacy and cookie documentation provided by
-              these external vendors.
-            </p>
+            <p>{t('cookies.sections.thirdParty.note')}</p>
           </div>
 
           <div className="policy-section">
-            <h2>4. Controlling Your Cookie Settings</h2>
-            <p>
-              You maintain complete control over cookie preferences through your
-              browser configuration. Access detailed guidance for popular browsers below:
-            </p>
+            <h2>{t('cookies.sections.controlling.title')}</h2>
+            <p>{t('cookies.sections.controlling.intro')}</p>
             <ul>
               <li>
                 <a target="_blank" rel="noopener noreferrer" href="https://support.google.com/chrome/answer/95647?hl=en&co=GENIE.Platform%3DDesktop">
@@ -115,26 +87,18 @@ export default function CookiePolicy() {
                 </a>
               </li>
             </ul>
-            <p>
-              Be aware that blocking specific cookies could impact website
-              functionality and overall user experience.
-            </p>
+            <p>{t('cookies.sections.controlling.warning')}</p>
           </div>
 
           <div className="policy-section">
-            <h2>5. Policy Modifications</h2>
-            <p>
-              {companyName} retains the authority to modify this Cookie Policy
-              as circumstances require. Material revisions will be reflected on
-              this page.
-            </p>
+            <h2>{t('cookies.sections.modifications.title')}</h2>
+            <p>{t('cookies.sections.modifications.content', { companyName })}</p>
           </div>
 
           <div className="policy-section">
-            <h2>6. Reach Out to Us</h2>
+            <h2>{t('cookies.sections.contact.title')}</h2>
             <p>
-              For inquiries regarding this Cookie Policy or our cookie
-              implementation, please contact us at: <a href={`mailto:${infoEmail}`}>{infoEmail}</a>
+              {t('cookies.sections.contact.content')} <a href={`mailto:${infoEmail}`}>{infoEmail}</a>
             </p>
           </div>
         </div>

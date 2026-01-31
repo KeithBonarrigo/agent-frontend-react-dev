@@ -61,7 +61,19 @@
     "restrictResponseEnd": "Restrict Response Ending at"
   },
   "summary": {
-    "noSettings": "No agent settings configured. Click Edit to add details."
+    "noSettings": "No agent settings configured. Click Edit to add details.",
+    "agent": "Agent",
+    "company": "Company",
+    "installDomain": "Install Domain",
+    "email": "Email",
+    "officePhone": "Office Phone",
+    "whatsappEnabled": "WhatsApp Enabled",
+    "whatsapp": "WhatsApp",
+    "mls": "MLS",
+    "address": "Address",
+    "timezone": "Timezone",
+    "agentId": "Agent ID",
+    "level": "Level"
   },
   "cancelModal": {
     "title": "Cancel Subscription",

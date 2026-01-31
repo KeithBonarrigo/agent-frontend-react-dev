@@ -1,0 +1,28 @@
+{
+  "title": "Conversation History",
+  "noSubscription": "Please select a subscription to view conversations.",
+  "searchPlaceholder": "Filter by domain, channel, or user...",
+  "buttons": {
+    "expandAll": "Expand All",
+    "expandAllLive": "Expand All Live",
+    "collapseAll": "Collapse All",
+    "refresh": "Refresh",
+    "liveOnly": "Live Only",
+    "showAll": "Show All"
+  },
+  "loading": "Loading conversations...",
+  "error": "Error:",
+  "noConversations": "No conversations found for this subscription.",
+  "online": "online",
+  "channel": "Channel:",
+  "user": "User:",
+  "channels": "channel",
+  "channels_plural": "channels",
+  "users": "user",
+  "users_plural": "users",
+  "messages": "messages",
+  "tokens": "tokens",
+  "first": "First:",
+  "last": "Last:",
+  "duration": "Duration:"
+}

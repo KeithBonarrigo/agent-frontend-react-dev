@@ -1,5 +1,7 @@
 import { useState, useEffect } from "react";
+import { useTranslation } from "react-i18next";
 import { getApiUrl } from "../utils/getApiUrl";
+import "./Tabs.css";
 
 // Helper function to calculate and format duration between two timestamps
 function formatDuration(firstTimestamp, lastTimestamp) {
@@ -32,6 +34,7 @@ function formatDuration(firstTimestamp, lastTimestamp) {
 }
 
 export default function ConversationsTab({ clientId, user }) {
+  const { t } = useTranslation('conversations');
   const [conversations, setConversations] = useState([]);
   const [loadingConversations, setLoadingConversations] = useState(false);
   const [conversationsError, setConversationsError] = useState(null);
@@ -88,7 +91,7 @@ export default function ConversationsTab({ clientId, user }) {
     try {
       const apiBaseUrl = getApiUrl();
       const historyKey = import.meta.env.VITE_HISTORY_VIEW_KEY || '';
-      
+
       const url = new URL(`${apiBaseUrl}/admin/history`);
       if (historyKey) {
         url.searchParams.append('key', historyKey);
@@ -110,7 +113,7 @@ export default function ConversationsTab({ clientId, user }) {
 
       const data = await response.json();
       console.log('✅ Conversations data received:', data);
-      
+
       setConversations(data.conversations || []);
     } catch (error) {
       console.error('Error fetching conversations:', error);
@@ -152,12 +155,12 @@ export default function ConversationsTab({ clientId, user }) {
 
   const expandAll = () => {
     setExpandedDomains(new Set(conversations.map(c => c.domain)));
-    const channelKeys = conversations.flatMap(c => 
+    const channelKeys = conversations.flatMap(c =>
       c.channels.map(ch => `${c.domain}|${ch.channel}`)
     );
     setExpandedChannels(new Set(channelKeys));
-    const userKeys = conversations.flatMap(c => 
-      c.channels.flatMap(ch => 
+    const userKeys = conversations.flatMap(c =>
+      c.channels.flatMap(ch =>
         ch.users.map(u => `${c.domain}|${ch.channel}|${u.userid}`)
       )
     );
@@ -234,162 +237,69 @@ export default function ConversationsTab({ clientId, user }) {
   // Show message if no clientId available
   if (!clientId) {
     return (
-      <div style={{ padding: '2em', textAlign: 'center', color: '#666' }}>
-        <p>Please select a subscription to view conversations.</p>
+      <div className="tab-empty-state">
+        <p>{t('noSubscription')}</p>
       </div>
     );
   }
 
   return (
-    <div style={{ padding: "2em", backgroundColor: "#f8f9fa", borderRadius: "8px", border: "1px solid #dee2e6" }}>
-      <h2 style={{ margin: '0 0 1em 0', textAlign: 'center' }}>Conversation History</h2>
+    <div className="tab-container">
+      <h2 className="tab-title">{t('title')}</h2>
 
-      <div style={{
-        display: 'flex',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        marginBottom: '1em',
-        flexWrap: 'wrap',
-        gap: '10px'
-      }}>
-        <div style={{ position: 'relative', flex: '1 1 250px', minWidth: '200px', maxWidth: '400px' }}>
-          <i className="fa fa-search" style={{
-            position: 'absolute',
-            left: '12px',
-            top: '50%',
-            transform: 'translateY(-50%)',
-            color: '#999',
-            fontSize: '14px'
-          }}></i>
+      <div className="toolbar">
+        <div className="search-container">
+          <i className="fa fa-search search-icon"></i>
           <input
             type="text"
-            placeholder="Filter by domain, channel, or user..."
+            placeholder={t('searchPlaceholder')}
             value={conversationSearch}
             onChange={(e) => setConversationSearch(e.target.value)}
-            style={{
-              width: '100%',
-              padding: '8px 12px 8px 36px',
-              border: '1px solid #ddd',
-              borderRadius: '4px',
-              fontSize: '14px'
-            }}
+            className="input-search"
           />
         </div>
-        <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
-          <button
-            onClick={expandAll}
-            style={{
-              padding: '8px 14px',
-              backgroundColor: '#007bff',
-              color: 'white',
-              border: 'none',
-              borderRadius: '4px',
-              cursor: 'pointer',
-              fontSize: '13px',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '6px'
-            }}
-          >
+        <div className="btn-group">
+          <button onClick={expandAll} className="btn btn-primary">
             <i className="fa-solid fa-angles-down"></i>
-            Expand All
+            {t('buttons.expandAll')}
           </button>
-          <button
-            onClick={expandAllLive}
-            style={{
-              padding: '8px 14px',
-              backgroundColor: '#28a745',
-              color: 'white',
-              border: 'none',
-              borderRadius: '4px',
-              cursor: 'pointer',
-              fontSize: '13px',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '6px'
-            }}
-          >
+          <button onClick={expandAllLive} className="btn btn-success">
             <i className="fa-solid fa-tower-broadcast"></i>
-            Expand All Live
+            {t('buttons.expandAllLive')}
           </button>
-          <button
-            onClick={collapseAll}
-            style={{
-              padding: '8px 14px',
-              backgroundColor: '#6c757d',
-              color: 'white',
-              border: 'none',
-              borderRadius: '4px',
-              cursor: 'pointer',
-              fontSize: '13px',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '6px'
-            }}
-          >
+          <button onClick={collapseAll} className="btn btn-secondary">
             <i className="fa-solid fa-angles-up"></i>
-            Collapse All
+            {t('buttons.collapseAll')}
           </button>
-          <button
-            onClick={fetchConversations}
-            style={{
-              padding: '8px 14px',
-              backgroundColor: '#28a745',
-              color: 'white',
-              border: 'none',
-              borderRadius: '4px',
-              cursor: 'pointer',
-              fontSize: '13px',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '6px'
-            }}
-          >
+          <button onClick={fetchConversations} className="btn btn-success">
             <i className="fa-solid fa-rotate"></i>
-            Refresh
+            {t('buttons.refresh')}
           </button>
           <button
             onClick={() => setShowOnlyLive(!showOnlyLive)}
-            style={{
-              padding: '8px 14px',
-              backgroundColor: showOnlyLive ? '#28a745' : '#17a2b8',
-              color: 'white',
-              border: 'none',
-              borderRadius: '4px',
-              cursor: 'pointer',
-              fontSize: '13px',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '6px'
-            }}
+            className={`btn ${showOnlyLive ? 'btn-success' : 'btn-info'}`}
           >
             {showOnlyLive ? (
               <i className="fa-solid fa-circle" style={{ fontSize: '8px' }}></i>
             ) : (
               <i className="fa-solid fa-list"></i>
             )}
-            {showOnlyLive ? 'Live Only' : 'Show All'}
+            {showOnlyLive ? t('buttons.liveOnly') : t('buttons.showAll')}
           </button>
         </div>
       </div>
 
       {loadingConversations ? (
-        <div style={{ textAlign: 'center', padding: '2em', color: '#666' }}>
-          <p>Loading conversations...</p>
+        <div className="tab-loading-state">
+          <p>{t('loading')}</p>
         </div>
       ) : conversationsError ? (
-        <div style={{ 
-          padding: '1em', 
-          backgroundColor: '#f8d7da', 
-          color: '#721c24',
-          border: '1px solid #f5c6cb',
-          borderRadius: '4px'
-        }}>
-          <strong>Error:</strong> {conversationsError}
+        <div className="alert alert-error">
+          <strong>{t('error')}</strong> {conversationsError}
         </div>
       ) : filteredConversations.length === 0 ? (
-        <div style={{ textAlign: 'center', padding: '2em', color: '#666' }}>
-          <p>No conversations found for this subscription.</p>
+        <div className="tab-empty-state">
+          <p>{t('noConversations')}</p>
         </div>
       ) : (
         <div>
@@ -405,61 +315,24 @@ export default function ConversationsTab({ clientId, user }) {
             }, 0);
 
             return (
-              <div
-                key={idx}
-                style={{
-                  border: '1px solid #ddd',
-                  borderRadius: '8px',
-                  marginBottom: '10px',
-                  overflow: 'hidden'
-                }}
-              >
-                <div
-                  onClick={() => toggleDomain(conv.domain)}
-                  style={{
-                    padding: '12px 16px',
-                    backgroundColor: '#f8f9fa',
-                    cursor: 'pointer',
-                    display: 'flex',
-                    justifyContent: 'space-between',
-                    alignItems: 'center',
-                    fontWeight: 'bold'
-                  }}
-                >
-                  <span style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <div key={idx} className="accordion-item">
+                <div onClick={() => toggleDomain(conv.domain)} className="accordion-header">
+                  <span className="flex flex-center gap-sm">
                     {isDomainExpanded ? '−' : '+'} {user?.agent_name || conv.domain}
                     {domainActiveCount > 0 && (
-                      <span style={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: '4px',
-                        backgroundColor: '#d4edda',
-                        color: '#155724',
-                        padding: '2px 8px',
-                        borderRadius: '12px',
-                        fontSize: '12px',
-                        fontWeight: '600'
-                      }}>
-                        <span
-                          style={{
-                            width: '8px',
-                            height: '8px',
-                            backgroundColor: '#28a745',
-                            borderRadius: '50%',
-                            display: 'inline-block'
-                          }}
-                        />
-                        {domainActiveCount} online
+                      <span className="badge-online">
+                        <span className="status-dot status-dot-online" />
+                        {domainActiveCount} {t('online')}
                       </span>
                     )}
                   </span>
-                  <span style={{ fontSize: '12px', fontWeight: 'normal', color: '#666' }}>
-                    {conv.channels.length} channel{conv.channels.length !== 1 ? 's' : ''}
+                  <span className="text-xs text-muted" style={{ fontWeight: 'normal' }}>
+                    {conv.channels.length} {conv.channels.length !== 1 ? t('channels_plural') : t('channels')}
                   </span>
                 </div>
 
                 {isDomainExpanded && (
-                  <div style={{ padding: '10px' }}>
+                  <div className="accordion-body">
                     {conv.channels.map((channel, chIdx) => {
                       const channelKey = `${conv.domain}|${channel.channel}`;
                       const isChannelExpanded = expandedChannels.has(channelKey);
@@ -469,55 +342,19 @@ export default function ConversationsTab({ clientId, user }) {
                       const activeCount = filteredUsers.filter(u => activeSessions[u.userid]).length;
 
                       return (
-                        <div
-                          key={chIdx}
-                          style={{
-                            border: '1px solid #e0e0e0',
-                            borderRadius: '6px',
-                            marginBottom: '8px',
-                            overflow: 'hidden'
-                          }}
-                        >
-                          <div
-                            onClick={() => toggleChannel(channelKey)}
-                            style={{
-                              padding: '10px 14px',
-                              background: 'linear-gradient(135deg, #34495e 0%, #2c3e50 50%, #1a252f 100%)',
-                              cursor: 'pointer',
-                              display: 'flex',
-                              justifyContent: 'space-between',
-                              alignItems: 'center'
-                            }}
-                          >
-                            <span style={{ display: 'flex', alignItems: 'center', gap: '8px', color: '#fff' }}>
-                              {isChannelExpanded ? '−' : '+'} <strong>Channel:</strong> {channel.channel}
+                        <div key={chIdx} className="channel-item">
+                          <div onClick={() => toggleChannel(channelKey)} className="channel-header">
+                            <span className="flex flex-center gap-sm">
+                              {isChannelExpanded ? '−' : '+'} <strong>{t('channel')}</strong> {channel.channel}
                               {activeCount > 0 && (
-                                <span style={{
-                                  display: 'flex',
-                                  alignItems: 'center',
-                                  gap: '4px',
-                                  backgroundColor: '#d4edda',
-                                  color: '#155724',
-                                  padding: '2px 8px',
-                                  borderRadius: '12px',
-                                  fontSize: '12px',
-                                  fontWeight: '600'
-                                }}>
-                                  <span
-                                    style={{
-                                      width: '8px',
-                                      height: '8px',
-                                      backgroundColor: '#28a745',
-                                      borderRadius: '50%',
-                                      display: 'inline-block'
-                                    }}
-                                  />
-                                  {activeCount} online
+                                <span className="badge-online">
+                                  <span className="status-dot status-dot-online" />
+                                  {activeCount} {t('online')}
                                 </span>
                               )}
                             </span>
-                            <span style={{ fontSize: '12px', color: '#fff' }}>
-                              {filteredUsers.length} user{filteredUsers.length !== 1 ? 's' : ''}
+                            <span className="text-xs">
+                              {filteredUsers.length} {filteredUsers.length !== 1 ? t('users_plural') : t('users')}
                             </span>
                           </div>
 
@@ -530,101 +367,41 @@ export default function ConversationsTab({ clientId, user }) {
                                 const isUserExpanded = expandedUsers.has(userKey);
 
                                 return (
-                                  <div
-                                    key={uIdx}
-                                    style={{
-                                      borderTop: '1px solid #ddd',
-                                      overflow: 'hidden'
-                                    }}
-                                  >
-                                    <div
-                                      onClick={() => toggleUser(userKey)}
-                                      style={{
-                                        padding: '8px 12px',
-                                        backgroundColor: '#e9ecef',
-                                        cursor: 'pointer',
-                                        display: 'flex',
-                                        justifyContent: 'space-between',
-                                        alignItems: 'center',
-                                        fontSize: '14px'
-                                      }}
-                                    >
-                                      <span style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                                        {isUserExpanded ? '−' : '+'} <strong>User:</strong> {userConv.userid}
+                                  <div key={uIdx} className="user-item">
+                                    <div onClick={() => toggleUser(userKey)} className="user-header">
+                                      <span className="flex flex-center gap-sm">
+                                        {isUserExpanded ? '−' : '+'} <strong>{t('user')}</strong> {userConv.userid}
                                         {activeSessions[userConv.userid] && (
-                                          <span
-                                            style={{
-                                              width: '10px',
-                                              height: '10px',
-                                              backgroundColor: '#28a745',
-                                              borderRadius: '50%',
-                                              display: 'inline-block',
-                                              boxShadow: '0 0 4px #28a745'
-                                            }}
-                                            title="User is currently online"
-                                          />
+                                          <span className="status-dot status-dot-online status-dot-lg" title="User is currently online" />
                                         )}
                                       </span>
-                                      <div style={{ display: 'flex', gap: '12px', fontSize: '12px', color: '#666' }}>
-                                        <span>{userConv.messages.length} messages</span>
-                                        <span>{userConv.totalTokens.toLocaleString()} tokens</span>
+                                      <div className="user-stats">
+                                        <span>{userConv.messages.length} {t('messages')}</span>
+                                        <span>{userConv.totalTokens.toLocaleString()} {t('tokens')}</span>
                                       </div>
                                     </div>
 
                                     {isUserExpanded && (
-                                      <div style={{ backgroundColor: '#fff' }}>
-                                        <div style={{
-                                          fontSize: '12px',
-                                          color: '#666',
-                                          padding: '8px 12px',
-                                          display: 'flex',
-                                          gap: '16px',
-                                          borderTop: '1px solid #e0e0e0'
-                                        }}>
-                                          <span><strong>First:</strong> {userConv.firstMessage}</span>
-                                          <span><strong>Last:</strong> {userConv.lastMessage}</span>
-                                          <span><strong>Duration:</strong> {formatDuration(userConv.firstMessage, userConv.lastMessage)}</span>
+                                      <div className="user-details">
+                                        <div className="user-meta">
+                                          <span><strong>{t('first')}</strong> {userConv.firstMessage}</span>
+                                          <span><strong>{t('last')}</strong> {userConv.lastMessage}</span>
+                                          <span><strong>{t('duration')}</strong> {formatDuration(userConv.firstMessage, userConv.lastMessage)}</span>
                                         </div>
 
-                                        <div style={{
-                                          maxHeight: '400px',
-                                          overflowY: 'auto',
-                                          borderTop: '1px solid #e0e0e0'
-                                        }}>
+                                        <div className="messages-container">
                                           {userConv.messages.map((msg, mIdx) => (
-                                            <div
-                                              key={mIdx}
-                                              style={{
-                                                padding: '10px',
-                                                borderBottom: mIdx < userConv.messages.length - 1 ? '1px solid #f0f0f0' : 'none',
-                                                display: 'grid',
-                                                gridTemplateColumns: '150px 1fr 80px 150px',
-                                                gap: '12px',
-                                                fontSize: '13px'
-                                              }}
-                                            >
-                                              <div style={{ fontWeight: '600', color: '#333' }}>
+                                            <div key={mIdx} className="message-row">
+                                              <div className="message-sender">
                                                 {msg.sender}
                                               </div>
-                                              <div style={{ 
-                                                whiteSpace: 'pre-wrap', 
-                                                wordBreak: 'break-word',
-                                                color: '#555'
-                                              }}>
+                                              <div className="message-content">
                                                 {msg.message}
                                               </div>
-                                              <div style={{ 
-                                                textAlign: 'right', 
-                                                color: '#666',
-                                                fontVariantNumeric: 'tabular-nums'
-                                              }}>
+                                              <div className="message-tokens">
                                                 {msg.tokens || '-'}
                                               </div>
-                                              <div style={{ 
-                                                textAlign: 'right', 
-                                                color: '#999',
-                                                fontSize: '12px'
-                                              }}>
+                                              <div className="message-time">
                                                 {new Date(msg.updated).toLocaleString()}
                                               </div>
                                             </div>
