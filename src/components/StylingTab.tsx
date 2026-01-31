@@ -27,7 +27,21 @@ const CSS_REFERENCE = `/* =============================================
    Contains: header, chat-box, and input.
    --------------------------------------------- */
 #chatbot-container {
-  /* position, width, height, border-radius, background, box-shadow, z-index */
+  position: fixed;
+  bottom: 0;
+  right: 20px;
+  width: 300px;
+  max-height: 70%;
+  border-radius: 12px 12px 0 0;
+  background-color: #ffffff;
+  border: 1px solid #2c3e50;
+  border-bottom: none;
+  box-shadow: -4px 0 15px rgba(0, 0, 0, 0.12), 0 -4px 15px rgba(0, 0, 0, 0.12);
+  z-index: 10000;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  font-family: 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
 }
 
 /* ---------------------------------------------
@@ -37,7 +51,16 @@ const CSS_REFERENCE = `/* =============================================
    Clicking toggles expand/collapse.
    --------------------------------------------- */
 #chatbot-header {
-  /* background, color, padding, font-weight, font-size */
+  background: linear-gradient(135deg, #2c3e50 0%, #1a252f 100%);
+  color: white;
+  padding: 15px 18px;
+  text-align: center;
+  font-weight: 600;
+  font-size: 15px;
+  align-items: center;
+  letter-spacing: 0.3px;
+  min-height: 50px;
+  box-sizing: border-box;
 }
 
 /* ---------------------------------------------
@@ -46,13 +69,31 @@ const CSS_REFERENCE = `/* =============================================
    Contains all user and bot messages.
    --------------------------------------------- */
 #chat-box {
-  /* flex, overflow-y, padding, background-color, font-size */
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 12px;
+  background-color: #f8f9fa;
+  font-family: 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  font-size: 14px;
+  line-height: 1.5;
+  color: #666;
 }
 
 /* Scrollbar styling for chat-box */
-#chat-box::-webkit-scrollbar { }
-#chat-box::-webkit-scrollbar-track { }
-#chat-box::-webkit-scrollbar-thumb { }
+#chat-box::-webkit-scrollbar {
+  width: 6px;
+}
+#chat-box::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+#chat-box::-webkit-scrollbar-thumb {
+  background: #2c3e50;
+  border-radius: 3px;
+}
+#chat-box::-webkit-scrollbar-thumb:hover {
+  background: #1a252f;
+}
 
 /* ---------------------------------------------
    #chat-input
@@ -60,10 +101,23 @@ const CSS_REFERENCE = `/* =============================================
    Where users type their messages.
    --------------------------------------------- */
 #chat-input {
-  /* width, padding, border, font-size, background-color */
+  width: 100%;
+  padding: 14px 16px;
+  border: none;
+  border-top: 1px solid #2c3e50;
+  font-size: 14px;
+  font-family: inherit;
+  background-color: #ffffff;
+  color: #212529;
+  outline: none;
+  box-sizing: border-box;
 }
-#chat-input:focus { }
-#chat-input::placeholder { }
+#chat-input:focus {
+  background-color: #f8f9fa;
+}
+#chat-input::placeholder {
+  color: #6c757d;
+}
 
 /* ---------------------------------------------
    .user-icon
@@ -71,32 +125,91 @@ const CSS_REFERENCE = `/* =============================================
    fa-user for user messages, fa-robot for bot.
    --------------------------------------------- */
 .user-icon {
-  /* background-color, color, border-radius, width, height */
+  background-color: #2c3e50;
+  color: white;
+  border-radius: 50%;
+  padding: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  min-width: 32px;
+  font-size: 14px;
+  flex-shrink: 0;
 }
 
-/* User icon (right-aligned messages) */
-#chat-box > div[style*="text-align: right"] .user-icon { }
+/* User icon (right-aligned messages) - blue */
+#chat-box > div[style*="text-align: right"] .user-icon {
+  background-color: #0d6efd;
+  color: white;
+  border-radius: 50%;
+  padding: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  min-width: 32px;
+  font-size: 14px;
+  box-shadow: 0 2px 6px rgba(13, 110, 253, 0.25);
+  flex-shrink: 0;
+}
 
-/* Bot icon (left-aligned messages) */
-#chat-box > div[style*="text-align: left"] .user-icon { }
+/* Bot icon (left-aligned messages) - dark */
+#chat-box > div[style*="text-align: left"] .user-icon {
+  background-color: #2c3e50;
+  color: white;
+  border-radius: 50%;
+  padding: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  min-width: 32px;
+  font-size: 14px;
+  box-shadow: 0 2px 6px rgba(44, 62, 80, 0.25);
+  flex-shrink: 0;
+}
 
 /* ---------------------------------------------
    .bot-typing / #chatbot-typing
    The typing indicator with animated dots.
    Shown while waiting for bot response.
    --------------------------------------------- */
-.bot-typing { }
-.bot-typing .bubble { }
-.bot-typing .dot { }
+.bot-typing {
+  background: transparent;
+}
+.bot-typing .bubble {
+  background: #ffffff;
+  border: 1px solid #dee2e6;
+  border-radius: 12px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+.bot-typing .dot {
+  background: #2c3e50;
+}
 
 /* ---------------------------------------------
    .property-results / .property-grid / .property-card
    MLS/EasyBroker property listing cards.
    Used when bot returns property search results.
    --------------------------------------------- */
-#chat-box .property-results { }
-#chat-box .property-grid { }
-#chat-box .property-card { }`;
+#chat-box .property-results {
+  margin: 0;
+  width: 100%;
+}
+#chat-box .property-grid {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+#chat-box .property-card {
+  width: 90%;
+  max-width: 90%;
+}`;
 
 export default function StylingTab({ clientId }: StylingTabProps) {
   const [customCss, setCustomCss] = useState("");
@@ -104,11 +217,53 @@ export default function StylingTab({ clientId }: StylingTabProps) {
   const [saving, setSaving] = useState(false);
   const [saveMessage, setSaveMessage] = useState("");
   const [copied, setCopied] = useState(false);
+  const [copyMessage, setCopyMessage] = useState(false);
+  const [analyzing, setAnalyzing] = useState(false);
+  const [suggestMessage, setSuggestMessage] = useState("");
 
   const handleCopyReference = () => {
     navigator.clipboard.writeText(CSS_REFERENCE);
     setCopied(true);
+    setCopyMessage(true);
     setTimeout(() => setCopied(false), 2000);
+    setTimeout(() => setCopyMessage(false), 5000);
+  };
+
+  const handleSuggestColors = async () => {
+    if (analyzing) return;
+
+    setAnalyzing(true);
+    setSuggestMessage("");
+
+    try {
+      const apiBaseUrl = getApiUrl();
+      const response = await fetch(`${apiBaseUrl}/api/color-analysis/${clientId}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        credentials: 'include',
+        body: JSON.stringify({ save: false })
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to analyze colors');
+      }
+
+      const data = await response.json();
+
+      if (data.customCss) {
+        setCustomCss(data.customCss);
+        setSuggestMessage("success");
+        setTimeout(() => setSuggestMessage(""), 5000);
+      }
+    } catch (error) {
+      console.error('Error analyzing colors:', error);
+      setSuggestMessage("error");
+      setTimeout(() => setSuggestMessage(""), 3000);
+    } finally {
+      setAnalyzing(false);
+    }
   };
 
   useEffect(() => {
@@ -179,25 +334,80 @@ export default function StylingTab({ clientId }: StylingTabProps) {
             <p style={{ color: "#666", fontSize: "0.9em", margin: 0 }}>
               Add custom CSS to style your chat widget. These styles will be injected into the widget.
             </p>
-            <button
-              onClick={handleCopyReference}
-              style={{
-                padding: "6px 12px",
-                backgroundColor: copied ? "#28a745" : "#6c757d",
-                color: "white",
-                border: "none",
-                borderRadius: "4px",
-                cursor: "pointer",
-                fontSize: "0.85em",
-                display: "flex",
-                alignItems: "center",
-                gap: "6px"
-              }}
-            >
-              <i className={copied ? "fa-solid fa-check" : "fa-solid fa-copy"}></i>
-              {copied ? "Copied!" : "Copy Reference"}
-            </button>
+            <div style={{ display: "flex", gap: "0.5em" }}>
+              <button
+                onClick={handleSuggestColors}
+                disabled={analyzing}
+                style={{
+                  padding: "6px 12px",
+                  backgroundColor: analyzing ? "#6c757d" : "#6f42c1",
+                  color: "white",
+                  border: "none",
+                  borderRadius: "4px",
+                  cursor: analyzing ? "not-allowed" : "pointer",
+                  fontSize: "0.85em",
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "6px"
+                }}
+              >
+                <i className={analyzing ? "fa-solid fa-spinner fa-spin" : "fa-solid fa-palette"}></i>
+                {analyzing ? "Analyzing..." : "Suggest Colors"}
+              </button>
+              <button
+                onClick={handleCopyReference}
+                style={{
+                  padding: "6px 12px",
+                  backgroundColor: copied ? "#28a745" : "#6c757d",
+                  color: "white",
+                  border: "none",
+                  borderRadius: "4px",
+                  cursor: "pointer",
+                  fontSize: "0.85em",
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "6px"
+                }}
+              >
+                <i className={copied ? "fa-solid fa-check" : "fa-solid fa-copy"}></i>
+                {copied ? "Copied!" : "Copy Current Styling"}
+              </button>
+            </div>
           </div>
+
+          {suggestMessage && (
+            <p style={{
+              margin: "0 0 1em 0",
+              padding: "8px 12px",
+              borderRadius: "4px",
+              backgroundColor: suggestMessage === "success" ? "#d4edda" : "#f8d7da",
+              color: suggestMessage === "success" ? "#155724" : "#721c24",
+              fontSize: "0.9em",
+              display: "flex",
+              alignItems: "center",
+              gap: "6px"
+            }}>
+              <i className={suggestMessage === "success" ? "fa-solid fa-wand-magic-sparkles" : "fa-solid fa-exclamation-circle"}></i>
+              {suggestMessage === "success" ? "Colors suggested! Review and save when ready." : "Failed to analyze colors. Please try again."}
+            </p>
+          )}
+
+          {copyMessage && (
+            <p style={{
+              margin: "0 0 1em 0",
+              padding: "8px 12px",
+              borderRadius: "4px",
+              backgroundColor: "#d1ecf1",
+              color: "#0c5460",
+              fontSize: "0.9em",
+              display: "flex",
+              alignItems: "center",
+              gap: "6px"
+            }}>
+              <i className="fa-solid fa-clipboard-check"></i>
+              Current styling copied! Paste it in the text field below to edit.
+            </p>
+          )}
 
           <textarea
             value={customCss}
