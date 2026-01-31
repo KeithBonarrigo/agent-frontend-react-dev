@@ -17,6 +17,9 @@
     "urlEmbeddings": {
       "title": "URL Embeddings",
       "description": "Add URLs to train your agent with web content",
+      "crawlDescription": "Train your agent by providing website URLs. The system will crawl and create embeddings from the content.",
+      "embeddedWebsites": "Embedded Websites",
+      "emptyState": "No embeddings yet. Click \"Add New Embedding\" to get started.",
       "addButton": "Add URL Embedding",
       "urlPlaceholder": "https://example.com/page",
       "urlLabel": "Website URL",
@@ -35,6 +38,8 @@
     "fileEmbeddings": {
       "title": "File Embeddings",
       "description": "Upload documents to train your agent",
+      "uploadDescription": "Upload document files to train your agent. Supported formats: PDF, TXT, DOC, DOCX, CSV.",
+      "emptyState": "No file embeddings yet. Click \"Add New File\" to get started.",
       "addButton": "Add File Embedding",
       "fileLabel": "Select File",
       "supportedFormats": "Supported formats: PDF, TXT, DOC, DOCX, CSV",

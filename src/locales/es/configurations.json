@@ -17,6 +17,9 @@
     "urlEmbeddings": {
       "title": "Embeddings de URL",
       "description": "Agrega URLs para entrenar a tu agente con contenido web",
+      "crawlDescription": "Entrena a tu agente proporcionando URLs de sitios web. El sistema rastreará y creará embeddings del contenido.",
+      "embeddedWebsites": "Sitios Web Integrados",
+      "emptyState": "Aún no hay embeddings. Haz clic en \"Agregar Nuevo Embedding\" para comenzar.",
       "addButton": "Agregar Embedding de URL",
       "urlPlaceholder": "https://ejemplo.com/pagina",
       "urlLabel": "URL del Sitio Web",
@@ -35,6 +38,8 @@
     "fileEmbeddings": {
       "title": "Embeddings de Archivos",
       "description": "Sube documentos para entrenar a tu agente",
+      "uploadDescription": "Sube archivos de documentos para entrenar a tu agente. Formatos soportados: PDF, TXT, DOC, DOCX, CSV.",
+      "emptyState": "Aún no hay embeddings de archivos. Haz clic en \"Agregar Nuevo Archivo\" para comenzar.",
       "addButton": "Agregar Embedding de Archivo",
       "fileLabel": "Seleccionar Archivo",
       "supportedFormats": "Formatos soportados: PDF, TXT, DOC, DOCX, CSV",

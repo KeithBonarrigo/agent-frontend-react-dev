@@ -998,7 +998,7 @@ export default function ConfigurationsTab({ user, clientId }: ConfigurationsTabP
               {isEmbeddingSectionOpen && (
                 <>
                   <p style={{ color: '#666', fontSize: '0.95em', marginBottom: '1.5em' }}>
-                    Train your agent by providing website URLs. The system will crawl and create embeddings from the content.
+                    {t('training.urlEmbeddings.crawlDescription')}
                   </p>
 
                   {embeddingsLoading ? (
@@ -1061,7 +1061,7 @@ export default function ConfigurationsTab({ user, clientId }: ConfigurationsTabP
                     </div>
                   ) : (
                     <div style={{ textAlign: 'center', padding: '2em', color: '#999', backgroundColor: '#f8f9fa', borderRadius: '4px', marginBottom: '1.5em' }}>
-                      No embeddings yet. Click "Add New Embedding" to get started.
+                      {t('training.urlEmbeddings.emptyState')}
                     </div>
                   )}
 
@@ -1200,7 +1200,7 @@ export default function ConfigurationsTab({ user, clientId }: ConfigurationsTabP
               {isFileSectionOpen && (
                 <>
                   <p style={{ color: '#666', fontSize: '0.95em', marginBottom: '1.5em' }}>
-                    Upload document files to train your agent. Supported formats: PDF, TXT, DOC, DOCX, CSV.
+                    {t('training.fileEmbeddings.uploadDescription')}
                   </p>
 
                   {fileEmbeddingsLoading ? (
@@ -1263,7 +1263,7 @@ export default function ConfigurationsTab({ user, clientId }: ConfigurationsTabP
                     </div>
                   ) : (
                     <div style={{ textAlign: 'center', padding: '2em', color: '#999', backgroundColor: '#f8f9fa', borderRadius: '4px', marginBottom: '1.5em' }}>
-                      No file embeddings yet. Click "Add New File" to get started.
+                      {t('training.fileEmbeddings.emptyState')}
                     </div>
                   )}
 
