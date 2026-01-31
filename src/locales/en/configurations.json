@@ -13,6 +13,7 @@
   },
   "training": {
     "title": "Training",
+    "description": "Configure and manage your agent's training data, knowledge base, and learning parameters.",
     "urlEmbeddings": {
       "title": "URL Embeddings",
       "description": "Add URLs to train your agent with web content",

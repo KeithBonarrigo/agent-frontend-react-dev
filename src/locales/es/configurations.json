@@ -13,6 +13,7 @@
   },
   "training": {
     "title": "Entrenamiento",
+    "description": "Configura y administra los datos de entrenamiento, base de conocimientos y parámetros de aprendizaje de tu agente.",
     "urlEmbeddings": {
       "title": "Embeddings de URL",
       "description": "Agrega URLs para entrenar a tu agente con contenido web",

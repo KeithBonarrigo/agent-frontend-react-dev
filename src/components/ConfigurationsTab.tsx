@@ -970,7 +970,7 @@ export default function ConfigurationsTab({ user, clientId }: ConfigurationsTabP
         {!isTrainingCollapsed && (
           <>
             <p style={{ color: '#666', lineHeight: '1.6', marginBottom: '1.5em' }}>
-              Configure and manage your agent's training data, knowledge base, and learning parameters.
+              {t('training.description')}
             </p>
 
             {/* URL Embedding Section */}
