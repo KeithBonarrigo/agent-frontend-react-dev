@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { getApiUrl } from "../utils/getApiUrl";
+import "./Tabs.css";
 
 // TypeScript interfaces
 interface User {
@@ -731,26 +732,19 @@ export default function ConfigurationsTab({ user, clientId }: ConfigurationsTabP
   }, [clientId]);
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5em' }}>
+    <div className="flex" style={{ flexDirection: 'column', gap: '1.5em' }}>
       {/* Instructions Section */}
-      <div style={{ padding: "2em", backgroundColor: "#f8f9fa", borderRadius: "8px", border: "1px solid #dee2e6" }}>
+      <div className="section">
         <div>
           <div
             onClick={() => setIsInstructionsCollapsed(!isInstructionsCollapsed)}
-            style={{
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-              cursor: "pointer",
-              userSelect: "none",
-              marginBottom: isInstructionsCollapsed ? 0 : "1em"
-            }}
+            className={`section-header ${!isInstructionsCollapsed ? 'section-header-expanded' : ''}`}
           >
-            <h2 style={{ margin: 0 }}>{t('instructions.title')}</h2>
-            <i
-              className={`fa-solid fa-chevron-${isInstructionsCollapsed ? 'down' : 'up'}`}
-              style={{ fontSize: "1.2em", color: "#666" }}
-            ></i>
+            <h2 className="section-title">
+              <i className="fa-solid fa-clipboard-list"></i>
+              {t('instructions.title')}
+            </h2>
+            <i className={`fa-solid fa-chevron-${isInstructionsCollapsed ? 'down' : 'up'} section-chevron`}></i>
           </div>
 
           {!isInstructionsCollapsed && (
@@ -758,10 +752,8 @@ export default function ConfigurationsTab({ user, clientId }: ConfigurationsTabP
               <p>{t('instructions.loading')}</p>
             ) : (
               <form onSubmit={handleSubmit}>
-                <div style={{ marginBottom: "1em" }}>
-                  <p style={{ color: "#666", fontSize: "0.9em", textAlign: "center" }}>
-                    {t('instructions.description')}
-                  </p>
+                <div className="section-description">
+                  <p>{t('instructions.description')}</p>
                 </div>
 
                 {instructions.map((instruction, index) => (
@@ -771,43 +763,16 @@ export default function ConfigurationsTab({ user, clientId }: ConfigurationsTabP
                     onDragStart={() => handleDragStart(index)}
                     onDragOver={(e) => handleDragOver(e, index)}
                     onDragEnd={handleDragEnd}
-                    style={{
-                      display: "flex",
-                      gap: "10px",
-                      marginBottom: "10px",
-                      opacity: draggedIndex === index ? 0.5 : 1,
-                      transition: "opacity 0.2s",
-                      backgroundColor: draggedIndex === index ? "#f0f0f0" : "transparent",
-                      padding: "5px",
-                      borderRadius: "4px"
-                    }}
+                    className={`instruction-row ${draggedIndex === index ? 'instruction-row-dragging' : ''}`}
                   >
                     <div
-                      style={{
-                        cursor: instruction.trim() !== '' ? 'grab' : 'default',
-                        padding: "10px 5px",
-                        color: instruction.trim() !== '' ? "#666" : "#ccc",
-                        fontSize: "18px",
-                        userSelect: "none",
-                        display: "flex",
-                        alignItems: "center"
-                      }}
+                      className={`instruction-drag-handle ${instruction.trim() !== '' ? 'instruction-drag-handle-active' : 'instruction-drag-handle-disabled'}`}
                       title="Drag to reorder"
                     >
                       ⋮⋮
                     </div>
 
-                    <div
-                      style={{
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        minWidth: "30px",
-                        fontWeight: "bold",
-                        color: "#666",
-                        fontSize: "14px"
-                      }}
-                    >
+                    <div className="instruction-number">
                       {index + 1}
                     </div>
 
@@ -815,31 +780,15 @@ export default function ConfigurationsTab({ user, clientId }: ConfigurationsTabP
                       value={instruction}
                       onChange={(e) => handleInstructionChange(index, e.target.value)}
                       placeholder={`Instruction ${index + 1}...`}
-                      style={{
-                        flex: 1,
-                        padding: "10px",
-                        border: "1px solid #ddd",
-                        borderRadius: "4px",
-                        minHeight: "60px",
-                        fontFamily: "inherit",
-                        fontSize: "14px"
-                      }}
+                      className="instruction-textarea"
                     />
 
-                    <div style={{ display: "flex", flexDirection: "column", gap: "5px" }}>
+                    <div className="instruction-actions">
                       <button
                         type="button"
                         onClick={() => moveUp(index)}
                         disabled={index === 0}
-                        style={{
-                          padding: "5px 10px",
-                          backgroundColor: index === 0 ? "#e9ecef" : "#007bff",
-                          color: index === 0 ? "#6c757d" : "white",
-                          border: "none",
-                          borderRadius: "4px",
-                          cursor: index === 0 ? "not-allowed" : "pointer",
-                          fontSize: "12px"
-                        }}
+                        className="btn-move"
                         title="Move up"
                       >
                         ▲
@@ -848,15 +797,7 @@ export default function ConfigurationsTab({ user, clientId }: ConfigurationsTabP
                         type="button"
                         onClick={() => moveDown(index)}
                         disabled={index === instructions.length - 1}
-                        style={{
-                          padding: "5px 10px",
-                          backgroundColor: index === instructions.length - 1 ? "#e9ecef" : "#007bff",
-                          color: index === instructions.length - 1 ? "#6c757d" : "white",
-                          border: "none",
-                          borderRadius: "4px",
-                          cursor: index === instructions.length - 1 ? "not-allowed" : "pointer",
-                          fontSize: "12px"
-                        }}
+                        className="btn-move"
                         title="Move down"
                       >
                         ▼
@@ -867,15 +808,8 @@ export default function ConfigurationsTab({ user, clientId }: ConfigurationsTabP
                       <button
                         type="button"
                         onClick={() => handleRemoveInstruction(index)}
-                        style={{
-                          padding: "10px 15px",
-                          backgroundColor: "#dc3545",
-                          color: "white",
-                          border: "none",
-                          borderRadius: "4px",
-                          cursor: "pointer",
-                          alignSelf: "flex-start"
-                        }}
+                        className="btn btn-danger"
+                        style={{ alignSelf: "flex-start" }}
                       >
                         Remove
                       </button>
@@ -883,21 +817,11 @@ export default function ConfigurationsTab({ user, clientId }: ConfigurationsTabP
                   </div>
                 ))}
 
-                <div style={{ display: "flex", gap: "10px", marginTop: "20px", marginLeft: "45px" }}>
+                <div className="instruction-button-row">
                   <button
                     type="button"
                     onClick={handleAddInstruction}
-                    style={{
-                      padding: "10px 20px",
-                      backgroundColor: "#28a745",
-                      color: "white",
-                      border: "none",
-                      borderRadius: "4px",
-                      cursor: "pointer",
-                      display: "flex",
-                      alignItems: "center",
-                      gap: "6px"
-                    }}
+                    className="btn btn-success btn-icon"
                   >
                     <i className="fa-solid fa-plus"></i>
                     {t('instructions.addButton')}
@@ -906,17 +830,7 @@ export default function ConfigurationsTab({ user, clientId }: ConfigurationsTabP
                   <button
                     type="submit"
                     disabled={saving}
-                    style={{
-                      padding: "10px 20px",
-                      backgroundColor: saving ? "#6c757d" : "#007bff",
-                      color: "white",
-                      border: "none",
-                      borderRadius: "4px",
-                      cursor: saving ? "not-allowed" : "pointer",
-                      display: "flex",
-                      alignItems: "center",
-                      gap: "6px"
-                    }}
+                    className={`btn btn-icon ${saving ? 'btn-secondary' : 'btn-primary'}`}
                   >
                     {saving ? (
                       <>
@@ -933,11 +847,7 @@ export default function ConfigurationsTab({ user, clientId }: ConfigurationsTabP
                 </div>
 
                 {saveMessage && (
-                  <p style={{
-                    marginTop: "10px",
-                    color: saveMessage.includes('✅') ? '#28a745' : '#dc3545',
-                    fontWeight: "bold"
-                  }}>
+                  <p className={`save-message mt-2 ${saveMessage.includes('✅') ? 'save-message-success' : 'save-message-error'}`}>
                     {saveMessage}
                   </p>
                 )}
@@ -948,107 +858,75 @@ export default function ConfigurationsTab({ user, clientId }: ConfigurationsTabP
       </div>
 
       {/* Training Section */}
-      <div style={{ padding: "2em", backgroundColor: "#f8f9fa", borderRadius: "8px", border: "1px solid #dee2e6" }}>
+      <div className="section">
         <div
           onClick={() => setIsTrainingCollapsed(!isTrainingCollapsed)}
-          style={{
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-            cursor: "pointer",
-            userSelect: "none",
-            marginBottom: isTrainingCollapsed ? 0 : "1em"
-          }}
+          className={`section-header ${!isTrainingCollapsed ? 'section-header-expanded' : ''}`}
         >
-          <h2 style={{ margin: 0 }}>{t('training.title')}</h2>
-          <i
-            className={`fa-solid fa-chevron-${isTrainingCollapsed ? 'down' : 'up'}`}
-            style={{ fontSize: "1.2em", color: "#666" }}
-          ></i>
+          <h2 className="section-title">
+            <i className="fa-solid fa-graduation-cap"></i>
+            {t('training.title')}
+          </h2>
+          <i className={`fa-solid fa-chevron-${isTrainingCollapsed ? 'down' : 'up'} section-chevron`}></i>
         </div>
 
         {!isTrainingCollapsed && (
           <>
-            <p style={{ color: '#666', lineHeight: '1.6', marginBottom: '1.5em' }}>
+            <p className="subsection-description">
               {t('training.description')}
             </p>
 
             {/* URL Embedding Section */}
-            <div style={{ backgroundColor: 'white', padding: '1.5em', borderRadius: '8px', border: '1px solid #dee2e6', marginBottom: '1.5em' }}>
+            <div className="subsection">
               <div
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'space-between',
-                  cursor: 'pointer',
-                  marginBottom: isEmbeddingSectionOpen ? '1em' : 0
-                }}
+                className={`subsection-header ${isEmbeddingSectionOpen ? 'subsection-header-expanded' : ''}`}
                 onClick={() => setIsEmbeddingSectionOpen(!isEmbeddingSectionOpen)}
               >
-                <h3 style={{ margin: 0, color: '#333', display: 'flex', alignItems: 'center', gap: '0.5em' }}>
-                  <i className="fa-solid fa-globe" style={{ color: '#007bff' }}></i>
+                <h3 className="subsection-title">
+                  <i className="fa-solid fa-globe embedding-icon-url"></i>
                   {t('training.urlEmbeddings.title')}
-                  <span style={{ fontSize: '0.75em', color: '#666', fontWeight: 'normal' }}>
+                  <span className="subsection-count">
                     - {embeddingsList.length} {embeddingsList.length === 1 ? 'Embedding' : 'Embeddings'}
                   </span>
                 </h3>
-                <i className={`fa-solid fa-chevron-${isEmbeddingSectionOpen ? 'up' : 'down'}`} style={{ color: '#666', fontSize: '0.9em' }}></i>
+                <i className={`fa-solid fa-chevron-${isEmbeddingSectionOpen ? 'up' : 'down'} section-chevron`} style={{ fontSize: '0.9em' }}></i>
               </div>
 
               {isEmbeddingSectionOpen && (
                 <>
-                  <p style={{ color: '#666', fontSize: '0.95em', marginBottom: '1.5em' }}>
+                  <p className="subsection-description">
                     {t('training.urlEmbeddings.crawlDescription')}
                   </p>
 
                   {embeddingsLoading ? (
-                    <div style={{ textAlign: 'center', padding: '2em', color: '#666' }}>
+                    <div className="loading-state">
                       <i className="fa-solid fa-spinner fa-spin" style={{ marginRight: '0.5em' }}></i>
                       Loading embeddings...
                     </div>
                   ) : embeddingsList.length > 0 ? (
-                    <div style={{ marginBottom: '1.5em' }}>
-                      <h4 style={{ margin: '0 0 0.75em 0', fontSize: '0.95em', color: '#666' }}>Embedded Websites</h4>
-                      <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5em' }}>
+                    <div className="mb-3">
+                      <h4 className="text-muted text-small mb-1">Embedded Websites</h4>
+                      <div className="embedding-list">
                         {embeddingsList.map((embedding, index) => (
-                          <div key={index} style={{
-                            padding: '0.75em 1em',
-                            backgroundColor: '#f8f9fa',
-                            borderRadius: '4px',
-                            border: '1px solid #dee2e6',
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'space-between'
-                          }}>
-                            <div style={{ display: 'flex', alignItems: 'center', gap: '0.75em', flex: 1 }}>
-                              <i className="fa-solid fa-globe" style={{ color: '#007bff', fontSize: '0.9em' }}></i>
-                              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.25em' }}>
+                          <div key={index} className="embedding-item">
+                            <div className="embedding-info">
+                              <i className="fa-solid fa-globe embedding-icon embedding-icon-url"></i>
+                              <div className="embedding-details">
                                 {embedding.title && (
-                                  <span style={{ color: '#333', fontSize: '0.95em', fontWeight: '500' }}>{embedding.title}</span>
+                                  <span className="embedding-title">{embedding.title}</span>
                                 )}
-                                <span style={{ color: '#666', fontSize: '0.85em' }}>{embedding.url || embedding.source}</span>
+                                <span className="embedding-source">{embedding.url || embedding.source}</span>
                               </div>
                             </div>
-                            <div style={{ display: 'flex', alignItems: 'center', gap: '1em' }}>
+                            <div className="embedding-meta">
                               {embedding.created_at && (
-                                <span style={{ fontSize: '0.85em', color: '#999', whiteSpace: 'nowrap' }}>
+                                <span className="embedding-date">
                                   {new Date(embedding.created_at).toLocaleDateString()}
                                 </span>
                               )}
                               <button
                                 onClick={() => handleDeleteEmbedding(embedding.id, 'url')}
-                                style={{
-                                  padding: '0.4em 0.75em',
-                                  fontSize: '0.85em',
-                                  backgroundColor: '#dc3545',
-                                  color: 'white',
-                                  border: 'none',
-                                  borderRadius: '4px',
-                                  cursor: 'pointer',
-                                  display: 'flex',
-                                  alignItems: 'center',
-                                  gap: '0.4em'
-                                }}
+                                className="btn-delete-sm"
                                 title="Delete embedding"
                               >
                                 <i className="fa-solid fa-trash"></i>
@@ -1060,7 +938,7 @@ export default function ConfigurationsTab({ user, clientId }: ConfigurationsTabP
                       </div>
                     </div>
                   ) : (
-                    <div style={{ textAlign: 'center', padding: '2em', color: '#999', backgroundColor: '#f8f9fa', borderRadius: '4px', marginBottom: '1.5em' }}>
+                    <div className="empty-state">
                       {t('training.urlEmbeddings.emptyState')}
                     </div>
                   )}
@@ -1068,30 +946,18 @@ export default function ConfigurationsTab({ user, clientId }: ConfigurationsTabP
                   {!showAddEmbeddingForm && (
                     <button
                       onClick={(e) => { e.stopPropagation(); setShowAddEmbeddingForm(true); }}
-                      style={{
-                        padding: '0.75em 1.5em',
-                        fontSize: '1em',
-                        backgroundColor: '#007bff',
-                        color: 'white',
-                        border: 'none',
-                        borderRadius: '4px',
-                        cursor: 'pointer',
-                        fontWeight: 'bold',
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: '0.5em'
-                      }}
+                      className="btn btn-primary btn-lg btn-icon"
                     >
                       <i className="fa-solid fa-plus"></i>
-                      Add New Embedding
+                      {t('training.urlEmbeddings.addNewButton')}
                     </button>
                   )}
 
                   {showAddEmbeddingForm && (
-                    <form onSubmit={handleCreateEmbedding} style={{ marginTop: '1.5em', padding: '1.5em', backgroundColor: '#f8f9fa', borderRadius: '4px', border: '1px solid #dee2e6' }}>
-                      <div style={{ marginBottom: '1em' }}>
-                        <label style={{ display: 'block', marginBottom: '0.5em', fontWeight: 'bold', color: '#333' }}>
-                          Website URL <span style={{ color: '#dc3545' }}>*</span>
+                    <form onSubmit={handleCreateEmbedding} className="form-container">
+                      <div className="form-group">
+                        <label className="form-label form-label-required">
+                          Website URL
                         </label>
                         <input
                           type="url"
@@ -1099,44 +965,28 @@ export default function ConfigurationsTab({ user, clientId }: ConfigurationsTabP
                           onChange={(e) => setEmbeddingUrl(e.target.value)}
                           placeholder="https://example.com"
                           disabled={embeddingLoading}
-                          style={{
-                            width: '100%',
-                            padding: '0.75em',
-                            fontSize: '1em',
-                            border: '1px solid #ddd',
-                            borderRadius: '4px',
-                            boxSizing: 'border-box'
-                          }}
+                          className="form-input"
                           required
                         />
                       </div>
 
                       {embeddingError && (
-                        <div style={{ backgroundColor: '#f8d7da', border: '1px solid #f5c6cb', borderRadius: '4px', padding: '0.75em', marginBottom: '1em', color: '#721c24' }}>
+                        <div className="alert alert-error mb-2">
                           {embeddingError}
                         </div>
                       )}
 
                       {embeddingSuccess && (
-                        <div style={{ backgroundColor: '#d4edda', border: '1px solid #c3e6cb', borderRadius: '4px', padding: '0.75em', marginBottom: '1em', color: '#155724' }}>
+                        <div className="alert alert-success mb-2">
                           {embeddingSuccess}
                         </div>
                       )}
 
-                      <div style={{ display: 'flex', gap: '1em' }}>
+                      <div className="form-actions">
                         <button
                           type="submit"
                           disabled={embeddingLoading || !embeddingUrl.trim()}
-                          style={{
-                            padding: '0.75em 1.5em',
-                            fontSize: '1em',
-                            backgroundColor: embeddingLoading ? '#ccc' : '#007bff',
-                            color: 'white',
-                            border: 'none',
-                            borderRadius: '4px',
-                            cursor: embeddingLoading ? 'not-allowed' : 'pointer',
-                            fontWeight: 'bold'
-                          }}
+                          className={`btn btn-lg ${embeddingLoading ? 'btn-secondary' : 'btn-primary'}`}
                         >
                           {embeddingLoading ? (
                             <>
@@ -1155,16 +1005,7 @@ export default function ConfigurationsTab({ user, clientId }: ConfigurationsTabP
                           type="button"
                           onClick={(e) => { e.stopPropagation(); setShowAddEmbeddingForm(false); setEmbeddingUrl(''); setEmbeddingError(null); setEmbeddingSuccess(null); }}
                           disabled={embeddingLoading}
-                          style={{
-                            padding: '0.75em 1.5em',
-                            fontSize: '1em',
-                            backgroundColor: '#6c757d',
-                            color: 'white',
-                            border: 'none',
-                            borderRadius: '4px',
-                            cursor: embeddingLoading ? 'not-allowed' : 'pointer',
-                            fontWeight: 'bold'
-                          }}
+                          className="btn btn-secondary btn-lg"
                         >
                           Cancel
                         </button>
@@ -1176,81 +1017,56 @@ export default function ConfigurationsTab({ user, clientId }: ConfigurationsTabP
             </div>
 
             {/* File Embedding Section */}
-            <div style={{ backgroundColor: 'white', padding: '1.5em', borderRadius: '8px', border: '1px solid #dee2e6' }}>
+            <div className="subsection">
               <div
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'space-between',
-                  cursor: 'pointer',
-                  marginBottom: isFileSectionOpen ? '1em' : 0
-                }}
+                className={`subsection-header ${isFileSectionOpen ? 'subsection-header-expanded' : ''}`}
                 onClick={() => setIsFileSectionOpen(!isFileSectionOpen)}
               >
-                <h3 style={{ margin: 0, color: '#333', display: 'flex', alignItems: 'center', gap: '0.5em' }}>
-                  <i className="fa-solid fa-file-arrow-up" style={{ color: '#28a745' }}></i>
+                <h3 className="subsection-title">
+                  <i className="fa-solid fa-file-arrow-up embedding-icon-file"></i>
                   File Embeddings
-                  <span style={{ fontSize: '0.75em', color: '#666', fontWeight: 'normal' }}>
+                  <span className="subsection-count">
                     - {fileEmbeddingsList.length} {fileEmbeddingsList.length === 1 ? 'Embedding' : 'Embeddings'}
                   </span>
                 </h3>
-                <i className={`fa-solid fa-chevron-${isFileSectionOpen ? 'up' : 'down'}`} style={{ color: '#666', fontSize: '0.9em' }}></i>
+                <i className={`fa-solid fa-chevron-${isFileSectionOpen ? 'up' : 'down'} section-chevron`} style={{ fontSize: '0.9em' }}></i>
               </div>
 
               {isFileSectionOpen && (
                 <>
-                  <p style={{ color: '#666', fontSize: '0.95em', marginBottom: '1.5em' }}>
+                  <p className="subsection-description">
                     {t('training.fileEmbeddings.uploadDescription')}
                   </p>
 
                   {fileEmbeddingsLoading ? (
-                    <div style={{ textAlign: 'center', padding: '2em', color: '#666' }}>
+                    <div className="loading-state">
                       <i className="fa-solid fa-spinner fa-spin" style={{ marginRight: '0.5em' }}></i>
                       Loading file embeddings...
                     </div>
                   ) : fileEmbeddingsList.length > 0 ? (
-                    <div style={{ marginBottom: '1.5em' }}>
-                      <h4 style={{ margin: '0 0 0.75em 0', fontSize: '0.95em', color: '#666' }}>Uploaded Files</h4>
-                      <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5em' }}>
+                    <div className="mb-3">
+                      <h4 className="text-muted text-small mb-1">Uploaded Files</h4>
+                      <div className="embedding-list">
                         {fileEmbeddingsList.map((embedding, index) => (
-                          <div key={index} style={{
-                            padding: '0.75em 1em',
-                            backgroundColor: '#f8f9fa',
-                            borderRadius: '4px',
-                            border: '1px solid #dee2e6',
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'space-between'
-                          }}>
-                            <div style={{ display: 'flex', alignItems: 'center', gap: '0.75em', flex: 1 }}>
-                              <i className="fa-solid fa-file" style={{ color: '#28a745', fontSize: '0.9em' }}></i>
-                              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.25em' }}>
+                          <div key={index} className="embedding-item">
+                            <div className="embedding-info">
+                              <i className="fa-solid fa-file embedding-icon embedding-icon-file"></i>
+                              <div className="embedding-details">
                                 {embedding.title && (
-                                  <span style={{ color: '#333', fontSize: '0.95em', fontWeight: '500' }}>{embedding.title}</span>
+                                  <span className="embedding-title">{embedding.title}</span>
                                 )}
-                                <span style={{ color: '#666', fontSize: '0.85em' }}>{embedding.filename || embedding.url || embedding.source}</span>
+                                <span className="embedding-source">{embedding.filename || embedding.url || embedding.source}</span>
                               </div>
                             </div>
-                            <div style={{ display: 'flex', alignItems: 'center', gap: '1em' }}>
+                            <div className="embedding-meta">
                               {embedding.created_at && (
-                                <span style={{ fontSize: '0.85em', color: '#999', whiteSpace: 'nowrap' }}>
+                                <span className="embedding-date">
                                   {new Date(embedding.created_at).toLocaleDateString()}
                                 </span>
                               )}
                               <button
                                 onClick={() => handleDeleteEmbedding(embedding.id, 'file')}
-                                style={{
-                                  padding: '0.4em 0.75em',
-                                  fontSize: '0.85em',
-                                  backgroundColor: '#dc3545',
-                                  color: 'white',
-                                  border: 'none',
-                                  borderRadius: '4px',
-                                  cursor: 'pointer',
-                                  display: 'flex',
-                                  alignItems: 'center',
-                                  gap: '0.4em'
-                                }}
+                                className="btn-delete-sm"
                                 title="Delete embedding"
                               >
                                 <i className="fa-solid fa-trash"></i>
@@ -1262,7 +1078,7 @@ export default function ConfigurationsTab({ user, clientId }: ConfigurationsTabP
                       </div>
                     </div>
                   ) : (
-                    <div style={{ textAlign: 'center', padding: '2em', color: '#999', backgroundColor: '#f8f9fa', borderRadius: '4px', marginBottom: '1.5em' }}>
+                    <div className="empty-state">
                       {t('training.fileEmbeddings.emptyState')}
                     </div>
                   )}
@@ -1270,48 +1086,22 @@ export default function ConfigurationsTab({ user, clientId }: ConfigurationsTabP
                   {!showAddFileForm && (
                     <button
                       onClick={(e) => { e.stopPropagation(); setShowAddFileForm(true); }}
-                      style={{
-                        padding: '0.75em 1.5em',
-                        fontSize: '1em',
-                        backgroundColor: '#28a745',
-                        color: 'white',
-                        border: 'none',
-                        borderRadius: '4px',
-                        cursor: 'pointer',
-                        fontWeight: 'bold',
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: '0.5em'
-                      }}
+                      className="btn btn-success btn-lg btn-icon"
                     >
                       <i className="fa-solid fa-plus"></i>
-                      Add New File
+                      {t('training.fileEmbeddings.addNewButton')}
                     </button>
                   )}
 
                   {showAddFileForm && (
-                    <div style={{ marginTop: '1.5em', padding: '1.5em', backgroundColor: '#f8f9fa', borderRadius: '4px', border: '1px solid #dee2e6' }}>
-                      <div style={{ marginBottom: '1.5em' }}>
-                        <label style={{ display: 'block', marginBottom: '0.75em', fontWeight: 'bold', color: '#333' }}>
-                          Choose File Source
-                        </label>
-                        <div style={{ display: 'flex', gap: '0.5em', flexWrap: 'wrap' }}>
+                    <div className="form-container">
+                      <div className="form-group">
+                        <label className="form-label">Choose File Source</label>
+                        <div className="file-source-group">
                           <button
                             type="button"
                             onClick={() => { setFileSource('local'); setGoogleDriveFile(null); }}
-                            style={{
-                              padding: '0.6em 1.2em',
-                              fontSize: '0.95em',
-                              backgroundColor: fileSource === 'local' ? '#28a745' : '#fff',
-                              color: fileSource === 'local' ? 'white' : '#333',
-                              border: `2px solid ${fileSource === 'local' ? '#28a745' : '#dee2e6'}`,
-                              borderRadius: '4px',
-                              cursor: 'pointer',
-                              display: 'flex',
-                              alignItems: 'center',
-                              gap: '0.5em',
-                              transition: 'all 0.2s ease'
-                            }}
+                            className={`file-source-btn file-source-btn-local ${fileSource === 'local' ? 'active' : ''}`}
                           >
                             <i className="fa-solid fa-computer"></i>
                             Local File
@@ -1321,19 +1111,7 @@ export default function ConfigurationsTab({ user, clientId }: ConfigurationsTabP
                             <button
                               type="button"
                               onClick={() => { setFileSource('google-drive'); setEmbeddingFile(null); }}
-                              style={{
-                                padding: '0.6em 1.2em',
-                                fontSize: '0.95em',
-                                backgroundColor: fileSource === 'google-drive' ? '#4285f4' : '#fff',
-                                color: fileSource === 'google-drive' ? 'white' : '#333',
-                                border: `2px solid ${fileSource === 'google-drive' ? '#4285f4' : '#dee2e6'}`,
-                                borderRadius: '4px',
-                                cursor: 'pointer',
-                                display: 'flex',
-                                alignItems: 'center',
-                                gap: '0.5em',
-                                transition: 'all 0.2s ease'
-                              }}
+                              className={`file-source-btn file-source-btn-google ${fileSource === 'google-drive' ? 'active' : ''}`}
                             >
                               <i className="fa-brands fa-google-drive"></i>
                               Google Drive
@@ -1344,61 +1122,43 @@ export default function ConfigurationsTab({ user, clientId }: ConfigurationsTabP
 
                       {fileSource === 'local' && (
                         <form onSubmit={handleCreateFileEmbedding}>
-                          <div style={{ marginBottom: '1em' }}>
-                            <label style={{ display: 'block', marginBottom: '0.5em', fontWeight: 'bold', color: '#333' }}>
-                              Select File <span style={{ color: '#dc3545' }}>*</span>
-                            </label>
+                          <div className="form-group">
+                            <label className="form-label form-label-required">Select File</label>
                             <input
                               type="file"
                               onChange={(e) => setEmbeddingFile(e.target.files?.[0] || null)}
                               accept=".pdf,.txt,.doc,.docx,.csv"
                               disabled={fileEmbeddingLoading}
-                              style={{
-                                width: '100%',
-                                padding: '0.75em',
-                                fontSize: '1em',
-                                border: '1px solid #ddd',
-                                borderRadius: '4px',
-                                boxSizing: 'border-box',
-                                cursor: fileEmbeddingLoading ? 'not-allowed' : 'pointer'
-                              }}
+                              className="form-input"
+                              style={{ cursor: fileEmbeddingLoading ? 'not-allowed' : 'pointer' }}
                               required
                             />
                             {embeddingFile && (
-                              <div style={{ marginTop: '0.5em', fontSize: '0.9em', color: '#666' }}>
+                              <div className="form-file-info">
                                 Selected: {embeddingFile.name} ({(embeddingFile.size / 1024).toFixed(2)} KB)
                               </div>
                             )}
                           </div>
 
                           {fileEmbeddingError && (
-                            <div style={{ backgroundColor: '#f8d7da', border: '1px solid #f5c6cb', borderRadius: '4px', padding: '0.75em', marginBottom: '1em', color: '#721c24' }}>
+                            <div className="alert alert-error mb-2">
                               <i className="fa-solid fa-exclamation-triangle" style={{ marginRight: '0.5em' }}></i>
                               {fileEmbeddingError}
                             </div>
                           )}
 
                           {fileEmbeddingSuccess && (
-                            <div style={{ backgroundColor: '#d4edda', border: '1px solid #c3e6cb', borderRadius: '4px', padding: '0.75em', marginBottom: '1em', color: '#155724' }}>
+                            <div className="alert alert-success mb-2">
                               <i className="fa-solid fa-check-circle" style={{ marginRight: '0.5em' }}></i>
                               {fileEmbeddingSuccess}
                             </div>
                           )}
 
-                          <div style={{ display: 'flex', gap: '1em' }}>
+                          <div className="form-actions">
                             <button
                               type="submit"
                               disabled={fileEmbeddingLoading || !embeddingFile}
-                              style={{
-                                padding: '0.75em 1.5em',
-                                fontSize: '1em',
-                                backgroundColor: fileEmbeddingLoading ? '#ccc' : '#28a745',
-                                color: 'white',
-                                border: 'none',
-                                borderRadius: '4px',
-                                cursor: fileEmbeddingLoading ? 'not-allowed' : 'pointer',
-                                fontWeight: 'bold'
-                              }}
+                              className={`btn btn-lg ${fileEmbeddingLoading ? 'btn-secondary' : 'btn-success'}`}
                             >
                               {fileEmbeddingLoading ? (
                                 <>
@@ -1417,16 +1177,7 @@ export default function ConfigurationsTab({ user, clientId }: ConfigurationsTabP
                               type="button"
                               onClick={(e) => { e.stopPropagation(); setShowAddFileForm(false); setEmbeddingFile(null); setFileEmbeddingError(null); setFileEmbeddingSuccess(null); setFileSource('local'); }}
                               disabled={fileEmbeddingLoading}
-                              style={{
-                                padding: '0.75em 1.5em',
-                                fontSize: '1em',
-                                backgroundColor: '#6c757d',
-                                color: 'white',
-                                border: 'none',
-                                borderRadius: '4px',
-                                cursor: fileEmbeddingLoading ? 'not-allowed' : 'pointer',
-                                fontWeight: 'bold'
-                              }}
+                              className="btn btn-secondary btn-lg"
                             >
                               Cancel
                             </button>
@@ -1436,27 +1187,15 @@ export default function ConfigurationsTab({ user, clientId }: ConfigurationsTabP
 
                       {fileSource === 'google-drive' && (
                         <div>
-                          <div style={{ marginBottom: '1em' }}>
-                            <label style={{ display: 'block', marginBottom: '0.5em', fontWeight: 'bold', color: '#333' }}>
-                              Select from Google Drive <span style={{ color: '#dc3545' }}>*</span>
-                            </label>
+                          <div className="form-group">
+                            <label className="form-label form-label-required">Select from Google Drive</label>
 
                             <button
                               type="button"
                               onClick={handleGoogleDrivePicker}
                               disabled={isGooglePickerLoading || fileEmbeddingLoading}
-                              style={{
-                                padding: '0.75em 1.5em',
-                                fontSize: '1em',
-                                backgroundColor: isGooglePickerLoading ? '#ccc' : '#4285f4',
-                                color: 'white',
-                                border: 'none',
-                                borderRadius: '4px',
-                                cursor: isGooglePickerLoading ? 'not-allowed' : 'pointer',
-                                display: 'flex',
-                                alignItems: 'center',
-                                gap: '0.5em'
-                              }}
+                              className={`btn btn-lg btn-icon ${isGooglePickerLoading ? 'btn-secondary' : ''}`}
+                              style={{ backgroundColor: isGooglePickerLoading ? '#ccc' : '#4285f4', color: 'white' }}
                             >
                               {isGooglePickerLoading ? (
                                 <>
@@ -1472,21 +1211,12 @@ export default function ConfigurationsTab({ user, clientId }: ConfigurationsTabP
                             </button>
 
                             {googleDriveFile && (
-                              <div style={{
-                                marginTop: '1em',
-                                padding: '0.75em 1em',
-                                backgroundColor: '#e8f4fd',
-                                border: '1px solid #4285f4',
-                                borderRadius: '4px',
-                                display: 'flex',
-                                alignItems: 'center',
-                                gap: '0.75em'
-                              }}>
-                                <i className="fa-brands fa-google-drive" style={{ color: '#4285f4', fontSize: '1.2em' }}></i>
-                                <div style={{ flex: 1 }}>
-                                  <div style={{ fontWeight: '500', color: '#333' }}>{googleDriveFile.name}</div>
+                              <div className="google-drive-selected">
+                                <i className="fa-brands fa-google-drive google-drive-selected-icon"></i>
+                                <div className="google-drive-selected-info">
+                                  <div className="google-drive-selected-name">{googleDriveFile.name}</div>
                                   {googleDriveFile.size && (
-                                    <div style={{ fontSize: '0.85em', color: '#666' }}>
+                                    <div className="google-drive-selected-size">
                                       {(googleDriveFile.size / 1024).toFixed(2)} KB
                                     </div>
                                   )}
@@ -1494,13 +1224,7 @@ export default function ConfigurationsTab({ user, clientId }: ConfigurationsTabP
                                 <button
                                   type="button"
                                   onClick={() => setGoogleDriveFile(null)}
-                                  style={{
-                                    background: 'none',
-                                    border: 'none',
-                                    color: '#666',
-                                    cursor: 'pointer',
-                                    padding: '0.25em'
-                                  }}
+                                  className="google-drive-remove-btn"
                                   title="Remove selection"
                                 >
                                   <i className="fa-solid fa-times"></i>
@@ -1510,34 +1234,25 @@ export default function ConfigurationsTab({ user, clientId }: ConfigurationsTabP
                           </div>
 
                           {fileEmbeddingError && (
-                            <div style={{ backgroundColor: '#f8d7da', border: '1px solid #f5c6cb', borderRadius: '4px', padding: '0.75em', marginBottom: '1em', color: '#721c24' }}>
+                            <div className="alert alert-error mb-2">
                               <i className="fa-solid fa-exclamation-triangle" style={{ marginRight: '0.5em' }}></i>
                               {fileEmbeddingError}
                             </div>
                           )}
 
                           {fileEmbeddingSuccess && (
-                            <div style={{ backgroundColor: '#d4edda', border: '1px solid #c3e6cb', borderRadius: '4px', padding: '0.75em', marginBottom: '1em', color: '#155724' }}>
+                            <div className="alert alert-success mb-2">
                               <i className="fa-solid fa-check-circle" style={{ marginRight: '0.5em' }}></i>
                               {fileEmbeddingSuccess}
                             </div>
                           )}
 
-                          <div style={{ display: 'flex', gap: '1em' }}>
+                          <div className="form-actions">
                             <button
                               type="button"
                               onClick={handleCreateFileEmbeddingFromGoogleDrive}
                               disabled={fileEmbeddingLoading || !googleDriveFile}
-                              style={{
-                                padding: '0.75em 1.5em',
-                                fontSize: '1em',
-                                backgroundColor: fileEmbeddingLoading || !googleDriveFile ? '#ccc' : '#28a745',
-                                color: 'white',
-                                border: 'none',
-                                borderRadius: '4px',
-                                cursor: fileEmbeddingLoading || !googleDriveFile ? 'not-allowed' : 'pointer',
-                                fontWeight: 'bold'
-                              }}
+                              className={`btn btn-lg ${fileEmbeddingLoading || !googleDriveFile ? 'btn-secondary' : 'btn-success'}`}
                             >
                               {fileEmbeddingLoading ? (
                                 <>
@@ -1556,16 +1271,7 @@ export default function ConfigurationsTab({ user, clientId }: ConfigurationsTabP
                               type="button"
                               onClick={(e) => { e.stopPropagation(); setShowAddFileForm(false); setGoogleDriveFile(null); setFileEmbeddingError(null); setFileEmbeddingSuccess(null); setFileSource('local'); }}
                               disabled={fileEmbeddingLoading}
-                              style={{
-                                padding: '0.75em 1.5em',
-                                fontSize: '1em',
-                                backgroundColor: '#6c757d',
-                                color: 'white',
-                                border: 'none',
-                                borderRadius: '4px',
-                                cursor: fileEmbeddingLoading ? 'not-allowed' : 'pointer',
-                                fontWeight: 'bold'
-                              }}
+                              className="btn btn-secondary btn-lg"
                             >
                               Cancel
                             </button>
@@ -1582,86 +1288,41 @@ export default function ConfigurationsTab({ user, clientId }: ConfigurationsTabP
       </div>
 
       {/* Models Section */}
-      <div style={{ padding: "2em", backgroundColor: "#f8f9fa", borderRadius: "8px", border: "1px solid #dee2e6" }}>
+      <div className="section">
         <div
           onClick={() => setIsModelsCollapsed(!isModelsCollapsed)}
-          style={{
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-            cursor: "pointer",
-            userSelect: "none",
-            marginBottom: isModelsCollapsed ? 0 : "1em"
-          }}
+          className={`section-header ${!isModelsCollapsed ? 'section-header-expanded' : ''}`}
         >
-          <h2 style={{ margin: 0 }}>{t('models.title')}</h2>
-          <i
-            className={`fa-solid fa-chevron-${isModelsCollapsed ? 'down' : 'up'}`}
-            style={{ fontSize: "1.2em", color: "#666" }}
-          ></i>
+          <h2 className="section-title">
+            <i className="fa-solid fa-robot"></i>
+            {t('models.title')}
+          </h2>
+          <i className={`fa-solid fa-chevron-${isModelsCollapsed ? 'down' : 'up'} section-chevron`}></i>
         </div>
 
         {!isModelsCollapsed && (
           fetchingCurrentModel ? (
-            <div style={{ textAlign: "center", padding: "2em", color: "#666" }}>
+            <div className="loading-state">
               <p>Loading...</p>
             </div>
           ) : (
             <form onSubmit={handleModelSubmit}>
               {/* Current Model and Model Selection - Side by side on larger screens */}
-              <div style={{
-                display: "flex",
-                flexWrap: "wrap",
-                gap: "20px",
-                marginBottom: "25px",
-                alignItems: "stretch"
-              }}>
+              <div className="model-cards-container">
                 {/* Current Model Display */}
-                <div style={{
-                  flex: "1 1 280px",
-                  padding: "20px",
-                  backgroundColor: "#fff",
-                  borderRadius: "8px",
-                  border: "2px solid #dee2e6",
-                  textAlign: "center",
-                  display: "flex",
-                  flexDirection: "column",
-                  justifyContent: "center"
-                }}>
-                  <div style={{
-                    fontSize: "12px",
-                    color: "#6c757d",
-                    marginBottom: "12px",
-                    textTransform: "uppercase",
-                    letterSpacing: "0.5px",
-                    fontWeight: "600"
-                  }}>
+                <div className="model-card model-card-centered">
+                  <div className="model-card-label">
                     {t('models.currentModel')}
                   </div>
-                  <div style={{
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    gap: "12px",
-                    flexWrap: "wrap"
-                  }}>
+                  <div className="model-card-value">
                     {getModelLogo(currentModel) && (
                       <img
                         src={getModelLogo(currentModel) || ''}
                         alt="Model logo"
-                        style={{
-                          width: "36px",
-                          height: "36px",
-                          objectFit: "contain"
-                        }}
+                        className="model-logo"
                       />
                     )}
-                    <span style={{
-                      color: "#007bff",
-                      fontWeight: "700",
-                      fontFamily: "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif",
-                      fontSize: "18px"
-                    }}>
+                    <span className="model-name">
                       {currentModel || 'Loading...'}
                     </span>
                   </div>
@@ -1669,39 +1330,15 @@ export default function ConfigurationsTab({ user, clientId }: ConfigurationsTabP
 
                 {/* Model Selection - Hidden for specialty levels (mls, easybroker) */}
                 {!isSpecialtyLevel && (
-                  <div style={{
-                    flex: "1 1 280px",
-                    padding: "20px",
-                    backgroundColor: "#fff",
-                    borderRadius: "8px",
-                    border: "2px solid #dee2e6"
-                  }}>
-                    <label
-                      htmlFor="model-select"
-                      style={{
-                        display: "block",
-                        marginBottom: "8px",
-                        fontWeight: "600",
-                        color: "#333",
-                        fontSize: "14px"
-                      }}
-                    >
+                  <div className="model-card">
+                    <label htmlFor="model-select" className="model-select-label">
                       {t('models.selectModel')}
                     </label>
                     <select
                       id="model-select"
                       value={selectedModel}
                       onChange={(e) => setSelectedModel(e.target.value)}
-                      style={{
-                        width: "100%",
-                        padding: "12px",
-                        fontSize: "14px",
-                        border: "1px solid #ced4da",
-                        borderRadius: "4px",
-                        backgroundColor: "white",
-                        cursor: "pointer",
-                        fontFamily: "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif"
-                      }}
+                      className="model-select"
                     >
                       <option value="">{t('models.selectPlaceholder')}</option>
 
@@ -1733,30 +1370,14 @@ export default function ConfigurationsTab({ user, clientId }: ConfigurationsTabP
 
               {/* Error Message */}
               {modelError && (
-                <div style={{
-                  padding: "12px",
-                  backgroundColor: "#f8d7da",
-                  color: "#721c24",
-                  borderRadius: "4px",
-                  marginBottom: "20px",
-                  border: "1px solid #f5c6cb",
-                  fontSize: "14px"
-                }}>
+                <div className="alert alert-error mb-3">
                   <strong>Error:</strong> {modelError}
                 </div>
               )}
 
               {/* Success Message */}
               {modelSuccess && (
-                <div style={{
-                  padding: "12px",
-                  backgroundColor: "#d4edda",
-                  color: "#155724",
-                  borderRadius: "4px",
-                  marginBottom: "20px",
-                  border: "1px solid #c3e6cb",
-                  fontSize: "14px"
-                }}>
+                <div className="alert alert-success mb-3">
                   {t('models.success')}
                 </div>
               )}
@@ -1764,19 +1385,9 @@ export default function ConfigurationsTab({ user, clientId }: ConfigurationsTabP
               {/* Level-based Message Area - Hidden for specialty levels */}
               {!isSpecialtyLevel && (
                 isRestrictedLevel ? (
-                  <div style={{
-                    marginBottom: "20px",
-                    padding: "16px 20px",
-                    backgroundColor: "#fff3e0",
-                    borderRadius: "8px",
-                    fontSize: "14px",
-                    color: "#e65100",
-                    border: "2px solid #ffb74d",
-                    textAlign: "center",
-                    boxShadow: "0 2px 8px rgba(230, 81, 0, 0.15)"
-                  }}>
-                    <div style={{ fontSize: "24px", marginBottom: "8px" }}>🔒</div>
-                    <div style={{ fontWeight: "700", fontSize: "16px", marginBottom: "6px" }}>
+                  <div className="restricted-warning">
+                    <div className="restricted-warning-icon">🔒</div>
+                    <div className="restricted-warning-title">
                       {t('models.restricted.title')}
                     </div>
                     <div>
@@ -1786,16 +1397,7 @@ export default function ConfigurationsTab({ user, clientId }: ConfigurationsTabP
                     </div>
                   </div>
                 ) : (
-                  <div style={{
-                    marginBottom: "20px",
-                    padding: "12px",
-                    backgroundColor: "#fff3cd",
-                    borderRadius: "4px",
-                    fontSize: "12px",
-                    color: "#856404",
-                    border: "1px solid #ffeeba",
-                    textAlign: "center"
-                  }}>
+                  <div className="note-box">
                     <strong>{t('models:note.title')}</strong> {t('models.note')}
                   </div>
                 )
@@ -1803,43 +1405,19 @@ export default function ConfigurationsTab({ user, clientId }: ConfigurationsTabP
 
               {/* Buttons - Hidden for specialty levels */}
               {!isSpecialtyLevel && (
-                <div style={{
-                  display: "flex",
-                  gap: "10px",
-                  justifyContent: "flex-end"
-                }}>
+                <div className="actions-right">
                   <button
                     type="button"
                     onClick={handleModelCancel}
                     disabled={modelLoading}
-                    style={{
-                      padding: "10px 20px",
-                      backgroundColor: "#6c757d",
-                      color: "white",
-                      border: "none",
-                      borderRadius: "4px",
-                      cursor: modelLoading ? "not-allowed" : "pointer",
-                      fontSize: "14px",
-                      fontWeight: "500",
-                      opacity: modelLoading ? 0.6 : 1
-                    }}
+                    className="btn btn-secondary"
                   >
                     {t('common:buttons.cancel')}
                   </button>
                   <button
                     type="submit"
                     disabled={modelLoading || !selectedModel || isModelUnchanged()}
-                    style={{
-                      padding: "10px 20px",
-                      backgroundColor: selectedModel && !isModelUnchanged() ? "#007bff" : "#6c757d",
-                      color: "white",
-                      border: "none",
-                      borderRadius: "4px",
-                      cursor: modelLoading || !selectedModel || isModelUnchanged() ? "not-allowed" : "pointer",
-                      fontSize: "14px",
-                      fontWeight: "500",
-                      opacity: modelLoading || !selectedModel || isModelUnchanged() ? 0.6 : 1
-                    }}
+                    className={`btn ${selectedModel && !isModelUnchanged() ? 'btn-primary' : 'btn-secondary'}`}
                   >
                     {modelLoading ? t('models.updating') : t('models.updateButton')}
                   </button>

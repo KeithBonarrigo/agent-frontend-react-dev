@@ -18,5 +18,54 @@
     "saveFailed": "Failed to save styling",
     "testInIntegrations": "Test it in Integrations"
   },
-  "placeholder": "Enter your custom CSS here..."
+  "placeholder": "Enter your custom CSS here...",
+  "branding": {
+    "title": "Branding",
+    "description": "Customize your chatbot's appearance with logos, icons, and text.",
+    "logoUrl": {
+      "label": "Header Logo URL",
+      "placeholder": "https://example.com/logo.png",
+      "hint": "Image displayed in the chatbot header (optional)",
+      "maxSize": "Max file size: 2MB"
+    },
+    "headline": {
+      "label": "Header Headline",
+      "placeholder": "Chat with Us",
+      "hint": "Text displayed in the chatbot header"
+    },
+    "greeting": {
+      "label": "Greeting Message",
+      "placeholder": "Hi! How can I help you today?",
+      "hint": "Initial welcome message from the bot"
+    },
+    "userIcon": {
+      "label": "User Avatar URL",
+      "placeholder": "https://example.com/user-avatar.png",
+      "hint": "Custom avatar for user messages (optional)",
+      "maxSize": "Max file size: 2MB"
+    },
+    "botIcon": {
+      "label": "Bot Avatar URL",
+      "placeholder": "https://example.com/bot-avatar.png",
+      "hint": "Custom avatar for bot messages (optional)",
+      "maxSize": "Max file size: 2MB"
+    },
+    "buttons": {
+      "save": "Save Branding",
+      "saving": "Saving..."
+    },
+    "messages": {
+      "saveSuccess": "Branding saved successfully!",
+      "saveFailed": "Failed to save branding"
+    },
+    "upload": {
+      "localFile": "Upload from computer",
+      "googleDrive": "Select from Google Drive",
+      "invalidType": "Invalid file type. Please select an image (PNG, JPEG, WebP, GIF, or SVG).",
+      "tooLarge": "File too large. Maximum size is 2MB.",
+      "failed": "Failed to upload image. Please try again.",
+      "googleDriveNotConfigured": "Google Drive is not configured. Please contact your administrator.",
+      "googleAuthFailed": "Failed to authenticate with Google Drive."
+    }
+  }
 }

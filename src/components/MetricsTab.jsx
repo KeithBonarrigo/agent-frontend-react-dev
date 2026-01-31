@@ -66,7 +66,10 @@ export default function MetricsTab({ clientId, subscription, tokensUsed }) {
 
   return (
     <div className="tab-container">
-      <h2 className="tab-title">{t('title')}</h2>
+      <h2 className="section-title section-title-centered" style={{ marginBottom: "1em" }}>
+        <i className="fa-solid fa-chart-line"></i>
+        {t('title')}
+      </h2>
 
       {/* Token Usage Section */}
       {subscription && (

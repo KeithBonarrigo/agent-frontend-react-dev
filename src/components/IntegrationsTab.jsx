@@ -1,6 +1,7 @@
 import { useState, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { getApiUrl } from "../utils/getApiUrl";
+import "./Tabs.css";
 
 // IntegrationsTab - Displays embed code and integration methods for the AI agent
 // Provides the script tag users need to embed the chatbot on their website
@@ -130,7 +131,10 @@ export default function IntegrationsTab({ user, clientId }) {
 
       {/* Website Embed Code Section */}
       <div style={{ marginBottom: "2em" }}>
-        <h2 style={{ textAlign: "center", marginBottom: "1em" }}>{t('webEmbed.title')}</h2>
+        <h2 className="section-title section-title-centered" style={{ marginBottom: "1em" }}>
+          <i className="fa-solid fa-window-maximize"></i>
+          {t('webEmbed.title')}
+        </h2>
         <div style={{ position: "relative", width: "70%", marginLeft: "auto", marginRight: "auto" }}>
           <pre style={{
             backgroundColor: "#fff",
@@ -185,7 +189,10 @@ export default function IntegrationsTab({ user, clientId }) {
 
       {/* Other Integrations Coming Soon */}
       <div style={{ marginTop: "2em", paddingTop: "2em", borderTop: "1px solid #ddd", textAlign: "center", color: "#666" }}>
-        <h3>{t('otherIntegrations.title')}</h3>
+        <h3 className="section-title section-title-centered" style={{ marginBottom: "0.5em" }}>
+          <i className="fa-solid fa-plug"></i>
+          {t('otherIntegrations.title')}
+        </h3>
         <p>{t('otherIntegrations.comingSoon')}</p>
       </div>
     </div>

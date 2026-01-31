@@ -78,8 +78,12 @@ export default function LeadsTab({ clientId }) {
 
   return (
     <div className="tab-container">
+      <h2 className="section-title section-title-centered" style={{ marginBottom: "1em" }}>
+        <i className="fa-solid fa-address-book"></i>
+        {t('title')}
+      </h2>
+
       <div className="toolbar mb-3">
-        <h2 className="mt-0 mb-0">{t('title')}</h2>
         <div className="flex flex-center gap-sm">
           <input
             type="text"

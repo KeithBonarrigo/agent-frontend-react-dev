@@ -378,7 +378,10 @@ export default function AddOnsTab({ user, clientId }) {
 
   return (
     <div className="tab-container">
-      <h2 className="tab-title mt-0">{t('title')}</h2>
+      <h2 className="section-title section-title-centered mt-0">
+        <span>⊕</span>
+        {t('title')}
+      </h2>
       <p className="tab-description">
         {t('description')}
       </p>

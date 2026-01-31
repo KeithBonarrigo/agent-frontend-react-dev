@@ -245,7 +245,10 @@ export default function ConversationsTab({ clientId, user }) {
 
   return (
     <div className="tab-container">
-      <h2 className="tab-title">{t('title')}</h2>
+      <h2 className="section-title section-title-centered" style={{ marginBottom: "1em" }}>
+        <i className="fa-solid fa-comments"></i>
+        {t('title')}
+      </h2>
 
       <div className="toolbar">
         <div className="search-container">

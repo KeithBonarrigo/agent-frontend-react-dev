@@ -18,5 +18,54 @@
     "saveFailed": "Error al guardar estilos",
     "testInIntegrations": "Probar en Integraciones"
   },
-  "placeholder": "Ingresa tu CSS personalizado aquí..."
+  "placeholder": "Ingresa tu CSS personalizado aquí...",
+  "branding": {
+    "title": "Marca",
+    "description": "Personaliza la apariencia de tu chatbot con logos, íconos y texto.",
+    "logoUrl": {
+      "label": "URL del Logo del Encabezado",
+      "placeholder": "https://ejemplo.com/logo.png",
+      "hint": "Imagen mostrada en el encabezado del chatbot (opcional)",
+      "maxSize": "Tamaño máximo de archivo: 2MB"
+    },
+    "headline": {
+      "label": "Título del Encabezado",
+      "placeholder": "Chatea con Nosotros",
+      "hint": "Texto mostrado en el encabezado del chatbot"
+    },
+    "greeting": {
+      "label": "Mensaje de Bienvenida",
+      "placeholder": "¡Hola! ¿Cómo puedo ayudarte hoy?",
+      "hint": "Mensaje de bienvenida inicial del bot"
+    },
+    "userIcon": {
+      "label": "URL del Avatar del Usuario",
+      "placeholder": "https://ejemplo.com/avatar-usuario.png",
+      "hint": "Avatar personalizado para mensajes del usuario (opcional)",
+      "maxSize": "Tamaño máximo de archivo: 2MB"
+    },
+    "botIcon": {
+      "label": "URL del Avatar del Bot",
+      "placeholder": "https://ejemplo.com/avatar-bot.png",
+      "hint": "Avatar personalizado para mensajes del bot (opcional)",
+      "maxSize": "Tamaño máximo de archivo: 2MB"
+    },
+    "buttons": {
+      "save": "Guardar Marca",
+      "saving": "Guardando..."
+    },
+    "messages": {
+      "saveSuccess": "Marca guardada exitosamente!",
+      "saveFailed": "Error al guardar marca"
+    },
+    "upload": {
+      "localFile": "Subir desde computadora",
+      "googleDrive": "Seleccionar de Google Drive",
+      "invalidType": "Tipo de archivo no válido. Por favor selecciona una imagen (PNG, JPEG, WebP, GIF o SVG).",
+      "tooLarge": "Archivo demasiado grande. El tamaño máximo es 2MB.",
+      "failed": "Error al subir imagen. Por favor intenta de nuevo.",
+      "googleDriveNotConfigured": "Google Drive no está configurado. Por favor contacta a tu administrador.",
+      "googleAuthFailed": "Error de autenticación con Google Drive."
+    }
+  }
 }
