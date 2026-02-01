@@ -44,6 +44,29 @@ export default function ConversationsTab({ clientId, user }) {
   const [conversationSearch, setConversationSearch] = useState('');
   const [activeSessions, setActiveSessions] = useState({});
   const [showOnlyLive, setShowOnlyLive] = useState(false);
+  const [sessionContacts, setSessionContacts] = useState({});
+
+  // Fetch session contacts from Redis
+  const fetchSessionContacts = async () => {
+    if (!clientId) return;
+
+    try {
+      const apiBaseUrl = getApiUrl();
+      const response = await fetch(`${apiBaseUrl}/admin/session-contacts`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify({ clientId })
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        setSessionContacts(data.sessions || {});
+      }
+    } catch (error) {
+      console.error('Error fetching session contacts:', error);
+    }
+  };
 
   // Fetch active sessions from Redis
   const fetchActiveSessions = async () => {
@@ -72,9 +95,13 @@ export default function ConversationsTab({ clientId, user }) {
     if (clientId) {
       fetchConversations();
       fetchActiveSessions();
+      fetchSessionContacts();
 
       // Poll for active sessions every 30 seconds
-      const interval = setInterval(fetchActiveSessions, 30000);
+      const interval = setInterval(() => {
+        fetchActiveSessions();
+        fetchSessionContacts();
+      }, 30000);
       return () => clearInterval(interval);
     }
   }, [clientId]);
@@ -369,16 +396,35 @@ export default function ConversationsTab({ clientId, user }) {
                                 const userKey = `${conv.domain}|${channel.channel}|${userConv.userid}`;
                                 const isUserExpanded = expandedUsers.has(userKey);
 
+                                // Look up contact info - try different key formats
+                                const contactKey = Object.keys(sessionContacts).find(key =>
+                                  key.includes(userConv.userid) || sessionContacts[key]?.userId === userConv.userid
+                                );
+                                const contact = contactKey ? sessionContacts[contactKey] : null;
+
                                 return (
                                   <div key={uIdx} className="user-item">
                                     <div onClick={() => toggleUser(userKey)} className="user-header">
                                       <span className="flex flex-center gap-sm">
                                         {isUserExpanded ? '−' : '+'} <strong>{t('user')}</strong> {userConv.userid}
+                                        {contact?.name && (
+                                          <span className="contact-name">— {contact.name}</span>
+                                        )}
                                         {activeSessions[userConv.userid] && (
                                           <span className="status-dot status-dot-online status-dot-lg" title="User is currently online" />
                                         )}
                                       </span>
                                       <div className="user-stats">
+                                        {contact?.email && (
+                                          <span className="contact-email" title={contact.email}>
+                                            <i className="fa-solid fa-envelope"></i> {contact.email}
+                                          </span>
+                                        )}
+                                        {contact?.phone && (
+                                          <span className="contact-phone" title={contact.phone}>
+                                            <i className="fa-solid fa-phone"></i> {contact.phone}
+                                          </span>
+                                        )}
                                         <span>{userConv.messages.length} {t('messages')}</span>
                                         <span>{userConv.totalTokens.toLocaleString()} {t('tokens')}</span>
                                       </div>

@@ -620,6 +620,30 @@
 }
 
 /* -----------------------------------------
+   Contact Info
+   ----------------------------------------- */
+.contact-name {
+  color: #1e3a8a;
+  font-weight: 500;
+  font-size: 13px;
+}
+
+.contact-email,
+.contact-phone {
+  color: #666;
+  font-size: 11px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.contact-email i,
+.contact-phone i {
+  font-size: 10px;
+  color: #888;
+}
+
+/* -----------------------------------------
    Messages List
    ----------------------------------------- */
 .messages-container {
