@@ -597,6 +597,20 @@
 .user-item {
   border-top: 1px solid #ddd;
   overflow: hidden;
+  transition: background-color 0.3s ease;
+}
+
+.user-item-highlight {
+  animation: highlight-pulse 2s ease-out;
+}
+
+@keyframes highlight-pulse {
+  0% {
+    background-color: #fef3c7;
+  }
+  100% {
+    background-color: transparent;
+  }
 }
 
 .user-stats {

@@ -27,6 +27,12 @@
   "duration": "Duración:",
   "liveMap": {
     "title": "Mapa en Vivo",
-    "placeholder": "Las ubicaciones de usuarios en vivo se mostrarán aquí."
+    "placeholder": "Las ubicaciones de usuarios en vivo se mostrarán aquí.",
+    "noData": "No hay datos de ubicación disponibles para las sesiones actuales.",
+    "viewConversation": "Ver Conversación",
+    "online": "En Línea",
+    "offline": "Desconectado",
+    "location": "ubicación",
+    "locations": "ubicaciones"
   }
 }

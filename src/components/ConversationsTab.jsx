@@ -231,6 +231,42 @@ export default function ConversationsTab({ clientId, user }) {
     setExpandedUsers(liveUsers);
   };
 
+  // Handle click from map popup - expand and scroll to user's conversation
+  const handleMapUserClick = (userId) => {
+    // Find the user in conversations
+    for (const conv of conversations) {
+      for (const ch of conv.channels) {
+        const user = ch.users.find(u =>
+          u.userid === userId ||
+          u.userid.includes(userId) ||
+          userId.includes(u.userid)
+        );
+        if (user) {
+          const channelKey = `${conv.domain}|${ch.channel}`;
+          const userKey = `${conv.domain}|${ch.channel}|${user.userid}`;
+
+          // Expand the accordion hierarchy
+          setExpandedDomains(prev => new Set([...prev, conv.domain]));
+          setExpandedChannels(prev => new Set([...prev, channelKey]));
+          setExpandedUsers(prev => new Set([...prev, userKey]));
+
+          // Scroll to the user element after a short delay to allow DOM update
+          setTimeout(() => {
+            const userElement = document.querySelector(`[data-user-key="${userKey}"]`);
+            if (userElement) {
+              userElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+              // Add a brief highlight effect
+              userElement.classList.add('user-item-highlight');
+              setTimeout(() => userElement.classList.remove('user-item-highlight'), 2000);
+            }
+          }, 100);
+
+          return;
+        }
+      }
+    }
+  };
+
   // Filter conversations based on search and live status
   const filteredConversations = conversations
     .map(conv => {
@@ -333,7 +369,7 @@ export default function ConversationsTab({ clientId, user }) {
         </div>
         {liveMapExpanded && (
           <div className="accordion-body" style={{ padding: '1em' }}>
-            <LiveMap sessions={sessionContacts} activeSessions={activeSessions} />
+            <LiveMap sessions={sessionContacts} activeSessions={activeSessions} onUserClick={handleMapUserClick} />
           </div>
         )}
       </div>
@@ -422,7 +458,7 @@ export default function ConversationsTab({ clientId, user }) {
                                 const contact = contactKey ? sessionContacts[contactKey] : null;
 
                                 return (
-                                  <div key={uIdx} className="user-item">
+                                  <div key={uIdx} className="user-item" data-user-key={userKey}>
                                     <div onClick={() => toggleUser(userKey)} className="user-header">
                                       <span className="flex flex-center gap-sm">
                                         {isUserExpanded ? '−' : '+'} <strong>{t('user')}</strong> {userConv.userid}

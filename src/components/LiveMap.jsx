@@ -1,4 +1,5 @@
 import { useEffect, useRef } from 'react';
+import { useTranslation } from 'react-i18next';
 import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
@@ -41,7 +42,8 @@ function FitBounds({ locations }) {
   return null;
 }
 
-export default function LiveMap({ sessions, activeSessions }) {
+export default function LiveMap({ sessions, activeSessions, onUserClick }) {
+  const { t } = useTranslation('conversations');
   const mapRef = useRef(null);
 
   // Extract locations from sessions that have location data
@@ -79,7 +81,7 @@ export default function LiveMap({ sessions, activeSessions }) {
     return (
       <div className="live-map-empty">
         <i className="fa-solid fa-map-location-dot"></i>
-        <p>No location data available for current sessions.</p>
+        <p>{t('liveMap.noData')}</p>
       </div>
     );
   }
@@ -112,7 +114,7 @@ export default function LiveMap({ sessions, activeSessions }) {
                 <div className="live-map-popup-header">
                   {loc.isOnline && (
                     <span className="live-map-popup-status online">
-                      <span className="status-dot"></span> Online
+                      <span className="status-dot"></span> {t('liveMap.online')}
                     </span>
                   )}
                   <span className="live-map-popup-name">{loc.name}</span>
@@ -141,6 +143,16 @@ export default function LiveMap({ sessions, activeSessions }) {
                   <i className="fa-solid fa-fingerprint"></i>
                   {loc.userId}
                 </div>
+
+                {onUserClick && (
+                  <button
+                    className="live-map-popup-btn"
+                    onClick={() => onUserClick(loc.userId)}
+                  >
+                    <i className="fa-solid fa-comments"></i>
+                    {t('liveMap.viewConversation')}
+                  </button>
+                )}
               </div>
             </Popup>
           </Marker>
@@ -149,13 +161,13 @@ export default function LiveMap({ sessions, activeSessions }) {
 
       <div className="live-map-legend">
         <span className="legend-item">
-          <span className="live-map-marker-sample online"></span> Online
+          <span className="live-map-marker-sample online"></span> {t('liveMap.online')}
         </span>
         <span className="legend-item">
-          <span className="live-map-marker-sample offline"></span> Offline
+          <span className="live-map-marker-sample offline"></span> {t('liveMap.offline')}
         </span>
         <span className="legend-count">
-          {locations.length} {locations.length === 1 ? 'location' : 'locations'}
+          {locations.length} {locations.length === 1 ? t('liveMap.location') : t('liveMap.locations')}
         </span>
       </div>
     </div>

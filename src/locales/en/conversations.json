@@ -27,6 +27,12 @@
   "duration": "Duration:",
   "liveMap": {
     "title": "Live Map",
-    "placeholder": "Live user locations will be displayed here."
+    "placeholder": "Live user locations will be displayed here.",
+    "noData": "No location data available for current sessions.",
+    "viewConversation": "View Conversation",
+    "online": "Online",
+    "offline": "Offline",
+    "location": "location",
+    "locations": "locations"
   }
 }
