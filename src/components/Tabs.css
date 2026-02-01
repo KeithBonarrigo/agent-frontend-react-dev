@@ -629,7 +629,8 @@
 }
 
 .contact-email,
-.contact-phone {
+.contact-phone,
+.contact-location {
   color: #666;
   font-size: 11px;
   display: flex;
@@ -638,7 +639,8 @@
 }
 
 .contact-email i,
-.contact-phone i {
+.contact-phone i,
+.contact-location i {
   font-size: 10px;
   color: #888;
 }

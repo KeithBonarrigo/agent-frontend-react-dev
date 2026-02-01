@@ -56,7 +56,7 @@ export default function ConversationsTab({ clientId, user }) {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',
-        body: JSON.stringify({ clientId })
+        body: JSON.stringify({ clientId, includeLocation: true })
       });
 
       if (response.ok) {
@@ -423,6 +423,11 @@ export default function ConversationsTab({ clientId, user }) {
                                         {contact?.phone && (
                                           <span className="contact-phone" title={contact.phone}>
                                             <i className="fa-solid fa-phone"></i> {contact.phone}
+                                          </span>
+                                        )}
+                                        {contact?.location && (
+                                          <span className="contact-location" title={`${contact.location.city || ''}, ${contact.location.regionName || ''}, ${contact.location.countryName || ''}`}>
+                                            <i className="fa-solid fa-location-dot"></i> {contact.location.city}{contact.location.country ? `, ${contact.location.country}` : ''}
                                           </span>
                                         )}
                                         <span>{userConv.messages.length} {t('messages')}</span>
