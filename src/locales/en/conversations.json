@@ -24,5 +24,9 @@
   "tokens": "tokens",
   "first": "First:",
   "last": "Last:",
-  "duration": "Duration:"
+  "duration": "Duration:",
+  "liveMap": {
+    "title": "Live Map",
+    "placeholder": "Live user locations will be displayed here."
+  }
 }

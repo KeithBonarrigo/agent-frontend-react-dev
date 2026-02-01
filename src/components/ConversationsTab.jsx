@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { getApiUrl } from "../utils/getApiUrl";
+import LiveMap from "./LiveMap";
 import "./Tabs.css";
 
 // Helper function to calculate and format duration between two timestamps
@@ -45,6 +46,7 @@ export default function ConversationsTab({ clientId, user }) {
   const [activeSessions, setActiveSessions] = useState({});
   const [showOnlyLive, setShowOnlyLive] = useState(false);
   const [sessionContacts, setSessionContacts] = useState({});
+  const [liveMapExpanded, setLiveMapExpanded] = useState(false);
 
   // Fetch session contacts from Redis
   const fetchSessionContacts = async () => {
@@ -317,6 +319,23 @@ export default function ConversationsTab({ clientId, user }) {
             {showOnlyLive ? t('buttons.liveOnly') : t('buttons.showAll')}
           </button>
         </div>
+      </div>
+
+      {/* Live Map Accordion */}
+      <div className="accordion-item" style={{ marginBottom: '1em' }}>
+        <div
+          onClick={() => setLiveMapExpanded(!liveMapExpanded)}
+          className="accordion-header"
+        >
+          <span className="flex flex-center gap-sm">
+            {liveMapExpanded ? '−' : '+'} <i className="fa-solid fa-earth-americas"></i> {t('liveMap.title')}
+          </span>
+        </div>
+        {liveMapExpanded && (
+          <div className="accordion-body" style={{ padding: '1em' }}>
+            <LiveMap sessions={sessionContacts} activeSessions={activeSessions} />
+          </div>
+        )}
       </div>
 
       {loadingConversations ? (
