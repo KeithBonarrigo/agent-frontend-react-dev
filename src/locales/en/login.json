@@ -1,0 +1,45 @@
+{
+  "pageTitle": {
+    "login": "Login",
+    "createAccount": "Create Account"
+  },
+  "placeholders": {
+    "email": "Email",
+    "password": "Password",
+    "confirmPassword": "Confirm Password",
+    "firstName": "First Name",
+    "lastName": "Last Name"
+  },
+  "buttons": {
+    "logIn": "Log In",
+    "createAccount": "Create Account",
+    "sending": "Sending...",
+    "sendResetLink": "Send Reset Link"
+  },
+  "links": {
+    "forgotPassword": "Forgot password?",
+    "backToLogin": "← Back to Login"
+  },
+  "prompts": {
+    "noAccount": "Don't have an account?",
+    "hasAccount": "Already have an account?"
+  },
+  "errors": {
+    "passwordMismatch": "Passwords don't match",
+    "signupFailed": "Signup failed",
+    "serverError": "❌ Server error.",
+    "resetFailed": "Failed to send reset email",
+    "serverErrorRetry": "Server error. Please try again."
+  },
+  "success": {
+    "accountCreated": "✅ Account Created!",
+    "switchingToLogin": "Switching to login..."
+  },
+  "passwordReset": {
+    "title": "Reset Password",
+    "description": "Enter your email and we'll send you a reset link.",
+    "checkEmailTitle": "Check Your Email",
+    "checkEmailMessage": "If an account exists for <strong>{{email}}</strong>, you'll receive a password reset link shortly.",
+    "checkSpam": "Don't see it? Check your spam folder."
+  }
+}

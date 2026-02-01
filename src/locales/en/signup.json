@@ -35,7 +35,8 @@
     "pro": "Pro - $79/month",
     "enterprise": "Enterprise - $199/month",
     "easybroker": "Real Estate Agent (EasyBroker) - $79/month",
-    "mls": "Real Estate Agent (MLS) - $79/month"
+    "mls": "Real Estate Agent (MLS) - $79/month",
+    "brandingNotice": "This plan includes a \"Powered by BotWerx\" branding message at the bottom of your web chatbot. You can remove this anytime by upgrading to Pro or Enterprise."
   },
   "buttons": {
     "startFreeTrial": "Start Free Trial",

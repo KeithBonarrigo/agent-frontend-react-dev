@@ -882,6 +882,14 @@ export default function SignupForm({ isOpen }) {
                   </div>
                 </div>
 
+                {/* Branding notice for free and basic plans */}
+                {(agentForm.level === 'free' || agentForm.level === 'basic') && (
+                  <div className="signup-branding-notice">
+                    <i className="fa-solid fa-info-circle"></i>
+                    <span>{t('plans.brandingNotice')}</span>
+                  </div>
+                )}
+
                 {/* Domain to Install Bot */}
                 <div className="home-form-group signup-domain-field">
                   <label htmlFor="domain_to_install_bot" className="home-form-label">

@@ -16,6 +16,7 @@ import enConversations from './locales/en/conversations.json';
 import enMetrics from './locales/en/metrics.json';
 import enLeads from './locales/en/leads.json';
 import enLegal from './locales/en/legal.json';
+import enLogin from './locales/en/login.json';
 
 import esCommon from './locales/es/common.json';
 import esDashboard from './locales/es/dashboard.json';
@@ -30,6 +31,7 @@ import esConversations from './locales/es/conversations.json';
 import esMetrics from './locales/es/metrics.json';
 import esLeads from './locales/es/leads.json';
 import esLegal from './locales/es/legal.json';
+import esLogin from './locales/es/login.json';
 
 const resources = {
   en: {
@@ -45,7 +47,8 @@ const resources = {
     conversations: enConversations,
     metrics: enMetrics,
     leads: enLeads,
-    legal: enLegal
+    legal: enLegal,
+    login: enLogin
   },
   es: {
     common: esCommon,
@@ -60,7 +63,8 @@ const resources = {
     conversations: esConversations,
     metrics: esMetrics,
     leads: esLeads,
-    legal: esLegal
+    legal: esLegal,
+    login: esLogin
   }
 };
 
@@ -71,7 +75,7 @@ i18n
     resources,
     fallbackLng: 'en',
     defaultNS: 'common',
-    ns: ['common', 'dashboard', 'signup', 'models', 'integrations', 'home', 'configurations', 'styling', 'addons', 'conversations', 'metrics', 'leads', 'legal'],
+    ns: ['common', 'dashboard', 'signup', 'models', 'integrations', 'home', 'configurations', 'styling', 'addons', 'conversations', 'metrics', 'leads', 'legal', 'login'],
 
     detection: {
       order: ['localStorage', 'navigator', 'htmlTag'],

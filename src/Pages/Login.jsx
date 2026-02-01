@@ -1,9 +1,12 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { useUser } from "../contexts/UserContext";
 import { getApiUrl } from "../utils/getApiUrl";
 
 export default function Login() {
+  const { t } = useTranslation('login');
+
   // Debug logging for environment configuration
   useEffect(() => {
     console.log('🔧 ============ LOGIN PAGE ENV CONFIG ============');
@@ -40,7 +43,7 @@ export default function Login() {
       navigate("/dashboard");
     } catch (err) {
       console.error("Login error:", err);
-      setError(err.message || "❌ Server error.");
+      setError(err.message || t('errors.serverError'));
     }
   };
 
@@ -56,7 +59,7 @@ export default function Login() {
     setError("");
 
     if (signupData.password !== signupData.confirmPassword) {
-      setError("Passwords don't match");
+      setError(t('errors.passwordMismatch'));
       return;
     }
 
@@ -76,7 +79,7 @@ export default function Login() {
       const data = await res.json();
 
       if (!res.ok) {
-        setError(data.error || "Signup failed");
+        setError(data.error || t('errors.signupFailed'));
         return;
       }
 
@@ -95,7 +98,7 @@ export default function Login() {
 
     } catch (err) {
       console.error("Signup error:", err);
-      setError("❌ Server error.");
+      setError(t('errors.serverError'));
     }
   };
 
@@ -107,7 +110,7 @@ export default function Login() {
 
   return (
     <div className="container" id="login-container" style={{ maxWidth: 400, margin: "auto", padding: "2em" }}>
-      <h2>{showSignup ? "Create Account" : "Login"}</h2>
+      <h2>{showSignup ? t('pageTitle.createAccount') : t('pageTitle.login')}</h2>
       
       <div style={{
         maxHeight: showSignup ? "0" : "1000px",
@@ -121,7 +124,7 @@ export default function Login() {
             id="email"
             type="email"
             name="email"
-            placeholder="Email"
+            placeholder={t('placeholders.email')}
             required
             value={email}
             onChange={(e) => setEmail(e.target.value)}
@@ -131,19 +134,20 @@ export default function Login() {
             id="password"
             type="password"
             name="password"
-            placeholder="Password"
+            placeholder={t('placeholders.password')}
             required
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
 
-          <div style={{ marginBottom: "1em" }}>
-            <a href="/password-reset/request" className="forgot">Forgot password?</a>
+          {error && <p style={{ color: "red", textAlign: "center" }}>{error}</p>}
+
+          <div style={{ textAlign: "center", marginTop: "1em" }}>
+            <a href="/password-reset/request" className="forgot">{t('links.forgotPassword')}</a>
           </div>
 
-          {error && <p style={{ color: "red" }}>{error}</p>}
-          <div id="login-submit-button-container">
-            <button className="btn" type="submit">Log In</button>
+          <div style={{ textAlign: "center", marginTop: "1em" }}>
+            <button className="btn" type="submit" style={{ display: "inline-block", width: "auto" }}>{t('buttons.logIn')}</button>
           </div>
         </form>
       </div>
@@ -157,15 +161,15 @@ export default function Login() {
       }}>
         {signupSuccess ? (
           <div style={{ textAlign: "center", padding: "2em 0" }}>
-            <h3 style={{ color: "green" }}>✅ Account Created!</h3>
-            <p>Switching to login...</p>
+            <h3 style={{ color: "green" }}>{t('success.accountCreated')}</h3>
+            <p>{t('success.switchingToLogin')}</p>
           </div>
         ) : (
           <form onSubmit={handleSignup}>
             <input
               type="text"
               name="firstName"
-              placeholder="First Name"
+              placeholder={t('placeholders.firstName')}
               required
               value={signupData.firstName}
               onChange={handleSignupChange}
@@ -174,7 +178,7 @@ export default function Login() {
             <input
               type="text"
               name="lastName"
-              placeholder="Last Name"
+              placeholder={t('placeholders.lastName')}
               required
               value={signupData.lastName}
               onChange={handleSignupChange}
@@ -183,7 +187,7 @@ export default function Login() {
             <input
               type="email"
               name="email"
-              placeholder="Email"
+              placeholder={t('placeholders.email')}
               required
               value={signupData.email}
               onChange={handleSignupChange}
@@ -192,7 +196,7 @@ export default function Login() {
             <input
               type="password"
               name="password"
-              placeholder="Password"
+              placeholder={t('placeholders.password')}
               required
               value={signupData.password}
               onChange={handleSignupChange}
@@ -201,7 +205,7 @@ export default function Login() {
             <input
               type="password"
               name="confirmPassword"
-              placeholder="Confirm Password"
+              placeholder={t('placeholders.confirmPassword')}
               required
               value={signupData.confirmPassword}
               onChange={handleSignupChange}
@@ -209,22 +213,22 @@ export default function Login() {
 
             {error && <p style={{ color: "red" }}>{error}</p>}
 
-            <br /><button className="btn" type="submit">Create Account</button>
+            <br /><button className="btn" type="submit">{t('buttons.createAccount')}</button>
           </form>
         )}
       </div>
 
       <div style={{ marginTop: "1em", textAlign: "center" }}>
-        <span>{showSignup ? "Already have an account? " : "Don't have an account? "}</span>
-        <a 
-          href="#" 
+        <span>{showSignup ? t('prompts.hasAccount') + " " : t('prompts.noAccount') + " "}</span>
+        <a
+          href="#"
           onClick={(e) => {
             e.preventDefault();
             toggleSignup();
           }}
           style={{ cursor: "pointer", textDecoration: "underline" }}
         >
-          {showSignup ? "Log In" : "Create Account"}
+          {showSignup ? t('buttons.logIn') : t('buttons.createAccount')}
         </a>
       </div>
     </div>
