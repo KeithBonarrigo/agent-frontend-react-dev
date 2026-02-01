@@ -47,20 +47,29 @@ export default function LiveMap({ sessions, activeSessions }) {
   // Extract locations from sessions that have location data
   const locations = Object.entries(sessions || {})
     .filter(([_, session]) => session?.location?.lat && session?.location?.lng)
-    .map(([key, session]) => ({
-      key,
-      lat: session.location.lat,
-      lng: session.location.lng,
-      name: session.name || 'Anonymous',
-      email: session.email,
-      phone: session.phone,
-      city: session.location.city,
-      region: session.location.regionName,
-      country: session.location.countryName,
-      countryCode: session.location.country,
-      userId: session.userId,
-      isOnline: activeSessions?.[session.userId] || false
-    }));
+    .map(([key, session]) => {
+      // Check if any active session matches this user - try multiple key formats
+      const isOnline = Object.keys(activeSessions || {}).some(activeKey =>
+        activeKey === session.userId ||
+        key.includes(activeKey) ||
+        (session.userId && activeKey.includes(session.userId))
+      );
+
+      return {
+        key,
+        lat: session.location.lat,
+        lng: session.location.lng,
+        name: session.name || 'Anonymous',
+        email: session.email,
+        phone: session.phone,
+        city: session.location.city,
+        region: session.location.regionName,
+        country: session.location.countryName,
+        countryCode: session.location.country,
+        userId: session.userId,
+        isOnline
+      };
+    });
 
   // Default center (world view)
   const defaultCenter = [20, 0];
