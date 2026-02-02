@@ -90,7 +90,10 @@ export default function MetricsTab({ clientId, subscription, tokensUsed, user })
 
     try {
       const apiBaseUrl = getApiUrl();
-      const response = await fetch(`${apiBaseUrl}/admin/session-contacts?clientId=${clientId}`, {
+      const response = await fetch(`${apiBaseUrl}/admin/session-contacts`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ clientId }),
         credentials: 'include'
       });
 
