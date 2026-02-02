@@ -11,8 +11,8 @@ export default function ModelsTab({ user, clientId }) {
   const [success, setSuccess] = useState(false);
   const [fetchingCurrent, setFetchingCurrent] = useState(true);
 
-  // Check user level for different restrictions
-  const userLevel = (user?.subscription_level || user?.level || '').toLowerCase();
+  // Check user level for different restrictions (level from bot_client_user takes priority)
+  const userLevel = (user?.level || user?.subscription_level || '').toLowerCase();
   const isSpecialtyLevel = userLevel === 'mls' || userLevel === 'easybroker';
   const isRestrictedLevel = userLevel === 'free' || userLevel === 'basic';
 

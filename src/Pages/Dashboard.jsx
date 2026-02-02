@@ -143,6 +143,16 @@ export default function Dashboard() {
           token_count: c.token_count,
           total_tokens: c.total_tokens
         })));
+        console.log('🏷️ LEVEL DEBUG - Clients:', data.clients?.map(c => ({
+          clientid: c.clientid,
+          level: c.level,
+          subscription_level: c.subscription_level,
+          subscriptionid: c.subscriptionid
+        })));
+        console.log('🏷️ LEVEL DEBUG - Subscriptions:', data.subscriptions?.map(s => ({
+          subscriptionid: s.subscriptionid,
+          level: s.level
+        })));
 
         setClients(data.clients || []);
         setSubscriptions(data.subscriptions || []);
@@ -192,6 +202,22 @@ export default function Dashboard() {
   const selectedSubscription = subscriptions.find(s => String(s.subscriptionid) === String(selectedSubscriptionId));
   const agentsInSubscription = clients.filter(c => String(c.subscriptionid) === String(selectedSubscriptionId));
   const selectedClient = clients.find(c => String(c.clientid) === String(selectedClientId));
+
+  // Debug logging for level display
+  if (selectedClient) {
+    console.log('🎯 SELECTED CLIENT LEVEL:', {
+      clientid: selectedClient.clientid,
+      level: selectedClient.level,
+      subscription_level: selectedClient.subscription_level,
+      displayed: selectedClient.level || selectedClient.subscription_level || 'basic'
+    });
+  }
+  if (selectedSubscription) {
+    console.log('🎯 SELECTED SUBSCRIPTION LEVEL:', {
+      subscriptionid: selectedSubscription.subscriptionid,
+      level: selectedSubscription.level
+    });
+  }
 
   // Calculate total token usage for the selected subscription by summing tokens from all agents
   const subscriptionTokensUsed = agentsInSubscription.reduce((total, client) => {
@@ -1639,9 +1665,9 @@ export default function Dashboard() {
             <span className="text-white"><strong>{t('dashboard:summary.agent')}:</strong> {getClientDisplayName(selectedClient)}</span>
             <span className="text-white"><strong>{t('dashboard:summary.agentId')}:</strong> {selectedClient.clientid}</span>
             <span className="text-white"><strong>{t('dashboard:summary.level')}:</strong> <span className="capitalize" style={{
-              backgroundColor: getLevelColor(selectedClient.subscription_level || selectedClient.level),
+              backgroundColor: getLevelColor(selectedClient.level || selectedClient.subscription_level),
               color: 'white', padding: '0.15em 0.5em', borderRadius: '3px', fontSize: '0.9em'
-            }}>{selectedClient.subscription_level || selectedClient.level || 'basic'}</span></span>
+            }}>{selectedClient.level || selectedClient.subscription_level || 'basic'}</span></span>
             {selectedClient.company && <span className="text-white"><strong>{t('dashboard:summary.company')}:</strong> {selectedClient.company}</span>}
           </div>
 

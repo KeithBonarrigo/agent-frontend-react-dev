@@ -3,11 +3,19 @@ import { useTranslation } from "react-i18next";
 import { getApiUrl } from "../utils/getApiUrl";
 import "./Tabs.css";
 
-export default function MetricsTab({ clientId, subscription, tokensUsed }) {
+export default function MetricsTab({ clientId, subscription, tokensUsed, user }) {
   const { t } = useTranslation('metrics');
   const [metrics, setMetrics] = useState(null);
+  const [leadsCount, setLeadsCount] = useState(null);
+  const [locations, setLocations] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+
+  // Check user level for MLS-specific metrics
+  const userLevel = (user?.level || user?.subscription_level || '').toLowerCase();
+  const isMlsLevel = userLevel === 'mls';
+
+  const showTokenUsage = subscription && !isMlsLevel;
 
   const formatNumber = (num) => num?.toLocaleString() || '0';
 
@@ -25,6 +33,8 @@ export default function MetricsTab({ clientId, subscription, tokensUsed }) {
   useEffect(() => {
     if (clientId) {
       fetchMetrics();
+      fetchLeadsCount();
+      fetchLocations();
     }
   }, [clientId]);
 
@@ -54,6 +64,60 @@ export default function MetricsTab({ clientId, subscription, tokensUsed }) {
     }
   };
 
+  const fetchLeadsCount = async () => {
+    if (!clientId) return;
+
+    try {
+      const apiBaseUrl = getApiUrl();
+      const response = await fetch(`${apiBaseUrl}/api/leads?clientId=${clientId}`, {
+        headers: {
+          'Authorization': `Bearer ${import.meta.env.VITE_CREATE_USER_TOKEN}`
+        }
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        setLeadsCount(data.leads?.length ?? 0);
+      }
+    } catch (err) {
+      console.error('Error fetching leads count:', err);
+      setLeadsCount(0);
+    }
+  };
+
+  const fetchLocations = async () => {
+    if (!clientId) return;
+
+    try {
+      const apiBaseUrl = getApiUrl();
+      const response = await fetch(`${apiBaseUrl}/admin/session-contacts?clientId=${clientId}`, {
+        credentials: 'include'
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        // Aggregate locations by country
+        const locationCounts = {};
+        Object.values(data || {}).forEach(session => {
+          if (session?.location?.countryName) {
+            const country = session.location.countryName;
+            const city = session.location.city || '';
+            const key = city ? `${city}, ${country}` : country;
+            locationCounts[key] = (locationCounts[key] || 0) + 1;
+          }
+        });
+        // Convert to sorted array
+        const sortedLocations = Object.entries(locationCounts)
+          .map(([location, count]) => ({ location, count }))
+          .sort((a, b) => b.count - a.count);
+        setLocations(sortedLocations);
+      }
+    } catch (err) {
+      console.error('Error fetching locations:', err);
+      setLocations([]);
+    }
+  };
+
   if (!clientId) {
     return (
       <div className="tab-empty-state">
@@ -71,8 +135,8 @@ export default function MetricsTab({ clientId, subscription, tokensUsed }) {
         {t('title')}
       </h2>
 
-      {/* Token Usage Section */}
-      {subscription && (
+      {/* Token Usage Section - hidden for MLS level */}
+      {showTokenUsage && (
         <div className="card" style={{ marginBottom: '1.5em' }}>
           <div className="card-header">
             {t('tokenUsage.title')}
@@ -120,7 +184,7 @@ export default function MetricsTab({ clientId, subscription, tokensUsed }) {
             <h3 className="metric-label">
               {t('cards.totalConversations')}
             </h3>
-            <p className="metric-value metric-value-blue">
+            <p className="metric-value">
               {metrics?.totalConversations ?? '—'}
             </p>
           </div>
@@ -129,25 +193,27 @@ export default function MetricsTab({ clientId, subscription, tokensUsed }) {
             <h3 className="metric-label">
               {t('cards.totalMessages')}
             </h3>
-            <p className="metric-value metric-value-green">
+            <p className="metric-value">
               {metrics?.totalMessages ?? '—'}
             </p>
           </div>
 
-          <div className="metric-card">
-            <h3 className="metric-label">
-              {t('cards.totalTokens')}
-            </h3>
-            <p className="metric-value metric-value-purple">
-              {metrics?.totalTokens?.toLocaleString() ?? '—'}
-            </p>
-          </div>
+          {!isMlsLevel && (
+            <div className="metric-card">
+              <h3 className="metric-label">
+                {t('cards.totalTokens')}
+              </h3>
+              <p className="metric-value">
+                {metrics?.totalTokens?.toLocaleString() ?? '—'}
+              </p>
+            </div>
+          )}
 
           <div className="metric-card">
             <h3 className="metric-label">
               {t('cards.activeUsers')}
             </h3>
-            <p className="metric-value metric-value-orange">
+            <p className="metric-value">
               {metrics?.activeUsers ?? '—'}
             </p>
           </div>
@@ -156,18 +222,103 @@ export default function MetricsTab({ clientId, subscription, tokensUsed }) {
             <h3 className="metric-label">
               {t('cards.avgMessagesPerConversation')}
             </h3>
-            <p className="metric-value metric-value-cyan">
+            <p className="metric-value">
               {metrics?.avgMessagesPerConversation?.toFixed(1) ?? '—'}
             </p>
           </div>
 
+          {!isMlsLevel && (
+            <div className="metric-card">
+              <h3 className="metric-label">
+                {t('cards.avgTokensPerMessage')}
+              </h3>
+              <p className="metric-value">
+                {metrics?.avgTokensPerMessage?.toFixed(0) ?? '—'}
+              </p>
+            </div>
+          )}
+
           <div className="metric-card">
             <h3 className="metric-label">
-              {t('cards.avgTokensPerMessage')}
+              <i className="fa-solid fa-user-plus" style={{ marginRight: '0.5em' }}></i>
+              {t('cards.totalLeads')}
             </h3>
-            <p className="metric-value metric-value-red">
-              {metrics?.avgTokensPerMessage?.toFixed(0) ?? '—'}
+            <p className="metric-value">
+              {leadsCount ?? '—'}
             </p>
+          </div>
+
+          {/* MLS-specific metrics */}
+          {isMlsLevel && (
+            <>
+              <div className="metric-card">
+                <h3 className="metric-label">
+                  <i className="fa-solid fa-magnifying-glass" style={{ marginRight: '0.5em' }}></i>
+                  {t('cards.totalSearches')}
+                </h3>
+                <p className="metric-value">
+                  {metrics?.totalSearches ?? '—'}
+                </p>
+              </div>
+
+              <div className="metric-card">
+                <h3 className="metric-label">
+                  <i className="fa-solid fa-calendar-check" style={{ marginRight: '0.5em' }}></i>
+                  {t('cards.viewingsScheduled')}
+                </h3>
+                <p className="metric-value">
+                  {metrics?.viewingsScheduled ?? '—'}
+                </p>
+              </div>
+
+              <div className="metric-card">
+                <h3 className="metric-label">
+                  <i className="fa-solid fa-house-flag" style={{ marginRight: '0.5em' }}></i>
+                  {t('cards.openHousesScheduled')}
+                </h3>
+                <p className="metric-value">
+                  {metrics?.openHousesScheduled ?? '—'}
+                </p>
+              </div>
+
+              <div className="metric-card">
+                <h3 className="metric-label">
+                  <i className="fa-solid fa-handshake" style={{ marginRight: '0.5em' }}></i>
+                  {t('cards.consultationsScheduled')}
+                </h3>
+                <p className="metric-value">
+                  {metrics?.consultationsScheduled ?? '—'}
+                </p>
+              </div>
+            </>
+          )}
+        </div>
+      )}
+
+      {/* Geographic Locations */}
+      {locations.length > 0 && (
+        <div className="card" style={{ marginTop: '1.5em' }}>
+          <div className="card-header">
+            <i className="fa-solid fa-globe" style={{ marginRight: '0.5em' }}></i>
+            {t('locations.title')}
+          </div>
+          <div className="card-body">
+            <div className="location-list">
+              {locations.slice(0, 10).map((loc, idx) => (
+                <div key={idx} className="location-item">
+                  <span className="location-name">
+                    <i className="fa-solid fa-location-dot" style={{ marginRight: '0.5em', color: '#666' }}></i>
+                    {loc.location}
+                  </span>
+                  <span className="location-count">{loc.count}</span>
+                </div>
+              ))}
+              {locations.length > 10 && (
+                <div className="location-more">
+                  {t('locations.andMore', { count: locations.length - 10 })}
+                </div>
+              )}
+            </div>
           </div>
         </div>
       )}

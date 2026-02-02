@@ -10,6 +10,7 @@ interface User {
   first_name?: string;
   last_name?: string;
   level?: string;
+  subscription_level?: string;
   item?: number;
   company?: string;
 }
@@ -73,8 +74,8 @@ export default function ConfigurationsTab({ user, clientId }: ConfigurationsTabP
   const [modelSuccess, setModelSuccess] = useState(false);
   const [fetchingCurrentModel, setFetchingCurrentModel] = useState(true);
 
-  // Check user level for model restrictions
-  const userLevel = (user?.level || '').toLowerCase();
+  // Check user level for model restrictions (level from bot_client_user takes priority)
+  const userLevel = (user?.level || user?.subscription_level || '').toLowerCase();
   const isSpecialtyLevel = userLevel === 'mls' || userLevel === 'easybroker';
   const isRestrictedLevel = userLevel === 'free' || userLevel === 'basic';
 

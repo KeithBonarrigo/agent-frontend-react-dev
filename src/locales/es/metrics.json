@@ -14,7 +14,16 @@
     "totalTokens": "Tokens Totales Usados",
     "activeUsers": "Usuarios Activos (Ahora)",
     "avgMessagesPerConversation": "Promedio de Mensajes por Conversación",
-    "avgTokensPerMessage": "Promedio de Tokens por Mensaje"
+    "avgTokensPerMessage": "Promedio de Tokens por Mensaje",
+    "totalLeads": "Prospectos Totales",
+    "totalSearches": "Búsquedas de Propiedades",
+    "viewingsScheduled": "Visitas Programadas",
+    "openHousesScheduled": "Casas Abiertas Programadas",
+    "consultationsScheduled": "Consultas Programadas"
+  },
+  "locations": {
+    "title": "Ubicaciones de Usuarios",
+    "andMore": "y {{count}} ubicaciones más"
   },
   "comingSoon": "Más métricas y análisis detallados próximamente."
 }

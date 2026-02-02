@@ -14,7 +14,16 @@
     "totalTokens": "Total Tokens Used",
     "activeUsers": "Active Users (Now)",
     "avgMessagesPerConversation": "Avg. Messages per Conversation",
-    "avgTokensPerMessage": "Avg. Tokens per Message"
+    "avgTokensPerMessage": "Avg. Tokens per Message",
+    "totalLeads": "Total Leads",
+    "totalSearches": "Property Searches",
+    "viewingsScheduled": "Viewings Scheduled",
+    "openHousesScheduled": "Open Houses Scheduled",
+    "consultationsScheduled": "Consultations Scheduled"
+  },
+  "locations": {
+    "title": "User Locations",
+    "andMore": "and {{count}} more locations"
   },
   "comingSoon": "More detailed metrics and analytics coming soon."
 }
