@@ -93,20 +93,23 @@ export default function MetricsTab({ clientId, subscription, tokensUsed, user })
       const response = await fetch(`${apiBaseUrl}/admin/session-contacts`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ clientId }),
-        credentials: 'include'
+        credentials: 'include',
+        body: JSON.stringify({ clientId, includeLocation: true })
       });
 
       if (response.ok) {
         const data = await response.json();
-        // Aggregate locations by country
+        const sessions = data.sessions || {};
+        // Aggregate locations by country (same logic as LiveMap)
         const locationCounts = {};
-        Object.values(data.sessions || data || {}).forEach(session => {
-          const country = session?.location?.countryName || session?.location?.country;
-          if (country) {
+        Object.values(sessions).forEach(session => {
+          if (session?.location?.lat && session?.location?.lng) {
+            const country = session.location.countryName || session.location.country || '';
             const city = session.location.city || '';
-            const key = city ? `${city}, ${country}` : country;
-            locationCounts[key] = (locationCounts[key] || 0) + 1;
+            const key = city && country ? `${city}, ${country}` : (country || city);
+            if (key) {
+              locationCounts[key] = (locationCounts[key] || 0) + 1;
+            }
           }
         });
         // Convert to sorted array
