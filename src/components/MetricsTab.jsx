@@ -102,8 +102,8 @@ export default function MetricsTab({ clientId, subscription, tokensUsed, user })
         // Aggregate locations by country
         const locationCounts = {};
         Object.values(data.sessions || data || {}).forEach(session => {
-          if (session?.location?.countryName) {
-            const country = session.location.countryName;
+          const country = session?.location?.countryName || session?.location?.country;
+          if (country) {
             const city = session.location.city || '';
             const key = city ? `${city}, ${country}` : country;
             locationCounts[key] = (locationCounts[key] || 0) + 1;
