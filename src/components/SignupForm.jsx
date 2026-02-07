@@ -568,47 +568,79 @@ export default function SignupForm({ isOpen }) {
       {/* Terms and Conditions Modal */}
       {showTermsModal && (
         <div className="signup-modal-overlay" onClick={() => setShowTermsModal(false)}>
-          <div className="signup-modal-container" onClick={(e) => e.stopPropagation()}>
+          <div className="signup-modal-container signup-modal-terms" onClick={(e) => e.stopPropagation()}>
             <div className="signup-modal-header">
-              <h2 className="signup-modal-title">Terms and Conditions</h2>
+              <h2 className="signup-modal-title">{t('terms.title', { ns: 'legal' })}</h2>
               <button onClick={() => setShowTermsModal(false)} className="signup-modal-close">
                 ×
               </button>
             </div>
 
-            <div className="signup-modal-body">
+            <div className="signup-modal-body signup-terms-scrollable" style={{ textAlign: 'left' }}>
               <p style={{ marginTop: 0 }}>
-                <strong>Here are the terms and conditions</strong>
+                <strong>{t('terms.disclaimer', { ns: 'legal' })}</strong>
               </p>
+              <p>{t('terms.platformDescription', { ns: 'legal' })}</p>
 
-              <p>
-                By using our service, you agree to these terms and conditions.
-                Please read them carefully before proceeding.
-              </p>
+              <h3 className="signup-terms-heading">{t('terms.sections.acceptance.title', { ns: 'legal' })}</h3>
+              <p>{t('terms.sections.acceptance.content', { ns: 'legal' })}</p>
 
-              <h3 className="signup-terms-heading">1. Acceptance of Terms</h3>
-              <p>
-                By accessing and using this service, you accept and agree to be bound by the terms
-                and provision of this agreement.
-              </p>
+              <h3 className="signup-terms-heading">{t('terms.sections.serviceDescription.title', { ns: 'legal' })}</h3>
+              <p>{t('terms.sections.serviceDescription.intro', { ns: 'legal' })}</p>
+              <ul>
+                <li>{t('terms.sections.serviceDescription.items.create', { ns: 'legal' })}</li>
+                <li>{t('terms.sections.serviceDescription.items.sync', { ns: 'legal' })}</li>
+                <li>{t('terms.sections.serviceDescription.items.manage', { ns: 'legal' })}</li>
+                <li>{t('terms.sections.serviceDescription.items.automate', { ns: 'legal' })}</li>
+              </ul>
+              <p><strong>{t('terms.sections.serviceDescription.important', { ns: 'legal' })}</strong></p>
 
-              <h3 className="signup-terms-heading">2. Use of Service</h3>
-              <p>
-                You agree to use this service only for lawful purposes and in accordance with
-                these terms and conditions.
-              </p>
+              <h3 className="signup-terms-heading">{t('terms.sections.registration.title', { ns: 'legal' })}</h3>
+              <p><strong>{t('terms.sections.registration.subtitle3', { ns: 'legal' })}</strong></p>
+              <p>{t('terms.sections.registration.responsibilityIntro', { ns: 'legal' })}</p>
+              <ul>
+                <li>{t('terms.sections.registration.responsibilityItems.accuracy', { ns: 'legal' })}</li>
+                <li>{t('terms.sections.registration.responsibilityItems.confidentiality', { ns: 'legal' })}</li>
+                <li>{t('terms.sections.registration.responsibilityItems.security', { ns: 'legal' })}</li>
+                <li>{t('terms.sections.registration.responsibilityItems.activities', { ns: 'legal' })}</li>
+              </ul>
 
-              <h3 className="signup-terms-heading">3. Privacy Policy</h3>
-              <p>
-                Your privacy is important to us. We are committed to protecting your personal
-                information and your right to privacy.
-              </p>
+              <h3 className="signup-terms-heading">{t('terms.sections.availability.title', { ns: 'legal' })}</h3>
+              <p><strong>{t('terms.sections.availability.subtitle3', { ns: 'legal' })}</strong></p>
+              <p>{t('terms.sections.availability.aiWarning', { ns: 'legal' })}</p>
+              <ul>
+                <li>{t('terms.sections.availability.aiItems.incorrect', { ns: 'legal' })}</li>
+                <li>{t('terms.sections.availability.aiItems.noReplace', { ns: 'legal' })}</li>
+                <li>{t('terms.sections.availability.aiItems.requires', { ns: 'legal' })}</li>
+              </ul>
 
-              <h3 className="signup-terms-heading">4. Changes to Terms</h3>
-              <p>
-                We reserve the right to modify these terms at any time. You should check this
-                page regularly to take notice of any changes we make.
-              </p>
+              <h3 className="signup-terms-heading">{t('terms.sections.liabilityLimitation.title', { ns: 'legal' })}</h3>
+              <p><strong>{t('terms.sections.liabilityLimitation.monetaryLimit', { ns: 'legal' })}</strong></p>
+
+              <h3 className="signup-terms-heading">{t('terms.sections.privacy.title', { ns: 'legal' })}</h3>
+              <p>{t('terms.sections.privacy.policy', { ns: 'legal' })}</p>
+
+              <h3 className="signup-terms-heading">{t('terms.sections.cancellation.title', { ns: 'legal' })}</h3>
+              <p>{t('terms.sections.cancellation.userCancellationIntro', { ns: 'legal' })}</p>
+              <ul>
+                <li>{t('terms.sections.cancellation.userCancellationItems.effect', { ns: 'legal' })}</li>
+                <li>{t('terms.sections.cancellation.userCancellationItems.noRefunds', { ns: 'legal' })}</li>
+              </ul>
+
+              <h3 className="signup-terms-heading">{t('terms.sections.governing.title', { ns: 'legal' })}</h3>
+              <p>{t('terms.sections.governing.law', { ns: 'legal' })}</p>
+
+              <div style={{ marginTop: '1.5em', padding: '1em', backgroundColor: '#f5f5f5', borderRadius: '8px' }}>
+                <p style={{ margin: 0 }}>
+                  <a href="/terms" target="_blank" rel="noopener noreferrer" style={{ color: '#1e3a8a', textDecoration: 'underline' }}>
+                    View Full Terms and Conditions
+                  </a>
+                </p>
+              </div>
+
+              <div style={{ marginTop: '1.5em' }}>
+                <p><strong>{t('terms.acceptanceFooter', { ns: 'legal' })}</strong></p>
+              </div>
 
               <div className="signup-terms-buttons">
                 <button

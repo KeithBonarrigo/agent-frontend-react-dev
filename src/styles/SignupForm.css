@@ -75,9 +75,31 @@
 /* ==========================================
    TERMS MODAL SPECIFIC STYLES
    ========================================== */
+.signup-modal-terms {
+  max-width: 800px;
+  max-height: 90vh;
+}
+
+.signup-terms-scrollable {
+  max-height: calc(90vh - 80px);
+  overflow-y: auto;
+  padding: 20px 30px 30px;
+}
+
+.signup-terms-scrollable ul {
+  margin: 10px 0;
+  padding-left: 25px;
+}
+
+.signup-terms-scrollable li {
+  margin-bottom: 5px;
+}
+
 .signup-terms-heading {
   margin-top: 20px;
+  margin-bottom: 10px;
   color: #1e3a8a;
+  font-size: 16px;
 }
 
 .signup-terms-buttons {

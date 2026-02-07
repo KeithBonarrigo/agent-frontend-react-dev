@@ -152,78 +152,360 @@
     }
   },
   "terms": {
-    "title": "Terms and Conditions",
-    "lastUpdated": "Effective Date: January 1, 2025",
+    "title": "Terms and Conditions of Use",
+    "lastUpdated": "Effective Date: January 1, 2026",
+    "developedBy": "Developed by: Botwerx, LLC",
+    "disclaimer": "IF YOU DO NOT ACCEPT THESE TERMS IN THEIR ENTIRETY, DO NOT USE THE PLATFORM.",
+    "platformDescription": "The Botwerx, LLC platform is a product developed and operated by Botwerx, LLC (\"Botwerx, LLC\", \"we\", \"our\"), which provides an artificial intelligence chatbot technology solution for real estate agents who use third-party property management platforms.",
+    "acceptanceFooter": "BY CLICKING \"I ACCEPT\" OR BY USING THE BOTWERX, LLC PLATFORM, YOU ACKNOWLEDGE THAT YOU HAVE READ, UNDERSTOOD, AND AGREE TO BE BOUND BY THESE TERMS AND CONDITIONS.",
     "sections": {
-      "serviceOverview": {
-        "title": "1. Service Overview",
-        "content": "Our conversational agent delivers automated replies to user inquiries using natural language understanding technology. It offers assistance through information delivery, directional guidance, and fundamental support capabilities. This chatbot serves general informational needs and cannot guarantee the accuracy or currency of all provided information."
+      "acceptance": {
+        "title": "Section 1: Acceptance of Terms",
+        "content": "By registering, accessing, or using the Botwerx, LLC platform (\"the Platform\"), you (\"User\", \"Agent\", \"you\") expressly, completely, and unconditionally agree to be bound by these Terms and Conditions (\"Terms\"), the Privacy Policy, and the Third-Party API Usage Agreement."
       },
-      "eligibility": {
-        "title": "2. Who May Use This Service",
-        "content": "Your use of the Service constitutes confirmation that you have reached 18 years of age or your jurisdiction's legal age of majority. When accessing the Service as an organizational representative, you affirm possessing proper authorization to accept these Terms for that entity."
-      },
-      "usage": {
-        "title": "3. Permitted Usage Guidelines",
-        "intro": "You commit to:",
+      "serviceDescription": {
+        "title": "Section 2: Description of Service",
+        "intro": "The Botwerx, LLC platform allows Users to:",
         "items": {
-          "legitimate": "Employ the Service exclusively for legitimate purposes.",
-          "integrity": "Refrain from compromising the chatbot's operational integrity or performance.",
-          "malware": "Avoid transmitting malicious software, viruses, or damaging content.",
-          "harassment": "Never leverage the Service for harassment, abuse, or inflicting harm upon others."
+          "create": "Create and customize chatbots with artificial intelligence",
+          "sync": "Automatically synchronize properties from third-party platforms via API",
+          "manage": "Manage client inquiries through virtual assistants",
+          "automate": "Automate responses about products, services, and inventory"
         },
-        "authority": "We maintain authority to restrict or revoke access for users who breach these guidelines."
+        "important": "IMPORTANT: The Botwerx platform is a third-party tool completely independent of CRM, management platform, or any outside data systems. We are not subsidiaries, affiliates, partners, or representatives of any of these platforms."
+      },
+      "registration": {
+        "title": "Section 3: Registration and User Account",
+        "subtitle1": "3.1 Registration Process",
+        "registrationIntro": "To use the Botwerx, LLC platform, the User must:",
+        "registrationItems": {
+          "complete": "Complete the registration form with truthful and up-to-date information",
+          "signature": "Provide a digital signature confirming reading and acceptance of these Terms",
+          "credentials": "Create secure access credentials (username and password)"
+        },
+        "subtitle2": "3.2 Synchronization with Third-Party Platforms",
+        "syncIntro": "To activate the Platform's functionalities, the User must:",
+        "syncItems": {
+          "apiKeys": "Provide their API Key(s) from the platforms they wish to integrate with (any outside data systems)",
+          "signAgreement": "Digitally sign the \"Third-Party API Usage Agreement\"",
+          "acceptPrivacy": "Expressly accept our Privacy Policy"
+        },
+        "subtitle3": "3.3 User Responsibility",
+        "responsibilityIntro": "The User is SOLELY AND EXCLUSIVELY RESPONSIBLE for:",
+        "responsibilityItems": {
+          "accuracy": "The accuracy and truthfulness of the information provided",
+          "confidentiality": "The confidentiality of their access credentials",
+          "security": "The security and protection of their API Keys",
+          "activities": "All activities conducted under their account",
+          "compliance": "Compliance with the Terms of Service of the third-party platforms they use"
+        }
+      },
+      "apiKeys": {
+        "title": "Section 4: Third-Party Platform API Keys - Critical Responsibility",
+        "subtitle1": "4.1 Nature of API Keys",
+        "warning": "IMPORTANT LEGAL WARNING: API Keys from any outside data systems are security credentials that grant COMPLETE access to:",
+        "warningItems": {
+          "properties": "All your properties and listings",
+          "clientInfo": "Your client and prospect information",
+          "sensitiveData": "Sensitive personal data",
+          "configurations": "Your account configurations on those platforms"
+        },
+        "subtitle2": "4.2 User Declaration",
+        "declarationIntro": "By providing your API Key(s), the User declares and guarantees that they:",
+        "declarationItems": {
+          "legitimate": "Are the legitimate holder of the account(s) on the corresponding platform(s)",
+          "authorization": "Have full authorization to share said credential(s) with the Botwerx, LLC platform",
+          "readTerms": "Have read and accept the Terms of Service of each third-party platform",
+          "understandRisks": "Understand the risks associated with sharing API credentials",
+          "acceptUsage": "Accept that Botwerx, LLC will use the API Key(s) exclusively for the described purposes"
+        },
+        "subtitle3": "4.3 Use of API Keys by Botwerx, LLC",
+        "usageIntro": "Botwerx, LLC will use the provided API Keys only to:",
+        "usageItems": {
+          "query": "Query the User's property inventory",
+          "sync": "Synchronize updated listing information",
+          "generate": "Generate automated responses based on User data",
+          "improve": "Improve the chatbot experience"
+        },
+        "notUsageIntro": "Botwerx, LLC will NOT use API Keys to:",
+        "notUsageItems": {
+          "modify": "Modify, delete, or alter properties without explicit authorization",
+          "accessUnrelated": "Access information unrelated to the Botwerx, LLC platform service",
+          "share": "Share, sell, or transfer API Keys to unauthorized third parties",
+          "operationsOutside": "Perform operations outside the scope of the contracted service"
+        },
+        "subtitle4": "4.4 Limitation of Liability Regarding API Keys",
+        "limitationIntro": "THE USER ACKNOWLEDGES AND ACCEPTS THAT:",
+        "limitationItems": {
+          "security": "The security of their API Keys is their exclusive responsibility",
+          "measures": "Botwerx, LLC implements reasonable security measures but does not guarantee absolute security",
+          "notResponsible": "Botwerx, LLC is NOT responsible for unauthorized access, security breaches, or misuse of API Keys",
+          "damages": "Any damage, loss, or harm derived from the use of API Keys is the exclusive responsibility of the User",
+          "changeKeys": "The User must immediately change their API Keys if they suspect a security compromise"
+        }
+      },
+      "thirdPartyServices": {
+        "title": "Section 5: Third-Party Services - External Data Systems",
+        "subtitle1": "5.1 Relationship with Third-Party Platforms",
+        "relationIntro": "The Botwerx, LLC platform integrates with independent third-party property platforms and any outside data systems, including but not limited to property management systems, MLS platforms, and real estate CRMs.",
+        "notImplyIntro": "This integration does NOT imply:",
+        "notImplyItems": {
+          "endorsement": "Endorsement, support, or certification by said platforms",
+          "association": "Commercial or legal association between Botwerx, LLC and said platforms",
+          "responsibility": "Responsibility of said platforms for the Botwerx, LLC platform or vice versa"
+        },
+        "subtitle2": "5.2 Terms of Third-Party Platforms",
+        "termsIntro": "The User acknowledges that they:",
+        "termsItems": {
+          "comply": "Must independently comply with the Terms of Service of each platform they use",
+          "mayModify": "Third-party platforms may modify, suspend, or terminate their APIs at any time",
+          "policies": "The policies of each platform prevail over the use of their services",
+          "noControl": "Botwerx, LLC does not control or guarantee the availability of third-party services",
+          "exclusive": "Some platforms are exclusive to certified real estate professionals"
+        },
+        "subtitle3": "5.3 Limitation of Liability Regarding Third-Party Services",
+        "liabilityIntro": "BOTWERX, LLC IS NOT RESPONSIBLE FOR:",
+        "liabilityItems": {
+          "interruptions": "Interruptions, errors, or failures in third-party services",
+          "apiChanges": "Changes in third-party APIs that affect the Botwerx, LLC platform",
+          "dataLoss": "Loss of data, functionality, or access due to third-party platforms",
+          "disputes": "Disputes, claims, or problems between the User and third-party platforms",
+          "regulations": "Compliance with regulations by third-party platforms",
+          "privacyViolations": "Privacy or security violations originating from third-party platforms",
+          "dataAccuracy": "Accuracy, timeliness, or truthfulness of data provided by third-party APIs",
+          "costs": "Costs, fees, or subscriptions of third-party platforms"
+        }
+      },
+      "availability": {
+        "title": "Section 6: Availability and Warranties",
+        "subtitle1": "6.1 Service \"AS IS\"",
+        "asIsIntro": "The platform is provided \"AS IS\" and \"AS AVAILABLE\", without warranties of any kind, express or implied, including but not limited to:",
+        "asIsItems": {
+          "uninterrupted": "Uninterrupted or error-free availability",
+          "results": "Specific results or meeting expectations",
+          "compatibility": "Compatibility with all systems or browsers",
+          "accuracy": "Accuracy or completeness of AI chatbot responses",
+          "continuous": "Continuous functionality of third-party integrations",
+          "realTime": "Real-time synchronization with third-party platforms"
+        },
+        "subtitle2": "6.2 No Uptime Guarantee",
+        "uptimeIntro": "Botwerx, LLC does NOT guarantee:",
+        "uptimeItems": {
+          "specific": "Specific uptime",
+          "speed": "Determined response speed",
+          "permanent": "Permanent 24/7 access",
+          "noInterruptions": "Absence of interruptions for maintenance",
+          "functioning": "Operation during interruptions of third-party services"
+        },
+        "subtitle3": "6.3 Limitations of Artificial Intelligence",
+        "aiWarning": "WARNING ABOUT AI: The Botwerx, LLC platform chatbot uses artificial intelligence technology that:",
+        "aiItems": {
+          "incorrect": "May generate incorrect, imprecise, or inappropriate responses",
+          "noReplace": "Does not replace the professional judgment of a real estate agent",
+          "requires": "Requires human supervision and validation",
+          "misinterpret": "May misinterpret queries or contexts",
+          "notSole": "Should not be the sole source of information for important decisions"
+        },
+        "userResponsibilityIntro": "The User acknowledges that they are responsible for:",
+        "userResponsibilityItems": {
+          "review": "Reviewing and validating responses generated by the chatbot",
+          "correct": "Correcting incorrect or inappropriate information",
+          "maintain": "Maintaining supervision over client interactions",
+          "notDepend": "Not depending exclusively on the chatbot for critical transactions"
+        },
+        "subtitle4": "6.4 Maintenance and Updates",
+        "maintenanceIntro": "Botwerx, LLC reserves the right to:",
+        "maintenanceItems": {
+          "scheduled": "Perform scheduled or emergency maintenance without prior notice",
+          "modify": "Modify, update, or discontinue functionalities",
+          "suspend": "Temporarily suspend the service for technical or security reasons",
+          "updateAi": "Update AI models and algorithms without prior notification"
+        }
+      },
+      "liabilityLimitation": {
+        "title": "Section 7: Limitation of Liability",
+        "subtitle1": "7.1 Total Exclusion of Liability",
+        "exclusionIntro": "TO THE MAXIMUM EXTENT PERMITTED BY APPLICABLE LAW, BOTWERX, LLC, ITS DIRECTORS, EMPLOYEES, PARTNERS, AND AFFILIATES SHALL NOT BE LIABLE FOR:",
+        "directDamages": "Direct Damages:",
+        "directItems": {
+          "dataLoss": "Loss of data or information",
+          "revenueLoss": "Loss of revenue, profits, or business opportunities",
+          "equipmentDamage": "Damage to equipment, systems, or networks",
+          "substituteCosts": "Costs of substitute services",
+          "clientLoss": "Loss of clients, prospects, or listings",
+          "commissionsLost": "Lost commissions or uncompleted transactions"
+        },
+        "indirectDamages": "Indirect, Incidental, or Consequential Damages:",
+        "indirectItems": {
+          "lostProfits": "Lost profits",
+          "reputational": "Reputational damage",
+          "trustLoss": "Loss of client trust",
+          "interruption": "Interruption of business activities",
+          "anyOther": "Any other economic or non-economic damages"
+        },
+        "subtitle2": "7.2 Monetary Limit",
+        "monetaryLimit": "IF DESPITE THE ABOVE ANY LIABILITY OF BOTWERX, LLC IS DETERMINED, THE MAXIMUM TOTAL AND AGGREGATE LIABILITY OF BOTWERX, LLC SHALL NOT EXCEED THE AMOUNT PAID BY THE USER FOR THE SERVICE IN THE LAST THREE (3) MONTHS, OR USD $100, WHICHEVER IS LESS.",
+        "subtitle3": "7.3 User Acknowledgment",
+        "acknowledgmentIntro": "The User acknowledges and accepts that they:",
+        "acknowledgmentItems": {
+          "readUnderstood": "Have read and understood these limitations of liability",
+          "ownRisk": "Use the platform at their own risk",
+          "notDepend": "Do not depend exclusively on the platform for critical business operations",
+          "backups": "Maintain independent backups of their critical information",
+          "supervise": "Are responsible for supervising the chatbot's interactions with their clients",
+          "understand": "Understand the limitations of artificial intelligence technology"
+        }
+      },
+      "indemnification": {
+        "title": "Section 8: Indemnification",
+        "content": "The User agrees to defend, indemnify, and hold harmless Botwerx, LLC, its directors, employees, contractors, partners, and affiliates from and against any claim, lawsuit, legal action, loss, liability, damage, cost, and expense (including reasonable attorney fees) arising from or related to:",
+        "items": {
+          "use": "The use or misuse of the Botwerx, LLC platform by the User",
+          "violation": "Violation of these Terms by the User",
+          "thirdPartyRights": "Violation of third-party rights (including intellectual property, privacy, etc.)",
+          "content": "Content provided by the User through the Botwerx, LLC platform",
+          "responses": "Chatbot responses reviewed, approved, or distributed by the User",
+          "thirdPartyTerms": "Violation of terms of any outside data systems or third-party platforms",
+          "unauthorized": "Unauthorized use of API Keys or credentials",
+          "incorrectInfo": "Incorrect, misleading, or false information provided to clients",
+          "clientDamages": "Damages caused to clients by chatbot information",
+          "regulations": "Violation of applicable real estate regulations",
+          "clientDisputes": "Disputes with clients related to the Botwerx, LLC platform information"
+        }
+      },
+      "intellectualProperty": {
+        "title": "Section 9: Intellectual Property",
+        "subtitle1": "9.1 Botwerx, LLC Property",
+        "propertyIntro": "All intellectual property rights over the Botwerx, LLC platform, including but not limited to:",
+        "propertyItems": {
+          "software": "Software, source code, and algorithms",
+          "design": "Design, user interface, and graphics",
+          "aiModels": "Artificial intelligence and machine learning models",
+          "documentation": "Documentation and training materials",
+          "brand": "The \"Botwerx\" brand and associated logos"
+        },
+        "propertyNote": "Are the exclusive property of Botwerx, LLC. The User does not acquire any ownership rights, only a limited license to use.",
+        "subtitle2": "9.2 License to Use",
+        "license": "Botwerx, LLC grants the User a limited, non-exclusive, non-transferable, revocable license to use the Botwerx, LLC platform solely for their real estate activities, subject to these Terms.",
+        "subtitle3": "9.3 Restrictions",
+        "restrictionsIntro": "The User may NOT:",
+        "restrictionsItems": {
+          "copy": "Copy, modify, or create derivative works of the Botwerx, LLC platform",
+          "reverse": "Reverse engineer, decompile, or disassemble the Platform",
+          "resell": "Resell, sublicense, or distribute the service",
+          "remove": "Remove proprietary marks or copyright notices",
+          "compete": "Use the Botwerx, LLC platform to compete with Botwerx, LLC"
+        }
       },
       "privacy": {
-        "title": "4. Information Gathering & Privacy",
-        "intro": "Our chatbot may capture and retain various data points, including:",
-        "items": {
-          "communications": "Communications you submit to the chatbot",
-          "metadata": "System metadata (such as IP addresses and device specifications)",
-          "behavioral": "Behavioral patterns used to refine our service"
+        "title": "Section 10: Privacy and Data Protection",
+        "subtitle1": "10.1 Privacy Policy",
+        "policy": "The processing of personal data is governed by our Privacy Policy, which forms an integral part of these Terms. The User must read and accept it.",
+        "subtitle2": "10.2 Responsibility for Third-Party Data",
+        "responsibilityIntro": "The User is RESPONSIBLE for the processing of personal data of their clients and prospects, and must:",
+        "responsibilityItems": {
+          "consent": "Obtain necessary consents for the use of AI chatbots",
+          "comply": "Comply with applicable data protection laws",
+          "inform": "Inform their clients about the use of AI technology",
+          "maintain": "Maintain appropriate privacy policies"
         },
-        "seePolicy": "Consult our Privacy Policy for comprehensive information about data handling practices."
+        "subtitle3": "10.3 Botwerx, LLC Limitation",
+        "limitationIntro": "Botwerx, LLC acts as a data processor on behalf of the User and:",
+        "limitationItems": {
+          "noControl": "Does not control what data the User uploads or processes",
+          "notResponsible": "Is not responsible for the User's regulatory compliance",
+          "implements": "Implements reasonable but not absolute security measures",
+          "mayAccess": "May access data only for service and support purposes"
+        }
       },
-      "aiConstraints": {
-        "title": "5. Artificial Intelligence Constraints",
-        "intro": "Our chatbot employs automated intelligence systems to formulate responses. These outputs:",
-        "items": {
-          "accuracy": "Cannot be warranted for accuracy, completeness, or relevance to your particular circumstances.",
-          "professional": "Must not be interpreted as legal, medical, financial, or expert professional counsel.",
-          "inaccuracies": "May occasionally include inaccuracies or unsuitable material, despite our ongoing efforts to reduce such occurrences."
+      "fees": {
+        "title": "Section 11: Fees and Payments",
+        "subtitle1": "11.1 Subscription Plans",
+        "plans": "The Botwerx, LLC platform offers different subscription plans whose details, fees, and functionalities are available on our platform.",
+        "subtitle2": "11.2 Billing",
+        "billingItems": {
+          "advance": "Fees are charged in advance (monthly, quarterly, or annually)",
+          "nonRefundable": "Payments are non-refundable unless otherwise required by law",
+          "authorize": "The User authorizes automatic charges to their payment method",
+          "taxes": "Fees do not include applicable taxes (VAT, withholdings, etc.)"
         },
-        "responsibility": "You assume full responsibility when acting on chatbot-provided information."
+        "subtitle3": "11.3 Fee Modification",
+        "modification": "Botwerx, LLC may modify fees with 30 days prior notice. Continued use after notice implies acceptance.",
+        "subtitle4": "11.4 Suspension for Non-Payment",
+        "suspensionIntro": "Failure to make timely payment will result in:",
+        "suspensionItems": {
+          "immediate": "Immediate suspension of service",
+          "possible": "Possible account cancellation",
+          "loss": "Loss of access to data (without possibility of recovery)"
+        }
       },
-      "ownership": {
-        "title": "6. Ownership Rights",
-        "content": "Every element of content, source code, and intellectual property associated with the chatbot belongs to {{companyName}} or its authorized licensors. Reproduction, distribution, or derivative creation requires explicit written consent."
-      },
-      "disclaimers": {
-        "title": "7. Service Disclaimers",
-        "intro": "This Service operates on an \"as is\" and \"as available\" basis. We provide no guarantees, whether stated or implied, concerning:",
-        "items": {
-          "suitability": "Suitability for your specific use case",
-          "uptime": "Continuous accessibility or operational uptime",
-          "precision": "Precision or thoroughness of generated responses"
+      "cancellation": {
+        "title": "Section 12: Cancellation and Termination",
+        "subtitle1": "12.1 Cancellation by User",
+        "userCancellationIntro": "The User may cancel their subscription at any time through the Platform. Cancellation:",
+        "userCancellationItems": {
+          "effect": "Will take effect at the end of the current billing period",
+          "noRefunds": "Will not generate refunds for unused time",
+          "mayResult": "May result in loss of data (backing up before cancellation is recommended)"
         },
-        "noLiability": "No liability attaches to us for damages stemming from Service usage."
+        "subtitle2": "12.2 Termination by Botwerx, LLC",
+        "terminationIntro": "Botwerx, LLC may suspend or terminate the User's account immediately and without prior notice if:",
+        "terminationItems": {
+          "violates": "The User violates these Terms",
+          "fraudulent": "Fraudulent or abusive use is detected",
+          "nonPayment": "The User fails to make payments",
+          "security": "Platform security is compromised",
+          "legalRisk": "There is legal or regulatory risk",
+          "misuse": "The User misuses third-party APIs"
+        },
+        "subtitle3": "12.3 Effects of Termination",
+        "effectsIntro": "Upon termination of the relationship:",
+        "effectsItems": {
+          "losesAccess": "The User loses immediate access to the Botwerx, LLC platform",
+          "deleted": "Data may be permanently deleted after 30 days",
+          "survive": "Indemnification and limitation of liability obligations survive",
+          "noRefund": "There is no right to refund of payments made"
+        }
       },
       "modifications": {
-        "title": "8. Terms Modifications",
-        "content": "These Terms may be revised at our discretion. Modifications will appear on this page alongside an updated effective date. Your continued Service usage following changes indicates acceptance of the revised Terms."
+        "title": "Section 13: Modifications to Terms",
+        "content": "Botwerx, LLC reserves the right to modify these Terms at any time. Changes:",
+        "items": {
+          "published": "Will be published on the Platform",
+          "effective": "Will take effect immediately or on the specified date",
+          "notified": "Will be notified by email if substantial",
+          "accepted": "Are considered accepted by continued use of the service"
+        },
+        "disagree": "If you do not agree with the modifications, you must cancel your account."
       },
-      "termination": {
-        "title": "9. Service Termination",
-        "content": "We hold the right to discontinue or suspend the Service at our discretion, whether or not advance notice is provided. Access privileges may be withdrawn if you breach these Terms."
+      "governing": {
+        "title": "Section 14: Governing Law and Jurisdiction",
+        "subtitle1": "14.1 Governing Law",
+        "law": "These Terms are governed by the laws of the State of Washington, United States, without consideration of conflict of law principles.",
+        "subtitle2": "14.2 Dispute Resolution",
+        "disputeIntro": "Any controversy arising from these Terms shall be resolved through:",
+        "disputeItems": {
+          "negotiation": "Good faith direct negotiation",
+          "mediation": "Voluntary mediation",
+          "jurisdiction": "Exclusive jurisdiction of the courts of Clark County, Washington, United States"
+        },
+        "subtitle3": "14.3 Waiver of Class Actions",
+        "waiver": "The User waives participation in class action lawsuits, class actions, or representative proceedings against Botwerx, LLC."
       },
-      "revisions": {
-        "title": "10. Policy Revisions",
-        "content": "This policy may undergo updates as needed. Changes will be communicated through revision of the \"Effective Date\" displayed at the page header."
-      },
-      "contact": {
-        "title": "11. Contact Information",
-        "intro": "For questions about this policy or our data management practices, please reach out:",
-        "address": "3242 NE 3rd Ave. Camas, WA 98607"
+      "general": {
+        "title": "Section 15: General Provisions",
+        "subtitle1": "15.1 Entire Agreement",
+        "entireAgreement": "These Terms, along with the Privacy Policy and the API Usage Agreement, constitute the complete agreement between the parties.",
+        "subtitle2": "15.2 Severability",
+        "severability": "If any provision is invalid, the remainder shall remain in force.",
+        "subtitle3": "15.3 No Waiver",
+        "noWaiver": "Failure to exercise a right does not constitute waiver thereof.",
+        "subtitle4": "15.4 Assignment",
+        "assignment": "Botwerx, LLC may assign these Terms. The User may not do so without written consent.",
+        "subtitle5": "15.5 Language",
+        "language": "In case of conflict between versions in different languages, the English version prevails.",
+        "subtitle6": "15.6 Contact",
+        "contact": "For inquiries about these Terms: legal@botwerx.ai"
       }
     }
   },
