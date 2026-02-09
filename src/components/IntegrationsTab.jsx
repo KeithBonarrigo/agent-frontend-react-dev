@@ -51,13 +51,22 @@ export default function IntegrationsTab({ user, clientId }) {
 
       try {
         const data = JSON.parse(event.data);
+        console.log('[WA Embedded Signup] postMessage received:', data);
+
         if (data.type === 'WA_EMBEDDED_SIGNUP') {
           if (data.data.event === 'FINISH') {
+            console.log('[WA Embedded Signup] FINISH - phone_number_id:', data.data.phone_number_id, 'waba_id:', data.data.waba_id);
             sessionInfoRef.current = {
               phone_number_id: data.data.phone_number_id,
               waba_id: data.data.waba_id
             };
+          } else if (data.data.event === 'FINISH_ONLY_WABA') {
+            console.log('[WA Embedded Signup] FINISH_ONLY_WABA - waba_id:', data.data.waba_id);
+            sessionInfoRef.current = {
+              waba_id: data.data.waba_id
+            };
           } else if (data.data.event === 'CANCEL') {
+            console.log('[WA Embedded Signup] CANCEL at step:', data.data.current_step);
             sessionInfoRef.current = {};
             setWspLoading(false);
           }
@@ -76,6 +85,13 @@ export default function IntegrationsTab({ user, clientId }) {
     try {
       const apiBaseUrl = getApiUrl();
       const sessionInfo = sessionInfoRef.current;
+
+      console.log('[WA Embedded Signup] Sending to backend - code:', code ? 'present' : 'missing',
+        'phone_number_id:', sessionInfo.phone_number_id, 'waba_id:', sessionInfo.waba_id);
+
+      if (!sessionInfo.phone_number_id || !sessionInfo.waba_id) {
+        throw new Error('WhatsApp setup incomplete. The phone number registration step may have been skipped. Please try again.');
+      }
 
       const res = await fetch(`${apiBaseUrl}/api/clients/${clientId}/whatsapp-embedded-signup`, {
         method: 'POST',
@@ -116,10 +132,12 @@ export default function IntegrationsTab({ user, clientId }) {
 
     window.FB.login(
       function (response) {
+        console.log('[WA Embedded Signup] FB.login response:', response);
         if (response.authResponse) {
           const code = response.authResponse.code;
           handleSignupComplete(code);
         } else {
+          console.log('[WA Embedded Signup] User cancelled or no authResponse');
           setWspLoading(false);
         }
       },
@@ -128,8 +146,6 @@ export default function IntegrationsTab({ user, clientId }) {
         response_type: 'code',
         override_default_response_type: true,
         extras: {
-          setup: {},
-          featureType: '',
           sessionInfoVersion: 2
         }
       }
