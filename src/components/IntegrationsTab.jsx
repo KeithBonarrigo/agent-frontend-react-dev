@@ -1,11 +1,11 @@
-import { useState, useRef, useEffect, useCallback } from "react";
+import { useState, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { getApiUrl } from "../utils/getApiUrl";
 import "./Tabs.css";
 
 // IntegrationsTab - Displays embed code and integration methods for the AI agent
 // Provides the script tag users need to embed the chatbot on their website
-// Includes WhatsApp Embedded Signup for connecting WhatsApp Business numbers
+// Includes WhatsApp phone number registration with SMS verification
 export default function IntegrationsTab({ user, clientId }) {
   const { t } = useTranslation('integrations');
   const [copied, setCopied] = useState(false);
@@ -14,147 +14,103 @@ export default function IntegrationsTab({ user, clientId }) {
   const chatbotScriptRef = useRef(null);
   const customCssRef = useRef(null);
 
-  // WhatsApp Embedded Signup state
-  const [wspStatus, setWspStatus] = useState(user?.wsp_status || null); // null or 'active'
+  // WhatsApp registration state
+  const [wspStatus, setWspStatus] = useState(user?.wsp_status || null);
   const [savedWspPhone, setSavedWspPhone] = useState(user?.office_wsp_phone || '');
+  const [wspPhone, setWspPhone] = useState('');
+  const [wspCode, setWspCode] = useState('');
+  const [wspStep, setWspStep] = useState('input'); // 'input' or 'verify'
   const [wspLoading, setWspLoading] = useState(false);
   const [wspError, setWspError] = useState('');
   const [wspSuccess, setWspSuccess] = useState('');
-  const sessionInfoRef = useRef({});
 
-  // Load Facebook SDK for WhatsApp Embedded Signup
-  useEffect(() => {
-    if (document.getElementById('facebook-jssdk')) return;
-
-    window.fbAsyncInit = function () {
-      console.log('[WA Embedded Signup] FB.init - appId:', import.meta.env.VITE_FB_APP_ID, 'config_id:', import.meta.env.VITE_WA_CONFIG_ID);
-      window.FB.init({
-        appId: import.meta.env.VITE_FB_APP_ID,
-        cookie: true,
-        xfbml: true,
-        version: 'v21.0'
-      });
-    };
-
-    const script = document.createElement('script');
-    script.id = 'facebook-jssdk';
-    script.src = 'https://connect.facebook.net/en_US/sdk.js';
-    script.async = true;
-    script.defer = true;
-    script.crossOrigin = 'anonymous';
-    document.body.appendChild(script);
-  }, []);
-
-  // Session info listener - captures phone_number_id and waba_id from Meta's popup
-  useEffect(() => {
-    const sessionInfoListener = (event) => {
-      if (event.origin !== "https://www.facebook.com" && event.origin !== "https://web.facebook.com") return;
-
-      try {
-        const data = JSON.parse(event.data);
-        console.log('[WA Embedded Signup] postMessage received:', data);
-
-        if (data.type === 'WA_EMBEDDED_SIGNUP') {
-          if (data.data.event === 'FINISH') {
-            console.log('[WA Embedded Signup] FINISH - phone_number_id:', data.data.phone_number_id, 'waba_id:', data.data.waba_id);
-            sessionInfoRef.current = {
-              phone_number_id: data.data.phone_number_id,
-              waba_id: data.data.waba_id
-            };
-          } else if (data.data.event === 'FINISH_ONLY_WABA') {
-            console.log('[WA Embedded Signup] FINISH_ONLY_WABA - waba_id:', data.data.waba_id);
-            sessionInfoRef.current = {
-              waba_id: data.data.waba_id
-            };
-          } else if (data.data.event === 'CANCEL') {
-            console.log('[WA Embedded Signup] CANCEL at step:', data.data.current_step);
-            sessionInfoRef.current = {};
-            setWspLoading(false);
-          }
-        }
-      } catch {
-        // Not JSON or not our event
-      }
-    };
-
-    window.addEventListener('message', sessionInfoListener);
-    return () => window.removeEventListener('message', sessionInfoListener);
-  }, []);
-
-  // Send auth code + session info to backend after Embedded Signup completes
-  const handleSignupComplete = useCallback(async (code) => {
-    try {
-      const apiBaseUrl = getApiUrl();
-      const sessionInfo = sessionInfoRef.current;
-
-      console.log('[WA Embedded Signup] Sending to backend - code:', code ? 'present' : 'missing',
-        'phone_number_id:', sessionInfo.phone_number_id, 'waba_id:', sessionInfo.waba_id);
-
-      if (!sessionInfo.phone_number_id || !sessionInfo.waba_id) {
-        throw new Error('WhatsApp setup incomplete. The phone number registration step may have been skipped. Please try again.');
-      }
-
-      const res = await fetch(`${apiBaseUrl}/api/clients/${clientId}/whatsapp-embedded-signup`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        credentials: 'include',
-        body: JSON.stringify({
-          code,
-          phone_number_id: sessionInfo.phone_number_id,
-          waba_id: sessionInfo.waba_id
-        })
-      });
-
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error || 'Signup failed');
-
-      setWspStatus('active');
-      setSavedWspPhone(data.phone_number || t('whatsapp.connected'));
-      setWspSuccess(t('whatsapp.success'));
-      setTimeout(() => setWspSuccess(''), 5000);
-    } catch (err) {
-      setWspError(err.message || t('whatsapp.signupError'));
-    } finally {
-      setWspLoading(false);
-    }
-  }, [clientId, t]);
-
-  // Launch Meta's Embedded Signup popup via Facebook SDK
-  const launchWhatsAppSignup = useCallback(() => {
-    if (!window.FB) {
-      setWspError(t('whatsapp.sdkError'));
-      return;
-    }
-
+  // Send verification code to the entered phone number
+  const handleSendCode = async () => {
+    if (!wspPhone.trim()) return;
     setWspLoading(true);
     setWspError('');
     setWspSuccess('');
-    sessionInfoRef.current = {};
 
-    const configId = import.meta.env.VITE_WA_CONFIG_ID;
-    console.log('[WA Embedded Signup] Launching FB.login with config_id:', configId, 'appId:', import.meta.env.VITE_FB_APP_ID);
+    try {
+      const apiBaseUrl = getApiUrl();
+      const res = await fetch(`${apiBaseUrl}/api/clients/${clientId}/whatsapp-register`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify({ phone_number: wspPhone.trim() })
+      });
 
-    window.FB.login(
-      function (response) {
-        console.log('[WA Embedded Signup] FB.login response:', response);
-        if (response.authResponse) {
-          const code = response.authResponse.code;
-          handleSignupComplete(code);
-        } else {
-          console.log('[WA Embedded Signup] User cancelled or no authResponse');
-          setWspLoading(false);
-        }
-      },
-      {
-        config_id: configId,
-        response_type: 'code',
-        override_default_response_type: true,
-        extras: {
-          sessionInfoVersion: 2
-        }
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || t('whatsapp.sendCodeError'));
+
+      setWspStep('verify');
+      setWspSuccess(t('whatsapp.codeSent'));
+      setTimeout(() => setWspSuccess(''), 5000);
+    } catch (err) {
+      setWspError(err.message);
+    } finally {
+      setWspLoading(false);
+    }
+  };
+
+  // Verify the code entered by the user
+  const handleVerifyCode = async () => {
+    if (!wspCode.trim()) return;
+    setWspLoading(true);
+    setWspError('');
+    setWspSuccess('');
+
+    try {
+      const apiBaseUrl = getApiUrl();
+      const res = await fetch(`${apiBaseUrl}/api/clients/${clientId}/whatsapp-verify`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify({ code: wspCode.trim() })
+      });
+
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || t('whatsapp.verifyError'));
+
+      setWspStatus('active');
+      setSavedWspPhone(data.phone_number || wspPhone);
+      setWspSuccess(t('whatsapp.success'));
+      setWspPhone('');
+      setWspCode('');
+      setWspStep('input');
+      setTimeout(() => setWspSuccess(''), 5000);
+    } catch (err) {
+      setWspError(err.message);
+    } finally {
+      setWspLoading(false);
+    }
+  };
+
+  // Disconnect the registered WhatsApp number
+  const handleDisconnect = async () => {
+    if (!window.confirm(t('whatsapp.removeConfirm'))) return;
+    setWspLoading(true);
+    setWspError('');
+
+    try {
+      const apiBaseUrl = getApiUrl();
+      const res = await fetch(`${apiBaseUrl}/api/clients/${clientId}/whatsapp-register`, {
+        method: 'DELETE',
+        credentials: 'include'
+      });
+      if (!res.ok) {
+        const data = await res.json();
+        throw new Error(data.error || 'Failed to remove');
       }
-    );
-  }, [handleSignupComplete, t]);
+      setSavedWspPhone('');
+      setWspStatus(null);
+      setWspStep('input');
+    } catch (err) {
+      setWspError(t('whatsapp.removeError'));
+    } finally {
+      setWspLoading(false);
+    }
+  };
 
   if (!clientId) {
     return (
@@ -165,7 +121,6 @@ export default function IntegrationsTab({ user, clientId }) {
   }
 
   // Determine the correct domain based on current hostname (runtime detection)
-  // Used to generate the correct embed script URL for the chatbot
   const hostname = window.location.hostname;
   let webEmbedDomain;
   let webEmbedProtocol = 'https';
@@ -182,27 +137,22 @@ export default function IntegrationsTab({ user, clientId }) {
   } else if (hostname.includes('aibridge.global')) {
     webEmbedDomain = 'chat.aibridge.global';
   } else {
-    // Default fallback
     webEmbedDomain = 'chat.botwerx.ai';
   }
 
-  // Generate the embed code script tag with the client's unique ID
   const embedCode = `<script src='${webEmbedProtocol}://${webEmbedDomain}/chatbot.js?id=${clientId}'></script>`;
 
-  // Copy embed code to clipboard with visual feedback
   const handleCopy = () => {
     navigator.clipboard.writeText(embedCode);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   };
 
-  // Load chatbot script for preview
   const handleTryItOut = async () => {
     if (chatbotLoaded || chatbotLoading) return;
 
     setChatbotLoading(true);
 
-    // Fetch and inject custom CSS first
     try {
       const apiBaseUrl = getApiUrl();
       const cssResponse = await fetch(`${apiBaseUrl}/api/client-styling/${clientId}`, {
@@ -212,17 +162,14 @@ export default function IntegrationsTab({ user, clientId }) {
       if (cssResponse.ok) {
         const cssData = await cssResponse.json();
         if (cssData.custom_css) {
-          // Remove old custom CSS if exists
           if (customCssRef.current) {
             customCssRef.current.remove();
           }
-          // Inject new custom CSS
           const styleEl = document.createElement('style');
           styleEl.id = `custom-css-${clientId}`;
           styleEl.textContent = cssData.custom_css;
           document.head.appendChild(styleEl);
           customCssRef.current = styleEl;
-          console.log('🎨 Custom CSS injected');
         }
       }
     } catch (error) {
@@ -230,18 +177,15 @@ export default function IntegrationsTab({ user, clientId }) {
     }
 
     const chatbotUrl = `${webEmbedProtocol}://${webEmbedDomain}/chatbot.js?id=${clientId}`;
-    console.log('🤖 Loading chatbot from:', chatbotUrl);
 
     const script = document.createElement('script');
     script.src = chatbotUrl;
     script.async = true;
     script.onload = () => {
-      console.log('✅ Chatbot script loaded successfully');
       setChatbotLoading(false);
       setChatbotLoaded(true);
     };
-    script.onerror = (err) => {
-      console.error('❌ Chatbot script failed to load:', err);
+    script.onerror = () => {
       setChatbotLoading(false);
       alert(t('webEmbed.loadFailed'));
     };
@@ -249,7 +193,6 @@ export default function IntegrationsTab({ user, clientId }) {
     document.body.appendChild(script);
   };
 
-  // Check if MLS token is missing for MLS domain
   const isMlsDomain = user?.domain === 'mls.aibridge.global';
   const hasMlsToken = user?.mls_token && user.mls_token.trim() !== '';
 
@@ -329,7 +272,7 @@ export default function IntegrationsTab({ user, clientId }) {
         </div>
       </div>
 
-      {/* WhatsApp Embedded Signup */}
+      {/* WhatsApp Registration */}
       <div style={{ marginTop: "2em", paddingTop: "2em", borderTop: "1px solid #ddd" }}>
         <h2 className="section-title section-title-centered" style={{ marginBottom: "1em" }}>
           <i className="fa-brands fa-whatsapp" style={{ color: "#25D366" }}></i>
@@ -339,7 +282,7 @@ export default function IntegrationsTab({ user, clientId }) {
           {t('whatsapp.description')}
         </p>
 
-        {/* State: Active / Connected */}
+        {/* State: Connected */}
         {wspStatus === 'active' && savedWspPhone ? (
           <div style={{
             backgroundColor: "#fff",
@@ -373,28 +316,7 @@ export default function IntegrationsTab({ user, clientId }) {
                 {t('whatsapp.registered')}
               </span>
               <button
-                onClick={async () => {
-                  if (!window.confirm(t('whatsapp.removeConfirm'))) return;
-                  setWspLoading(true);
-                  setWspError('');
-                  try {
-                    const apiBaseUrl = getApiUrl();
-                    const res = await fetch(`${apiBaseUrl}/api/clients/${clientId}/whatsapp-register`, {
-                      method: 'DELETE',
-                      credentials: 'include'
-                    });
-                    if (!res.ok) {
-                      const data = await res.json();
-                      throw new Error(data.error || 'Failed to remove');
-                    }
-                    setSavedWspPhone('');
-                    setWspStatus(null);
-                  } catch (err) {
-                    setWspError(t('whatsapp.removeError'));
-                  } finally {
-                    setWspLoading(false);
-                  }
-                }}
+                onClick={handleDisconnect}
                 disabled={wspLoading}
                 style={{
                   background: "none",
@@ -411,32 +333,122 @@ export default function IntegrationsTab({ user, clientId }) {
             </div>
           </div>
 
-        /* State: Not connected - show Connect button */
+        /* State: Not connected - show registration form */
         ) : (
-          <div style={{ textAlign: "center" }}>
-            <button
-              onClick={launchWhatsAppSignup}
-              disabled={wspLoading}
-              style={{
-                padding: "0.75em 2em",
-                backgroundColor: wspLoading ? "#ccc" : "#25D366",
-                color: "white",
-                border: "none",
-                borderRadius: "4px",
-                cursor: wspLoading ? "default" : "pointer",
-                fontSize: "1em",
-                fontWeight: "600",
-                display: "inline-flex",
-                alignItems: "center",
-                gap: "0.5em"
-              }}
-            >
-              <i className="fa-brands fa-whatsapp"></i>
-              {wspLoading ? t('whatsapp.connecting') : t('whatsapp.connectButton')}
-            </button>
-            <p style={{ fontSize: "0.85em", color: "#888", marginTop: "0.75em" }}>
-              {t('whatsapp.connectHelper')}
-            </p>
+          <div style={{
+            backgroundColor: "#fff",
+            padding: "1.5em",
+            borderRadius: "4px",
+            boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)",
+            border: "1px solid #ddd",
+            width: "70%",
+            marginLeft: "auto",
+            marginRight: "auto"
+          }}>
+            {/* Step 1: Phone number input */}
+            <div style={{ marginBottom: wspStep === 'verify' ? "1.25em" : 0 }}>
+              <label style={{ display: "block", fontSize: "0.85em", color: "#555", marginBottom: "0.4em", fontWeight: "600" }}>
+                {t('whatsapp.phoneLabel')}
+              </label>
+              <div style={{ display: "flex", gap: "0.5em" }}>
+                <input
+                  type="tel"
+                  value={wspPhone}
+                  onChange={(e) => setWspPhone(e.target.value)}
+                  placeholder={t('whatsapp.phonePlaceholder')}
+                  disabled={wspStep === 'verify' || wspLoading}
+                  style={{
+                    flex: 1,
+                    padding: "0.6em 0.8em",
+                    border: "1px solid #ccc",
+                    borderRadius: "4px",
+                    fontSize: "1em",
+                    backgroundColor: wspStep === 'verify' ? '#f0f0f0' : '#fff'
+                  }}
+                />
+                <button
+                  onClick={handleSendCode}
+                  disabled={!wspPhone.trim() || wspLoading || wspStep === 'verify'}
+                  style={{
+                    padding: "0.6em 1.2em",
+                    backgroundColor: (!wspPhone.trim() || wspLoading || wspStep === 'verify') ? "#ccc" : "#25D366",
+                    color: "white",
+                    border: "none",
+                    borderRadius: "4px",
+                    cursor: (!wspPhone.trim() || wspLoading || wspStep === 'verify') ? "default" : "pointer",
+                    fontSize: "0.9em",
+                    fontWeight: "600",
+                    whiteSpace: "nowrap"
+                  }}
+                >
+                  {wspLoading && wspStep === 'input' ? t('whatsapp.sending') : t('whatsapp.sendCode')}
+                </button>
+              </div>
+              <p style={{ fontSize: "0.8em", color: "#888", marginTop: "0.4em", marginBottom: 0 }}>
+                {t('whatsapp.phoneHelper')}
+              </p>
+            </div>
+
+            {/* Step 2: Verification code input */}
+            {wspStep === 'verify' && (
+              <div>
+                <label style={{ display: "block", fontSize: "0.85em", color: "#555", marginBottom: "0.4em", fontWeight: "600" }}>
+                  {t('whatsapp.codeLabel')}
+                </label>
+                <div style={{ display: "flex", gap: "0.5em" }}>
+                  <input
+                    type="text"
+                    value={wspCode}
+                    onChange={(e) => setWspCode(e.target.value)}
+                    placeholder={t('whatsapp.codePlaceholder')}
+                    disabled={wspLoading}
+                    style={{
+                      flex: 1,
+                      padding: "0.6em 0.8em",
+                      border: "1px solid #ccc",
+                      borderRadius: "4px",
+                      fontSize: "1em"
+                    }}
+                  />
+                  <button
+                    onClick={handleVerifyCode}
+                    disabled={!wspCode.trim() || wspLoading}
+                    style={{
+                      padding: "0.6em 1.2em",
+                      backgroundColor: (!wspCode.trim() || wspLoading) ? "#ccc" : "#007bff",
+                      color: "white",
+                      border: "none",
+                      borderRadius: "4px",
+                      cursor: (!wspCode.trim() || wspLoading) ? "default" : "pointer",
+                      fontSize: "0.9em",
+                      fontWeight: "600",
+                      whiteSpace: "nowrap"
+                    }}
+                  >
+                    {wspLoading ? t('whatsapp.verifying') : t('whatsapp.verify')}
+                  </button>
+                </div>
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: "0.4em" }}>
+                  <p style={{ fontSize: "0.8em", color: "#888", margin: 0 }}>
+                    {t('whatsapp.codeHelper')}
+                  </p>
+                  <button
+                    onClick={() => { setWspStep('input'); setWspCode(''); setWspError(''); }}
+                    style={{
+                      background: "none",
+                      border: "none",
+                      color: "#007bff",
+                      cursor: "pointer",
+                      fontSize: "0.8em",
+                      textDecoration: "underline",
+                      padding: 0
+                    }}
+                  >
+                    {t('whatsapp.changeNumber')}
+                  </button>
+                </div>
+              </div>
+            )}
           </div>
         )}
 

@@ -1,35 +1,43 @@
 {
   "title": "Integraciones",
   "webEmbed": {
-    "title": "Inserción Web",
+    "title": "Insercion Web",
     "description": "Agrega el chatbot de IA a tu sitio web",
-    "copyInstruction": "Copia este código y pégalo en la sección <head> de tu sitio web en",
+    "copyInstruction": "Copia este codigo y pegalo en la seccion <head> de tu sitio web en",
     "yourDomain": "tu dominio",
     "tryItOut": "Probar",
-    "chatbotLoaded": "Chatbot cargado! Búscalo en la esquina.",
+    "chatbotLoaded": "Chatbot cargado! Buscalo en la esquina.",
     "loadFailed": "Error al cargar el chatbot. Por favor intenta de nuevo."
   },
   "mlsWarning": {
     "title": "Token MLS Requerido:",
-    "message": "Debes ingresar un token MLS válido para que este servicio funcione. Puedes hacerlo arriba en la configuración de tu empresa.",
-    "note": "Nota: El token se encripta al ingresarlo y no será visible después."
+    "message": "Debes ingresar un token MLS valido para que este servicio funcione. Puedes hacerlo arriba en la configuracion de tu empresa.",
+    "note": "Nota: El token se encripta al ingresarlo y no sera visible despues."
   },
   "whatsapp": {
     "title": "WhatsApp",
-    "description": "Conecta un número de WhatsApp Business a tu agente de IA.",
-    "connectButton": "Conectar Número de WhatsApp",
-    "connecting": "Conectando...",
-    "connectHelper": "Abre el asistente de configuración de Meta para conectar tu número de WhatsApp Business.",
-    "connected": "Conectado",
+    "description": "Registra un numero de WhatsApp Business para tu agente de IA.",
+    "phoneLabel": "Numero de WhatsApp",
+    "phonePlaceholder": "+1 (555) 123-4567",
+    "phoneHelper": "Ingresa el numero con codigo de pais. Se enviara un codigo de verificacion por SMS.",
+    "sendCode": "Enviar Codigo",
+    "sending": "Enviando...",
+    "sendCodeError": "Error al enviar el codigo de verificacion. Por favor intenta de nuevo.",
+    "codeSent": "Codigo de verificacion enviado! Revisa tu telefono.",
+    "codeLabel": "Codigo de Verificacion",
+    "codePlaceholder": "Ingresa el codigo de 6 digitos",
+    "codeHelper": "Ingresa el codigo enviado a tu telefono.",
+    "verify": "Verificar",
+    "verifying": "Verificando...",
+    "verifyError": "Codigo de verificacion invalido. Por favor intenta de nuevo.",
+    "changeNumber": "Cambiar numero",
     "registered": "Conectado",
-    "currentNumber": "Número conectado",
-    "success": "¡Número de WhatsApp conectado exitosamente!",
+    "currentNumber": "Numero conectado",
+    "success": "Numero de WhatsApp registrado exitosamente!",
     "remove": "Desconectar",
     "removing": "Desconectando...",
-    "removeError": "Error al desconectar el número de WhatsApp. Por favor intenta de nuevo.",
-    "removeConfirm": "¿Estás seguro de que deseas desconectar este número de WhatsApp?",
-    "signupError": "Error al conectar el número de WhatsApp. Por favor intenta de nuevo.",
-    "sdkError": "El SDK de Facebook no se cargó. Por favor recarga la página e intenta de nuevo."
+    "removeError": "Error al desconectar el numero de WhatsApp. Por favor intenta de nuevo.",
+    "removeConfirm": "Estas seguro de que deseas desconectar este numero de WhatsApp?"
   },
-  "noSubscription": "Por favor selecciona una suscripción para configurar integraciones."
+  "noSubscription": "Por favor selecciona una suscripcion para configurar integraciones."
 }
