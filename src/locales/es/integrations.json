@@ -14,19 +14,22 @@
     "message": "Debes ingresar un token MLS válido para que este servicio funcione. Puedes hacerlo arriba en la configuración de tu empresa.",
     "note": "Nota: El token se encripta al ingresarlo y no será visible después."
   },
-  "otherIntegrations": {
-    "title": "Otras Integraciones",
-    "comingSoon": "WhatsApp, Messenger y otras integraciones próximamente..."
-  },
   "whatsapp": {
     "title": "WhatsApp",
-    "description": "Conecta tu cuenta de WhatsApp Business",
-    "comingSoon": "Próximamente"
-  },
-  "messenger": {
-    "title": "Facebook Messenger",
-    "description": "Conecta tu Página de Facebook",
-    "comingSoon": "Próximamente"
+    "description": "Conecta un número de WhatsApp Business a tu agente de IA.",
+    "connectButton": "Conectar Número de WhatsApp",
+    "connecting": "Conectando...",
+    "connectHelper": "Abre el asistente de configuración de Meta para conectar tu número de WhatsApp Business.",
+    "connected": "Conectado",
+    "registered": "Conectado",
+    "currentNumber": "Número conectado",
+    "success": "¡Número de WhatsApp conectado exitosamente!",
+    "remove": "Desconectar",
+    "removing": "Desconectando...",
+    "removeError": "Error al desconectar el número de WhatsApp. Por favor intenta de nuevo.",
+    "removeConfirm": "¿Estás seguro de que deseas desconectar este número de WhatsApp?",
+    "signupError": "Error al conectar el número de WhatsApp. Por favor intenta de nuevo.",
+    "sdkError": "El SDK de Facebook no se cargó. Por favor recarga la página e intenta de nuevo."
   },
   "noSubscription": "Por favor selecciona una suscripción para configurar integraciones."
 }

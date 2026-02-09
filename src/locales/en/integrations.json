@@ -14,19 +14,22 @@
     "message": "You must enter a valid MLS token for this service to work. You can do this above in your company settings.",
     "note": "Note: The token is encrypted upon entry and will not be viewable afterward."
   },
-  "otherIntegrations": {
-    "title": "Other Integrations",
-    "comingSoon": "WhatsApp, Messenger, and other integrations coming soon..."
-  },
   "whatsapp": {
     "title": "WhatsApp",
-    "description": "Connect your WhatsApp Business account",
-    "comingSoon": "Coming Soon"
-  },
-  "messenger": {
-    "title": "Facebook Messenger",
-    "description": "Connect your Facebook Page",
-    "comingSoon": "Coming Soon"
+    "description": "Connect a WhatsApp Business number to your AI agent.",
+    "connectButton": "Connect WhatsApp Number",
+    "connecting": "Connecting...",
+    "connectHelper": "Opens Meta's setup wizard to connect your WhatsApp Business number.",
+    "connected": "Connected",
+    "registered": "Connected",
+    "currentNumber": "Connected number",
+    "success": "WhatsApp number connected successfully!",
+    "remove": "Disconnect",
+    "removing": "Disconnecting...",
+    "removeError": "Failed to disconnect WhatsApp number. Please try again.",
+    "removeConfirm": "Are you sure you want to disconnect this WhatsApp number?",
+    "signupError": "Failed to connect WhatsApp number. Please try again.",
+    "sdkError": "Facebook SDK not loaded. Please refresh the page and try again."
   },
   "noSubscription": "Please select a subscription to configure integrations."
 }
