@@ -27,6 +27,7 @@ export default function IntegrationsTab({ user, clientId }) {
     if (document.getElementById('facebook-jssdk')) return;
 
     window.fbAsyncInit = function () {
+      console.log('[WA Embedded Signup] FB.init - appId:', import.meta.env.VITE_FB_APP_ID, 'config_id:', import.meta.env.VITE_WA_CONFIG_ID);
       window.FB.init({
         appId: import.meta.env.VITE_FB_APP_ID,
         cookie: true,
@@ -130,6 +131,9 @@ export default function IntegrationsTab({ user, clientId }) {
     setWspSuccess('');
     sessionInfoRef.current = {};
 
+    const configId = import.meta.env.VITE_WA_CONFIG_ID;
+    console.log('[WA Embedded Signup] Launching FB.login with config_id:', configId, 'appId:', import.meta.env.VITE_FB_APP_ID);
+
     window.FB.login(
       function (response) {
         console.log('[WA Embedded Signup] FB.login response:', response);
@@ -142,7 +146,7 @@ export default function IntegrationsTab({ user, clientId }) {
         }
       },
       {
-        config_id: import.meta.env.VITE_WA_CONFIG_ID,
+        config_id: configId,
         response_type: 'code',
         override_default_response_type: true,
         extras: {
