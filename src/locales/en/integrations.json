@@ -37,7 +37,11 @@
     "remove": "Disconnect",
     "removing": "Disconnecting...",
     "removeError": "Failed to disconnect WhatsApp number. Please try again.",
-    "removeConfirm": "Are you sure you want to disconnect this WhatsApp number?"
+    "removeConfirm": "Are you sure you want to disconnect this WhatsApp number?",
+    "pinLabel": "Security PIN",
+    "pinPlaceholder": "Choose a 6-digit PIN",
+    "pinHelper": "Choose a 6-digit PIN. Save this — you'll need it to re-register this number.",
+    "prerequisiteWarning": "The phone number must not be active on WhatsApp or WhatsApp Business App. Delete WhatsApp from that phone first if needed."
   },
   "noSubscription": "Please select a subscription to configure integrations."
 }

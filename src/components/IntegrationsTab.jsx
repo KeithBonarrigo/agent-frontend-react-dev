@@ -19,6 +19,7 @@ export default function IntegrationsTab({ user, clientId }) {
   const [savedWspPhone, setSavedWspPhone] = useState(user?.office_wsp_phone || '');
   const [wspPhone, setWspPhone] = useState('');
   const [wspCode, setWspCode] = useState('');
+  const [wspPin, setWspPin] = useState('');
   const [wspStep, setWspStep] = useState('input'); // 'input' or 'verify'
   const [wspLoading, setWspLoading] = useState(false);
   const [wspError, setWspError] = useState('');
@@ -55,7 +56,7 @@ export default function IntegrationsTab({ user, clientId }) {
 
   // Verify the code entered by the user
   const handleVerifyCode = async () => {
-    if (!wspCode.trim()) return;
+    if (!wspCode.trim() || !wspPin.trim() || wspPin.trim().length !== 6) return;
     setWspLoading(true);
     setWspError('');
     setWspSuccess('');
@@ -66,7 +67,7 @@ export default function IntegrationsTab({ user, clientId }) {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',
-        body: JSON.stringify({ code: wspCode.trim() })
+        body: JSON.stringify({ code: wspCode.trim(), pin: wspPin.trim() })
       });
 
       const data = await res.json();
@@ -77,6 +78,7 @@ export default function IntegrationsTab({ user, clientId }) {
       setWspSuccess(t('whatsapp.success'));
       setWspPhone('');
       setWspCode('');
+      setWspPin('');
       setWspStep('input');
       setTimeout(() => setWspSuccess(''), 5000);
     } catch (err) {
@@ -282,6 +284,25 @@ export default function IntegrationsTab({ user, clientId }) {
           {t('whatsapp.description')}
         </p>
 
+        {/* Prerequisite warning */}
+        {wspStatus !== 'active' && (
+          <p style={{
+            fontSize: "0.85em",
+            color: "#856404",
+            backgroundColor: "#fff3cd",
+            border: "1px solid #ffeeba",
+            borderRadius: "4px",
+            padding: "0.75em 1em",
+            width: "70%",
+            marginLeft: "auto",
+            marginRight: "auto",
+            marginBottom: "1em",
+            textAlign: "center"
+          }}>
+            {t('whatsapp.prerequisiteWarning')}
+          </p>
+        )}
+
         {/* State: Connected */}
         {wspStatus === 'active' && savedWspPhone ? (
           <div style={{
@@ -412,14 +433,14 @@ export default function IntegrationsTab({ user, clientId }) {
                   />
                   <button
                     onClick={handleVerifyCode}
-                    disabled={!wspCode.trim() || wspLoading}
+                    disabled={!wspCode.trim() || wspPin.trim().length !== 6 || wspLoading}
                     style={{
                       padding: "0.6em 1.2em",
-                      backgroundColor: (!wspCode.trim() || wspLoading) ? "#ccc" : "#007bff",
+                      backgroundColor: (!wspCode.trim() || wspPin.trim().length !== 6 || wspLoading) ? "#ccc" : "#007bff",
                       color: "white",
                       border: "none",
                       borderRadius: "4px",
-                      cursor: (!wspCode.trim() || wspLoading) ? "default" : "pointer",
+                      cursor: (!wspCode.trim() || wspPin.trim().length !== 6 || wspLoading) ? "default" : "pointer",
                       fontSize: "0.9em",
                       fontWeight: "600",
                       whiteSpace: "nowrap"
@@ -428,12 +449,37 @@ export default function IntegrationsTab({ user, clientId }) {
                     {wspLoading ? t('whatsapp.verifying') : t('whatsapp.verify')}
                   </button>
                 </div>
+                {/* PIN input */}
+                <label style={{ display: "block", fontSize: "0.85em", color: "#555", marginBottom: "0.4em", marginTop: "1em", fontWeight: "600" }}>
+                  {t('whatsapp.pinLabel')}
+                </label>
+                <input
+                  type="text"
+                  inputMode="numeric"
+                  maxLength={6}
+                  value={wspPin}
+                  onChange={(e) => setWspPin(e.target.value.replace(/[^0-9]/g, ''))}
+                  placeholder={t('whatsapp.pinPlaceholder')}
+                  disabled={wspLoading}
+                  style={{
+                    width: "100%",
+                    padding: "0.6em 0.8em",
+                    border: "1px solid #ccc",
+                    borderRadius: "4px",
+                    fontSize: "1em",
+                    boxSizing: "border-box"
+                  }}
+                />
+                <p style={{ fontSize: "0.8em", color: "#888", marginTop: "0.4em", marginBottom: 0 }}>
+                  {t('whatsapp.pinHelper')}
+                </p>
+
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: "0.4em" }}>
                   <p style={{ fontSize: "0.8em", color: "#888", margin: 0 }}>
                     {t('whatsapp.codeHelper')}
                   </p>
                   <button
-                    onClick={() => { setWspStep('input'); setWspCode(''); setWspError(''); }}
+                    onClick={() => { setWspStep('input'); setWspCode(''); setWspPin(''); setWspError(''); }}
                     style={{
                       background: "none",
                       border: "none",
