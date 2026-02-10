@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { getApiUrl } from "../utils/getApiUrl";
 import "./Tabs.css";
@@ -8,6 +8,14 @@ import "./Tabs.css";
 // Includes WhatsApp phone number registration with SMS verification
 export default function IntegrationsTab({ user, clientId }) {
   const { t } = useTranslation('integrations');
+
+  // DEBUG: Remove after confirming WhatsApp section renders in prod
+  useEffect(() => {
+    console.log('[IntegrationsTab] Mounted', { clientId, hostname: window.location.hostname });
+    console.log('[IntegrationsTab] user props:', { wsp_status: user?.wsp_status, office_wsp_phone: user?.office_wsp_phone, level: user?.level || user?.subscription_level });
+    const wspDiv = document.querySelector('[data-section="whatsapp"]');
+    console.log('[IntegrationsTab] WhatsApp section in DOM:', !!wspDiv);
+  }, [clientId, user]);
   const [copied, setCopied] = useState(false);
   const [chatbotLoaded, setChatbotLoaded] = useState(false);
   const [chatbotLoading, setChatbotLoading] = useState(false);
@@ -275,7 +283,7 @@ export default function IntegrationsTab({ user, clientId }) {
       </div>
 
       {/* WhatsApp Registration */}
-      <div style={{ marginTop: "2em", paddingTop: "2em", borderTop: "1px solid #ddd" }}>
+      <div data-section="whatsapp" style={{ marginTop: "2em", paddingTop: "2em", borderTop: "1px solid #ddd" }}>
         <h2 className="section-title section-title-centered" style={{ marginBottom: "1em" }}>
           <i className="fa-brands fa-whatsapp" style={{ color: "#25D366" }}></i>
           {' '}{t('whatsapp.title')}
