@@ -50,7 +50,6 @@ export default function Dashboard() {
   const [isEditingAgent, setIsEditingAgent] = useState(false);
   const [agentEditForm, setAgentEditForm] = useState({
     agent_name: '',
-    mls_token: '',
     contact_email: '',
     contact_phone: '',
     contact_phone_wsp: false,
@@ -246,7 +245,6 @@ export default function Dashboard() {
     if (selectedClient) {
       setAgentEditForm({
         agent_name: selectedClient.agent_name || '',
-        mls_token: selectedClient.mls_token ? '••••••••' : '',
         contact_email: selectedClient.contact_email || '',
         contact_phone: selectedClient.contact_phone || '',
         contact_phone_wsp: selectedClient.contact_phone_wsp || false,
@@ -634,7 +632,7 @@ export default function Dashboard() {
 
   // handleUpdateAgent - Updates agent/client settings
   // Called when user submits the agent edit form
-  // Updates bot_client_user table fields: agent_name, mls_token, contact_email, contact_phone,
+  // Updates bot_client_user table fields: agent_name, contact_email, contact_phone,
   // contact_phone_wsp, office_lat, office_long, office_address, office_wsp_phone, company
   const handleUpdateAgent = async (e) => {
     e.preventDefault();
@@ -665,7 +663,6 @@ export default function Dashboard() {
           },
           body: JSON.stringify({
             agent_name: agentEditForm.agent_name.trim() || null,
-            mls_token: agentEditForm.mls_token.trim() || null,
             contact_email: agentEditForm.contact_email.trim() || null,
             contact_phone: agentEditForm.contact_phone.trim() || null,
             contact_phone_wsp: agentEditForm.contact_phone_wsp,
@@ -1431,21 +1428,6 @@ export default function Dashboard() {
                           </label>
                         </div>
 
-                        {/* MLS Token - Only show for MLS level */}
-                        {(selectedClient?.level === 'mls' || selectedClient?.subscription_level === 'mls') && (
-                          <div style={{ width: '220px' }}>
-                            <label className="form-label">{t('form.mlsToken')}</label>
-                            <input
-                              type="password"
-                              name="mls_token"
-                              value={agentEditForm.mls_token}
-                              onChange={handleAgentEditChange}
-                              placeholder="Enter MLS Token"
-                              autoComplete="off"
-                              className="form-input form-input-sm"
-                            />
-                          </div>
-                        )}
                       </div>
 
                       {/* Office Address - Full Width */}
@@ -1583,7 +1565,6 @@ export default function Dashboard() {
                           if (selectedClient) {
                             setAgentEditForm({
                               agent_name: selectedClient.agent_name || '',
-                              mls_token: selectedClient.mls_token ? '••••••••' : '',
                               contact_email: selectedClient.contact_email || '',
                               contact_phone: selectedClient.contact_phone || '',
                               contact_phone_wsp: selectedClient.contact_phone_wsp || false,
@@ -1627,9 +1608,6 @@ export default function Dashboard() {
                     )}
                     {agentEditForm.office_wsp_phone && agentEditForm.office_wsp_phone !== agentEditForm.contact_phone && (
                       <span><strong className="text-muted">{t('dashboard:summary.whatsapp')}:</strong> {agentEditForm.office_wsp_phone}</span>
-                    )}
-                    {agentEditForm.mls_token && (selectedClient?.level === 'mls' || selectedClient?.subscription_level === 'mls') && (
-                      <span><strong className="text-muted">{t('dashboard:summary.mls')}:</strong> ••••••••</span>
                     )}
                     {(agentEditForm.office_address || agentEditForm.timezone) && (
                       <div className="flex gap-lg flex-wrap mt-sm" style={{ flexBasis: '100%' }}>

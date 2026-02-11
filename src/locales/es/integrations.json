@@ -11,7 +11,7 @@
   },
   "mlsWarning": {
     "title": "Token MLS Requerido:",
-    "message": "Debes ingresar un token MLS valido para que este servicio funcione. Puedes hacerlo arriba en la configuracion de tu empresa.",
+    "message": "Debes ingresar un token MLS valido para que este servicio funcione. Puedes hacerlo en la pestana de Configuraciones bajo Token API MLS.",
     "note": "Nota: El token se encripta al ingresarlo y no sera visible despues."
   },
   "whatsapp": {

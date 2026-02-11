@@ -13,6 +13,7 @@ interface User {
   subscription_level?: string;
   item?: number;
   company?: string;
+  mls_token?: string;
 }
 
 interface ConfigurationsTabProps {
@@ -53,6 +54,15 @@ interface GoogleDriveFile {
 
 export default function ConfigurationsTab({ user, clientId }: ConfigurationsTabProps) {
   const { t } = useTranslation('configurations');
+
+  // MLS API Token state
+  const isMlsLevel = (user?.level || user?.subscription_level || '').toLowerCase() === 'mls';
+  const [isMlsTokenCollapsed, setIsMlsTokenCollapsed] = useState(true);
+  const [mlsToken, setMlsToken] = useState('');
+  const [mlsTokenSaving, setMlsTokenSaving] = useState(false);
+  const [mlsTokenMessage, setMlsTokenMessage] = useState('');
+  const [mlsDisclaimerAccepted, setMlsDisclaimerAccepted] = useState(false);
+  const hasMlsToken = !!(user?.mls_token && user.mls_token.trim() !== '');
 
   // Instructions state
   const [instructions, setInstructions] = useState<string[]>(['']);
@@ -197,6 +207,38 @@ export default function ConfigurationsTab({ user, clientId }: ConfigurationsTabP
     loadGoogleApi();
     loadGoogleIdentity();
   }, [fileSource, isGoogleApiLoaded, isGoogleDriveEnabled]);
+
+  // MLS Token handler
+  const handleMlsTokenSave = async () => {
+    if (!mlsToken.trim()) return;
+    setMlsTokenSaving(true);
+    setMlsTokenMessage('');
+
+    try {
+      const apiBaseUrl = getApiUrl();
+      const response = await fetch(`${apiBaseUrl}/api/clients/${clientId}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${import.meta.env.VITE_CREATE_USER_TOKEN}`
+        },
+        body: JSON.stringify({ mls_token: mlsToken.trim() }),
+        credentials: 'include'
+      });
+
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.error || 'Failed to save MLS token');
+
+      setMlsTokenMessage(t('mlsToken.success'));
+      setMlsToken('');
+      setTimeout(() => setMlsTokenMessage(''), 3000);
+    } catch (error: any) {
+      console.error('MLS token save error:', error);
+      setMlsTokenMessage(t('mlsToken.error'));
+    } finally {
+      setMlsTokenSaving(false);
+    }
+  };
 
   // Instruction handlers
   const handleInstructionChange = (index: number, value: string) => {
@@ -734,6 +776,106 @@ export default function ConfigurationsTab({ user, clientId }: ConfigurationsTabP
 
   return (
     <div className="flex" style={{ flexDirection: 'column', gap: '1.5em' }}>
+      {/* MLS API Token Section - Only for MLS level */}
+      {isMlsLevel && (
+        <div className="section">
+          <div
+            onClick={() => setIsMlsTokenCollapsed(!isMlsTokenCollapsed)}
+            className={`section-header ${!isMlsTokenCollapsed ? 'section-header-expanded' : ''}`}
+          >
+            <h2 className="section-title">
+              <i className="fa-solid fa-key"></i>
+              {t('mlsToken.title')}
+            </h2>
+            <i className={`fa-solid fa-chevron-${isMlsTokenCollapsed ? 'down' : 'up'} section-chevron`}></i>
+          </div>
+
+          {!isMlsTokenCollapsed && (
+            <div style={{ padding: '1em 0' }}>
+              <p className="section-description" style={{ marginBottom: '1em' }}>
+                {t('mlsToken.description')}
+              </p>
+
+              {hasMlsToken && (
+                <div className="alert alert-success mb-2" style={{ display: 'flex', alignItems: 'center', gap: '0.5em' }}>
+                  <i className="fa-solid fa-check-circle"></i>
+                  {t('mlsToken.currentStatus')}
+                </div>
+              )}
+
+              {/* Legal disclaimer */}
+              <div style={{
+                border: '1px solid #ccc',
+                borderRadius: '4px',
+                padding: '1em',
+                maxHeight: '200px',
+                overflowY: 'auto',
+                fontSize: '0.8em',
+                color: '#444',
+                backgroundColor: '#fafafa',
+                lineHeight: '1.5',
+                marginBottom: '0.75em'
+              }}>
+                <p style={{ fontWeight: 600, marginTop: 0 }}>{t('mlsToken.disclaimerIntro')}</p>
+                <p><strong>{t('mlsToken.disclaimerCustody.title')}</strong> {t('mlsToken.disclaimerCustody.text')}</p>
+                <p><strong>{t('mlsToken.disclaimerBrand.title')}</strong> {t('mlsToken.disclaimerBrand.text')}</p>
+                <p><strong>{t('mlsToken.disclaimerPrivacy.title')}</strong> {t('mlsToken.disclaimerPrivacy.text')}</p>
+                <p><strong>{t('mlsToken.disclaimerNoTraining.title')}</strong> {t('mlsToken.disclaimerNoTraining.text')}</p>
+                <p><strong>{t('mlsToken.disclaimerLiability.title')}</strong> {t('mlsToken.disclaimerLiability.text')}</p>
+                <p style={{ marginBottom: 0 }}><strong>{t('mlsToken.disclaimerTermination.title')}</strong> {t('mlsToken.disclaimerTermination.text')}</p>
+              </div>
+
+              <div style={{ display: 'flex', alignItems: 'flex-start', gap: '0.5em', marginBottom: '1em' }}>
+                <input
+                  type="checkbox"
+                  id="mls-disclaimer"
+                  checked={mlsDisclaimerAccepted}
+                  onChange={(e) => setMlsDisclaimerAccepted(e.target.checked)}
+                  style={{ marginTop: '0.2em', cursor: 'pointer' }}
+                />
+                <label htmlFor="mls-disclaimer" style={{ fontSize: '0.85em', fontWeight: 600, cursor: 'pointer' }}>
+                  {t('mlsToken.disclaimerAccept')}
+                </label>
+              </div>
+
+              <div style={{ display: 'flex', gap: '0.5em', alignItems: 'flex-end' }}>
+                <div style={{ flex: 1 }}>
+                  <label className="form-label">{t('mlsToken.inputLabel')}</label>
+                  <input
+                    type="password"
+                    value={mlsToken}
+                    onChange={(e) => setMlsToken(e.target.value)}
+                    placeholder={hasMlsToken ? t('mlsToken.placeholderUpdate') : t('mlsToken.placeholder')}
+                    autoComplete="off"
+                    disabled={!mlsDisclaimerAccepted}
+                    className="form-input"
+                    style={{ backgroundColor: !mlsDisclaimerAccepted ? '#f0f0f0' : '#fff' }}
+                  />
+                </div>
+                <button
+                  onClick={handleMlsTokenSave}
+                  disabled={mlsTokenSaving || !mlsToken.trim() || !mlsDisclaimerAccepted}
+                  className={`btn ${mlsTokenSaving || !mlsToken.trim() || !mlsDisclaimerAccepted ? 'btn-secondary' : 'btn-primary'}`}
+                  style={{ whiteSpace: 'nowrap' }}
+                >
+                  {mlsTokenSaving ? t('mlsToken.saving') : t('mlsToken.saveButton')}
+                </button>
+              </div>
+
+              <p style={{ fontSize: '0.8em', color: '#888', marginTop: '0.4em' }}>
+                {t('mlsToken.note')}
+              </p>
+
+              {mlsTokenMessage && (
+                <p className={`save-message mt-2 ${mlsTokenMessage.includes(t('mlsToken.success')) ? 'save-message-success' : 'save-message-error'}`}>
+                  {mlsTokenMessage}
+                </p>
+              )}
+            </div>
+          )}
+        </div>
+      )}
+
       {/* Instructions Section */}
       <div className="section">
         <div>

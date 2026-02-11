@@ -11,7 +11,7 @@
   },
   "mlsWarning": {
     "title": "MLS Token Required:",
-    "message": "You must enter a valid MLS token for this service to work. You can do this above in your company settings.",
+    "message": "You must enter a valid MLS token for this service to work. You can do this in the Configurations tab under MLS API Token.",
     "note": "Note: The token is encrypted upon entry and will not be viewable afterward."
   },
   "whatsapp": {

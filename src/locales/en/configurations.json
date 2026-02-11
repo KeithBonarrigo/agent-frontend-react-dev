@@ -1,5 +1,44 @@
 {
   "title": "Configurations",
+  "mlsToken": {
+    "title": "MLS API Token",
+    "description": "Enter your MLS API token to enable MLS property data for your agent.",
+    "inputLabel": "MLS Token",
+    "placeholder": "Enter MLS Token",
+    "placeholderUpdate": "Enter new token to update",
+    "saveButton": "Save",
+    "saving": "Saving...",
+    "success": "MLS token saved successfully!",
+    "error": "Failed to save MLS token. Please try again.",
+    "note": "The token is encrypted upon entry and will not be viewable afterward.",
+    "currentStatus": "MLS token is configured.",
+    "disclaimerIntro": "By integrating your API key into this platform, the Subscriber acknowledges and accepts the following in relation to their current contract with MLS BCS, S.A. de C.V., and its Operating Policies and Procedures (PPO's, version 06-05-2023):",
+    "disclaimerCustody": {
+      "title": "Credential Custody (Category A Violation, ref. PPO's 5.1):",
+      "text": "The Subscriber understands that their password and API key are private and for exclusive use. AiBridge (developer of PropelAgent) acts solely as a passive technical processor, storing the key under AES-256 encryption and industry-standard security protocols (no human access). The Subscriber irrevocably exempts AiBridge, its affiliates, directors, and employees from any liability, claim, or damage arising from access revocation, suspensions, or fines by MLS BCS if misuse of the account by the Subscriber or third parties is determined. AiBridge does not guarantee continuity of service if MLS BCS revokes credentials."
+    },
+    "disclaimerBrand": {
+      "title": "Brand and Advertising Compliance (Category B Violation, ref. PPO's 1.2-1.5, 1.3, 5.11):",
+      "text": "The Subscriber is exclusively responsible for configuring in the AI agent the official name of their Brokerage, approved logos, and contact information in accordance with PPO's, avoiding identity impersonation. AiBridge provides tools for visibility but does not verify or assume responsibility for non-compliance. Any fine or sanction for lack of identification is the sole burden of the Subscriber."
+    },
+    "disclaimerPrivacy": {
+      "title": "Contact Data Filtering and Privacy (ref. PPO's 5.11, 6):",
+      "text": "AiBridge will apply automatic filters to remove prohibited contact data from public descriptions, protecting against violations. However, the Subscriber accepts that AiBridge is not responsible for omissions, errors in original data, or interpretations by MLS BCS regarding dissemination. The Subscriber will indemnify AiBridge for any related claim."
+    },
+    "disclaimerNoTraining": {
+      "title": "No Model Training or Misuse (ref. PPO's 5, intellectual property):",
+      "text": "AiBridge guarantees that property data accessed via API is used only for real-time agent functionality, without permanent storage, AI training, data mining, or sharing with third parties. This protects the MLS BCS database. Violations detected by MLS BCS are the responsibility of the Subscriber."
+    },
+    "disclaimerLiability": {
+      "title": "Sole Agency Liability and Indemnity (ref. PPO's 8.9):",
+      "text": "Any penalty, fine, obligation, or dispute imposed by MLS BCS arising from this integration (including, without limitation, violations of sales procedures or resolutions) shall be the exclusive responsibility of the Subscriber and their Agency. The Subscriber shall indemnify, defend, and hold harmless AiBridge from all costs, damages, legal fees, or losses. AiBridge may terminate this integration immediately without refund if it detects risk."
+    },
+    "disclaimerTermination": {
+      "title": "Termination and Jurisdiction:",
+      "text": "AiBridge may suspend or terminate access without notice for non-compliance. This clause is governed by the laws of Mexico; disputes in the courts of La Paz, BCS. Survives termination."
+    },
+    "disclaimerAccept": "I have read, understood, and accept this Clause."
+  },
   "instructions": {
     "title": "Add Your Agent Instructions",
     "description": "Add custom instructions for your AI agent. Drag to reorder, or use arrow buttons.",

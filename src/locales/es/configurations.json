@@ -1,5 +1,44 @@
 {
   "title": "Configuraciones",
+  "mlsToken": {
+    "title": "Token API MLS",
+    "description": "Ingresa tu token API MLS para habilitar datos de propiedades MLS para tu agente.",
+    "inputLabel": "Token MLS",
+    "placeholder": "Ingresa el Token MLS",
+    "placeholderUpdate": "Ingresa un nuevo token para actualizar",
+    "saveButton": "Guardar",
+    "saving": "Guardando...",
+    "success": "Token MLS guardado exitosamente!",
+    "error": "Error al guardar el token MLS. Por favor intenta de nuevo.",
+    "note": "El token se encripta al ingresarlo y no sera visible despues.",
+    "currentStatus": "El token MLS esta configurado.",
+    "disclaimerIntro": "Al integrar su clave API en esta plataforma, el Suscriptor reconoce y acepta lo siguiente en relacion con su contrato vigente con MLS BCS, S.A. de C.V., y sus Politicas y Procedimientos Operativos (PPO's, version 06-05-2023):",
+    "disclaimerCustody": {
+      "title": "Custodia de Credenciales (Violacion Categoria A, ref. PPO's 5.1):",
+      "text": "El Suscriptor entiende que su contrasena y clave API son privadas y de uso exclusivo. AiBridge (desarrollador de PropelAgent) actua unicamente como procesador tecnico pasivo, almacenando la clave bajo cifrado AES-256 y protocolos de seguridad estandar de industria (sin acceso humano). El Suscriptor exime irrevocablemente a AiBridge, sus afiliados, directivos y empleados de cualquier responsabilidad, reclamo o dano derivado de revocacion de acceso, suspensiones o multas por MLS BCS si se determina mal uso de la cuenta por el Suscriptor o terceros. AiBridge no garantiza continuidad de servicio si MLS BCS revoca credenciales."
+    },
+    "disclaimerBrand": {
+      "title": "Cumplimiento de Marca y Publicidad (Violacion Categoria B, ref. PPO's 1.2-1.5, 1.3, 5.11):",
+      "text": "El Suscriptor es exclusivamente responsable de configurar en el agente AI el nombre oficial de su Correduria, logotipos aprobados y datos de contacto conforme a PPO's, evitando suplantacion de identidad. AiBridge proporciona herramientas para visibilidad, pero no verifica ni asume responsabilidad por incumplimientos. Cualquier multa o sancion por falta de identificacion es carga unica del Suscriptor."
+    },
+    "disclaimerPrivacy": {
+      "title": "Filtro de Datos de Contacto y Privacidad (ref. PPO's 5.11, 6):",
+      "text": "AiBridge aplicara filtros automaticos para remover datos de contacto prohibidos en descripciones publicas, protegiendo contra violaciones. Sin embargo, el Suscriptor acepta que AiBridge no es responsable por omisiones, errores en datos originales o interpretaciones de MLS BCS sobre difusion. El Suscriptor indemnizara a AiBridge por cualquier reclamo relacionado."
+    },
+    "disclaimerNoTraining": {
+      "title": "No Entrenamiento de Modelos ni Uso Indebido (ref. PPO's 5, propiedad intelectual):",
+      "text": "AiBridge garantiza que los datos de propiedades accedidos via API se usan solo para funcionalidad del agente en tiempo real, sin almacenamiento permanente, entrenamiento de IA, mineria de datos o compartir con terceros. Esto protege la base de datos de MLS BCS. Violaciones detectadas por MLS BCS son responsabilidad del Suscriptor."
+    },
+    "disclaimerLiability": {
+      "title": "Responsabilidad Unica de la Agencia e Indemnidad (ref. PPO's 8.9):",
+      "text": "Cualquier pena, multa, obligacion o disputa impuesta por MLS BCS derivada de esta integracion (incluyendo, sin limitar, violaciones a procedimientos de ventas o resoluciones) sera responsabilidad exclusiva del Suscriptor y su Agencia. El Suscriptor indemnizara, defendera y mantendra indemne a AiBridge de todo costo, dano, honorario legal o perdida. AiBridge puede terminar esta integracion inmediatamente sin reembolso si detecta riesgo."
+    },
+    "disclaimerTermination": {
+      "title": "Terminacion y Jurisdiccion:",
+      "text": "AiBridge puede suspender o terminar acceso sin aviso por incumplimiento. Esta clausula se rige por leyes de Mexico; disputas en tribunales de La Paz, BCS. Sobrevive terminacion."
+    },
+    "disclaimerAccept": "He leido, entendido y acepto esta Clausula."
+  },
   "instructions": {
     "title": "Agrega Instrucciones para tu Agente",
     "description": "Agrega instrucciones personalizadas para tu agente de IA. Arrastra para reordenar o usa los botones de flecha.",
