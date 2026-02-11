@@ -229,8 +229,19 @@ export default function ConfigurationsTab({ user, clientId }: ConfigurationsTabP
       const data = await response.json();
       if (!response.ok) throw new Error(data.error || 'Failed to save MLS token');
 
+      // Record terms acceptance after successful token save
+      if (mlsDisclaimerAccepted) {
+        await fetch(`${apiBaseUrl}/api/clients/${clientId}/mls-terms`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ version: 1 }),
+          credentials: 'include'
+        });
+      }
+
       setMlsTokenMessage(t('mlsToken.success'));
       setMlsToken('');
+      setMlsDisclaimerAccepted(false);
       setTimeout(() => setMlsTokenMessage(''), 3000);
     } catch (error: any) {
       console.error('MLS token save error:', error);
