@@ -174,7 +174,7 @@ export default function AddOnsTab({ user, clientId }) {
     setSavingAddOn(addOnKey);
     try {
       const apiBaseUrl = getApiUrl();
-      const oauthUrlEndpoint = `${apiBaseUrl}/api/integrations/${addOnKey}/oauth-url?clientId=${clientId}`;
+      const oauthUrlEndpoint = `${apiBaseUrl}/api/integrations/${addOnKey}/oauth-url?clientId=${clientId}&origin=${encodeURIComponent(window.location.origin)}`;
       console.log('🔐 OAuth: Requesting OAuth URL from:', oauthUrlEndpoint);
 
       const response = await fetch(oauthUrlEndpoint, {

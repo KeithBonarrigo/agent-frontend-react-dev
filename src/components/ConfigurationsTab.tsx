@@ -1430,8 +1430,8 @@ export default function ConfigurationsTab({ user, clientId }: ConfigurationsTabP
         )}
       </div>
 
-      {/* Models Section */}
-      <div className="section">
+      {/* Models Section - hidden for MLS level (model is fixed) */}
+      {!isMlsLevel && <div className="section">
         <div
           onClick={() => setIsModelsCollapsed(!isModelsCollapsed)}
           className={`section-header ${!isModelsCollapsed ? 'section-header-expanded' : ''}`}
@@ -1569,7 +1569,7 @@ export default function ConfigurationsTab({ user, clientId }: ConfigurationsTabP
             </form>
           )
         )}
-      </div>
+      </div>}
     </div>
   );
 }
