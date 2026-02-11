@@ -12,6 +12,7 @@
     "error": "Error al guardar el token MLS. Por favor intenta de nuevo.",
     "note": "El token se encripta al ingresarlo y no sera visible despues.",
     "currentStatus": "El token MLS esta configurado.",
+    "termsAccepted": "Terminos aceptados el {{date}} desde IP {{ip}}",
     "disclaimerIntro": "Al integrar su clave API en esta plataforma, el Suscriptor reconoce y acepta lo siguiente en relacion con su contrato vigente con MLS BCS, S.A. de C.V., y sus Politicas y Procedimientos Operativos (PPO's, version 06-05-2023):",
     "disclaimerCustody": {
       "title": "Custodia de Credenciales (Violacion Categoria A, ref. PPO's 5.1):",

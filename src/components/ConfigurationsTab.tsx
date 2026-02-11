@@ -62,6 +62,7 @@ export default function ConfigurationsTab({ user, clientId }: ConfigurationsTabP
   const [mlsTokenSaving, setMlsTokenSaving] = useState(false);
   const [mlsTokenMessage, setMlsTokenMessage] = useState('');
   const [mlsDisclaimerAccepted, setMlsDisclaimerAccepted] = useState(false);
+  const [mlsTermsRecord, setMlsTermsRecord] = useState<{ accepted_at: string; ip_address: string } | null>(null);
   const hasMlsToken = !!(user?.mls_token && user.mls_token.trim() !== '');
 
   // Instructions state
@@ -123,6 +124,27 @@ export default function ConfigurationsTab({ user, clientId }: ConfigurationsTabP
     appId: import.meta.env.VITE_GOOGLE_APP_ID || null
   };
   const isGoogleDriveEnabled = !!(googleDriveConfig.clientId && googleDriveConfig.apiKey);
+
+  // Fetch MLS terms acceptance record
+  useEffect(() => {
+    if (!isMlsLevel || !clientId) return;
+    const fetchMlsTerms = async () => {
+      try {
+        const apiBaseUrl = getApiUrl();
+        const response = await fetch(`${apiBaseUrl}/api/clients/${clientId}/mls-terms`, {
+          method: 'GET',
+          credentials: 'include'
+        });
+        if (response.ok) {
+          const data = await response.json();
+          if (data?.accepted_at) setMlsTermsRecord(data);
+        }
+      } catch (err) {
+        // silently ignore — just won't show the record
+      }
+    };
+    fetchMlsTerms();
+  }, [clientId, isMlsLevel]);
 
   // Fetch client instructions
   useEffect(() => {
@@ -231,12 +253,27 @@ export default function ConfigurationsTab({ user, clientId }: ConfigurationsTabP
 
       // Record terms acceptance after successful token save
       if (mlsDisclaimerAccepted) {
-        await fetch(`${apiBaseUrl}/api/clients/${clientId}/mls-terms`, {
+        const termsRes = await fetch(`${apiBaseUrl}/api/clients/${clientId}/mls-terms`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ version: 1 }),
           credentials: 'include'
         });
+        if (termsRes.ok) {
+          const termsData = await termsRes.json();
+          if (termsData?.accepted_at) {
+            setMlsTermsRecord(termsData);
+          } else {
+            // Re-fetch to get the record with timestamp/IP
+            const refetch = await fetch(`${apiBaseUrl}/api/clients/${clientId}/mls-terms`, {
+              method: 'GET', credentials: 'include'
+            });
+            if (refetch.ok) {
+              const refetchData = await refetch.json();
+              if (refetchData?.accepted_at) setMlsTermsRecord(refetchData);
+            }
+          }
+        }
       }
 
       setMlsTokenMessage(t('mlsToken.success'));
@@ -808,9 +845,20 @@ export default function ConfigurationsTab({ user, clientId }: ConfigurationsTabP
               </p>
 
               {hasMlsToken && (
-                <div className="alert alert-success mb-2" style={{ display: 'flex', alignItems: 'center', gap: '0.5em' }}>
-                  <i className="fa-solid fa-check-circle"></i>
-                  {t('mlsToken.currentStatus')}
+                <div className="alert alert-success mb-2" style={{ display: 'flex', flexDirection: 'column', gap: '0.3em' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.5em' }}>
+                    <i className="fa-solid fa-check-circle"></i>
+                    {t('mlsToken.currentStatus')}
+                  </div>
+                  {mlsTermsRecord && (
+                    <div style={{ fontSize: '0.8em', color: '#155724', paddingLeft: '1.4em' }}>
+                      <i className="fa-solid fa-file-signature" style={{ marginRight: '0.4em' }}></i>
+                      {t('mlsToken.termsAccepted', {
+                        date: new Date(mlsTermsRecord.accepted_at).toLocaleString(),
+                        ip: mlsTermsRecord.ip_address
+                      })}
+                    </div>
+                  )}
                 </div>
               )}
 

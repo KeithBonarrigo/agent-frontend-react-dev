@@ -12,6 +12,7 @@
     "error": "Failed to save MLS token. Please try again.",
     "note": "The token is encrypted upon entry and will not be viewable afterward.",
     "currentStatus": "MLS token is configured.",
+    "termsAccepted": "Terms accepted on {{date}} from IP {{ip}}",
     "disclaimerIntro": "By integrating your API key into this platform, the Subscriber acknowledges and accepts the following in relation to their current contract with MLS BCS, S.A. de C.V., and its Operating Policies and Procedures (PPO's, version 06-05-2023):",
     "disclaimerCustody": {
       "title": "Credential Custody (Category A Violation, ref. PPO's 5.1):",
