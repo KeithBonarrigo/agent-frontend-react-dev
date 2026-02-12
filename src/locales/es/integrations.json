@@ -43,5 +43,29 @@
     "pinHelper": "Elige un PIN de 6 digitos. Guardalo — lo necesitaras para volver a registrar este numero.",
     "prerequisiteWarning": "El numero de telefono no debe estar activo en WhatsApp o WhatsApp Business App. Si lo esta, elimina WhatsApp de ese telefono primero."
   },
+  "messenger": {
+    "title": "Messenger",
+    "description": "Conecta una Pagina de Facebook para recibir y responder conversaciones de Messenger con tu agente de IA.",
+    "connectButton": "Conectar con Facebook",
+    "connecting": "Conectando...",
+    "connectHelper": "Se te pedira iniciar sesion en Facebook y seleccionar una Pagina para conectar.",
+    "connectError": "Error al conectar Messenger. Por favor intenta de nuevo.",
+    "sdkLoadError": "Error al cargar Facebook. Verifica tu conexion e intenta de nuevo.",
+    "loginCancelled": "Inicio de sesion de Facebook cancelado. Por favor intenta de nuevo.",
+    "fetchPagesError": "Error al obtener tus Paginas de Facebook. Por favor intenta de nuevo.",
+    "noPagesFound": "No se encontraron Paginas de Facebook. Debes ser administrador de al menos una Pagina.",
+    "selectPageLabel": "Selecciona una Pagina de Facebook",
+    "selectPagePlaceholder": "-- Elige una Pagina --",
+    "selectPageHelper": "Selecciona la Pagina de Facebook que deseas conectar a este agente de IA.",
+    "confirmPage": "Conectar Pagina",
+    "cancelSelection": "Cancelar",
+    "connectedPage": "Pagina conectada",
+    "connected": "Conectado",
+    "success": "Messenger conectado exitosamente!",
+    "disconnect": "Desconectar",
+    "disconnecting": "Desconectando...",
+    "removeError": "Error al desconectar Messenger. Por favor intenta de nuevo.",
+    "removeConfirm": "Estas seguro de que deseas desconectar esta Pagina de Facebook de Messenger?"
+  },
   "noSubscription": "Por favor selecciona una suscripcion para configurar integraciones."
 }

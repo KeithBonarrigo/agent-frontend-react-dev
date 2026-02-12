@@ -1,11 +1,13 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { getApiUrl } from "../utils/getApiUrl";
+import { loadFacebookSdk } from "../utils/loadFacebookSdk";
 import "./Tabs.css";
 
 // IntegrationsTab - Displays embed code and integration methods for the AI agent
 // Provides the script tag users need to embed the chatbot on their website
 // Includes WhatsApp phone number registration with SMS verification
+// Includes Messenger page connection via Facebook Login
 export default function IntegrationsTab({ user, clientId }) {
   const { t } = useTranslation('integrations');
 
@@ -14,6 +16,11 @@ export default function IntegrationsTab({ user, clientId }) {
   const [chatbotLoading, setChatbotLoading] = useState(false);
   const chatbotScriptRef = useRef(null);
   const customCssRef = useRef(null);
+
+  // Pre-load Facebook SDK so FB.login() can be called synchronously on click
+  useEffect(() => {
+    loadFacebookSdk().catch(() => {});
+  }, []);
 
   // WhatsApp registration state
   const [wspStatus, setWspStatus] = useState(user?.wsp_status || null);
@@ -25,6 +32,18 @@ export default function IntegrationsTab({ user, clientId }) {
   const [wspLoading, setWspLoading] = useState(false);
   const [wspError, setWspError] = useState('');
   const [wspSuccess, setWspSuccess] = useState('');
+
+  // Messenger state
+  const [msgStatus, setMsgStatus] = useState(user?.messenger_status || null);
+  const [msgPageName, setMsgPageName] = useState(user?.messenger_page_name || '');
+  const [msgPageId, setMsgPageId] = useState(user?.messenger_page_id || '');
+  const [msgLoading, setMsgLoading] = useState(false);
+  const [msgError, setMsgError] = useState('');
+  const [msgSuccess, setMsgSuccess] = useState('');
+  const [msgPages, setMsgPages] = useState([]);
+  const [msgSelectedPageId, setMsgSelectedPageId] = useState('');
+  const [msgUserToken, setMsgUserToken] = useState('');
+  const [msgStep, setMsgStep] = useState('connect'); // 'connect' or 'select-page'
 
   // Send verification code to the entered phone number
   const handleSendCode = async () => {
@@ -112,6 +131,127 @@ export default function IntegrationsTab({ user, clientId }) {
       setWspError(t('whatsapp.removeError'));
     } finally {
       setWspLoading(false);
+    }
+  };
+
+  // Messenger: initiate FB.login and fetch Pages
+  const handleMessengerConnect = async () => {
+    setMsgLoading(true);
+    setMsgError('');
+    setMsgSuccess('');
+
+    try {
+      const FB = await loadFacebookSdk();
+
+      FB.login((response) => {
+        if (response.authResponse) {
+          const userAccessToken = response.authResponse.accessToken;
+          setMsgUserToken(userAccessToken);
+
+          FB.api('/me/accounts', { access_token: userAccessToken }, (pagesResponse) => {
+            if (pagesResponse.error) {
+              setMsgError(t('messenger.fetchPagesError'));
+              setMsgLoading(false);
+              return;
+            }
+
+            const pages = pagesResponse.data || [];
+
+            if (pages.length === 0) {
+              setMsgError(t('messenger.noPagesFound'));
+              setMsgLoading(false);
+              return;
+            }
+
+            if (pages.length === 1) {
+              handleMessengerSubmit(userAccessToken, pages[0].id, pages[0].name);
+            } else {
+              setMsgPages(pages.map(p => ({ id: p.id, name: p.name })));
+              setMsgStep('select-page');
+              setMsgLoading(false);
+            }
+          });
+        } else {
+          setMsgError(t('messenger.loginCancelled'));
+          setMsgLoading(false);
+        }
+      }, { scope: 'pages_messaging,pages_manage_metadata' });
+
+    } catch (err) {
+      setMsgError(err.message || t('messenger.sdkLoadError'));
+      setMsgLoading(false);
+    }
+  };
+
+  // Messenger: submit selected page + token to backend
+  const handleMessengerSubmit = async (userAccessToken, pageId, pageName) => {
+    setMsgLoading(true);
+    setMsgError('');
+
+    try {
+      const apiBaseUrl = getApiUrl();
+      const res = await fetch(`${apiBaseUrl}/api/clients/${clientId}/messenger-connect`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify({
+          user_access_token: userAccessToken,
+          page_id: pageId,
+          page_name: pageName
+        })
+      });
+
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || t('messenger.connectError'));
+
+      setMsgStatus('active');
+      setMsgPageName(pageName || data.page_name);
+      setMsgPageId(pageId);
+      setMsgStep('connect');
+      setMsgPages([]);
+      setMsgSelectedPageId('');
+      setMsgUserToken('');
+      setMsgSuccess(t('messenger.success'));
+      setTimeout(() => setMsgSuccess(''), 5000);
+    } catch (err) {
+      setMsgError(err.message);
+    } finally {
+      setMsgLoading(false);
+    }
+  };
+
+  // Messenger: confirm page selection from dropdown
+  const handlePageSelectConfirm = () => {
+    if (!msgSelectedPageId || !msgUserToken) return;
+    const selectedPage = msgPages.find(p => p.id === msgSelectedPageId);
+    if (!selectedPage) return;
+    handleMessengerSubmit(msgUserToken, selectedPage.id, selectedPage.name);
+  };
+
+  // Messenger: disconnect
+  const handleMessengerDisconnect = async () => {
+    if (!window.confirm(t('messenger.removeConfirm'))) return;
+    setMsgLoading(true);
+    setMsgError('');
+
+    try {
+      const apiBaseUrl = getApiUrl();
+      const res = await fetch(`${apiBaseUrl}/api/clients/${clientId}/messenger-connect`, {
+        method: 'DELETE',
+        credentials: 'include'
+      });
+      if (!res.ok) {
+        const data = await res.json();
+        throw new Error(data.error || 'Failed to disconnect');
+      }
+      setMsgPageName('');
+      setMsgPageId('');
+      setMsgStatus(null);
+      setMsgStep('connect');
+    } catch (err) {
+      setMsgError(t('messenger.removeError'));
+    } finally {
+      setMsgLoading(false);
     }
   };
 
@@ -508,6 +648,190 @@ export default function IntegrationsTab({ user, clientId }) {
         {wspError && (
           <p style={{ textAlign: "center", color: "#dc3545", marginTop: "0.75em", fontWeight: "600" }}>
             {wspError}
+          </p>
+        )}
+      </div>
+
+      {/* Messenger Integration */}
+      <div style={{ marginTop: "2em", paddingTop: "2em", borderTop: "1px solid #ddd" }}>
+        <h2 className="section-title section-title-centered" style={{ marginBottom: "1em" }}>
+          <i className="fa-brands fa-facebook-messenger" style={{ color: "#0084FF" }}></i>
+          {' '}{t('messenger.title')}
+        </h2>
+        <p style={{ fontSize: "0.95em", color: "#666", textAlign: "center", marginBottom: "1.5em" }}>
+          {t('messenger.description')}
+        </p>
+
+        {/* Connected state */}
+        {msgStatus === 'active' && msgPageName ? (
+          <div style={{
+            backgroundColor: "#fff",
+            padding: "1.25em",
+            borderRadius: "4px",
+            boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)",
+            border: "1px solid #ddd",
+            width: "70%",
+            marginLeft: "auto",
+            marginRight: "auto",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between"
+          }}>
+            <div>
+              <span style={{ fontSize: "0.85em", color: "#888" }}>{t('messenger.connectedPage')}</span>
+              <p style={{ margin: "0.25em 0 0", fontSize: "1.1em", fontWeight: "600", color: "#333" }}>
+                <i className="fa-brands fa-facebook-messenger" style={{ color: "#0084FF", marginRight: "0.5em" }}></i>
+                {msgPageName}
+              </p>
+            </div>
+            <div style={{ display: "flex", alignItems: "center", gap: "0.75em" }}>
+              <span style={{
+                backgroundColor: "#d4edda",
+                color: "#155724",
+                padding: "0.25em 0.75em",
+                borderRadius: "12px",
+                fontSize: "0.8em",
+                fontWeight: "600"
+              }}>
+                {t('messenger.connected')}
+              </span>
+              <button
+                onClick={handleMessengerDisconnect}
+                disabled={msgLoading}
+                style={{
+                  background: "none",
+                  border: "none",
+                  color: "#dc3545",
+                  cursor: msgLoading ? "default" : "pointer",
+                  fontSize: "0.85em",
+                  textDecoration: "underline",
+                  padding: 0
+                }}
+              >
+                {msgLoading ? t('messenger.disconnecting') : t('messenger.disconnect')}
+              </button>
+            </div>
+          </div>
+
+        ) : msgStep === 'select-page' ? (
+          /* Page selection state */
+          <div style={{
+            backgroundColor: "#fff",
+            padding: "1.5em",
+            borderRadius: "4px",
+            boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)",
+            border: "1px solid #ddd",
+            width: "70%",
+            marginLeft: "auto",
+            marginRight: "auto"
+          }}>
+            <label style={{ display: "block", fontSize: "0.85em", color: "#555", marginBottom: "0.4em", fontWeight: "600" }}>
+              {t('messenger.selectPageLabel')}
+            </label>
+            <div style={{ display: "flex", gap: "0.5em" }}>
+              <select
+                value={msgSelectedPageId}
+                onChange={(e) => setMsgSelectedPageId(e.target.value)}
+                disabled={msgLoading}
+                style={{
+                  flex: 1,
+                  padding: "0.6em 0.8em",
+                  border: "1px solid #ccc",
+                  borderRadius: "4px",
+                  fontSize: "1em"
+                }}
+              >
+                <option value="">{t('messenger.selectPagePlaceholder')}</option>
+                {msgPages.map(page => (
+                  <option key={page.id} value={page.id}>{page.name}</option>
+                ))}
+              </select>
+              <button
+                onClick={handlePageSelectConfirm}
+                disabled={!msgSelectedPageId || msgLoading}
+                style={{
+                  padding: "0.6em 1.2em",
+                  backgroundColor: (!msgSelectedPageId || msgLoading) ? "#ccc" : "#0084FF",
+                  color: "white",
+                  border: "none",
+                  borderRadius: "4px",
+                  cursor: (!msgSelectedPageId || msgLoading) ? "default" : "pointer",
+                  fontSize: "0.9em",
+                  fontWeight: "600",
+                  whiteSpace: "nowrap"
+                }}
+              >
+                {msgLoading ? t('messenger.connecting') : t('messenger.confirmPage')}
+              </button>
+            </div>
+            <p style={{ fontSize: "0.8em", color: "#888", marginTop: "0.4em", marginBottom: 0 }}>
+              {t('messenger.selectPageHelper')}
+            </p>
+            <div style={{ marginTop: "0.6em" }}>
+              <button
+                onClick={() => { setMsgStep('connect'); setMsgPages([]); setMsgSelectedPageId(''); setMsgUserToken(''); }}
+                style={{
+                  background: "none",
+                  border: "none",
+                  color: "#007bff",
+                  cursor: "pointer",
+                  fontSize: "0.8em",
+                  textDecoration: "underline",
+                  padding: 0
+                }}
+              >
+                {t('messenger.cancelSelection')}
+              </button>
+            </div>
+          </div>
+
+        ) : (
+          /* Disconnected state */
+          <div style={{
+            backgroundColor: "#fff",
+            padding: "1.5em",
+            borderRadius: "4px",
+            boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)",
+            border: "1px solid #ddd",
+            width: "70%",
+            marginLeft: "auto",
+            marginRight: "auto",
+            textAlign: "center"
+          }}>
+            <button
+              onClick={handleMessengerConnect}
+              disabled={msgLoading}
+              style={{
+                padding: "0.75em 2em",
+                backgroundColor: msgLoading ? "#ccc" : "#0084FF",
+                color: "white",
+                border: "none",
+                borderRadius: "4px",
+                cursor: msgLoading ? "default" : "pointer",
+                fontSize: "1em",
+                fontWeight: "600",
+                display: "inline-flex",
+                alignItems: "center",
+                gap: "0.5em"
+              }}
+            >
+              <i className="fa-brands fa-facebook"></i>
+              {msgLoading ? t('messenger.connecting') : t('messenger.connectButton')}
+            </button>
+            <p style={{ fontSize: "0.8em", color: "#888", marginTop: "0.75em", marginBottom: 0 }}>
+              {t('messenger.connectHelper')}
+            </p>
+          </div>
+        )}
+
+        {msgSuccess && (
+          <p style={{ textAlign: "center", color: "#28a745", marginTop: "0.75em", fontWeight: "600" }}>
+            {msgSuccess}
+          </p>
+        )}
+        {msgError && (
+          <p style={{ textAlign: "center", color: "#dc3545", marginTop: "0.75em", fontWeight: "600" }}>
+            {msgError}
           </p>
         )}
       </div>

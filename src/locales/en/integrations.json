@@ -43,5 +43,29 @@
     "pinHelper": "Choose a 6-digit PIN. Save this — you'll need it to re-register this number.",
     "prerequisiteWarning": "The phone number must not be active on WhatsApp or WhatsApp Business App. Delete WhatsApp from that phone first if needed."
   },
+  "messenger": {
+    "title": "Messenger",
+    "description": "Connect a Facebook Page to receive and respond to Messenger conversations with your AI agent.",
+    "connectButton": "Connect with Facebook",
+    "connecting": "Connecting...",
+    "connectHelper": "You will be asked to log in to Facebook and select a Page to connect.",
+    "connectError": "Failed to connect Messenger. Please try again.",
+    "sdkLoadError": "Failed to load Facebook. Please check your connection and try again.",
+    "loginCancelled": "Facebook login was cancelled. Please try again.",
+    "fetchPagesError": "Failed to retrieve your Facebook Pages. Please try again.",
+    "noPagesFound": "No Facebook Pages found. You must be an admin of at least one Facebook Page.",
+    "selectPageLabel": "Select a Facebook Page",
+    "selectPagePlaceholder": "-- Choose a Page --",
+    "selectPageHelper": "Select the Facebook Page you want to connect to this AI agent.",
+    "confirmPage": "Connect Page",
+    "cancelSelection": "Cancel",
+    "connectedPage": "Connected Page",
+    "connected": "Connected",
+    "success": "Messenger connected successfully!",
+    "disconnect": "Disconnect",
+    "disconnecting": "Disconnecting...",
+    "removeError": "Failed to disconnect Messenger. Please try again.",
+    "removeConfirm": "Are you sure you want to disconnect this Facebook Page from Messenger?"
+  },
   "noSubscription": "Please select a subscription to configure integrations."
 }
