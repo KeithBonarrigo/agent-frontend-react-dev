@@ -14,6 +14,7 @@ interface User {
   item?: number;
   company?: string;
   mls_token?: string;
+  company_flex_url?: string;
 }
 
 interface ConfigurationsTabProps {
@@ -64,6 +65,10 @@ export default function ConfigurationsTab({ user, clientId }: ConfigurationsTabP
   const [mlsDisclaimerAccepted, setMlsDisclaimerAccepted] = useState(false);
   const [mlsTermsRecord, setMlsTermsRecord] = useState<{ accepted_at: string; ip_address: string } | null>(null);
   const hasMlsToken = !!(user?.mls_token && user.mls_token.trim() !== '');
+  const [companyFlexUrl, setCompanyFlexUrl] = useState(user?.company_flex_url || '');
+  const [flexUrlSaving, setFlexUrlSaving] = useState(false);
+  const [flexUrlMessage, setFlexUrlMessage] = useState('');
+  const [showFlexUrlHelp, setShowFlexUrlHelp] = useState(false);
 
   // Instructions state
   const [instructions, setInstructions] = useState<string[]>(['']);
@@ -230,9 +235,9 @@ export default function ConfigurationsTab({ user, clientId }: ConfigurationsTabP
     loadGoogleIdentity();
   }, [fileSource, isGoogleApiLoaded, isGoogleDriveEnabled]);
 
-  // MLS Token handler
+  // MLS Token handler - requires disclaimer accepted, flex URL, and MLS token
   const handleMlsTokenSave = async () => {
-    if (!mlsToken.trim()) return;
+    if (!mlsToken.trim() || !companyFlexUrl.trim() || !mlsDisclaimerAccepted) return;
     setMlsTokenSaving(true);
     setMlsTokenMessage('');
 
@@ -244,7 +249,7 @@ export default function ConfigurationsTab({ user, clientId }: ConfigurationsTabP
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${import.meta.env.VITE_CREATE_USER_TOKEN}`
         },
-        body: JSON.stringify({ mls_token: mlsToken.trim() }),
+        body: JSON.stringify({ mls_token: mlsToken.trim(), company_flex_url: companyFlexUrl.trim() }),
         credentials: 'include'
       });
 
@@ -285,6 +290,39 @@ export default function ConfigurationsTab({ user, clientId }: ConfigurationsTabP
       setMlsTokenMessage(t('mlsToken.error'));
     } finally {
       setMlsTokenSaving(false);
+    }
+  };
+
+  // Company Flex URL handler
+  const handleFlexUrlSave = async () => {
+    if (!companyFlexUrl.trim()) return;
+    setFlexUrlSaving(true);
+    setFlexUrlMessage('');
+
+    try {
+      const apiBaseUrl = getApiUrl();
+      const payload = { company_flex_url: companyFlexUrl.trim() };
+      console.log('Flex URL save payload:', JSON.stringify(payload));
+      const res = await fetch(`${apiBaseUrl}/api/clients/${clientId}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${import.meta.env.VITE_CREATE_USER_TOKEN}`
+        },
+        body: JSON.stringify(payload),
+        credentials: 'include'
+      });
+
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'Failed to save');
+
+      setFlexUrlMessage(t('mlsToken.companyFlexUrl.success'));
+      setTimeout(() => setFlexUrlMessage(''), 3000);
+    } catch (err: any) {
+      console.error('Flex URL save error:', err);
+      setFlexUrlMessage(t('mlsToken.companyFlexUrl.error'));
+    } finally {
+      setFlexUrlSaving(false);
     }
   };
 
@@ -897,9 +935,53 @@ export default function ConfigurationsTab({ user, clientId }: ConfigurationsTabP
                 </label>
               </div>
 
+              {/* Company Flex URL */}
+              <div style={{ marginBottom: '1em' }}>
+                <h3 style={{ fontSize: '1.1em', fontWeight: 600, marginTop: 0, marginBottom: '0.4em' }}>{t('mlsToken.companyFlexUrl.title')}</h3>
+                <p style={{ fontSize: '0.85em', color: '#666', marginBottom: '0.25em', marginTop: 0 }}>
+                  {t('mlsToken.companyFlexUrl.description')}
+                </p>
+                <a
+                  href="#"
+                  onClick={(e: React.MouseEvent) => { e.preventDefault(); setShowFlexUrlHelp(true); }}
+                  style={{ fontSize: '0.8em', color: '#007bff', textDecoration: 'underline', cursor: 'pointer' }}
+                >
+                  {t('mlsToken.companyFlexUrl.helpLink')}
+                </a>
+                <div style={{ display: 'flex', gap: '0.5em', marginTop: '0.5em' }}>
+                  <input
+                    type="text"
+                    value={companyFlexUrl}
+                    onChange={(e) => setCompanyFlexUrl(e.target.value)}
+                    placeholder={t('mlsToken.companyFlexUrl.placeholder')}
+                    className="form-input"
+                    style={{ flex: 1 }}
+                  />
+                  <button
+                    onClick={handleFlexUrlSave}
+                    disabled={flexUrlSaving || !companyFlexUrl.trim()}
+                    className={`btn ${flexUrlSaving || !companyFlexUrl.trim() ? 'btn-secondary' : 'btn-primary'}`}
+                    style={{ whiteSpace: 'nowrap' }}
+                  >
+                    {flexUrlSaving ? t('mlsToken.companyFlexUrl.saving') : t('mlsToken.companyFlexUrl.saveButton')}
+                  </button>
+                </div>
+                {flexUrlMessage && (
+                  <p style={{
+                    fontSize: '0.85em',
+                    marginTop: '0.5em',
+                    fontWeight: 600,
+                    color: flexUrlMessage === t('mlsToken.companyFlexUrl.success') ? '#28a745' : '#dc3545'
+                  }}>
+                    {flexUrlMessage}
+                  </p>
+                )}
+              </div>
+
+              {/* MLS Token */}
+              <h3 style={{ fontSize: '1.1em', fontWeight: 600, marginTop: 0, marginBottom: '0.4em' }}>{t('mlsToken.inputLabel')}</h3>
               <div style={{ display: 'flex', gap: '0.5em', alignItems: 'flex-end' }}>
                 <div style={{ flex: 1 }}>
-                  <label className="form-label">{t('mlsToken.inputLabel')}</label>
                   <input
                     type="password"
                     value={mlsToken}
@@ -913,8 +995,8 @@ export default function ConfigurationsTab({ user, clientId }: ConfigurationsTabP
                 </div>
                 <button
                   onClick={handleMlsTokenSave}
-                  disabled={mlsTokenSaving || !mlsToken.trim() || !mlsDisclaimerAccepted}
-                  className={`btn ${mlsTokenSaving || !mlsToken.trim() || !mlsDisclaimerAccepted ? 'btn-secondary' : 'btn-primary'}`}
+                  disabled={mlsTokenSaving || !mlsToken.trim() || !companyFlexUrl.trim() || !mlsDisclaimerAccepted}
+                  className={`btn ${mlsTokenSaving || !mlsToken.trim() || !companyFlexUrl.trim() || !mlsDisclaimerAccepted ? 'btn-secondary' : 'btn-primary'}`}
                   style={{ whiteSpace: 'nowrap' }}
                 >
                   {mlsTokenSaving ? t('mlsToken.saving') : t('mlsToken.saveButton')}
@@ -1629,6 +1711,37 @@ export default function ConfigurationsTab({ user, clientId }: ConfigurationsTabP
           )
         )}
       </div>}
+
+      {/* Flex URL Help Modal */}
+      {showFlexUrlHelp && (
+        <div className="modal-overlay">
+          <div className="modal-content" style={{ maxWidth: '500px' }}>
+            <h3 className="modal-header">
+              <i className="fa-solid fa-circle-question" style={{ marginRight: '0.5em', color: '#007bff' }}></i>
+              {t('mlsToken.companyFlexUrl.helpTitle')}
+            </h3>
+            <div className="modal-body">
+              <ol style={{ paddingLeft: '1.2em', lineHeight: '1.8', margin: 0 }}>
+                <li>{t('mlsToken.companyFlexUrl.helpStep1')}</li>
+                <li>{t('mlsToken.companyFlexUrl.helpStep2')}</li>
+                <li>{t('mlsToken.companyFlexUrl.helpStep3')}</li>
+                <li>{t('mlsToken.companyFlexUrl.helpStep4')}</li>
+              </ol>
+              <p style={{ fontSize: '0.85em', color: '#555', backgroundColor: '#f8f9fa', padding: '0.75em', borderRadius: '4px', marginTop: '0.75em', wordBreak: 'break-all' }}>
+                {t('mlsToken.companyFlexUrl.helpExample')}
+              </p>
+            </div>
+            <div style={{ textAlign: 'right', marginTop: '1em' }}>
+              <button
+                onClick={() => setShowFlexUrlHelp(false)}
+                className="btn btn-primary"
+              >
+                {t('mlsToken.companyFlexUrl.helpClose')}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

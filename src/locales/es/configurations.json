@@ -38,7 +38,24 @@
       "title": "Terminacion y Jurisdiccion:",
       "text": "AiBridge puede suspender o terminar acceso sin aviso por incumplimiento. Esta clausula se rige por leyes de Mexico; disputas en tribunales de La Paz, BCS. Sobrevive terminacion."
     },
-    "disclaimerAccept": "He leido, entendido y acepto esta Clausula."
+    "disclaimerAccept": "He leido, entendido y acepto esta Clausula.",
+    "companyFlexUrl": {
+      "title": "URL de Flex de la Empresa",
+      "description": "Ingresa la URL de Flexmls de tu empresa para la integracion de busqueda de propiedades.",
+      "placeholder": "https://my.flexmls.com/JuanPerez/search/shared_links/DRmzs/listings/",
+      "saveButton": "Guardar",
+      "saving": "Guardando...",
+      "success": "URL guardada exitosamente!",
+      "error": "Error al guardar. Por favor intenta de nuevo.",
+      "helpLink": "¿Donde encuentro esto?",
+      "helpTitle": "Como Encontrar tu URL de Flex de la Empresa",
+      "helpStep1": "Inicia sesion en FlexMLS y abre cualquiera de tus listados de propiedades.",
+      "helpStep2": "Copia la URL de la barra de direcciones de tu navegador.",
+      "helpStep3": "Elimina el ID de la propiedad al final de la URL (el ultimo segmento despues de la ultima barra).",
+      "helpExample": "Ejemplo: si la URL completa es https://my.flexmls.com/JuanPerez/search/shared_links/DRmzs/listings/20251234, copia todo antes del ID del listado: https://my.flexmls.com/JuanPerez/search/shared_links/DRmzs/listings/",
+      "helpStep4": "Pega la URL restante en el campo de arriba.",
+      "helpClose": "Entendido"
+    }
   },
   "instructions": {
     "title": "Agrega Instrucciones para tu Agente",

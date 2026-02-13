@@ -38,7 +38,24 @@
       "title": "Termination and Jurisdiction:",
       "text": "AiBridge may suspend or terminate access without notice for non-compliance. This clause is governed by the laws of Mexico; disputes in the courts of La Paz, BCS. Survives termination."
     },
-    "disclaimerAccept": "I have read, understood, and accept this Clause."
+    "disclaimerAccept": "I have read, understood, and accept this Clause.",
+    "companyFlexUrl": {
+      "title": "Company Flex URL",
+      "description": "Enter your company's Flexmls URL for property search integration.",
+      "placeholder": "https://my.flexmls.com/JuanPerez/search/shared_links/DRmzs/listings/",
+      "saveButton": "Save",
+      "saving": "Saving...",
+      "success": "Company Flex URL saved successfully!",
+      "error": "Failed to save. Please try again.",
+      "helpLink": "Where do I find this?",
+      "helpTitle": "How to Find Your Company Flex URL",
+      "helpStep1": "Log in to FlexMLS and open any one of your property listings.",
+      "helpStep2": "Copy the URL from your browser's address bar.",
+      "helpStep3": "Remove the property ID at the end of the URL (the last segment after the final slash).",
+      "helpExample": "Example: if the full URL is https://my.flexmls.com/JuanPerez/search/shared_links/DRmzs/listings/20251234, copy everything before the listing ID: https://my.flexmls.com/JuanPerez/search/shared_links/DRmzs/listings/",
+      "helpStep4": "Paste the remaining URL into the field above.",
+      "helpClose": "Got it"
+    }
   },
   "instructions": {
     "title": "Add Your Agent Instructions",
