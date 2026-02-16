@@ -302,7 +302,6 @@ export default function ConfigurationsTab({ user, clientId }: ConfigurationsTabP
     try {
       const apiBaseUrl = getApiUrl();
       const payload = { company_flex_url: companyFlexUrl.trim() };
-      console.log('Flex URL save payload:', JSON.stringify(payload));
       const res = await fetch(`${apiBaseUrl}/api/clients/${clientId}`, {
         method: 'PUT',
         headers: {

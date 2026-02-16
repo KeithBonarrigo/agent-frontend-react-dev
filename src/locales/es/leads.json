@@ -22,5 +22,34 @@
     "created": "Creado",
     "notes": "Notas"
   },
-  "showingCount": "Mostrando {{filtered}} de {{total}} prospectos"
+  "showingCount": "Mostrando {{filtered}} de {{total}} prospectos",
+  "share": {
+    "title": "Compartir / Invitar",
+    "description": "Invita a colegas y contactos a probar tu asistente de IA por correo electronico o WhatsApp.",
+    "waMeLabel": "Enlace Directo de WhatsApp",
+    "waMeHelper": "Comparte este enlace para que cualquiera pueda iniciar una conversacion con tu asistente de IA por WhatsApp.",
+    "copy": "Copiar",
+    "copied": "Copiado!",
+    "emailTitle": "Enviar por Correo Electronico",
+    "emailAddressesLabel": "Direcciones de Correo",
+    "emailAddressesPlaceholder": "correo1@ejemplo.com, correo2@ejemplo.com",
+    "messageLabel": "Mensaje",
+    "emailSubjectLabel": "Asunto",
+    "emailSubjectPlaceholder": "Ingresa el asunto del correo...",
+    "sendEmail": "Enviar Invitaciones",
+    "sending": "Enviando...",
+    "emailSentSuccess": "Invitaciones enviadas exitosamente!",
+    "emailSendError": "Error al enviar las invitaciones por correo. Por favor intenta de nuevo.",
+    "wspTitle": "Enviar por WhatsApp",
+    "wspNumbersLabel": "Numeros de WhatsApp",
+    "wspNumbersPlaceholder": "+1234567890, +0987654321",
+    "sendWhatsApp": "Enviar por WhatsApp",
+    "wspSentSuccess": "Invitaciones de WhatsApp enviadas exitosamente!",
+    "wspSendError": "Error al enviar las invitaciones por WhatsApp. Por favor intenta de nuevo.",
+    "mls": {
+      "emailDefaultSubject": "Prueba PropelAgent - Nuestro Asistente de IA MLS para Baja California Sur",
+      "emailDefaultMessage": "Hola! Me gustaria invitarte a probar PropelAgent, nuestro asistente de IA MLS para Baja California Sur. Puedes verlo en accion gratis en {{domain}}. Cuando estes listo para tener el tuyo, registrate en Botwerx.ai — sin compromiso. Configuralo, previsualizalo y asegurate de que te encante antes de agregarlo a tu sitio web o conectarlo a WhatsApp!",
+      "wspDefaultMessage": "Hola! Me gustaria invitarte a probar PropelAgent, nuestro asistente de IA MLS para Baja California Sur. Puedes verlo en accion gratis en {{domain}}. Cuando estes listo para tener el tuyo, registrate en Botwerx.ai — sin compromiso. Configuralo, previsualizalo y asegurate de que te encante antes de agregarlo a tu sitio web o conectarlo a WhatsApp!"
+    }
+  }
 }

@@ -91,5 +91,9 @@
   "success": {
     "agentUpdated": "Agent updated successfully!",
     "agentCreated": "Agent created!"
+  },
+  "inviteBanner": {
+    "text": "Loving your AI assistant? Invite your colleagues to try it!",
+    "link": "Send an invite"
   }
 }

@@ -17,6 +17,7 @@ export default function Dashboard() {
   const { t } = useTranslation('dashboard');
   const { user, isLoggedIn, isLoading, logout } = useUser();
   const [activeTab, setActiveTab] = useState('configurations');
+  const [expandShare, setExpandShare] = useState(false);
   const [tokenLimits, setTokenLimits] = useState(null);
   const [loadingLimits, setLoadingLimits] = useState(true);
   
@@ -1635,6 +1636,36 @@ export default function Dashboard() {
 
       </div>
 
+      {/* Invite Banner */}
+      {selectedClient && (
+        <div style={{
+          backgroundColor: '#d4edda',
+          border: '1px solid #c3e6cb',
+          borderRadius: '6px',
+          padding: '0.75em 1.25em',
+          marginBottom: '1em',
+          display: 'flex',
+          alignItems: 'center',
+          gap: '0.5em'
+        }}>
+          <i className="fa-solid fa-bullhorn" style={{ color: '#155724', fontSize: '1.1em' }}></i>
+          <span style={{ color: '#155724', fontSize: '0.95em' }}>
+            {t('dashboard:inviteBanner.text')}{' '}
+            <a
+              href="#"
+              onClick={(e) => {
+                e.preventDefault();
+                setExpandShare(true);
+                setActiveTab('leads');
+              }}
+              style={{ color: '#155724', fontWeight: 700, textDecoration: 'underline' }}
+            >
+              {t('dashboard:inviteBanner.link')} →
+            </a>
+          </span>
+        </div>
+      )}
+
       {/* Agent Details + Tabs Container */}
       {selectedClient && (
         <div className="card">
@@ -1672,7 +1703,7 @@ export default function Dashboard() {
           {activeTab === 'integrations' && <IntegrationsTab user={selectedClient} clientId={selectedClientId} />}
           {activeTab === 'conversations' && <ConversationsTab user={selectedClient} clientId={selectedClientId} />}
           {activeTab === 'metrics' && <MetricsTab user={selectedClient} clientId={selectedClientId} subscription={selectedSubscription} tokensUsed={subscriptionTokensUsed} />}
-          {activeTab === 'leads' && <LeadsTab clientId={selectedClientId} />}
+          {activeTab === 'leads' && <LeadsTab user={selectedClient} clientId={selectedClientId} expandShare={expandShare} onShareExpanded={() => setExpandShare(false)} />}
           {activeTab === 'styling' && <StylingTab user={selectedClient} clientId={selectedClientId} onNavigateToIntegrations={() => setActiveTab('integrations')} />}
             </>
           )}

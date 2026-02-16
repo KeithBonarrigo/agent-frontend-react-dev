@@ -22,5 +22,34 @@
     "created": "Created",
     "notes": "Notes"
   },
-  "showingCount": "Showing {{filtered}} of {{total}} leads"
+  "showingCount": "Showing {{filtered}} of {{total}} leads",
+  "share": {
+    "title": "Share / Invite",
+    "description": "Invite colleagues and contacts to try your AI assistant by email or WhatsApp.",
+    "waMeLabel": "WhatsApp Direct Link",
+    "waMeHelper": "Share this link so anyone can start a WhatsApp conversation with your AI assistant.",
+    "copy": "Copy",
+    "copied": "Copied!",
+    "emailTitle": "Send via Email",
+    "emailAddressesLabel": "Email Addresses",
+    "emailAddressesPlaceholder": "email1@example.com, email2@example.com",
+    "messageLabel": "Message",
+    "emailSubjectLabel": "Subject",
+    "emailSubjectPlaceholder": "Enter email subject...",
+    "sendEmail": "Send Invites",
+    "sending": "Sending...",
+    "emailSentSuccess": "Invitations sent successfully!",
+    "emailSendError": "Failed to send email invitations. Please try again.",
+    "wspTitle": "Send via WhatsApp",
+    "wspNumbersLabel": "WhatsApp Numbers",
+    "wspNumbersPlaceholder": "+1234567890, +0987654321",
+    "sendWhatsApp": "Send via WhatsApp",
+    "wspSentSuccess": "WhatsApp invitations sent successfully!",
+    "wspSendError": "Failed to send WhatsApp invitations. Please try again.",
+    "mls": {
+      "emailDefaultSubject": "Try PropelAgent - Our MLS AI Assistant for Baja California Sur",
+      "emailDefaultMessage": "Hi! I'd like to invite you to try PropelAgent, our MLS AI assistant for Baja California Sur. You can see it in action for free at {{domain}}. When you're ready to get your own, sign up at Botwerx.ai — no commitment needed. Set it up, preview it, and make sure you love it before adding it to your website or connecting it to WhatsApp!",
+      "wspDefaultMessage": "Hi! I'd like to invite you to try PropelAgent, our MLS AI assistant for Baja California Sur. You can see it in action for free at {{domain}}. When you're ready to get your own, sign up at Botwerx.ai — no commitment needed. Set it up, preview it, and make sure you love it before adding it to your website or connecting it to WhatsApp!"
+    }
+  }
 }
