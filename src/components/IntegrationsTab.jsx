@@ -175,7 +175,7 @@ export default function IntegrationsTab({ user, clientId }) {
           setMsgError(t('messenger.loginCancelled'));
           setMsgLoading(false);
         }
-      }, { scope: 'pages_messaging,pages_manage_metadata' });
+      }, { config_id: import.meta.env.VITE_MSG_CONFIG_ID });
 
     } catch (err) {
       setMsgError(err.message || t('messenger.sdkLoadError'));
