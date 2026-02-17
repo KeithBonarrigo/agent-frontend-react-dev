@@ -214,7 +214,7 @@ export default function LeadsTab({ user, clientId, expandShare, onShareExpanded 
           <div style={{ padding: '1em 0' }}>
             <p className="section-description">{t('share.description')}</p>
 
-            {/* wa.me Direct Link */}
+            {/* wa.me Direct Link — hidden for now
             {hasWhatsAppPhone && (
               <div style={{ width: '70%', marginLeft: 'auto', marginRight: 'auto', marginBottom: '1.5em' }}>
                 <label style={{ display: 'block', fontSize: '0.85em', color: '#555', marginBottom: '0.4em', fontWeight: '600' }}>
@@ -242,6 +242,7 @@ export default function LeadsTab({ user, clientId, expandShare, onShareExpanded 
                 </p>
               </div>
             )}
+            */}
 
             {/* Email Sharing */}
             <div style={{ width: '70%', marginLeft: 'auto', marginRight: 'auto', marginBottom: '1.5em' }}>
