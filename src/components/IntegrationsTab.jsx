@@ -45,6 +45,13 @@ export default function IntegrationsTab({ user, clientId }) {
   const [msgUserToken, setMsgUserToken] = useState('');
   const [msgStep, setMsgStep] = useState('connect'); // 'connect' or 'select-page'
 
+  // Instagram state
+  const [igStatus, setIgStatus] = useState(user?.instagram_status || null);
+  const [igAccountName, setIgAccountName] = useState(user?.instagram_account_name || '');
+  const [igLoading, setIgLoading] = useState(false);
+  const [igError, setIgError] = useState('');
+  const [igSuccess, setIgSuccess] = useState('');
+
   // Send verification code to the entered phone number
   const handleSendCode = async () => {
     if (!wspPhone.trim()) return;
@@ -226,6 +233,83 @@ export default function IntegrationsTab({ user, clientId }) {
     const selectedPage = msgPages.find(p => p.id === msgSelectedPageId);
     if (!selectedPage) return;
     handleMessengerSubmit(msgUserToken, selectedPage.id, selectedPage.name);
+  };
+
+  // Instagram: connect via Facebook Login for Business (Instagram config)
+  const handleInstagramConnect = async () => {
+    setIgLoading(true);
+    setIgError('');
+    setIgSuccess('');
+
+    try {
+      const FB = await loadFacebookSdk();
+
+      FB.login((response) => {
+        if (response.authResponse) {
+          const userAccessToken = response.authResponse.accessToken;
+          // Send token to backend — backend will exchange for long-lived token,
+          // look up the linked Instagram Business Account, and subscribe to webhooks
+          handleInstagramSubmit(userAccessToken);
+        } else {
+          setIgError(t('instagram.loginCancelled'));
+          setIgLoading(false);
+        }
+      }, { config_id: import.meta.env.VITE_IG_CONFIG_ID });
+
+    } catch (err) {
+      setIgError(err.message || t('instagram.sdkLoadError'));
+      setIgLoading(false);
+    }
+  };
+
+  // Instagram: submit token to backend
+  const handleInstagramSubmit = async (userAccessToken) => {
+    try {
+      const apiBaseUrl = getApiUrl();
+      const res = await fetch(`${apiBaseUrl}/api/clients/${clientId}/instagram-connect`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify({ user_access_token: userAccessToken })
+      });
+
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || t('instagram.connectError'));
+
+      setIgStatus('active');
+      setIgAccountName(data.instagram_username || data.instagram_account_name || '');
+      setIgSuccess(t('instagram.success'));
+      setTimeout(() => setIgSuccess(''), 5000);
+    } catch (err) {
+      setIgError(err.message);
+    } finally {
+      setIgLoading(false);
+    }
+  };
+
+  // Instagram: disconnect
+  const handleInstagramDisconnect = async () => {
+    if (!window.confirm(t('instagram.removeConfirm'))) return;
+    setIgLoading(true);
+    setIgError('');
+
+    try {
+      const apiBaseUrl = getApiUrl();
+      const res = await fetch(`${apiBaseUrl}/api/clients/${clientId}/instagram-connect`, {
+        method: 'DELETE',
+        credentials: 'include'
+      });
+      if (!res.ok) {
+        const data = await res.json();
+        throw new Error(data.error || 'Failed to disconnect');
+      }
+      setIgAccountName('');
+      setIgStatus(null);
+    } catch (err) {
+      setIgError(t('instagram.removeError'));
+    } finally {
+      setIgLoading(false);
+    }
   };
 
   // Messenger: disconnect
@@ -832,6 +916,137 @@ export default function IntegrationsTab({ user, clientId }) {
         {msgError && (
           <p style={{ textAlign: "center", color: "#dc3545", marginTop: "0.75em", fontWeight: "600" }}>
             {msgError}
+          </p>
+        )}
+      </div>
+
+      {/* Instagram Integration */}
+      <div style={{ marginTop: "2em", paddingTop: "2em", borderTop: "1px solid #ddd" }}>
+        <h2 className="section-title section-title-centered" style={{ marginBottom: "1em" }}>
+          <i className="fa-brands fa-instagram" style={{ color: "#E4405F" }}></i>
+          {' '}{t('instagram.title')}
+        </h2>
+        <p style={{ fontSize: "0.95em", color: "#666", textAlign: "center", marginBottom: "1.5em" }}>
+          {t('instagram.description')}
+        </p>
+
+        {/* Prerequisite: need a Facebook Page connected to an Instagram Business account */}
+        {igStatus !== 'active' && (
+          <p style={{
+            fontSize: "0.85em",
+            color: "#856404",
+            backgroundColor: "#fff3cd",
+            border: "1px solid #ffeeba",
+            borderRadius: "4px",
+            padding: "0.75em 1em",
+            width: "70%",
+            marginLeft: "auto",
+            marginRight: "auto",
+            marginBottom: "1em",
+            textAlign: "center"
+          }}>
+            {t('instagram.prerequisiteWarning')}
+          </p>
+        )}
+
+        {/* Connected state */}
+        {igStatus === 'active' && igAccountName ? (
+          <div style={{
+            backgroundColor: "#fff",
+            padding: "1.25em",
+            borderRadius: "4px",
+            boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)",
+            border: "1px solid #ddd",
+            width: "70%",
+            marginLeft: "auto",
+            marginRight: "auto",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between"
+          }}>
+            <div>
+              <span style={{ fontSize: "0.85em", color: "#888" }}>{t('instagram.connectedAccount')}</span>
+              <p style={{ margin: "0.25em 0 0", fontSize: "1.1em", fontWeight: "600", color: "#333" }}>
+                <i className="fa-brands fa-instagram" style={{ color: "#E4405F", marginRight: "0.5em" }}></i>
+                @{igAccountName}
+              </p>
+            </div>
+            <div style={{ display: "flex", alignItems: "center", gap: "0.75em" }}>
+              <span style={{
+                backgroundColor: "#d4edda",
+                color: "#155724",
+                padding: "0.25em 0.75em",
+                borderRadius: "12px",
+                fontSize: "0.8em",
+                fontWeight: "600"
+              }}>
+                {t('instagram.connected')}
+              </span>
+              <button
+                onClick={handleInstagramDisconnect}
+                disabled={igLoading}
+                style={{
+                  background: "none",
+                  border: "none",
+                  color: "#dc3545",
+                  cursor: igLoading ? "default" : "pointer",
+                  fontSize: "0.85em",
+                  textDecoration: "underline",
+                  padding: 0
+                }}
+              >
+                {igLoading ? t('instagram.disconnecting') : t('instagram.disconnect')}
+              </button>
+            </div>
+          </div>
+
+        ) : (
+          /* Disconnected state */
+          <div style={{
+            backgroundColor: "#fff",
+            padding: "1.5em",
+            borderRadius: "4px",
+            boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)",
+            border: "1px solid #ddd",
+            width: "70%",
+            marginLeft: "auto",
+            marginRight: "auto",
+            textAlign: "center"
+          }}>
+            <button
+              onClick={handleInstagramConnect}
+              disabled={igLoading}
+              style={{
+                padding: "0.75em 2em",
+                backgroundColor: igLoading ? "#ccc" : "#E4405F",
+                color: "white",
+                border: "none",
+                borderRadius: "4px",
+                cursor: igLoading ? "default" : "pointer",
+                fontSize: "1em",
+                fontWeight: "600",
+                display: "inline-flex",
+                alignItems: "center",
+                gap: "0.5em"
+              }}
+            >
+              <i className="fa-brands fa-instagram"></i>
+              {igLoading ? t('instagram.connecting') : t('instagram.connectButton')}
+            </button>
+            <p style={{ fontSize: "0.8em", color: "#888", marginTop: "0.75em", marginBottom: 0 }}>
+              {t('instagram.connectHelper')}
+            </p>
+          </div>
+        )}
+
+        {igSuccess && (
+          <p style={{ textAlign: "center", color: "#28a745", marginTop: "0.75em", fontWeight: "600" }}>
+            {igSuccess}
+          </p>
+        )}
+        {igError && (
+          <p style={{ textAlign: "center", color: "#dc3545", marginTop: "0.75em", fontWeight: "600" }}>
+            {igError}
           </p>
         )}
       </div>

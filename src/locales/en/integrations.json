@@ -67,5 +67,23 @@
     "removeError": "Failed to disconnect Messenger. Please try again.",
     "removeConfirm": "Are you sure you want to disconnect this Facebook Page from Messenger?"
   },
+  "instagram": {
+    "title": "Instagram",
+    "description": "Connect an Instagram Business account to receive and respond to Instagram DMs with your AI agent.",
+    "connectButton": "Connect Instagram",
+    "connecting": "Connecting...",
+    "connectHelper": "You will be asked to log in and authorize access to your Instagram Business account.",
+    "connectError": "Failed to connect Instagram. Please try again.",
+    "sdkLoadError": "Failed to load Facebook. Please check your connection and try again.",
+    "loginCancelled": "Instagram login was cancelled. Please try again.",
+    "connectedAccount": "Connected Account",
+    "connected": "Connected",
+    "success": "Instagram connected successfully!",
+    "disconnect": "Disconnect",
+    "disconnecting": "Disconnecting...",
+    "removeError": "Failed to disconnect Instagram. Please try again.",
+    "removeConfirm": "Are you sure you want to disconnect this Instagram account?",
+    "prerequisiteWarning": "Your Instagram account must be a Business or Creator account linked to a Facebook Page."
+  },
   "noSubscription": "Please select a subscription to configure integrations."
 }

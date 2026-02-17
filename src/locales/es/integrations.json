@@ -67,5 +67,23 @@
     "removeError": "Error al desconectar Messenger. Por favor intenta de nuevo.",
     "removeConfirm": "Estas seguro de que deseas desconectar esta Pagina de Facebook de Messenger?"
   },
+  "instagram": {
+    "title": "Instagram",
+    "description": "Conecta una cuenta de Instagram Business para recibir y responder DMs de Instagram con tu agente de IA.",
+    "connectButton": "Conectar Instagram",
+    "connecting": "Conectando...",
+    "connectHelper": "Se te pedira iniciar sesion y autorizar acceso a tu cuenta de Instagram Business.",
+    "connectError": "Error al conectar Instagram. Por favor intenta de nuevo.",
+    "sdkLoadError": "Error al cargar Facebook. Verifica tu conexion e intenta de nuevo.",
+    "loginCancelled": "Inicio de sesion de Instagram cancelado. Por favor intenta de nuevo.",
+    "connectedAccount": "Cuenta conectada",
+    "connected": "Conectado",
+    "success": "Instagram conectado exitosamente!",
+    "disconnect": "Desconectar",
+    "disconnecting": "Desconectando...",
+    "removeError": "Error al desconectar Instagram. Por favor intenta de nuevo.",
+    "removeConfirm": "Estas seguro de que deseas desconectar esta cuenta de Instagram?",
+    "prerequisiteWarning": "Tu cuenta de Instagram debe ser una cuenta Business o Creator vinculada a una Pagina de Facebook."
+  },
   "noSubscription": "Por favor selecciona una suscripcion para configurar integraciones."
 }
