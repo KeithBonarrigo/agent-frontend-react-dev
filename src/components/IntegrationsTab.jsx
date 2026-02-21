@@ -52,6 +52,12 @@ export default function IntegrationsTab({ user, clientId }) {
   const [igError, setIgError] = useState('');
   const [igSuccess, setIgSuccess] = useState('');
 
+  // Instagram test message state
+  const [igTestRecipient, setIgTestRecipient] = useState('');
+  const [igTestMessage, setIgTestMessage] = useState('');
+  const [igTestLoading, setIgTestLoading] = useState(false);
+  const [igTestResult, setIgTestResult] = useState({ type: '', message: '' });
+
   // Send verification code to the entered phone number
   const handleSendCode = async () => {
     if (!wspPhone.trim()) return;
@@ -309,6 +315,37 @@ export default function IntegrationsTab({ user, clientId }) {
       setIgError(t('instagram.removeError'));
     } finally {
       setIgLoading(false);
+    }
+  };
+
+  // Instagram: send test message
+  const handleInstagramTestMessage = async () => {
+    if (!igTestRecipient.trim() || !igTestMessage.trim()) return;
+    setIgTestLoading(true);
+    setIgTestResult({ type: '', message: '' });
+
+    try {
+      const apiBaseUrl = getApiUrl();
+      const res = await fetch(`${apiBaseUrl}/api/clients/${clientId}/instagram-send`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify({
+          recipient_id: igTestRecipient.trim(),
+          message: igTestMessage.trim()
+        })
+      });
+
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || t('instagram.sendError'));
+
+      setIgTestResult({ type: 'success', message: t('instagram.sendSuccess') });
+      setIgTestMessage('');
+      setTimeout(() => setIgTestResult({ type: '', message: '' }), 5000);
+    } catch (err) {
+      setIgTestResult({ type: 'error', message: err.message });
+    } finally {
+      setIgTestLoading(false);
     }
   };
 
@@ -951,6 +988,7 @@ export default function IntegrationsTab({ user, clientId }) {
 
         {/* Connected state */}
         {igStatus === 'active' && igAccountName ? (
+          <>
           <div style={{
             backgroundColor: "#fff",
             padding: "1.25em",
@@ -999,6 +1037,98 @@ export default function IntegrationsTab({ user, clientId }) {
               </button>
             </div>
           </div>
+
+          {/* Send Test Message */}
+          <div style={{
+            backgroundColor: "#fff",
+            padding: "1.25em",
+            borderRadius: "4px",
+            boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)",
+            border: "1px solid #ddd",
+            width: "70%",
+            marginLeft: "auto",
+            marginRight: "auto",
+            marginTop: "1em"
+          }}>
+            <h3 style={{ fontSize: "0.95em", fontWeight: "600", color: "#333", marginTop: 0, marginBottom: "0.75em" }}>
+              <i className="fa-solid fa-paper-plane" style={{ color: "#E4405F", marginRight: "0.5em" }}></i>
+              {t('instagram.testTitle')}
+            </h3>
+
+            <div style={{ marginBottom: "0.75em" }}>
+              <label style={{ display: "block", fontSize: "0.85em", fontWeight: "600", color: "#555", marginBottom: "0.25em" }}>
+                {t('instagram.recipientLabel')}
+              </label>
+              <input
+                type="text"
+                value={igTestRecipient}
+                onChange={(e) => setIgTestRecipient(e.target.value)}
+                placeholder={t('instagram.recipientPlaceholder')}
+                style={{
+                  width: "100%",
+                  padding: "0.5em 0.75em",
+                  border: "1px solid #ccc",
+                  borderRadius: "4px",
+                  fontSize: "0.9em",
+                  boxSizing: "border-box"
+                }}
+              />
+              <span style={{ fontSize: "0.75em", color: "#888", marginTop: "0.25em", display: "block" }}>
+                {t('instagram.recipientHelper')}
+              </span>
+            </div>
+
+            <div style={{ marginBottom: "0.75em" }}>
+              <label style={{ display: "block", fontSize: "0.85em", fontWeight: "600", color: "#555", marginBottom: "0.25em" }}>
+                {t('instagram.messageLabel')}
+              </label>
+              <textarea
+                value={igTestMessage}
+                onChange={(e) => setIgTestMessage(e.target.value)}
+                placeholder={t('instagram.messagePlaceholder')}
+                rows={3}
+                style={{
+                  width: "100%",
+                  padding: "0.5em 0.75em",
+                  border: "1px solid #ccc",
+                  borderRadius: "4px",
+                  fontSize: "0.9em",
+                  boxSizing: "border-box",
+                  resize: "vertical"
+                }}
+              />
+            </div>
+
+            <button
+              onClick={handleInstagramTestMessage}
+              disabled={igTestLoading || !igTestRecipient.trim() || !igTestMessage.trim()}
+              style={{
+                padding: "0.5em 1.5em",
+                backgroundColor: (igTestLoading || !igTestRecipient.trim() || !igTestMessage.trim()) ? "#ccc" : "#E4405F",
+                color: "white",
+                border: "none",
+                borderRadius: "4px",
+                cursor: (igTestLoading || !igTestRecipient.trim() || !igTestMessage.trim()) ? "default" : "pointer",
+                fontSize: "0.9em",
+                fontWeight: "600"
+              }}
+            >
+              {igTestLoading ? t('instagram.sending') : t('instagram.sendButton')}
+            </button>
+
+            {igTestResult.message && (
+              <p style={{
+                fontSize: "0.85em",
+                fontWeight: "600",
+                marginTop: "0.5em",
+                marginBottom: 0,
+                color: igTestResult.type === 'success' ? '#28a745' : '#dc3545'
+              }}>
+                {igTestResult.message}
+              </p>
+            )}
+          </div>
+          </>
 
         ) : (
           /* Disconnected state */

@@ -83,7 +83,17 @@
     "disconnecting": "Disconnecting...",
     "removeError": "Failed to disconnect Instagram. Please try again.",
     "removeConfirm": "Are you sure you want to disconnect this Instagram account?",
-    "prerequisiteWarning": "Your Instagram account must be a Business or Creator account linked to a Facebook Page."
+    "prerequisiteWarning": "Your Instagram account must be a Business or Creator account linked to a Facebook Page.",
+    "testTitle": "Send Test Message",
+    "recipientLabel": "Recipient ID",
+    "recipientPlaceholder": "Enter Instagram-Scoped ID (IGSID)",
+    "recipientHelper": "The IGSID of a user who has recently messaged this account. Check your webhook logs for this value.",
+    "messageLabel": "Message",
+    "messagePlaceholder": "Type your message...",
+    "sendButton": "Send Message",
+    "sending": "Sending...",
+    "sendSuccess": "Message sent successfully!",
+    "sendError": "Failed to send message. Please try again."
   },
   "noSubscription": "Please select a subscription to configure integrations."
 }

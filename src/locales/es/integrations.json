@@ -83,7 +83,17 @@
     "disconnecting": "Desconectando...",
     "removeError": "Error al desconectar Instagram. Por favor intenta de nuevo.",
     "removeConfirm": "Estas seguro de que deseas desconectar esta cuenta de Instagram?",
-    "prerequisiteWarning": "Tu cuenta de Instagram debe ser una cuenta Business o Creator vinculada a una Pagina de Facebook."
+    "prerequisiteWarning": "Tu cuenta de Instagram debe ser una cuenta Business o Creator vinculada a una Pagina de Facebook.",
+    "testTitle": "Enviar mensaje de prueba",
+    "recipientLabel": "ID del destinatario",
+    "recipientPlaceholder": "Ingrese el ID de Instagram (IGSID)",
+    "recipientHelper": "El IGSID de un usuario que ha enviado un mensaje reciente a esta cuenta. Consulte los registros de webhooks para obtener este valor.",
+    "messageLabel": "Mensaje",
+    "messagePlaceholder": "Escribe tu mensaje...",
+    "sendButton": "Enviar mensaje",
+    "sending": "Enviando...",
+    "sendSuccess": "Mensaje enviado exitosamente!",
+    "sendError": "Error al enviar el mensaje. Intentelo de nuevo."
   },
   "noSubscription": "Por favor selecciona una suscripcion para configurar integraciones."
 }
