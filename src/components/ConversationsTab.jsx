@@ -48,6 +48,11 @@ export default function ConversationsTab({ clientId, user }) {
   const [sessionContacts, setSessionContacts] = useState({});
   const [liveMapExpanded, setLiveMapExpanded] = useState(false);
 
+  // Human agent reply state
+  const [replyText, setReplyText] = useState({});
+  const [replyLoading, setReplyLoading] = useState({});
+  const [replyResult, setReplyResult] = useState({});
+
   // Fetch session contacts from Redis
   const fetchSessionContacts = async () => {
     if (!clientId) return;
@@ -264,6 +269,40 @@ export default function ConversationsTab({ clientId, user }) {
           return;
         }
       }
+    }
+  };
+
+  // Send a human agent reply to an Instagram user
+  const handleInstagramReply = async (recipientId) => {
+    const text = (replyText[recipientId] || '').trim();
+    if (!text) return;
+
+    setReplyLoading(prev => ({ ...prev, [recipientId]: true }));
+    setReplyResult(prev => ({ ...prev, [recipientId]: null }));
+
+    try {
+      const apiBaseUrl = getApiUrl();
+      const res = await fetch(`${apiBaseUrl}/api/clients/${clientId}/instagram-send`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify({
+          recipient_id: recipientId,
+          message: text,
+          tag: 'HUMAN_AGENT'
+        })
+      });
+
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || t('reply.error'));
+
+      setReplyResult(prev => ({ ...prev, [recipientId]: { type: 'success', message: t('reply.success') } }));
+      setReplyText(prev => ({ ...prev, [recipientId]: '' }));
+      setTimeout(() => setReplyResult(prev => ({ ...prev, [recipientId]: null })), 5000);
+    } catch (err) {
+      setReplyResult(prev => ({ ...prev, [recipientId]: { type: 'error', message: err.message } }));
+    } finally {
+      setReplyLoading(prev => ({ ...prev, [recipientId]: false }));
     }
   };
 
@@ -516,6 +555,68 @@ export default function ConversationsTab({ clientId, user }) {
                                             </div>
                                           ))}
                                         </div>
+
+                                        {/* Human agent reply for Instagram conversations */}
+                                        {channel.channel.toLowerCase().includes('instagram') && (
+                                          <div style={{
+                                            marginTop: "0.75em",
+                                            padding: "0.75em",
+                                            backgroundColor: "#f8f9fa",
+                                            borderRadius: "4px",
+                                            border: "1px solid #e9ecef"
+                                          }}>
+                                            <p style={{ fontSize: "0.75em", color: "#888", margin: "0 0 0.5em 0" }}>
+                                              <i className="fa-solid fa-headset" style={{ marginRight: "0.4em" }}></i>
+                                              {t('reply.humanAgentNote')}
+                                            </p>
+                                            <div style={{ display: "flex", gap: "0.5em", alignItems: "flex-end" }}>
+                                              <textarea
+                                                value={replyText[userConv.userid] || ''}
+                                                onChange={(e) => setReplyText(prev => ({ ...prev, [userConv.userid]: e.target.value }))}
+                                                placeholder={t('reply.placeholder')}
+                                                rows={2}
+                                                style={{
+                                                  flex: 1,
+                                                  padding: "0.5em 0.75em",
+                                                  border: "1px solid #ccc",
+                                                  borderRadius: "4px",
+                                                  fontSize: "0.85em",
+                                                  resize: "vertical",
+                                                  boxSizing: "border-box"
+                                                }}
+                                              />
+                                              <button
+                                                onClick={() => handleInstagramReply(userConv.userid)}
+                                                disabled={replyLoading[userConv.userid] || !(replyText[userConv.userid] || '').trim()}
+                                                style={{
+                                                  padding: "0.5em 1em",
+                                                  backgroundColor: (replyLoading[userConv.userid] || !(replyText[userConv.userid] || '').trim()) ? "#ccc" : "#E4405F",
+                                                  color: "white",
+                                                  border: "none",
+                                                  borderRadius: "4px",
+                                                  cursor: (replyLoading[userConv.userid] || !(replyText[userConv.userid] || '').trim()) ? "default" : "pointer",
+                                                  fontSize: "0.85em",
+                                                  fontWeight: "600",
+                                                  whiteSpace: "nowrap"
+                                                }}
+                                              >
+                                                <i className="fa-solid fa-paper-plane" style={{ marginRight: "0.4em" }}></i>
+                                                {replyLoading[userConv.userid] ? t('reply.sending') : t('reply.send')}
+                                              </button>
+                                            </div>
+                                            {replyResult[userConv.userid] && (
+                                              <p style={{
+                                                fontSize: "0.8em",
+                                                fontWeight: "600",
+                                                marginTop: "0.4em",
+                                                marginBottom: 0,
+                                                color: replyResult[userConv.userid].type === 'success' ? '#28a745' : '#dc3545'
+                                              }}>
+                                                {replyResult[userConv.userid].message}
+                                              </p>
+                                            )}
+                                          </div>
+                                        )}
                                       </div>
                                     )}
                                   </div>

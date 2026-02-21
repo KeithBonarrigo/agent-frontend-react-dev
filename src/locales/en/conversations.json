@@ -34,5 +34,13 @@
     "offline": "Offline",
     "location": "location",
     "locations": "locations"
+  },
+  "reply": {
+    "placeholder": "Type a reply...",
+    "send": "Send Reply",
+    "sending": "Sending...",
+    "success": "Reply sent successfully!",
+    "error": "Failed to send reply. Please try again.",
+    "humanAgentNote": "This reply will be sent as a human agent response via the Instagram Messaging API."
   }
 }
