@@ -22,6 +22,37 @@ export default function IntegrationsTab({ user, clientId, onClientUpdate }) {
     loadFacebookSdk().catch(() => {});
   }, []);
 
+  // Persist integration states to localStorage
+  const saveIntegrationState = (updates) => {
+    try {
+      const key = `integrations_${clientId}`;
+      const saved = JSON.parse(localStorage.getItem(key) || '{}');
+      localStorage.setItem(key, JSON.stringify({ ...saved, ...updates }));
+    } catch { /* ignore */ }
+  };
+
+  // Restore integration states from localStorage on mount
+  // This ensures connected states survive tab switches and page refreshes
+  useEffect(() => {
+    if (!clientId) return;
+    try {
+      const saved = JSON.parse(localStorage.getItem(`integrations_${clientId}`) || '{}');
+      if (saved.igStatus === 'active' && saved.igAccountName) {
+        setIgStatus('active');
+        setIgAccountName(saved.igAccountName);
+      }
+      if (saved.msgStatus === 'active' && saved.msgPageName) {
+        setMsgStatus('active');
+        setMsgPageName(saved.msgPageName);
+        if (saved.msgPageId) setMsgPageId(saved.msgPageId);
+      }
+      if (saved.wspStatus === 'active' && saved.wspPhone) {
+        setWspStatus('active');
+        setSavedWspPhone(saved.wspPhone);
+      }
+    } catch { /* ignore */ }
+  }, [clientId]);
+
   // WhatsApp registration state
   const [wspStatus, setWspStatus] = useState(user?.wsp_status || null);
   const [savedWspPhone, setSavedWspPhone] = useState(user?.office_wsp_phone || '');
@@ -110,6 +141,7 @@ export default function IntegrationsTab({ user, clientId, onClientUpdate }) {
       setSavedWspPhone(data.phone_number || wspPhone);
       setWspSuccess(t('whatsapp.success'));
       onClientUpdate?.({ wsp_status: 'active', office_wsp_phone: data.phone_number || wspPhone });
+      saveIntegrationState({ wspStatus: 'active', wspPhone: data.phone_number || wspPhone });
       setWspPhone('');
       setWspCode('');
       setWspPin('');
@@ -142,6 +174,7 @@ export default function IntegrationsTab({ user, clientId, onClientUpdate }) {
       setWspStatus(null);
       setWspStep('input');
       onClientUpdate?.({ wsp_status: null, office_wsp_phone: '' });
+      saveIntegrationState({ wspStatus: null, wspPhone: '' });
     } catch (err) {
       setWspError(t('whatsapp.removeError'));
     } finally {
@@ -223,6 +256,7 @@ export default function IntegrationsTab({ user, clientId, onClientUpdate }) {
       setMsgPageName(pageName || data.page_name);
       setMsgPageId(pageId);
       onClientUpdate?.({ messenger_status: 'active', messenger_page_name: pageName || data.page_name, messenger_page_id: pageId });
+      saveIntegrationState({ msgStatus: 'active', msgPageName: pageName || data.page_name, msgPageId: pageId });
       setMsgStep('connect');
       setMsgPages([]);
       setMsgSelectedPageId('');
@@ -291,6 +325,7 @@ export default function IntegrationsTab({ user, clientId, onClientUpdate }) {
       setIgSuccess(t('instagram.success'));
       setTimeout(() => setIgSuccess(''), 5000);
       onClientUpdate?.({ instagram_status: 'active', instagram_account_name: accountName });
+      saveIntegrationState({ igStatus: 'active', igAccountName: accountName });
     } catch (err) {
       setIgError(err.message);
     } finally {
@@ -317,6 +352,7 @@ export default function IntegrationsTab({ user, clientId, onClientUpdate }) {
       setIgAccountName('');
       setIgStatus(null);
       onClientUpdate?.({ instagram_status: null, instagram_account_name: '' });
+      saveIntegrationState({ igStatus: null, igAccountName: '' });
     } catch (err) {
       setIgError(t('instagram.removeError'));
     } finally {
@@ -376,6 +412,7 @@ export default function IntegrationsTab({ user, clientId, onClientUpdate }) {
       setMsgStatus(null);
       setMsgStep('connect');
       onClientUpdate?.({ messenger_status: null, messenger_page_name: '', messenger_page_id: '' });
+      saveIntegrationState({ msgStatus: null, msgPageName: '', msgPageId: '' });
     } catch (err) {
       setMsgError(t('messenger.removeError'));
     } finally {
