@@ -203,6 +203,16 @@ export default function Dashboard() {
   const agentsInSubscription = clients.filter(c => String(c.subscriptionid) === String(selectedSubscriptionId));
   const selectedClient = clients.find(c => String(c.clientid) === String(selectedClientId));
 
+  // Callback to update a specific client's fields in the clients array
+  // Used by child components (e.g. IntegrationsTab) after connect/disconnect
+  const handleClientUpdate = (updatedFields) => {
+    setClients(prev => prev.map(c =>
+      String(c.clientid) === String(selectedClientId)
+        ? { ...c, ...updatedFields }
+        : c
+    ));
+  };
+
   // Debug logging for level display
   if (selectedClient) {
     console.log('🎯 SELECTED CLIENT LEVEL:', {
@@ -1700,7 +1710,7 @@ export default function Dashboard() {
           {activeTab === 'configurations' && <ConfigurationsTab user={selectedClient} clientId={selectedClientId} />}
           {/* Add-Ons Tab - Selectable decorators/integrations from server's decorator registry */}
           {activeTab === 'addons' && <AddOnsTab user={selectedClient} clientId={selectedClientId} />}
-          {activeTab === 'integrations' && <IntegrationsTab user={selectedClient} clientId={selectedClientId} />}
+          {activeTab === 'integrations' && <IntegrationsTab user={selectedClient} clientId={selectedClientId} onClientUpdate={handleClientUpdate} />}
           {activeTab === 'conversations' && <ConversationsTab user={selectedClient} clientId={selectedClientId} />}
           {activeTab === 'metrics' && <MetricsTab user={selectedClient} clientId={selectedClientId} subscription={selectedSubscription} tokensUsed={subscriptionTokensUsed} />}
           {activeTab === 'leads' && <LeadsTab user={selectedClient} clientId={selectedClientId} expandShare={expandShare} onShareExpanded={() => setExpandShare(false)} />}

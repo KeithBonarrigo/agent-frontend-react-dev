@@ -8,7 +8,7 @@ import "./Tabs.css";
 // Provides the script tag users need to embed the chatbot on their website
 // Includes WhatsApp phone number registration with SMS verification
 // Includes Messenger page connection via Facebook Login
-export default function IntegrationsTab({ user, clientId }) {
+export default function IntegrationsTab({ user, clientId, onClientUpdate }) {
   const { t } = useTranslation('integrations');
 
   const [copied, setCopied] = useState(false);
@@ -109,6 +109,7 @@ export default function IntegrationsTab({ user, clientId }) {
       setWspStatus('active');
       setSavedWspPhone(data.phone_number || wspPhone);
       setWspSuccess(t('whatsapp.success'));
+      onClientUpdate?.({ wsp_status: 'active', office_wsp_phone: data.phone_number || wspPhone });
       setWspPhone('');
       setWspCode('');
       setWspPin('');
@@ -140,6 +141,7 @@ export default function IntegrationsTab({ user, clientId }) {
       setSavedWspPhone('');
       setWspStatus(null);
       setWspStep('input');
+      onClientUpdate?.({ wsp_status: null, office_wsp_phone: '' });
     } catch (err) {
       setWspError(t('whatsapp.removeError'));
     } finally {
@@ -220,6 +222,7 @@ export default function IntegrationsTab({ user, clientId }) {
       setMsgStatus('active');
       setMsgPageName(pageName || data.page_name);
       setMsgPageId(pageId);
+      onClientUpdate?.({ messenger_status: 'active', messenger_page_name: pageName || data.page_name, messenger_page_id: pageId });
       setMsgStep('connect');
       setMsgPages([]);
       setMsgSelectedPageId('');
@@ -282,10 +285,12 @@ export default function IntegrationsTab({ user, clientId }) {
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || t('instagram.connectError'));
 
+      const accountName = data.instagram_username || data.instagram_account_name || '';
       setIgStatus('active');
-      setIgAccountName(data.instagram_username || data.instagram_account_name || '');
+      setIgAccountName(accountName);
       setIgSuccess(t('instagram.success'));
       setTimeout(() => setIgSuccess(''), 5000);
+      onClientUpdate?.({ instagram_status: 'active', instagram_account_name: accountName });
     } catch (err) {
       setIgError(err.message);
     } finally {
@@ -311,6 +316,7 @@ export default function IntegrationsTab({ user, clientId }) {
       }
       setIgAccountName('');
       setIgStatus(null);
+      onClientUpdate?.({ instagram_status: null, instagram_account_name: '' });
     } catch (err) {
       setIgError(t('instagram.removeError'));
     } finally {
@@ -369,6 +375,7 @@ export default function IntegrationsTab({ user, clientId }) {
       setMsgPageId('');
       setMsgStatus(null);
       setMsgStep('connect');
+      onClientUpdate?.({ messenger_status: null, messenger_page_name: '', messenger_page_id: '' });
     } catch (err) {
       setMsgError(t('messenger.removeError'));
     } finally {
