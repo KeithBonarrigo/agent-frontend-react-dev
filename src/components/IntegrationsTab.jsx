@@ -509,16 +509,23 @@ export default function IntegrationsTab({ user, clientId, onClientUpdate }) {
       {/* MLS Token Warning */}
       {isMlsDomain && !hasMlsToken && (
         <div style={{
-          backgroundColor: '#f8d7da',
-          border: '1px solid #f5c6cb',
-          borderRadius: '4px',
-          padding: '1em',
-          marginBottom: '1.5em',
-          color: '#721c24',
-          textAlign: 'center'
+          display: 'flex',
+          alignItems: 'flex-start',
+          gap: '0.6em',
+          padding: '0.75em 1em',
+          backgroundColor: '#e8f4fd',
+          border: '1px solid #bee5eb',
+          borderRadius: '6px',
+          color: '#0c5460',
+          fontSize: '0.85em',
+          lineHeight: '1.5',
+          marginBottom: '1.5em'
         }}>
-          <strong>⚠️ {t('mlsWarning.title')}</strong> {t('mlsWarning.message')}
-          <br /><span style={{ fontSize: '0.9em', fontStyle: 'italic' }}>{t('mlsWarning.note')}</span>
+          <i className="fa-solid fa-circle-info" style={{ marginTop: '0.2em', flexShrink: 0 }}></i>
+          <span>
+            <strong>{t('mlsWarning.title')}</strong> {t('mlsWarning.message')}
+            <br /><span style={{ fontStyle: 'italic' }}>{t('mlsWarning.note')}</span>
+          </span>
         </div>
       )}
 
@@ -586,28 +593,28 @@ export default function IntegrationsTab({ user, clientId, onClientUpdate }) {
           <i className="fa-brands fa-whatsapp" style={{ color: "#25D366" }}></i>
           {' '}{t('whatsapp.title')}
         </h2>
-        <p style={{ fontSize: "0.95em", color: "#666", textAlign: "center", marginBottom: "1.5em" }}>
-          {t('whatsapp.description')}
-        </p>
-
-        {/* Prerequisite warning */}
-        {wspStatus !== 'active' && (
-          <p style={{
-            fontSize: "0.85em",
-            color: "#856404",
-            backgroundColor: "#fff3cd",
-            border: "1px solid #ffeeba",
-            borderRadius: "4px",
-            padding: "0.75em 1em",
-            width: "70%",
-            marginLeft: "auto",
-            marginRight: "auto",
-            marginBottom: "1em",
-            textAlign: "center"
-          }}>
-            {t('whatsapp.prerequisiteWarning')}
-          </p>
-        )}
+        <div style={{
+          display: 'flex',
+          alignItems: 'flex-start',
+          gap: '0.6em',
+          padding: '0.75em 1em',
+          backgroundColor: '#e8f4fd',
+          border: '1px solid #bee5eb',
+          borderRadius: '6px',
+          color: '#0c5460',
+          fontSize: '0.85em',
+          lineHeight: '1.5',
+          width: '70%',
+          marginLeft: 'auto',
+          marginRight: 'auto',
+          marginBottom: '1.5em'
+        }}>
+          <i className="fa-solid fa-circle-info" style={{ marginTop: '0.2em', flexShrink: 0 }}></i>
+          <span>
+            {t('whatsapp.description')}
+            {wspStatus !== 'active' && (<><br /><br />{t('whatsapp.prerequisiteWarning')}</>)}
+          </span>
+        </div>
 
         {/* State: Connected */}
         {wspStatus === 'active' && savedWspPhone ? (
@@ -823,9 +830,25 @@ export default function IntegrationsTab({ user, clientId, onClientUpdate }) {
           <i className="fa-brands fa-facebook-messenger" style={{ color: "#0084FF" }}></i>
           {' '}{t('messenger.title')}
         </h2>
-        <p style={{ fontSize: "0.95em", color: "#666", textAlign: "center", marginBottom: "1.5em" }}>
-          {t('messenger.description')}
-        </p>
+        <div style={{
+          display: 'flex',
+          alignItems: 'flex-start',
+          gap: '0.6em',
+          padding: '0.75em 1em',
+          backgroundColor: '#e8f4fd',
+          border: '1px solid #bee5eb',
+          borderRadius: '6px',
+          color: '#0c5460',
+          fontSize: '0.85em',
+          lineHeight: '1.5',
+          width: '70%',
+          marginLeft: 'auto',
+          marginRight: 'auto',
+          marginBottom: '1.5em'
+        }}>
+          <i className="fa-solid fa-circle-info" style={{ marginTop: '0.2em', flexShrink: 0 }}></i>
+          <span>{t('messenger.description')}</span>
+        </div>
 
         {/* Connected state */}
         {msgStatus === 'active' && msgPageName ? (
@@ -1007,28 +1030,28 @@ export default function IntegrationsTab({ user, clientId, onClientUpdate }) {
           <i className="fa-brands fa-instagram" style={{ color: "#E4405F" }}></i>
           {' '}{t('instagram.title')}
         </h2>
-        <p style={{ fontSize: "0.95em", color: "#666", textAlign: "center", marginBottom: "1.5em" }}>
-          {t('instagram.description')}
-        </p>
-
-        {/* Prerequisite: need a Facebook Page connected to an Instagram Business account */}
-        {igStatus !== 'active' && (
-          <p style={{
-            fontSize: "0.85em",
-            color: "#856404",
-            backgroundColor: "#fff3cd",
-            border: "1px solid #ffeeba",
-            borderRadius: "4px",
-            padding: "0.75em 1em",
-            width: "70%",
-            marginLeft: "auto",
-            marginRight: "auto",
-            marginBottom: "1em",
-            textAlign: "center"
-          }}>
-            {t('instagram.prerequisiteWarning')}
-          </p>
-        )}
+        <div style={{
+          display: 'flex',
+          alignItems: 'flex-start',
+          gap: '0.6em',
+          padding: '0.75em 1em',
+          backgroundColor: '#e8f4fd',
+          border: '1px solid #bee5eb',
+          borderRadius: '6px',
+          color: '#0c5460',
+          fontSize: '0.85em',
+          lineHeight: '1.5',
+          width: '70%',
+          marginLeft: 'auto',
+          marginRight: 'auto',
+          marginBottom: '1.5em'
+        }}>
+          <i className="fa-solid fa-circle-info" style={{ marginTop: '0.2em', flexShrink: 0 }}></i>
+          <span>
+            {t('instagram.description')}
+            {igStatus !== 'active' && (<><br /><br />{t('instagram.prerequisiteWarning')}</>)}
+          </span>
+        </div>
 
         {/* Connected state */}
         {igStatus === 'active' && igAccountName ? (

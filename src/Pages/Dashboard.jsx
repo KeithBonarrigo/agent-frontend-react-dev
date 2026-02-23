@@ -1707,7 +1707,7 @@ export default function Dashboard() {
             <div className="dashboard-loading"><p>Loading...</p></div>
           ) : (
             <>
-          {activeTab === 'configurations' && <ConfigurationsTab user={selectedClient} clientId={selectedClientId} />}
+          {activeTab === 'configurations' && <ConfigurationsTab user={selectedClient} clientId={selectedClientId} onClientUpdate={handleClientUpdate} />}
           {/* Add-Ons Tab - Selectable decorators/integrations from server's decorator registry */}
           {activeTab === 'addons' && <AddOnsTab user={selectedClient} clientId={selectedClientId} />}
           {activeTab === 'integrations' && <IntegrationsTab user={selectedClient} clientId={selectedClientId} onClientUpdate={handleClientUpdate} />}

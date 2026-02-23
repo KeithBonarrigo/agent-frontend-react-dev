@@ -158,5 +158,29 @@
       "fetchFailed": "Failed to fetch current model",
       "updateFailed": "Failed to update model"
     }
+  },
+  "history": {
+    "title": "History",
+    "description": "Your conversation history is automatically saved and can be viewed in the Conversations tab. Adding history lines to the prompt gives your bot more context from recent messages, but uses more tokens per request.",
+    "label": "Conversation History Lines",
+    "option0": "0 - No history",
+    "option1": "1 line",
+    "option2": "2 lines",
+    "option3": "3 lines",
+    "option4": "4 lines",
+    "option5": "5 lines",
+    "saveButton": "Save",
+    "saving": "Saving...",
+    "success": "History setting saved successfully!",
+    "error": "Failed to save history setting. Please try again.",
+    "whatIsToken": "What is a token?",
+    "tokenHelp": {
+      "title": "What is a Token?",
+      "what": "A token is a small unit of text that AI models use to process language. Roughly speaking, 1 token is about 4 characters or ¾ of a word in English. For example, the word \"chatbot\" is 2 tokens.",
+      "why": "Every message your bot sends and receives is broken into tokens. The more tokens in a request, the more processing the AI model needs to do — and the more it costs.",
+      "cost": "When you add conversation history lines to the prompt, each previous message adds tokens to every new request. This gives your bot better context to provide relevant answers, but it increases the token usage (and cost) per interaction.",
+      "tip": "Tip: Start with 1-2 lines of history. This gives good context without significantly increasing costs. Only increase if your bot needs more conversational memory.",
+      "close": "Got it"
+    }
   }
 }

@@ -158,5 +158,29 @@
       "fetchFailed": "Error al obtener el modelo actual",
       "updateFailed": "Error al actualizar el modelo"
     }
+  },
+  "history": {
+    "title": "Historial",
+    "description": "Tu historial de conversaciones se guarda automaticamente y se puede ver en la pestana de Conversaciones. Agregar lineas de historial al prompt le da a tu bot mas contexto de mensajes recientes, pero usa mas tokens por solicitud.",
+    "label": "Lineas de Historial de Conversacion",
+    "option0": "0 - Sin historial",
+    "option1": "1 linea",
+    "option2": "2 lineas",
+    "option3": "3 lineas",
+    "option4": "4 lineas",
+    "option5": "5 lineas",
+    "saveButton": "Guardar",
+    "saving": "Guardando...",
+    "success": "Configuracion de historial guardada exitosamente!",
+    "error": "Error al guardar la configuracion de historial. Por favor intenta de nuevo.",
+    "whatIsToken": "Que es un token?",
+    "tokenHelp": {
+      "title": "Que es un Token?",
+      "what": "Un token es una pequena unidad de texto que los modelos de IA usan para procesar lenguaje. Aproximadamente, 1 token equivale a unos 4 caracteres o 3/4 de una palabra en espanol. Por ejemplo, la palabra \"chatbot\" son 2 tokens.",
+      "why": "Cada mensaje que tu bot envia y recibe se divide en tokens. Cuantos mas tokens tenga una solicitud, mas procesamiento necesita el modelo de IA, y mas cuesta.",
+      "cost": "Cuando agregas lineas de historial de conversacion al prompt, cada mensaje anterior agrega tokens a cada nueva solicitud. Esto le da a tu bot mejor contexto para dar respuestas relevantes, pero aumenta el uso de tokens (y el costo) por interaccion.",
+      "tip": "Consejo: Comienza con 1-2 lineas de historial. Esto da buen contexto sin aumentar significativamente los costos. Solo aumenta si tu bot necesita mas memoria conversacional.",
+      "close": "Entendido"
+    }
   }
 }

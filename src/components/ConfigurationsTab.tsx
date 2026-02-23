@@ -15,11 +15,13 @@ interface User {
   company?: string;
   mls_token?: string;
   company_flex_url?: string;
+  history_lines_to_load?: number;
 }
 
 interface ConfigurationsTabProps {
   user: User;
   clientId: number;
+  onClientUpdate?: (fields: Partial<User>) => void;
 }
 
 // Helper function to get the logo path for a model
@@ -53,7 +55,7 @@ interface GoogleDriveFile {
   size?: number;
 }
 
-export default function ConfigurationsTab({ user, clientId }: ConfigurationsTabProps) {
+export default function ConfigurationsTab({ user, clientId, onClientUpdate }: ConfigurationsTabProps) {
   const { t } = useTranslation('configurations');
 
   // MLS API Token state
@@ -89,6 +91,17 @@ export default function ConfigurationsTab({ user, clientId }: ConfigurationsTabP
   const [modelError, setModelError] = useState('');
   const [modelSuccess, setModelSuccess] = useState(false);
   const [fetchingCurrentModel, setFetchingCurrentModel] = useState(true);
+
+  // History section state
+  const [isHistoryCollapsed, setIsHistoryCollapsed] = useState(true);
+  const [historyLines, setHistoryLines] = useState<number>(user?.history_lines_to_load ?? 0);
+  const [historySaving, setHistorySaving] = useState(false);
+  const [historyMessage, setHistoryMessage] = useState('');
+  const [showTokenHelp, setShowTokenHelp] = useState(false);
+
+  useEffect(() => {
+    setHistoryLines(user?.history_lines_to_load ?? 0);
+  }, [user?.history_lines_to_load]);
 
   // Check user level for model restrictions (level from bot_client_user takes priority)
   const userLevel = (user?.level || user?.subscription_level || '').toLowerCase();
@@ -850,6 +863,30 @@ export default function ConfigurationsTab({ user, clientId }: ConfigurationsTabP
       return selectedModel === 'gpt-5';
     }
     return selectedModel === currentModel;
+  };
+
+  // History save handler
+  const handleHistorySave = async () => {
+    if (!clientId) return;
+    setHistorySaving(true);
+    setHistoryMessage('');
+    try {
+      const apiBaseUrl = getApiUrl();
+      const res = await fetch(`${apiBaseUrl}/api/clients/${clientId}/history-lines`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify({ history_lines_to_load: historyLines }),
+      });
+      if (!res.ok) throw new Error('Failed to save');
+      onClientUpdate?.({ history_lines_to_load: historyLines });
+      setHistoryMessage(t('history.success'));
+      setTimeout(() => setHistoryMessage(''), 3000);
+    } catch {
+      setHistoryMessage(t('history.error'));
+    } finally {
+      setHistorySaving(false);
+    }
   };
 
   // Fetch current model on mount
@@ -1710,6 +1747,123 @@ export default function ConfigurationsTab({ user, clientId }: ConfigurationsTabP
           )
         )}
       </div>}
+
+      {/* History Section */}
+      <div className="section">
+        <div
+          onClick={() => setIsHistoryCollapsed(!isHistoryCollapsed)}
+          className={`section-header ${!isHistoryCollapsed ? 'section-header-expanded' : ''}`}
+        >
+          <h2 className="section-title">
+            <i className="fa-solid fa-clock-rotate-left"></i>
+            {t('history.title')}
+          </h2>
+          <i className={`fa-solid fa-chevron-${isHistoryCollapsed ? 'down' : 'up'} section-chevron`}></i>
+        </div>
+
+        {!isHistoryCollapsed && (
+          <div style={{ padding: '1.5em 2em' }}>
+            <div style={{
+              display: 'flex',
+              alignItems: 'flex-start',
+              gap: '0.6em',
+              padding: '0.75em 1em',
+              backgroundColor: '#e8f4fd',
+              border: '1px solid #bee5eb',
+              borderRadius: '6px',
+              color: '#0c5460',
+              fontSize: '0.85em',
+              lineHeight: '1.5',
+              marginBottom: '1.5em'
+            }}>
+              <i className="fa-solid fa-circle-info" style={{ marginTop: '0.2em', flexShrink: 0 }}></i>
+              <span>
+                {t('history.description')}{' '}
+                <a
+                  href="#"
+                  onClick={(e: React.MouseEvent) => { e.preventDefault(); setShowTokenHelp(true); }}
+                  style={{ color: '#0c5460', fontWeight: 600, textDecoration: 'underline', cursor: 'pointer' }}
+                >
+                  {t('history.whatIsToken')}
+                </a>
+              </span>
+            </div>
+
+            <div style={{ maxWidth: '400px' }}>
+              <label style={{ display: 'block', fontWeight: 600, marginBottom: '0.5em' }}>
+                {t('history.label')}
+              </label>
+              <select
+                value={historyLines}
+                onChange={(e) => setHistoryLines(Number(e.target.value))}
+                className="form-input"
+                style={{ width: '100%', padding: '0.5em', fontSize: '0.95em' }}
+              >
+                {[0, 1, 2, 3, 4, 5].map((n) => (
+                  <option key={n} value={n}>
+                    {t(`history.option${n}`)}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            <div className="actions-right" style={{ marginTop: '1.5em' }}>
+              <button
+                type="button"
+                onClick={handleHistorySave}
+                disabled={historySaving}
+                className="btn btn-primary"
+              >
+                {historySaving ? t('history.saving') : t('history.saveButton')}
+              </button>
+            </div>
+
+            {historyMessage && (
+              <p style={{
+                marginTop: '0.75em',
+                color: historyMessage.includes('!') ? '#28a745' : '#dc3545',
+                fontSize: '0.9em'
+              }}>
+                {historyMessage}
+              </p>
+            )}
+          </div>
+        )}
+      </div>
+
+      {/* Token Help Modal */}
+      {showTokenHelp && (
+        <div className="modal-overlay">
+          <div className="modal-content" style={{ maxWidth: '500px' }}>
+            <h3 className="modal-header">
+              <i className="fa-solid fa-circle-question" style={{ marginRight: '0.5em', color: '#007bff' }}></i>
+              {t('history.tokenHelp.title')}
+            </h3>
+            <div className="modal-body">
+              <p style={{ marginBottom: '0.75em', lineHeight: '1.7' }}>
+                {t('history.tokenHelp.what')}
+              </p>
+              <p style={{ marginBottom: '0.75em', lineHeight: '1.7' }}>
+                {t('history.tokenHelp.why')}
+              </p>
+              <p style={{ marginBottom: '0.75em', lineHeight: '1.7' }}>
+                {t('history.tokenHelp.cost')}
+              </p>
+              <p style={{ fontSize: '0.85em', color: '#555', backgroundColor: '#f8f9fa', padding: '0.75em', borderRadius: '4px', marginTop: '0.75em' }}>
+                {t('history.tokenHelp.tip')}
+              </p>
+            </div>
+            <div style={{ textAlign: 'right', marginTop: '1em' }}>
+              <button
+                onClick={() => setShowTokenHelp(false)}
+                className="btn btn-primary"
+              >
+                {t('history.tokenHelp.close')}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Flex URL Help Modal */}
       {showFlexUrlHelp && (
