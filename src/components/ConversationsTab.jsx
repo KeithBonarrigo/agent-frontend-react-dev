@@ -94,6 +94,16 @@ export default function ConversationsTab({ clientId, user }) {
     });
   };
 
+  // Handle Facebook Logout for human agent
+  const handleFbAgentLogout = () => {
+    loadFacebookSdk().then(FB => {
+      FB.logout(() => {
+        setFbAgentAuth(false);
+        setFbAgentName('');
+      });
+    }).catch(() => {});
+  };
+
   // Fetch session contacts from Redis
   const fetchSessionContacts = async () => {
     if (!clientId) return;
@@ -663,10 +673,26 @@ export default function ConversationsTab({ clientId, user }) {
                                                 ) : (
                                                   /* Authenticated — show reply form */
                                                   <>
-                                                    <p style={{ fontSize: "0.75em", color: "#28a745", margin: "0 0 0.5em 0" }}>
-                                                      <i className="fa-solid fa-circle-check" style={{ marginRight: "0.4em" }}></i>
-                                                      {t('reply.fbLoggedInAs', { name: fbAgentName })}
-                                                    </p>
+                                                    <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", margin: "0 0 0.5em 0" }}>
+                                                      <p style={{ fontSize: "0.75em", color: "#28a745", margin: 0 }}>
+                                                        <i className="fa-solid fa-circle-check" style={{ marginRight: "0.4em" }}></i>
+                                                        {t('reply.fbLoggedInAs', { name: fbAgentName })}
+                                                      </p>
+                                                      <button
+                                                        onClick={handleFbAgentLogout}
+                                                        style={{
+                                                          background: "none",
+                                                          border: "none",
+                                                          color: "#888",
+                                                          fontSize: "0.75em",
+                                                          cursor: "pointer",
+                                                          padding: "0.2em 0.4em",
+                                                          textDecoration: "underline"
+                                                        }}
+                                                      >
+                                                        {t('reply.fbLogout')}
+                                                      </button>
+                                                    </div>
                                                     <div style={{ display: "flex", gap: "0.5em", alignItems: "flex-end" }}>
                                                       <textarea
                                                         value={replyText[userConv.userid] || ''}

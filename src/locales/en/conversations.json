@@ -46,6 +46,7 @@
     "fbLoginRequired": "You must log in with Facebook to send a human agent reply.",
     "fbLogin": "Login with Facebook",
     "fbLoggingIn": "Logging in...",
-    "fbLoggedInAs": "Authenticated as {{name}}"
+    "fbLoggedInAs": "Authenticated as {{name}}",
+    "fbLogout": "Log out"
   }
 }
