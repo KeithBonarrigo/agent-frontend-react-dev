@@ -101,6 +101,9 @@ export default function HomeHeader() {
           {isLoggedIn ? (
             <>
               <li>
+                <Link to="/agent">Agent</Link>
+              </li>
+              <li>
                 <Link to="/dashboard">{t('navigation.myDashboard')}</Link>
               </li>
               <li>

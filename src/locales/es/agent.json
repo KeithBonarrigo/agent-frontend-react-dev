@@ -1,0 +1,187 @@
+{
+  "hero": {
+    "title": "Un Ejército de Ventas En Un Solo Agente IA",
+    "subtitle": "Tu agente de inteligencia artificial se integra con tus plataformas, responde consultas de clientes, califica leads y agenda citas — todo en automático, las 24 horas del día.",
+    "badgeReady": "Listo en 30 seg",
+    "badgeSecurity": "Seguridad Bancaria",
+    "badge247": "Responde 24/7",
+    "cta": "Comenzar Gratis"
+  },
+  "chat": {
+    "name": "Sofia - Tu Asistente IA",
+    "online": "En línea",
+    "inputPlaceholder": "Escribe un mensaje...",
+    "bubble1": "¡Hola! Soy Sofia, tu asistente de ventas. ¿En qué puedo ayudarte hoy?",
+    "bubble2": "Busco una casa de 3 recámaras en la zona dorada",
+    "bubble3": "¡Excelente elección! Tengo 4 propiedades disponibles en esa zona. ¿Te gustaría agendar una visita o recibir los detalles por WhatsApp?",
+    "bubble4": "Sí, mándame los detalles por WhatsApp",
+    "bubble5": "¡Perfecto! Te envío la información ahora mismo. ¿Me compartes tu número?"
+  },
+  "features": {
+    "title": "¿Por Qué PropelAgent es Diferente?",
+    "subtitle": "No solo es un chatbot. Es tu mejor vendedor trabajando sin descanso.",
+    "install": {
+      "title": "Instalación Instantánea",
+      "description": "Copia una línea de código y tu agente estará activo en tu sitio web en menos de 30 segundos."
+    },
+    "leads": {
+      "title": "Califica Leads Inteligentemente",
+      "description": "Tu agente identifica los prospectos más calificados y los prioriza automáticamente para tu equipo."
+    },
+    "calendar": {
+      "title": "Agenda Citas Automáticamente",
+      "description": "Conecta tu calendario y tu agente agenda visitas directamente con tus clientes potenciales."
+    },
+    "always": {
+      "title": "Trabaja 24/7/365",
+      "description": "Tu agente nunca descansa. Responde preguntas, captura leads y cierra ventas a cualquier hora."
+    },
+    "channels": {
+      "title": "WhatsApp + Web + Redes",
+      "description": "Un solo agente que responde en tu sitio web, WhatsApp Business, Messenger e Instagram."
+    },
+    "dashboard": {
+      "title": "Dashboard con Insights",
+      "description": "Métricas en tiempo real de conversaciones, leads capturados y rendimiento de tu agente."
+    }
+  },
+  "security": {
+    "title": "Tus Datos Más Seguros que en un Banco",
+    "subtitle": "Protección de nivel empresarial para tu información y la de tus clientes.",
+    "encryption": {
+      "title": "Encriptación AES-256",
+      "description": "Todos los datos se encriptan en tránsito y en reposo con el mismo estándar que usan los bancos."
+    },
+    "validation": {
+      "title": "Validación de Suscriptores",
+      "description": "Cada usuario pasa por verificación de identidad antes de acceder a datos sensibles."
+    },
+    "audit": {
+      "title": "Registro de Auditoría",
+      "description": "Cada acción se registra para mantener transparencia y trazabilidad completa."
+    },
+    "zeroAccess": {
+      "title": "Cero Acceso Humano",
+      "description": "Tus datos nunca son vistos por personas. Todo el procesamiento es automático y seguro."
+    },
+    "iso": {
+      "title": "ISO 27001",
+      "description": "Certificación internacional de seguridad de la información"
+    },
+    "soc": {
+      "title": "SOC 2 Type II",
+      "description": "Auditoría independiente de controles de seguridad y privacidad"
+    }
+  },
+  "pricing": {
+    "title": "Elige tu Plan y Comienza Hoy",
+    "subtitle": "Sin contratos a largo plazo. Cancela cuando quieras.",
+    "starter": {
+      "name": "Starter",
+      "price": "$888",
+      "currency": "MXN",
+      "period": "por mes",
+      "features": [
+        "1 Agente IA",
+        "Web chat + WhatsApp",
+        "500 conversaciones/mes",
+        "Dashboard básico",
+        "Soporte por email"
+      ],
+      "cta": "Comenzar Gratis"
+    },
+    "premium": {
+      "name": "Premium",
+      "badge": "Más Popular",
+      "price": "$3,500",
+      "currency": "MXN",
+      "period": "por mes",
+      "features": [
+        "Agentes ilimitados",
+        "Todos los canales",
+        "Conversaciones ilimitadas",
+        "Dashboard avanzado",
+        "Agenda de citas",
+        "Calificación de leads",
+        "Soporte prioritario"
+      ],
+      "cta": "Comenzar Gratis"
+    },
+    "signup": {
+      "title": "Empieza gratis hoy",
+      "nameLabel": "Nombre completo",
+      "namePlaceholder": "Tu nombre",
+      "emailLabel": "Correo electrónico",
+      "emailPlaceholder": "tu@correo.com",
+      "phoneLabel": "Teléfono",
+      "phonePlaceholder": "+52 612 123 4567",
+      "cta": "Crear Mi Agente Gratis"
+    }
+  },
+  "cta": {
+    "title": "¿Listo para Vender Más Sin Trabajar Más?",
+    "primary": "Comenzar Prueba Gratis",
+    "secondary": "Ver Demo en Vivo"
+  },
+  "contact": {
+    "title": "Habla con un Experto",
+    "subtitle": "¿Tienes preguntas sobre cómo PropelAgent puede ayudar a tu negocio? Nuestro equipo está listo para ayudarte.",
+    "bullets": [
+      "Resolveremos todas tus dudas sobre la plataforma",
+      "Te ayudamos a configurar tu agente paso a paso",
+      "Sin compromiso — explora primero, decide después"
+    ],
+    "form": {
+      "firstName": "Nombre",
+      "firstNamePlaceholder": "Nombre",
+      "lastName": "Apellido",
+      "lastNamePlaceholder": "Apellido",
+      "email": "Correo electrónico",
+      "emailPlaceholder": "tu@correo.com",
+      "company": "Nombre de compañía",
+      "companyPlaceholder": "Tu empresa",
+      "role": "Cargo",
+      "rolePlaceholder": "Director, Gerente, etc.",
+      "phone": "Número de teléfono",
+      "phonePlaceholder": "+52 612 123 4567",
+      "country": "País",
+      "countryPlaceholder": "Selecciona tu país",
+      "submit": "Enviar Mensaje",
+      "sending": "Enviando...",
+      "success": "¡Mensaje enviado! Nos pondremos en contacto pronto.",
+      "error": "Error al enviar. Intenta de nuevo."
+    },
+    "countries": {
+      "MX": "México",
+      "US": "Estados Unidos",
+      "CO": "Colombia",
+      "AR": "Argentina",
+      "ES": "España",
+      "CL": "Chile",
+      "PE": "Perú",
+      "OTHER": "Otro"
+    }
+  },
+  "footer": {
+    "brand": "PropelAgent",
+    "tagline": "Tu agente de ventas con inteligencia artificial. Vende más, trabaja menos.",
+    "product": "Producto",
+    "productLinks": {
+      "pricing": "Precios",
+      "demo": "Demo",
+      "signup": "Registrarse"
+    },
+    "legal": "Legal",
+    "legalLinks": {
+      "privacy": "Privacidad",
+      "terms": "Términos",
+      "cookies": "Cookies"
+    },
+    "contactTitle": "Contacto",
+    "contactLinks": {
+      "email": "info@aibridge.mx",
+      "expert": "Habla con un experto"
+    },
+    "copyright": "PropelAgent by AI Bridge. Todos los derechos reservados."
+  }
+}

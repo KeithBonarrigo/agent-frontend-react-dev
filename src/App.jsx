@@ -16,6 +16,7 @@ import PasswordResetRequest from "./Pages/PasswordResetRequest";
 import PasswordResetCheckEmail from "./Pages/PasswordResetCheckEmail";
 import PasswordResetConfirm from "./Pages/PasswordResetConfirm";
 import OAuthCallback from "./Pages/OAuthCallback";
+import Agent from "./Pages/Agent";
 import { UserProvider } from './contexts/UserContext';
 import { DomainProvider } from './contexts/DomainContext';
 
@@ -41,6 +42,7 @@ function App() {
             <Route path="/password-reset/request" element={<PasswordResetRequest />} />
             <Route path="/password-reset/check-email" element={<PasswordResetCheckEmail />} />
             <Route path="/password-reset/confirm" element={<PasswordResetConfirm />} />
+            <Route path="/agent" element={<Agent />} />
             <Route path="/oauth/callback" element={<OAuthCallback />} />
             <Route path="/oauth/:provider/callback" element={<OAuthCallback />} />
           </Route>

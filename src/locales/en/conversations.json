@@ -41,6 +41,10 @@
     "sending": "Sending...",
     "success": "Reply sent successfully!",
     "error": "Failed to send reply. Please try again.",
-    "humanAgentNote": "This reply will be sent as a human agent response via the Instagram Messaging API."
+    "humanAgentNote": "This reply will be sent as a human agent response via the Instagram Messaging API.",
+    "fbLoginRequired": "You must log in with Facebook to send a human agent reply.",
+    "fbLogin": "Login with Facebook",
+    "fbLoggingIn": "Logging in...",
+    "fbLoggedInAs": "Authenticated as {{name}}"
   }
 }

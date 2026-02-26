@@ -1,0 +1,187 @@
+{
+  "hero": {
+    "title": "A Sales Army In A Single AI Agent",
+    "subtitle": "Your artificial intelligence agent integrates with your platforms, answers customer inquiries, qualifies leads, and schedules appointments — all automatically, 24 hours a day.",
+    "badgeReady": "Ready in 30 sec",
+    "badgeSecurity": "Bank-Level Security",
+    "badge247": "Responds 24/7",
+    "cta": "Start Free"
+  },
+  "chat": {
+    "name": "Sofia - Your AI Assistant",
+    "online": "Online",
+    "inputPlaceholder": "Type a message...",
+    "bubble1": "Hi! I'm Sofia, your sales assistant. How can I help you today?",
+    "bubble2": "I'm looking for a 3-bedroom house in the golden zone",
+    "bubble3": "Excellent choice! I have 4 available properties in that area. Would you like to schedule a visit or receive the details via WhatsApp?",
+    "bubble4": "Yes, send me the details on WhatsApp",
+    "bubble5": "Perfect! I'll send you the information right now. Can you share your number?"
+  },
+  "features": {
+    "title": "Why Is PropelAgent Different?",
+    "subtitle": "It's not just a chatbot. It's your best salesperson working non-stop.",
+    "install": {
+      "title": "Instant Installation",
+      "description": "Copy one line of code and your agent will be active on your website in less than 30 seconds."
+    },
+    "leads": {
+      "title": "Smart Lead Qualification",
+      "description": "Your agent identifies the most qualified prospects and automatically prioritizes them for your team."
+    },
+    "calendar": {
+      "title": "Automatic Appointment Scheduling",
+      "description": "Connect your calendar and your agent schedules visits directly with your potential clients."
+    },
+    "always": {
+      "title": "Works 24/7/365",
+      "description": "Your agent never rests. It answers questions, captures leads, and closes sales at any hour."
+    },
+    "channels": {
+      "title": "WhatsApp + Web + Social",
+      "description": "A single agent that responds on your website, WhatsApp Business, Messenger, and Instagram."
+    },
+    "dashboard": {
+      "title": "Dashboard with Insights",
+      "description": "Real-time metrics on conversations, captured leads, and your agent's performance."
+    }
+  },
+  "security": {
+    "title": "Your Data Safer Than a Bank",
+    "subtitle": "Enterprise-level protection for your information and your clients'.",
+    "encryption": {
+      "title": "AES-256 Encryption",
+      "description": "All data is encrypted in transit and at rest with the same standard used by banks."
+    },
+    "validation": {
+      "title": "Subscriber Validation",
+      "description": "Every user goes through identity verification before accessing sensitive data."
+    },
+    "audit": {
+      "title": "Audit Trail",
+      "description": "Every action is logged to maintain complete transparency and traceability."
+    },
+    "zeroAccess": {
+      "title": "Zero Human Access",
+      "description": "Your data is never seen by people. All processing is automatic and secure."
+    },
+    "iso": {
+      "title": "ISO 27001",
+      "description": "International information security certification"
+    },
+    "soc": {
+      "title": "SOC 2 Type II",
+      "description": "Independent audit of security and privacy controls"
+    }
+  },
+  "pricing": {
+    "title": "Choose Your Plan and Start Today",
+    "subtitle": "No long-term contracts. Cancel anytime.",
+    "starter": {
+      "name": "Starter",
+      "price": "$888",
+      "currency": "MXN",
+      "period": "per month",
+      "features": [
+        "1 AI Agent",
+        "Web chat + WhatsApp",
+        "500 conversations/month",
+        "Basic dashboard",
+        "Email support"
+      ],
+      "cta": "Start Free"
+    },
+    "premium": {
+      "name": "Premium",
+      "badge": "Most Popular",
+      "price": "$3,500",
+      "currency": "MXN",
+      "period": "per month",
+      "features": [
+        "Unlimited agents",
+        "All channels",
+        "Unlimited conversations",
+        "Advanced dashboard",
+        "Appointment scheduling",
+        "Lead qualification",
+        "Priority support"
+      ],
+      "cta": "Start Free"
+    },
+    "signup": {
+      "title": "Start free today",
+      "nameLabel": "Full name",
+      "namePlaceholder": "Your name",
+      "emailLabel": "Email address",
+      "emailPlaceholder": "you@email.com",
+      "phoneLabel": "Phone",
+      "phonePlaceholder": "+1 555 123 4567",
+      "cta": "Create My Free Agent"
+    }
+  },
+  "cta": {
+    "title": "Ready to Sell More Without Working More?",
+    "primary": "Start Free Trial",
+    "secondary": "See Live Demo"
+  },
+  "contact": {
+    "title": "Talk to an Expert",
+    "subtitle": "Have questions about how PropelAgent can help your business? Our team is ready to help.",
+    "bullets": [
+      "We'll answer all your questions about the platform",
+      "We'll help you set up your agent step by step",
+      "No commitment — explore first, decide later"
+    ],
+    "form": {
+      "firstName": "First Name",
+      "firstNamePlaceholder": "First name",
+      "lastName": "Last Name",
+      "lastNamePlaceholder": "Last name",
+      "email": "Email address",
+      "emailPlaceholder": "you@email.com",
+      "company": "Company name",
+      "companyPlaceholder": "Your company",
+      "role": "Job title",
+      "rolePlaceholder": "Director, Manager, etc.",
+      "phone": "Phone number",
+      "phonePlaceholder": "+1 555 123 4567",
+      "country": "Country",
+      "countryPlaceholder": "Select your country",
+      "submit": "Send Message",
+      "sending": "Sending...",
+      "success": "Message sent! We'll be in touch soon.",
+      "error": "Error sending. Please try again."
+    },
+    "countries": {
+      "MX": "Mexico",
+      "US": "United States",
+      "CO": "Colombia",
+      "AR": "Argentina",
+      "ES": "Spain",
+      "CL": "Chile",
+      "PE": "Peru",
+      "OTHER": "Other"
+    }
+  },
+  "footer": {
+    "brand": "PropelAgent",
+    "tagline": "Your AI-powered sales agent. Sell more, work less.",
+    "product": "Product",
+    "productLinks": {
+      "pricing": "Pricing",
+      "demo": "Demo",
+      "signup": "Sign Up"
+    },
+    "legal": "Legal",
+    "legalLinks": {
+      "privacy": "Privacy",
+      "terms": "Terms",
+      "cookies": "Cookies"
+    },
+    "contactTitle": "Contact",
+    "contactLinks": {
+      "email": "info@aibridge.mx",
+      "expert": "Talk to an expert"
+    },
+    "copyright": "PropelAgent by AI Bridge. All rights reserved."
+  }
+}
