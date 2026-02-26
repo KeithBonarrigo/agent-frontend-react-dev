@@ -54,6 +54,9 @@ export default function ConversationsTab({ clientId, user }) {
   const [replyLoading, setReplyLoading] = useState({});
   const [replyResult, setReplyResult] = useState({});
 
+  // Human agent reply section collapsed state
+  const [replyCollapsed, setReplyCollapsed] = useState(true);
+
   // Facebook Login state for human agent authentication
   const [fbAgentAuth, setFbAgentAuth] = useState(false);
   const [fbAgentName, setFbAgentName] = useState('');
@@ -598,98 +601,121 @@ export default function ConversationsTab({ clientId, user }) {
                                         {channel.channel.toLowerCase().includes('instagram') && (
                                           <div style={{
                                             marginTop: "0.75em",
-                                            padding: "0.75em",
-                                            backgroundColor: "#f8f9fa",
                                             borderRadius: "4px",
-                                            border: "1px solid #e9ecef"
+                                            border: "1px solid #e9ecef",
+                                            overflow: "hidden"
                                           }}>
-                                            <p style={{ fontSize: "0.75em", color: "#888", margin: "0 0 0.5em 0" }}>
-                                              <i className="fa-solid fa-headset" style={{ marginRight: "0.4em" }}></i>
-                                              {t('reply.humanAgentNote')}
-                                            </p>
+                                            {/* Collapsible header */}
+                                            <div
+                                              onClick={() => setReplyCollapsed(prev => !prev)}
+                                              style={{
+                                                display: "flex",
+                                                alignItems: "center",
+                                                justifyContent: "space-between",
+                                                padding: "0.5em 0.75em",
+                                                backgroundColor: "#f0f0f0",
+                                                cursor: "pointer",
+                                                userSelect: "none"
+                                              }}
+                                            >
+                                              <span style={{ fontSize: "0.8em", fontWeight: "600", color: "#555" }}>
+                                                <i className="fa-solid fa-headset" style={{ marginRight: "0.4em" }}></i>
+                                                {t('reply.title')}
+                                              </span>
+                                              <i className={`fa-solid fa-chevron-${replyCollapsed ? 'down' : 'up'}`} style={{ fontSize: "0.7em", color: "#888" }}></i>
+                                            </div>
 
-                                            {!fbAgentAuth ? (
-                                              /* Facebook Login gate — agent must authenticate before replying */
-                                              <div style={{ textAlign: "center", padding: "1em 0" }}>
-                                                <p style={{ fontSize: "0.85em", color: "#555", marginBottom: "0.75em" }}>
-                                                  <i className="fa-solid fa-lock" style={{ marginRight: "0.4em" }}></i>
-                                                  {t('reply.fbLoginRequired')}
+                                            {/* Collapsible body */}
+                                            {!replyCollapsed && (
+                                              <div style={{ padding: "0.75em", backgroundColor: "#f8f9fa" }}>
+                                                <p style={{ fontSize: "0.75em", color: "#888", margin: "0 0 0.5em 0" }}>
+                                                  {t('reply.humanAgentNote')}
                                                 </p>
-                                                <button
-                                                  onClick={handleFbAgentLogin}
-                                                  disabled={fbLoginLoading}
-                                                  style={{
-                                                    padding: "0.6em 1.5em",
-                                                    backgroundColor: "#1877F2",
-                                                    color: "white",
-                                                    border: "none",
-                                                    borderRadius: "6px",
-                                                    cursor: fbLoginLoading ? "default" : "pointer",
-                                                    fontSize: "0.9em",
-                                                    fontWeight: "600",
-                                                    display: "inline-flex",
-                                                    alignItems: "center",
-                                                    gap: "0.5em"
-                                                  }}
-                                                >
-                                                  <i className="fa-brands fa-facebook" style={{ fontSize: "1.2em" }}></i>
-                                                  {fbLoginLoading ? t('reply.fbLoggingIn') : t('reply.fbLogin')}
-                                                </button>
-                                              </div>
-                                            ) : (
-                                              /* Authenticated — show reply form */
-                                              <>
-                                                <p style={{ fontSize: "0.75em", color: "#28a745", margin: "0 0 0.5em 0" }}>
-                                                  <i className="fa-solid fa-circle-check" style={{ marginRight: "0.4em" }}></i>
-                                                  {t('reply.fbLoggedInAs', { name: fbAgentName })}
-                                                </p>
-                                                <div style={{ display: "flex", gap: "0.5em", alignItems: "flex-end" }}>
-                                                  <textarea
-                                                    value={replyText[userConv.userid] || ''}
-                                                    onChange={(e) => setReplyText(prev => ({ ...prev, [userConv.userid]: e.target.value }))}
-                                                    placeholder={t('reply.placeholder')}
-                                                    rows={2}
-                                                    style={{
-                                                      flex: 1,
-                                                      padding: "0.5em 0.75em",
-                                                      border: "1px solid #ccc",
-                                                      borderRadius: "4px",
-                                                      fontSize: "0.85em",
-                                                      resize: "vertical",
-                                                      boxSizing: "border-box"
-                                                    }}
-                                                  />
-                                                  <button
-                                                    onClick={() => handleInstagramReply(userConv.userid)}
-                                                    disabled={replyLoading[userConv.userid] || !(replyText[userConv.userid] || '').trim()}
-                                                    style={{
-                                                      padding: "0.5em 1em",
-                                                      backgroundColor: (replyLoading[userConv.userid] || !(replyText[userConv.userid] || '').trim()) ? "#ccc" : "#E4405F",
-                                                      color: "white",
-                                                      border: "none",
-                                                      borderRadius: "4px",
-                                                      cursor: (replyLoading[userConv.userid] || !(replyText[userConv.userid] || '').trim()) ? "default" : "pointer",
-                                                      fontSize: "0.85em",
-                                                      fontWeight: "600",
-                                                      whiteSpace: "nowrap"
-                                                    }}
-                                                  >
-                                                    <i className="fa-solid fa-paper-plane" style={{ marginRight: "0.4em" }}></i>
-                                                    {replyLoading[userConv.userid] ? t('reply.sending') : t('reply.send')}
-                                                  </button>
-                                                </div>
-                                                {replyResult[userConv.userid] && (
-                                                  <p style={{
-                                                    fontSize: "0.8em",
-                                                    fontWeight: "600",
-                                                    marginTop: "0.4em",
-                                                    marginBottom: 0,
-                                                    color: replyResult[userConv.userid].type === 'success' ? '#28a745' : '#dc3545'
-                                                  }}>
-                                                    {replyResult[userConv.userid].message}
-                                                  </p>
+
+                                                {!fbAgentAuth ? (
+                                                  /* Facebook Login gate */
+                                                  <div style={{ textAlign: "center", padding: "1em 0" }}>
+                                                    <p style={{ fontSize: "0.85em", color: "#555", marginBottom: "0.75em" }}>
+                                                      <i className="fa-solid fa-lock" style={{ marginRight: "0.4em" }}></i>
+                                                      {t('reply.fbLoginRequired')}
+                                                    </p>
+                                                    <button
+                                                      onClick={handleFbAgentLogin}
+                                                      disabled={fbLoginLoading}
+                                                      style={{
+                                                        padding: "0.6em 1.5em",
+                                                        backgroundColor: "#1877F2",
+                                                        color: "white",
+                                                        border: "none",
+                                                        borderRadius: "6px",
+                                                        cursor: fbLoginLoading ? "default" : "pointer",
+                                                        fontSize: "0.9em",
+                                                        fontWeight: "600",
+                                                        display: "inline-flex",
+                                                        alignItems: "center",
+                                                        gap: "0.5em"
+                                                      }}
+                                                    >
+                                                      <i className="fa-brands fa-facebook" style={{ fontSize: "1.2em" }}></i>
+                                                      {fbLoginLoading ? t('reply.fbLoggingIn') : t('reply.fbLogin')}
+                                                    </button>
+                                                  </div>
+                                                ) : (
+                                                  /* Authenticated — show reply form */
+                                                  <>
+                                                    <p style={{ fontSize: "0.75em", color: "#28a745", margin: "0 0 0.5em 0" }}>
+                                                      <i className="fa-solid fa-circle-check" style={{ marginRight: "0.4em" }}></i>
+                                                      {t('reply.fbLoggedInAs', { name: fbAgentName })}
+                                                    </p>
+                                                    <div style={{ display: "flex", gap: "0.5em", alignItems: "flex-end" }}>
+                                                      <textarea
+                                                        value={replyText[userConv.userid] || ''}
+                                                        onChange={(e) => setReplyText(prev => ({ ...prev, [userConv.userid]: e.target.value }))}
+                                                        placeholder={t('reply.placeholder')}
+                                                        rows={2}
+                                                        style={{
+                                                          flex: 1,
+                                                          padding: "0.5em 0.75em",
+                                                          border: "1px solid #ccc",
+                                                          borderRadius: "4px",
+                                                          fontSize: "0.85em",
+                                                          resize: "vertical",
+                                                          boxSizing: "border-box"
+                                                        }}
+                                                      />
+                                                      <button
+                                                        onClick={() => handleInstagramReply(userConv.userid)}
+                                                        disabled={replyLoading[userConv.userid] || !(replyText[userConv.userid] || '').trim()}
+                                                        style={{
+                                                          padding: "0.5em 1em",
+                                                          backgroundColor: (replyLoading[userConv.userid] || !(replyText[userConv.userid] || '').trim()) ? "#ccc" : "#E4405F",
+                                                          color: "white",
+                                                          border: "none",
+                                                          borderRadius: "4px",
+                                                          cursor: (replyLoading[userConv.userid] || !(replyText[userConv.userid] || '').trim()) ? "default" : "pointer",
+                                                          fontSize: "0.85em",
+                                                          fontWeight: "600",
+                                                          whiteSpace: "nowrap"
+                                                        }}
+                                                      >
+                                                        <i className="fa-solid fa-paper-plane" style={{ marginRight: "0.4em" }}></i>
+                                                        {replyLoading[userConv.userid] ? t('reply.sending') : t('reply.send')}
+                                                      </button>
+                                                    </div>
+                                                    {replyResult[userConv.userid] && (
+                                                      <p style={{
+                                                        fontSize: "0.8em",
+                                                        fontWeight: "600",
+                                                        marginTop: "0.4em",
+                                                        marginBottom: 0,
+                                                        color: replyResult[userConv.userid].type === 'success' ? '#28a745' : '#dc3545'
+                                                      }}>
+                                                        {replyResult[userConv.userid].message}
+                                                      </p>
+                                                    )}
+                                                  </>
                                                 )}
-                                              </>
+                                              </div>
                                             )}
                                           </div>
                                         )}

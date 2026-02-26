@@ -41,6 +41,7 @@
     "sending": "Enviando...",
     "success": "Respuesta enviada exitosamente!",
     "error": "Error al enviar la respuesta. Intentelo de nuevo.",
+    "title": "Respuesta de Agente Humano",
     "humanAgentNote": "Esta respuesta se enviara como respuesta de agente humano a traves de la API de mensajeria de Instagram.",
     "fbLoginRequired": "Debes iniciar sesion con Facebook para enviar una respuesta como agente humano.",
     "fbLogin": "Iniciar sesion con Facebook",
