@@ -51,6 +51,14 @@ export default function Agent() {
   const contactBullets = t('contact.bullets', { returnObjects: true });
   const countries = ['MX', 'US', 'CO', 'AR', 'ES', 'CL', 'PE', 'OTHER'];
 
+  const handleLaunchChat = () => {
+    if (document.getElementById('botwerx-demo-chat')) return;
+    const script = document.createElement('script');
+    script.id = 'botwerx-demo-chat';
+    script.src = 'https://chat.botwerx.ai/chatbot.js?id=72';
+    document.head.appendChild(script);
+  };
+
   return (
     <div className="agent-page">
 
@@ -76,7 +84,7 @@ export default function Agent() {
 
           {/* Chat mockup */}
           <div className="agent-hero-chat">
-            <div className="agent-chat-window">
+            <div className="agent-chat-window" onClick={handleLaunchChat} style={{ cursor: "pointer" }}>
               <div className="agent-chat-header">
                 <div className="agent-chat-avatar">
                   <i className="fa-solid fa-robot"></i>
@@ -415,7 +423,7 @@ export default function Agent() {
             </div>
           </div>
           <div className="agent-footer-bottom">
-            &copy; {new Date().getFullYear()} {t('footer.copyright')}
+            &copy; {new Date().getFullYear()} PropelAgent by <a href="https://aibridge.global" target="_blank" rel="noopener noreferrer" style={{ color: '#fff', textDecoration: 'underline' }}>AI Bridge</a>. {t('footer.allRightsReserved')}
           </div>
         </div>
       </footer>

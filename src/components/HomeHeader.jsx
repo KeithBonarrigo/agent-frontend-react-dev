@@ -44,10 +44,17 @@ export default function HomeHeader() {
 
   // Determine which logo to display based on domain
   const getLogoConfig = () => {
-    const hostname = domainInfo?.hostname;
+    const hostname = domainInfo?.hostname || window.location.hostname;
+
+    if (hostname === 'localhost' || hostname?.includes('propel')) {
+      return {
+        src: '/img/logos/propel-agent-white.png',
+        alt: 'PropelAgent',
+        className: 'propel-logo'
+      };
+    }
 
     if (hostname?.includes('aibridge.global') || hostname?.includes('base')) {
-      console.log("🎨 Using AI Bridge logo for domain:", hostname);
       return {
         src: '/img/AI-Bridge-Logo-Med2.png',
         alt: companyName
@@ -55,7 +62,6 @@ export default function HomeHeader() {
     }
 
     // Default logo (BotWerx) for all other domains
-    console.log("🎨 Using BotWerx logo for domain:", hostname);
     return {
       src: '/img/logo-botwerx.jpeg',
       alt: companyName
@@ -63,14 +69,18 @@ export default function HomeHeader() {
   };
 
   const logoConfig = getLogoConfig();
+  const isPropel = logoConfig.className === 'propel-logo';
 
   return (
     <header className="home-header">
       <nav className="home-nav">
         <div className="home-logo">
           <Link to="/">
-            <img src={logoConfig.src} alt={logoConfig.alt} />
+            <img src={logoConfig.src} alt={logoConfig.alt} className={logoConfig.className || ''} />
           </Link>
+          {isPropel && (
+            <span className="propel-byline">By <a href="https://aibridge.global" target="_blank" rel="noopener noreferrer">AI Bridge</a></span>
+          )}
         </div>
 
         <ul className="home-nav-links">
@@ -79,30 +89,36 @@ export default function HomeHeader() {
               {t('navigation.home')}
             </a>
           </li>
-          {/* Changed link text from "Services" to "Benefits" to better describe the section content
-              The section showcases benefits of AI agents rather than listing services offered */}
-          <li>
-            <a href="#services" onClick={(e) => handleNavClick(e, "services")}>
-              {t('navigation.benefits')}
-            </a>
-          </li>
-          <li>
-            <a href="#solutions" onClick={(e) => handleNavClick(e, "solutions")}>
-              {t('navigation.solutions')}
-            </a>
-          </li>
-          <li>
-            <a href="#faq" onClick={(e) => handleNavClick(e, "faq")}>
-              {t('navigation.faq')}
-            </a>
-          </li>
+          {!isPropel && (
+            <>
+              {/* Changed link text from "Services" to "Benefits" to better describe the section content
+                  The section showcases benefits of AI agents rather than listing services offered */}
+              <li>
+                <a href="#services" onClick={(e) => handleNavClick(e, "services")}>
+                  {t('navigation.benefits')}
+                </a>
+              </li>
+              <li>
+                <a href="#solutions" onClick={(e) => handleNavClick(e, "solutions")}>
+                  {t('navigation.solutions')}
+                </a>
+              </li>
+              <li>
+                <a href="#faq" onClick={(e) => handleNavClick(e, "faq")}>
+                  {t('navigation.faq')}
+                </a>
+              </li>
+            </>
+          )}
 
           {/* Auth Links */}
           {isLoggedIn ? (
             <>
-              <li>
-                <Link to="/agent">Agent</Link>
-              </li>
+              {!isPropel && (
+                <li>
+                  <Link to="/agent">Agent</Link>
+                </li>
+              )}
               <li>
                 <Link to="/dashboard">{t('navigation.myDashboard')}</Link>
               </li>

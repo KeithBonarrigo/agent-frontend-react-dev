@@ -73,6 +73,26 @@ body {
   height: 130px;
 }
 
+.home-logo img.propel-logo {
+  height: auto;
+  width: auto;
+  max-width: 200px;
+}
+
+.propel-byline {
+  display: block;
+  text-align: center;
+  font-size: 0.75rem;
+  color: #94a3b8;
+  margin-top: -8px;
+  letter-spacing: 0.05em;
+}
+
+.propel-byline a {
+  color: inherit;
+  text-decoration: underline;
+}
+
 .home-nav-links {
   display: flex;
   list-style: none;

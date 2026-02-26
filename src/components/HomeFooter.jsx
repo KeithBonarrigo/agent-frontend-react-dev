@@ -6,6 +6,12 @@ function HomeFooter() {
   const currentYear = new Date().getFullYear();
   const { domainInfo, companyName } = useDomain();
 
+  // Hide footer on PropelAgent domains (has its own footer on the Agent page)
+  const hostname = domainInfo?.hostname || window.location.hostname;
+  if (hostname === 'localhost' || hostname?.includes('propel')) {
+    return null;
+  }
+
   // Get logo based on domain
   const getLogoSrc = () => {
     if (domainInfo?.domainType === 'botwerx') {

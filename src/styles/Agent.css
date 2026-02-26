@@ -106,13 +106,14 @@
 
 .agent-hero .agent-container {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   gap: 3rem;
 }
 
 .agent-hero-content {
   flex: 1;
   z-index: 1;
+  padding-top: 2rem;
 }
 
 .agent-hero-content h1 {
@@ -595,6 +596,14 @@
   max-width: 100%;
 }
 
+/* Remove overflow/max-height clipping — form is always open on Agent page */
+.agent-pricing-signup .signup-form-wrapper,
+.agent-pricing-signup .signup-form-container,
+.agent-pricing-signup .agent-collapsible {
+  overflow: visible;
+  max-height: none;
+}
+
 .agent-pricing-signup .btn-green {
   width: 100%;
   text-align: center;
@@ -795,7 +804,7 @@
   padding-top: 1.5rem;
   text-align: center;
   font-size: 0.8rem;
-  color: rgba(255,255,255,0.4);
+  color: #fff;
 }
 
 /* =========================================
