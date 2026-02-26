@@ -68,8 +68,10 @@ export default function ConversationsTab({ clientId, user }) {
       FB.getLoginStatus(response => {
         if (response.status === 'connected') {
           FB.api('/me', { fields: 'name' }, (user) => {
-            setFbAgentAuth(true);
-            setFbAgentName(user.name || '');
+            if (user && user.name) {
+              setFbAgentAuth(true);
+              setFbAgentName(user.name);
+            }
           });
         }
       });
