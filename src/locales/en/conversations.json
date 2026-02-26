@@ -47,6 +47,6 @@
     "fbLogin": "Login with Facebook",
     "fbLoggingIn": "Logging in...",
     "fbLoggedInAs": "Authenticated as {{name}}",
-    "fbLogout": "Log out"
+    "fbLogout": "Log out of Facebook"
   }
 }

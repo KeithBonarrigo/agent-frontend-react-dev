@@ -47,6 +47,6 @@
     "fbLogin": "Iniciar sesion con Facebook",
     "fbLoggingIn": "Iniciando sesion...",
     "fbLoggedInAs": "Autenticado como {{name}}",
-    "fbLogout": "Cerrar sesion"
+    "fbLogout": "Cerrar sesion de Facebook"
   }
 }

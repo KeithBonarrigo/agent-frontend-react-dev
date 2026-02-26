@@ -681,15 +681,20 @@ export default function ConversationsTab({ clientId, user }) {
                                                       <button
                                                         onClick={handleFbAgentLogout}
                                                         style={{
-                                                          background: "none",
+                                                          backgroundColor: "#1877F2",
+                                                          color: "white",
                                                           border: "none",
-                                                          color: "#888",
-                                                          fontSize: "0.75em",
+                                                          fontSize: "0.7em",
+                                                          fontWeight: "600",
                                                           cursor: "pointer",
-                                                          padding: "0.2em 0.4em",
-                                                          textDecoration: "underline"
+                                                          padding: "0.3em 0.8em",
+                                                          borderRadius: "4px",
+                                                          display: "inline-flex",
+                                                          alignItems: "center",
+                                                          gap: "0.4em"
                                                         }}
                                                       >
+                                                        <i className="fa-brands fa-facebook"></i>
                                                         {t('reply.fbLogout')}
                                                       </button>
                                                     </div>
