@@ -7,7 +7,7 @@ import { useDomain } from "../contexts/DomainContext";
 import { getApiUrl } from "../utils/getApiUrl";
 import "../styles/SignupForm.css";
 
-export default function SignupForm({ isOpen }) {
+export default function SignupForm({ isOpen, allowedLevels }) {
   const { t } = useTranslation('signup');
   // Get domain information from context
   const { domainInfo } = useDomain();
@@ -92,7 +92,7 @@ export default function SignupForm({ isOpen }) {
     contact_phone: "",
     contact_phone_wsp: false,
     office_address: "",
-    level: "basic",
+    level: allowedLevels?.length ? allowedLevels[0] : "basic",
     office_wsp_phone: "",
     item: 1,
     date_paid: "",
@@ -904,12 +904,12 @@ export default function SignupForm({ isOpen }) {
                       onChange={handleAgentFormChange}
                       className="home-form-input"
                     >
-                      <option value="free">{t('plans.free')}</option>
-                      <option value="basic">{t('plans.basic')}</option>
-                      <option value="pro">{t('plans.pro')}</option>
-                      <option value="enterprise">{t('plans.enterprise')}</option>
-                      <option value="easybroker">{t('plans.easybroker')}</option>
-                      <option value="mls">{t('plans.mls')}</option>
+                      {(!allowedLevels || allowedLevels.includes('free')) && <option value="free">{t('plans.free')}</option>}
+                      {(!allowedLevels || allowedLevels.includes('basic')) && <option value="basic">{t('plans.basic')}</option>}
+                      {(!allowedLevels || allowedLevels.includes('pro')) && <option value="pro">{t('plans.pro')}</option>}
+                      {(!allowedLevels || allowedLevels.includes('enterprise')) && <option value="enterprise">{t('plans.enterprise')}</option>}
+                      {(!allowedLevels || allowedLevels.includes('easybroker')) && <option value="easybroker">{t('plans.easybroker')}</option>}
+                      {(!allowedLevels || allowedLevels.includes('mls')) && <option value="mls">{t('plans.mls')}</option>}
                     </select>
                   </div>
                 </div>

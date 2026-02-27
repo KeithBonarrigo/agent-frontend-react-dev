@@ -249,7 +249,7 @@ export default function Agent() {
 
           {/* Signup form — reuses the same component from the homepage */}
           <div className="agent-pricing-signup">
-            <SignupForm isOpen={true} onClose={() => {}} />
+            <SignupForm isOpen={true} onClose={() => {}} allowedLevels={['mls']} />
           </div>
         </div>
       </section>
