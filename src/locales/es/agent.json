@@ -175,11 +175,12 @@
     "legalLinks": {
       "privacy": "Privacidad",
       "terms": "Términos",
-      "cookies": "Cookies"
+      "cookies": "Cookies",
+      "dataDeletion": "Eliminación de Datos"
     },
     "contactTitle": "Contacto",
     "contactLinks": {
-      "email": "info@aibridge.mx",
+      "email": "info@aibridge.global",
       "expert": "Habla con un experto"
     },
     "copyright": "PropelAgent by AI Bridge. Todos los derechos reservados.",

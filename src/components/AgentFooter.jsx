@@ -16,9 +16,9 @@ export default function AgentFooter() {
             <div className="agent-footer-col">
               <h4>{t('footer.product')}</h4>
               <ul>
-                <li><a href="#pricing">{t('footer.productLinks.pricing')}</a></li>
-                <li><a href="#contact">{t('footer.productLinks.demo')}</a></li>
-                <li><a href="#pricing">{t('footer.productLinks.signup')}</a></li>
+                <li><a href="https://propelagent.aibridge.global/#pricing">{t('footer.productLinks.pricing')}</a></li>
+                <li><a href="https://propelagent.aibridge.global/#contact">{t('footer.productLinks.demo')}</a></li>
+                <li><a href="https://propelagent.aibridge.global/#pricing">{t('footer.productLinks.signup')}</a></li>
               </ul>
             </div>
             <div className="agent-footer-col">
@@ -27,13 +27,14 @@ export default function AgentFooter() {
                 <li><a href="/privacy">{t('footer.legalLinks.privacy')}</a></li>
                 <li><a href="/terms-and-conditions">{t('footer.legalLinks.terms')}</a></li>
                 <li><a href="/cookies">{t('footer.legalLinks.cookies')}</a></li>
+                <li><a href="/data-deletion">{t('footer.legalLinks.dataDeletion')}</a></li>
               </ul>
             </div>
             <div className="agent-footer-col">
               <h4>{t('footer.contactTitle')}</h4>
               <ul>
-                <li><a href="mailto:info@aibridge.mx">{t('footer.contactLinks.email')}</a></li>
-                <li><a href="#contact">{t('footer.contactLinks.expert')}</a></li>
+                <li><a href="mailto:info@aibridge.global">{t('footer.contactLinks.email')}</a></li>
+                <li><a href="https://propelagent.aibridge.global/#contact">{t('footer.contactLinks.expert')}</a></li>
               </ul>
             </div>
           </div>
