@@ -311,18 +311,27 @@
   margin: 0;
 }
 
-.agent-channel-logos {
+.agent-channel-icons {
   display: flex;
   justify-content: center;
-  gap: 1.25rem;
-  margin-top: 1.25em;
-  font-size: 1.6rem;
+  gap: 0.75rem;
+  margin: 0 auto 1.5em;
+  font-size: 1.4rem;
 }
 
-.agent-channel-logos .fa-whatsapp { color: #25D366; }
-.agent-channel-logos .fa-facebook-messenger { color: #0084FF; }
-.agent-channel-logos .fa-instagram { color: #E4405F; }
-.agent-channel-logos .fa-globe { color: #3b82f6; }
+.agent-channel-icons i {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 10px;
+}
+
+.agent-channel-icons .fa-whatsapp { background: #dcfce7; color: #25D366; }
+.agent-channel-icons .fa-facebook-messenger { background: #dbeafe; color: #0084FF; }
+.agent-channel-icons .fa-instagram { background: #fce7f3; color: #E4405F; }
+.agent-channel-icons .fa-globe { background: #dbeafe; color: #3b82f6; }
 
 /* =========================================
    SECURITY SECTION

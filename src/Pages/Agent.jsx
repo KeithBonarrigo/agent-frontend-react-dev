@@ -145,17 +145,14 @@ export default function Agent() {
               <p>{t('features.always.description')}</p>
             </div>
             <div className="agent-feature-card">
-              <div className="agent-feature-icon amber">
-                <i className="fa-solid fa-comments"></i>
-              </div>
-              <h3>{t('features.channels.title')}</h3>
-              <p>{t('features.channels.description')}</p>
-              <div className="agent-channel-logos">
+              <div className="agent-channel-icons">
                 <i className="fa-brands fa-whatsapp" title="WhatsApp"></i>
                 <i className="fa-brands fa-facebook-messenger" title="Messenger"></i>
                 <i className="fa-brands fa-instagram" title="Instagram"></i>
                 <i className="fa-solid fa-globe" title="Web"></i>
               </div>
+              <h3>{t('features.channels.title')}</h3>
+              <p>{t('features.channels.description')}</p>
             </div>
             <div className="agent-feature-card">
               <div className="agent-feature-icon green">
