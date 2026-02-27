@@ -311,6 +311,19 @@
   margin: 0;
 }
 
+.agent-channel-logos {
+  display: flex;
+  justify-content: center;
+  gap: 1.25rem;
+  margin-top: 1.25em;
+  font-size: 1.6rem;
+}
+
+.agent-channel-logos .fa-whatsapp { color: #25D366; }
+.agent-channel-logos .fa-facebook-messenger { color: #0084FF; }
+.agent-channel-logos .fa-instagram { color: #E4405F; }
+.agent-channel-logos .fa-globe { color: #3b82f6; }
+
 /* =========================================
    SECURITY SECTION
    ========================================= */
@@ -750,6 +763,12 @@
 
 .agent-footer-brand {
   flex: 1;
+}
+
+.agent-footer-logo {
+  max-width: 180px;
+  height: auto;
+  margin-bottom: 0.75em;
 }
 
 .agent-footer-brand h3 {

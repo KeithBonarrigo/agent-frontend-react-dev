@@ -150,6 +150,12 @@ export default function Agent() {
               </div>
               <h3>{t('features.channels.title')}</h3>
               <p>{t('features.channels.description')}</p>
+              <div className="agent-channel-logos">
+                <i className="fa-brands fa-whatsapp" title="WhatsApp"></i>
+                <i className="fa-brands fa-facebook-messenger" title="Messenger"></i>
+                <i className="fa-brands fa-instagram" title="Instagram"></i>
+                <i className="fa-solid fa-globe" title="Web"></i>
+              </div>
             </div>
             <div className="agent-feature-card">
               <div className="agent-feature-icon green">
@@ -381,7 +387,7 @@ export default function Agent() {
         <div className="agent-container">
           <div className="agent-footer-content">
             <div className="agent-footer-brand">
-              <h3><i className="fa-solid fa-robot" style={{ marginRight: "0.4em" }}></i>{t('footer.brand')}</h3>
+              <img src="/img/logos/propel-agent-black.png" alt="PropelAgent" className="agent-footer-logo" />
               <p>{t('footer.tagline')}</p>
             </div>
             <div className="agent-footer-links">
