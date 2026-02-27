@@ -4,6 +4,10 @@
    ========================================= */
 
 /* ---------- Base & Variables ---------- */
+html:has(.agent-page) {
+  scroll-behavior: smooth;
+}
+
 .agent-page {
   font-family: 'Poppins', system-ui, -apple-system, sans-serif;
   color: #1a1a2e;
@@ -27,6 +31,126 @@
   margin: 0 auto;
 }
 
+/* =========================================
+   AGENT HEADER
+   ========================================= */
+.agent-header {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  background: #fff;
+  border-bottom: 3px solid #c9a84c;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+.agent-header-nav {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.6rem 2rem;
+}
+
+.agent-header-logo img {
+  height: auto;
+  width: auto;
+  max-width: 180px;
+  display: block;
+}
+
+.agent-header-byline {
+  font-size: 0.7rem;
+  color: rgba(0, 0, 0, 0.5);
+  margin-top: 0.15rem;
+  display: block;
+  text-align: center;
+}
+
+.agent-header-byline a {
+  color: #1e3a8a;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.agent-header-byline a:hover {
+  text-decoration: underline;
+}
+
+.agent-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.agent-header-link {
+  color: #444;
+  text-decoration: none;
+  font-size: 0.9rem;
+  font-weight: 500;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4em;
+  transition: color 0.2s;
+}
+
+.agent-header-link:hover {
+  color: #1a1a2e;
+}
+
+.agent-header-btn-outline {
+  display: inline-block;
+  padding: 0.5em 1.25em;
+  border: 1.5px solid #d1d5db;
+  border-radius: 999px;
+  color: #333;
+  font-size: 0.9rem;
+  font-weight: 500;
+  text-decoration: none;
+  transition: border-color 0.2s, background 0.2s;
+}
+
+.agent-header-btn-outline:hover {
+  border-color: #22c55e;
+  background: linear-gradient(135deg, #15803d 0%, #22c55e 100%);
+  color: #fff;
+}
+
+.agent-header-btn-green {
+  display: inline-block;
+  padding: 0.5em 1.25em;
+  background: linear-gradient(135deg, #15803d 0%, #22c55e 100%);
+  color: #fff;
+  font-size: 0.9rem;
+  font-weight: 600;
+  border-radius: 999px;
+  text-decoration: none;
+  transition: background 0.2s, transform 0.2s;
+}
+
+.agent-header-btn-green:hover {
+  background: #fff;
+  color: #15803d;
+  transform: translateY(-1px);
+}
+
+@media (max-width: 640px) {
+  .agent-header-nav {
+    padding: 0.5rem 1rem;
+  }
+
+  .agent-header-actions {
+    gap: 0.5rem;
+  }
+
+  .agent-header-link,
+  .agent-header-btn-outline,
+  .agent-header-btn-green {
+    font-size: 0.8rem;
+    padding: 0.4em 0.9em;
+  }
+}
+
 /* ---------- Section Titles ---------- */
 .agent-page .agent-section-title {
   font-size: 2.2rem;
@@ -46,7 +170,7 @@
 /* ---------- Buttons ---------- */
 .agent-page .btn-green {
   display: inline-block;
-  background: #22c55e;
+  background: linear-gradient(135deg, #15803d 0%, #22c55e 100%);
   color: #fff;
   font-weight: 600;
   font-size: 1rem;
@@ -59,7 +183,7 @@
 }
 
 .agent-page .btn-green:hover {
-  background: #16a34a;
+  background: linear-gradient(135deg, #116932 0%, #16a34a 100%);
   transform: translateY(-2px);
   box-shadow: 0 6px 20px rgba(34, 197, 94, 0.35);
 }
@@ -115,6 +239,7 @@
   flex: 1;
   z-index: 1;
   padding-top: 2rem;
+  text-align: center;
 }
 
 .agent-hero-content h1 {
@@ -122,24 +247,38 @@
   font-weight: 800;
   line-height: 1.15;
   margin-bottom: 1rem;
-  background: linear-gradient(90deg, #fff 0%, #c7d2fe 100%);
+  color: #fff;
+}
+
+.agent-hero-gold {
+  background: linear-gradient(90deg, #d4a853 0%, #f0d68a 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
 }
 
 .agent-hero-content p {
-  font-size: 1.1rem;
-  color: rgba(255,255,255,0.8);
-  margin-bottom: 1.5rem;
-  max-width: 520px;
+  font-size: 1.05rem;
+  color: rgba(255,255,255,0.75);
+  margin-bottom: 1.25rem;
+  max-width: 540px;
+  margin-left: auto;
+  margin-right: auto;
   line-height: 1.7;
+}
+
+.agent-hero-disclaimer {
+  font-size: 0.8rem !important;
+  color: rgba(255,255,255,0.45) !important;
+  font-style: italic;
+  margin-bottom: 1.5rem !important;
 }
 
 .agent-hero-badges {
   display: flex;
   gap: 0.75rem;
   flex-wrap: wrap;
+  justify-content: center;
   margin-bottom: 2rem;
 }
 
@@ -162,7 +301,7 @@
 
 /* Chat mockup */
 .agent-hero-chat {
-  flex: 0 0 380px;
+  flex: 0 0 460px;
   z-index: 1;
 }
 
@@ -185,10 +324,29 @@
   width: 40px;
   height: 40px;
   border-radius: 50%;
-  background: rgba(255,255,255,0.25);
+  background: linear-gradient(135deg, #d4a853, #f0d68a);
   display: flex;
   align-items: center;
   justify-content: center;
+  font-size: 1.1rem;
+  color: #fff;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.agent-chat-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.agent-chat-avatar-fallback {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
   font-size: 1.1rem;
   color: #fff;
 }
@@ -236,23 +394,36 @@
   border-bottom-right-radius: 4px;
 }
 
-.agent-chat-input {
+.chat-time {
+  display: block;
+  font-size: 0.7rem;
+  color: rgba(0,0,0,0.4);
+  text-align: right;
+  margin-top: 0.25em;
+}
+
+.chat-time i {
+  color: #53bdeb;
+  font-size: 0.65rem;
+  margin-left: 0.15em;
+}
+
+.agent-chat-cta {
   display: flex;
   align-items: center;
-  border-top: 1px solid #e5e7eb;
-  padding: 0.75em 1em;
-  background: #fff;
+  justify-content: center;
+  gap: 0.5em;
+  padding: 0.9em 1em;
+  background: #c9a84c;
+  color: #fff;
+  font-weight: 600;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: background 0.2s;
 }
 
-.agent-chat-input span {
-  flex: 1;
-  color: #aaa;
-  font-size: 0.85rem;
-}
-
-.agent-chat-input i {
-  color: #075E54;
-  font-size: 1.1rem;
+.agent-chat-cta:hover {
+  background: #b8953f;
 }
 
 /* =========================================
@@ -317,16 +488,16 @@
   justify-content: center;
   gap: 0.75rem;
   margin: 0 auto 1.5em;
-  font-size: 1.4rem;
+  font-size: 1.5rem;
 }
 
 .agent-channel-icons i {
-  width: 40px;
-  height: 40px;
+  width: 52px;
+  height: 52px;
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 10px;
+  border-radius: 12px;
 }
 
 .agent-channel-icons .fa-whatsapp { background: #dcfce7; color: #25D366; }
@@ -412,40 +583,57 @@
 }
 
 .agent-cert-card i {
-  font-size: 2rem;
-  color: #059669;
-  margin-bottom: 0.5em;
+  font-size: 4rem;
+  color: #22c55e;
+  margin-bottom: 0.75em;
   display: block;
 }
 
 .agent-cert-card h4 {
-  margin: 0 0 0.25em;
-  font-size: 1rem;
+  margin: 0 0 0.5em;
+  font-size: 1.2rem;
+  color: #fff;
 }
 
 .agent-cert-card p {
   margin: 0;
-  font-size: 0.8rem;
+  font-size: 0.85rem;
   color: #94a3b8;
+  line-height: 1.5;
 }
 
 /* =========================================
    PRICING SECTION
    ========================================= */
+.agent-trial-badge {
+  display: inline-block;
+  background: #dcfce7;
+  color: #15803d;
+  font-size: 0.85rem;
+  font-weight: 600;
+  padding: 0.4em 1.2em;
+  border-radius: 999px;
+  margin-bottom: 1rem;
+  text-align: center;
+  width: fit-content;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.agent-pricing .agent-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
 .agent-pricing {
   background: #fff;
 }
 
-.agent-pricing-layout {
-  display: flex;
-  gap: 2rem;
-  align-items: flex-start;
-}
-
 .agent-pricing-plans {
-  flex: 1;
   display: flex;
   gap: 1.5rem;
+  margin-bottom: 2.5rem;
 }
 
 .agent-plan-card {
@@ -508,6 +696,17 @@
 .agent-plan-period {
   font-size: 0.85rem;
   color: #888;
+  margin-bottom: 0.5em;
+}
+
+.agent-plan-trial {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #15803d;
+  background: #dcfce7;
+  display: inline-block;
+  padding: 0.25em 0.8em;
+  border-radius: 999px;
   margin-bottom: 1.5em;
 }
 
@@ -538,20 +737,20 @@
   margin-top: auto;
 }
 
-/* Signup card — sits below the pricing cards, same width */
+/* Pricing plans + signup form wrapper */
 .agent-pricing-signup {
-  margin-top: 2.5rem;
+  width: 100%;
 }
 
-.agent-pricing-signup .signup-modal-overlay {
+/* Only flatten the Terms modal inline — keep the Stripe payment modal as a fixed overlay */
+.agent-pricing-signup .signup-modal-overlay:has(.signup-modal-terms) {
   position: static;
   background: none;
   padding: 0;
   z-index: auto;
 }
 
-.agent-pricing-signup .signup-modal-container,
-.agent-pricing-signup .signup-modal-container-narrow {
+.agent-pricing-signup .signup-modal-terms {
   max-width: 100%;
   box-shadow: none;
 }
@@ -647,6 +846,19 @@
   font-size: 2rem;
   font-weight: 700;
   margin-bottom: 1.5rem;
+  background: linear-gradient(90deg, #fff 0%, #c7d2fe 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.agent-cta-subtitle {
+  color: #94a3b8;
+  font-size: 1rem;
+  max-width: 600px;
+  margin: 0 auto 2rem;
+  text-align: center;
+  line-height: 1.6;
 }
 
 .agent-cta-buttons {
@@ -660,7 +872,8 @@
    CONTACT SECTION
    ========================================= */
 .agent-contact {
-  background: #fff;
+  background: linear-gradient(135deg, #0f172a, #1e293b);
+  color: #fff;
 }
 
 .agent-contact-layout {
@@ -677,11 +890,11 @@
   font-size: 2rem;
   font-weight: 700;
   margin-bottom: 0.75em;
-  color: #1a1a2e;
+  color: #fff;
 }
 
 .agent-contact-info > p {
-  color: #666;
+  color: #94a3b8;
   line-height: 1.7;
   margin-bottom: 1.5em;
 }
@@ -698,7 +911,7 @@
   gap: 0.75em;
   padding: 0.5em 0;
   font-size: 0.95rem;
-  color: #444;
+  color: rgba(255, 255, 255, 0.8);
 }
 
 .agent-contact-bullets li i {
@@ -708,10 +921,11 @@
 
 .agent-contact-form {
   flex: 1;
-  background: #f8f9fc;
+  background: #fff;
   border-radius: 12px;
   padding: 2em;
-  border: 1px solid #e5e7eb;
+  border: none;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
 }
 
 .agent-contact-form .form-row {
@@ -729,7 +943,7 @@
   font-size: 0.85rem;
   font-weight: 600;
   margin-bottom: 0.3em;
-  color: #444;
+  color: #333;
 }
 
 .agent-contact-form input,
@@ -861,7 +1075,8 @@
   .agent-hero-chat {
     flex: none;
     width: 100%;
-    max-width: 380px;
+    max-width: 460px;
+    margin: 0 auto;
   }
 
   .agent-features-grid {
@@ -878,12 +1093,8 @@
     flex-direction: row;
   }
 
-  .agent-pricing-layout {
-    flex-direction: column;
-  }
-
-  .agent-pricing-signup {
-    margin-top: 2rem;
+  .agent-pricing-plans {
+    margin-bottom: 2rem;
   }
 
   .agent-contact-layout {

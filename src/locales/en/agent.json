@@ -1,7 +1,17 @@
 {
+  "header": {
+    "demo": "See Demo",
+    "expert": "Talk to an expert",
+    "cta": "Start free",
+    "dashboard": "My Dashboard",
+    "logIn": "Log In",
+    "logOut": "Log Out"
+  },
   "hero": {
-    "title": "A Sales Army In A Single AI Agent",
-    "subtitle": "Your artificial intelligence agent integrates with your platforms, answers customer inquiries, qualifies leads, and schedules appointments — all automatically, 24 hours a day.",
+    "titleLine1": "A Sales Army",
+    "titleLine2": "In A Single AI Agent",
+    "subtitle": "The first virtual salesperson that integrates automatically with platforms like EasyBroker and OmniMls. A single AI agent that knows every property, serves hundreds of clients simultaneously, and closes appointments 24/7. No setup. No maintenance. Just sales.*",
+    "disclaimer": "*PropelAgent is an independent service not affiliated with the mentioned brands.",
     "badgeReady": "Ready in 30 sec",
     "badgeSecurity": "Bank-Level Security",
     "badge247": "Responds 24/7",
@@ -9,13 +19,11 @@
   },
   "chat": {
     "name": "Sofia - Your AI Assistant",
-    "online": "Online",
-    "inputPlaceholder": "Type a message...",
-    "bubble1": "Hi! I'm Sofia, your sales assistant. How can I help you today?",
-    "bubble2": "I'm looking for a 3-bedroom house in the golden zone",
-    "bubble3": "Excellent choice! I have 4 available properties in that area. Would you like to schedule a visit or receive the details via WhatsApp?",
-    "bubble4": "Yes, send me the details on WhatsApp",
-    "bubble5": "Perfect! I'll send you the information right now. Can you share your number?"
+    "online": "Live - Chat with her now",
+    "bubble1": "Hi, I'm Sofia. I'll help you find your ideal property.",
+    "bubble2": "I'm looking for an apartment in Polanco",
+    "bubble3": "Excellent area. I have 12 options. What's your budget?",
+    "cta": "Chat with Sofia Live"
   },
   "features": {
     "title": "Why Is PropelAgent Different?",
@@ -65,8 +73,8 @@
       "description": "Your data is never seen by people. All processing is automatic and secure."
     },
     "iso": {
-      "title": "ISO 27001",
-      "description": "International information security certification"
+      "title": "International Standards",
+      "description": "We comply with the highest international data security standards"
     },
     "soc": {
       "title": "SOC 2 Type II",
@@ -74,8 +82,9 @@
     }
   },
   "pricing": {
+    "trialBadge": "14-day free trial",
     "title": "Choose Your Plan and Start Today",
-    "subtitle": "No long-term contracts. Cancel anytime.",
+    "subtitle": "No credit card required. Cancel anytime.",
     "starter": {
       "name": "Starter",
       "price": "$888",
@@ -88,6 +97,7 @@
         "Basic dashboard",
         "Email support"
       ],
+      "trial": "14-day free trial",
       "cta": "Start Free"
     },
     "premium": {
@@ -105,6 +115,7 @@
         "Lead qualification",
         "Priority support"
       ],
+      "trial": "14-day free trial",
       "cta": "Start Free"
     },
     "signup": {
@@ -120,6 +131,7 @@
   },
   "cta": {
     "title": "Ready to Sell More Without Working More?",
+    "subtitle": "Join the real estate agents who are already multiplying their sales with PropelAgent. Your competition is already using it.",
     "primary": "Start Free Trial",
     "secondary": "See Live Demo"
   },

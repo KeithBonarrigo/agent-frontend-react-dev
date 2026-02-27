@@ -699,7 +699,7 @@ export default function SignupForm({ isOpen, allowedLevels }) {
                 </div>
               </div>
 
-              <Elements stripe={stripePromise} options={{ clientSecret }}>
+              <Elements key={clientSecret} stripe={stripePromise} options={{ clientSecret }}>
                 <StripePaymentForm
                   clientSecret={clientSecret}
                   onSuccess={handlePaymentSuccess}

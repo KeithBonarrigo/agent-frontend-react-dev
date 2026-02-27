@@ -66,8 +66,12 @@ export default function Agent() {
       <section className="agent-hero">
         <div className="agent-container">
           <div className="agent-hero-content">
-            <h1>{t('hero.title')}</h1>
+            <h1>
+              {t('hero.titleLine1')}<br />
+              <span className="agent-hero-gold">{t('hero.titleLine2')}</span>
+            </h1>
             <p>{t('hero.subtitle')}</p>
+            <p className="agent-hero-disclaimer">{t('hero.disclaimer')}</p>
             <div className="agent-hero-badges">
               <span className="badge">
                 <i className="fa-solid fa-bolt"></i> {t('hero.badgeReady')}
@@ -79,7 +83,6 @@ export default function Agent() {
                 <i className="fa-solid fa-clock"></i> {t('hero.badge247')}
               </span>
             </div>
-            <a href="#pricing" className="btn-green">{t('hero.cta')}</a>
           </div>
 
           {/* Chat mockup */}
@@ -87,7 +90,7 @@ export default function Agent() {
             <div className="agent-chat-window" onClick={handleLaunchChat} style={{ cursor: "pointer" }}>
               <div className="agent-chat-header">
                 <div className="agent-chat-avatar">
-                  <i className="fa-solid fa-robot"></i>
+                  <img src="/img/logos/sofia-anne.png" alt="Sofia" />
                 </div>
                 <div className="agent-chat-header-info">
                   <h4>{t('chat.name')}</h4>
@@ -95,15 +98,21 @@ export default function Agent() {
                 </div>
               </div>
               <div className="agent-chat-body">
-                <div className="chat-bubble bot">{t('chat.bubble1')}</div>
-                <div className="chat-bubble user">{t('chat.bubble2')}</div>
-                <div className="chat-bubble bot">{t('chat.bubble3')}</div>
-                <div className="chat-bubble user">{t('chat.bubble4')}</div>
-                <div className="chat-bubble bot">{t('chat.bubble5')}</div>
+                <div className="chat-bubble bot">
+                  {t('chat.bubble1')}
+                  <span className="chat-time">9:35</span>
+                </div>
+                <div className="chat-bubble user">
+                  {t('chat.bubble2')}
+                  <span className="chat-time">9:41 <i className="fa-solid fa-check-double"></i></span>
+                </div>
+                <div className="chat-bubble bot">
+                  {t('chat.bubble3')}
+                  <span className="chat-time">9:41</span>
+                </div>
               </div>
-              <div className="agent-chat-input">
-                <span>{t('chat.inputPlaceholder')}</span>
-                <i className="fa-solid fa-paper-plane"></i>
+              <div className="agent-chat-cta">
+                <i className="fa-regular fa-comment-dots"></i> {t('chat.cta')}
               </div>
             </div>
           </div>
@@ -210,6 +219,13 @@ export default function Agent() {
               </div>
             </div>
 
+            <div className="agent-security-certs">
+              <div className="agent-cert-card">
+                <i className="fa-solid fa-shield-halved"></i>
+                <h4>{t('security.iso.title')}</h4>
+                <p>{t('security.iso.description')}</p>
+              </div>
+            </div>
           </div>
         </div>
       </section>
@@ -217,15 +233,17 @@ export default function Agent() {
       {/* ===== PRICING ===== */}
       <section className="agent-pricing" id="pricing">
         <div className="agent-container">
+          <div className="agent-trial-badge">{t('pricing.trialBadge')}</div>
           <h2 className="agent-section-title">{t('pricing.title')}</h2>
           <p className="agent-section-subtitle">{t('pricing.subtitle')}</p>
-          <div className="agent-pricing-layout">
+          <div className="agent-pricing-signup">
             <div className="agent-pricing-plans">
               {/* Starter */}
               <div className="agent-plan-card">
                 <h3>{t('pricing.starter.name')}</h3>
                 <div className="agent-plan-price">{t('pricing.starter.price')} <span>{t('pricing.starter.currency')}</span></div>
                 <div className="agent-plan-period">{t('pricing.starter.period')}</div>
+                <div className="agent-plan-trial">{t('pricing.starter.trial')}</div>
                 <ul className="agent-plan-features">
                   {Array.isArray(starterFeatures) && starterFeatures.map((feat, i) => (
                     <li key={i}><i className="fa-solid fa-check"></i> {feat}</li>
@@ -240,6 +258,7 @@ export default function Agent() {
                 <h3>{t('pricing.premium.name')}</h3>
                 <div className="agent-plan-price">{t('pricing.premium.price')} <span>{t('pricing.premium.currency')}</span></div>
                 <div className="agent-plan-period">{t('pricing.premium.period')}</div>
+                <div className="agent-plan-trial">{t('pricing.premium.trial')}</div>
                 <ul className="agent-plan-features">
                   {Array.isArray(premiumFeatures) && premiumFeatures.map((feat, i) => (
                     <li key={i}><i className="fa-solid fa-check"></i> {feat}</li>
@@ -248,10 +267,8 @@ export default function Agent() {
                 <button className="btn-green">{t('pricing.premium.cta')}</button>
               </div>
             </div>
-          </div>
 
-          {/* Signup form — reuses the same component from the homepage */}
-          <div className="agent-pricing-signup">
+            {/* Signup form — reuses the same component from the homepage */}
             <SignupForm isOpen={true} onClose={() => {}} allowedLevels={['mls']} />
           </div>
         </div>
@@ -261,6 +278,7 @@ export default function Agent() {
       <section className="agent-cta">
         <div className="agent-container">
           <h2>{t('cta.title')}</h2>
+          <p className="agent-cta-subtitle">{t('cta.subtitle')}</p>
           <div className="agent-cta-buttons">
             <a href="#pricing" className="btn-green">{t('cta.primary')}</a>
             <a href="#contact" className="btn-outline">{t('cta.secondary')}</a>

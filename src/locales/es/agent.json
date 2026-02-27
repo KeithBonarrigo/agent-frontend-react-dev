@@ -1,7 +1,17 @@
 {
+  "header": {
+    "demo": "Ver Demo",
+    "expert": "Habla con un experto",
+    "cta": "Comenzar gratis",
+    "dashboard": "Mi Dashboard",
+    "logIn": "Iniciar Sesión",
+    "logOut": "Cerrar Sesión"
+  },
   "hero": {
-    "title": "Un Ejército de Ventas En Un Solo Agente IA",
-    "subtitle": "Tu agente de inteligencia artificial se integra con tus plataformas, responde consultas de clientes, califica leads y agenda citas — todo en automático, las 24 horas del día.",
+    "titleLine1": "Un Ejercito de Ventas",
+    "titleLine2": "En Un Solo Agente IA",
+    "subtitle": "El primer vendedor virtual que se integra automáticamente con plataformas como EasyBroker y OmniMls. Un solo agente IA que conoce cada propiedad, atiende cientos de clientes simultaneamente, y cierra citas 24/7. Sin configurar nada. Sin mantenimiento. Solo ventas.*",
+    "disclaimer": "*PropelAgent es un servicio independiente no afiliado con las marcas mencionadas.",
     "badgeReady": "Listo en 30 seg",
     "badgeSecurity": "Seguridad Bancaria",
     "badge247": "Responde 24/7",
@@ -9,13 +19,11 @@
   },
   "chat": {
     "name": "Sofia - Tu Asistente IA",
-    "online": "En línea",
-    "inputPlaceholder": "Escribe un mensaje...",
-    "bubble1": "¡Hola! Soy Sofia, tu asistente de ventas. ¿En qué puedo ayudarte hoy?",
-    "bubble2": "Busco una casa de 3 recámaras en la zona dorada",
-    "bubble3": "¡Excelente elección! Tengo 4 propiedades disponibles en esa zona. ¿Te gustaría agendar una visita o recibir los detalles por WhatsApp?",
-    "bubble4": "Sí, mándame los detalles por WhatsApp",
-    "bubble5": "¡Perfecto! Te envío la información ahora mismo. ¿Me compartes tu número?"
+    "online": "En vivo - Habla con ella ahora",
+    "bubble1": "Hola, soy Sofia. Te ayudo a encontrar tu propiedad ideal.",
+    "bubble2": "Busco departamento en Polanco",
+    "bubble3": "Excelente zona. Tengo 12 opciones. Cual es tu presupuesto?",
+    "cta": "Hablar con Sofia en Vivo"
   },
   "features": {
     "title": "¿Por Qué PropelAgent es Diferente?",
@@ -65,8 +73,8 @@
       "description": "Tus datos nunca son vistos por personas. Todo el procesamiento es automático y seguro."
     },
     "iso": {
-      "title": "ISO 27001",
-      "description": "Certificación internacional de seguridad de la información"
+      "title": "Estándares Internacionales",
+      "description": "Cumplimos con los más altos estándares internacionales de seguridad de datos"
     },
     "soc": {
       "title": "SOC 2 Type II",
@@ -74,8 +82,9 @@
     }
   },
   "pricing": {
+    "trialBadge": "14 dias de prueba gratis",
     "title": "Elige tu Plan y Comienza Hoy",
-    "subtitle": "Sin contratos a largo plazo. Cancela cuando quieras.",
+    "subtitle": "Sin tarjeta requerida. Cancela cuando quieras.",
     "starter": {
       "name": "Starter",
       "price": "$888",
@@ -88,6 +97,7 @@
         "Dashboard básico",
         "Soporte por email"
       ],
+      "trial": "14 dias de prueba sin costo",
       "cta": "Comenzar Gratis"
     },
     "premium": {
@@ -105,6 +115,7 @@
         "Calificación de leads",
         "Soporte prioritario"
       ],
+      "trial": "14 dias de prueba sin costo",
       "cta": "Comenzar Gratis"
     },
     "signup": {
@@ -119,7 +130,8 @@
     }
   },
   "cta": {
-    "title": "¿Listo para Vender Más Sin Trabajar Más?",
+    "title": "Listo para Vender Mas Sin Trabajar Mas?",
+    "subtitle": "Unete a los agentes inmobiliarios que ya multiplican sus ventas con PropelAgent. Tu competencia ya lo esta usando.",
     "primary": "Comenzar Prueba Gratis",
     "secondary": "Ver Demo en Vivo"
   },

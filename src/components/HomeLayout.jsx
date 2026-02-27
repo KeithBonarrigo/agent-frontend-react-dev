@@ -1,5 +1,6 @@
 import { Outlet } from "react-router-dom";
 import HomeHeader from "./HomeHeader";
+import AgentHeader from "./AgentHeader";
 import HomeFooter from "./HomeFooter";
 import AgentFooter from "./AgentFooter";
 import { useDomain } from "../contexts/DomainContext";
@@ -11,7 +12,7 @@ function HomeLayout() {
 
   return (
     <>
-      <HomeHeader />
+      {isPropel ? <AgentHeader /> : <HomeHeader />}
 
       <main>
         <Outlet />
