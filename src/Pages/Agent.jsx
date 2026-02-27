@@ -207,18 +207,6 @@ export default function Agent() {
               </div>
             </div>
 
-            <div className="agent-security-certs">
-              <div className="agent-cert-card">
-                <i className="fa-solid fa-certificate"></i>
-                <h4>{t('security.iso.title')}</h4>
-                <p>{t('security.iso.description')}</p>
-              </div>
-              <div className="agent-cert-card">
-                <i className="fa-solid fa-shield-halved"></i>
-                <h4>{t('security.soc.title')}</h4>
-                <p>{t('security.soc.description')}</p>
-              </div>
-            </div>
           </div>
         </div>
       </section>
