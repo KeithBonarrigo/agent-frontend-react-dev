@@ -44,7 +44,7 @@ export default function AgentHeader() {
             </Link>
           )}
 
-          <a href="#contact" className="agent-header-link">
+          <a href="#contact" className="agent-header-link agent-header-divider">
             <i className="fa-regular fa-comment-dots"></i> {t('header.demo')}
           </a>
           <a href="#contact" className="agent-header-btn-outline">

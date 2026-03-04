@@ -23,7 +23,7 @@ import { DomainProvider, useDomain } from './contexts/DomainContext';
 function AppRoutes() {
   const { domainInfo } = useDomain();
   const hostname = domainInfo?.hostname || window.location.hostname;
-  const isPropel = hostname === 'localhost' || hostname?.includes('propel');
+  const isPropel = hostname?.includes('propel');
 
   return (
     <>

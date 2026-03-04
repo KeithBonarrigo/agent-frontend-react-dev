@@ -18,6 +18,10 @@ export default function Dashboard() {
   const { user, isLoggedIn, isLoading, logout } = useUser();
   const [activeTab, setActiveTab] = useState('configurations');
   const [expandShare, setExpandShare] = useState(false);
+  const [expandAllLive, setExpandAllLive] = useState(false);
+  const [expandCollaborations, setExpandCollaborations] = useState(false);
+  const [leadsCollabCount, setLeadsCollabCount] = useState(0);
+  const [leadsCount, setLeadsCount] = useState(0);
   const [tokenLimits, setTokenLimits] = useState(null);
   const [loadingLimits, setLoadingLimits] = useState(true);
   
@@ -248,6 +252,37 @@ export default function Dashboard() {
     if (selectedClientId) {
       fetchEmbeddings();
       fetchFileEmbeddings();
+    }
+  }, [selectedClientId]);
+
+  // Fetch collaboration count for Leads tab badge (EasyBroker only)
+  useEffect(() => {
+    const level = (selectedClient?.level || selectedClient?.subscription_level || '').toLowerCase();
+    if (selectedClientId && level === 'easybroker') {
+      const apiBaseUrl = getApiUrl();
+      fetch(`${apiBaseUrl}/api/leads/${selectedClientId}/collaborations`, {
+        headers: { 'Authorization': `Bearer ${import.meta.env.VITE_CREATE_USER_TOKEN}` }
+      })
+        .then(res => res.ok ? res.json() : Promise.reject())
+        .then(data => setLeadsCollabCount((data.properties || []).length))
+        .catch(() => setLeadsCollabCount(0));
+    } else {
+      setLeadsCollabCount(0);
+    }
+  }, [selectedClientId, selectedClient?.level, selectedClient?.subscription_level]);
+
+  // Fetch leads count for Leads tab badge
+  useEffect(() => {
+    if (selectedClientId) {
+      const apiBaseUrl = getApiUrl();
+      fetch(`${apiBaseUrl}/api/leads?clientId=${selectedClientId}`, {
+        headers: { 'Authorization': `Bearer ${import.meta.env.VITE_CREATE_USER_TOKEN}` }
+      })
+        .then(res => res.ok ? res.json() : Promise.reject())
+        .then(data => setLeadsCount((data.leads || []).length))
+        .catch(() => setLeadsCount(0));
+    } else {
+      setLeadsCount(0);
     }
   }, [selectedClientId]);
 
@@ -1656,6 +1691,7 @@ export default function Dashboard() {
           marginBottom: '1em',
           display: 'flex',
           alignItems: 'center',
+          justifyContent: 'center',
           gap: '0.5em'
         }}>
           <i className="fa-solid fa-bullhorn" style={{ color: '#155724', fontSize: '1.1em' }}></i>
@@ -1698,7 +1734,7 @@ export default function Dashboard() {
             <button className={`dashboard-tab ${activeTab === 'styling' ? 'dashboard-tab-active' : ''}`} onClick={() => setActiveTab('styling')}>◉ {t('common:navigation.styling')}</button>
             <button className={`dashboard-tab ${activeTab === 'integrations' ? 'dashboard-tab-active' : ''}`} onClick={() => setActiveTab('integrations')}>⇄ {t('common:navigation.integrations')}</button>
             <button className={`dashboard-tab ${activeTab === 'conversations' ? 'dashboard-tab-active' : ''}`} onClick={() => setActiveTab('conversations')}>◐ {t('common:navigation.conversations')}</button>
-            <button className={`dashboard-tab ${activeTab === 'leads' ? 'dashboard-tab-active' : ''}`} onClick={() => setActiveTab('leads')}>⊛ {t('common:navigation.leads')}</button>
+            <button className={`dashboard-tab ${activeTab === 'leads' ? 'dashboard-tab-active' : ''}`} onClick={() => setActiveTab('leads')}>⊛ {t('common:navigation.leads')}{leadsCount > 0 && <span className="tab-badge-blue">{leadsCount}</span>}{leadsCollabCount > 0 && <span className="tab-badge-green">{leadsCollabCount}</span>}</button>
             <button className={`dashboard-tab ${activeTab === 'metrics' ? 'dashboard-tab-active' : ''}`} onClick={() => setActiveTab('metrics')}>▦ {t('common:navigation.metrics')}</button>
           </div>
 
@@ -1711,9 +1747,9 @@ export default function Dashboard() {
           {/* Add-Ons Tab - Selectable decorators/integrations from server's decorator registry */}
           {activeTab === 'addons' && <AddOnsTab user={selectedClient} clientId={selectedClientId} />}
           {activeTab === 'integrations' && <IntegrationsTab user={selectedClient} clientId={selectedClientId} onClientUpdate={handleClientUpdate} />}
-          {activeTab === 'conversations' && <ConversationsTab user={selectedClient} clientId={selectedClientId} />}
-          {activeTab === 'metrics' && <MetricsTab user={selectedClient} clientId={selectedClientId} subscription={selectedSubscription} tokensUsed={subscriptionTokensUsed} />}
-          {activeTab === 'leads' && <LeadsTab user={selectedClient} clientId={selectedClientId} expandShare={expandShare} onShareExpanded={() => setExpandShare(false)} />}
+          {activeTab === 'conversations' && <ConversationsTab user={selectedClient} clientId={selectedClientId} expandAllLive={expandAllLive} onExpandAllLiveDone={() => setExpandAllLive(false)} />}
+          {activeTab === 'metrics' && <MetricsTab user={selectedClient} clientId={selectedClientId} subscription={selectedSubscription} tokensUsed={subscriptionTokensUsed} onNavigateToConversations={() => setActiveTab('conversations')} onNavigateToActiveUsers={() => { setExpandAllLive(true); setActiveTab('conversations'); }} onNavigateToLeads={() => setActiveTab('leads')} onNavigateToCollaborations={() => { setExpandCollaborations(true); setActiveTab('leads'); }} />}
+          {activeTab === 'leads' && <LeadsTab user={selectedClient} clientId={selectedClientId} expandShare={expandShare} onShareExpanded={() => setExpandShare(false)} expandCollaborations={expandCollaborations} onCollaborationsExpanded={() => setExpandCollaborations(false)} />}
           {activeTab === 'styling' && <StylingTab user={selectedClient} clientId={selectedClientId} onNavigateToIntegrations={() => setActiveTab('integrations')} />}
             </>
           )}

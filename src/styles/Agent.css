@@ -94,6 +94,12 @@ html:has(.agent-page) {
   transition: color 0.2s;
 }
 
+.agent-header-divider {
+  margin-left: 0.75rem;
+  padding-left: 1rem;
+  border-left: 1px solid #d1d5db;
+}
+
 .agent-header-link:hover {
   color: #1a1a2e;
 }
@@ -739,21 +745,9 @@ html:has(.agent-page) {
 
 /* Pricing plans + signup form wrapper */
 .agent-pricing-signup {
-  width: 100%;
+  width: 66%;
 }
 
-/* Only flatten the Terms modal inline — keep the Stripe payment modal as a fixed overlay */
-.agent-pricing-signup .signup-modal-overlay:has(.signup-modal-terms) {
-  position: static;
-  background: none;
-  padding: 0;
-  z-index: auto;
-}
-
-.agent-pricing-signup .signup-modal-terms {
-  max-width: 100%;
-  box-shadow: none;
-}
 
 .agent-pricing-signup .home-form {
   max-width: 100%;
@@ -920,7 +914,8 @@ html:has(.agent-page) {
 }
 
 .agent-contact-form {
-  flex: 1;
+  flex: 0 0 33%;
+  max-width: 400px;
   background: #fff;
   border-radius: 12px;
   padding: 2em;
@@ -1091,6 +1086,10 @@ html:has(.agent-page) {
     flex: none;
     width: 100%;
     flex-direction: row;
+  }
+
+  .agent-pricing-signup {
+    width: 100%;
   }
 
   .agent-pricing-plans {

@@ -23,6 +23,43 @@
     "notes": "Notas"
   },
   "showingCount": "Mostrando {{filtered}} de {{total}} prospectos",
+  "collaborations": {
+    "title": "Colaboraciones",
+    "description": "Propiedades de otras oficinas que se mostraron a tus contactos. Estas son oportunidades de colaboracion.",
+    "loading": "Cargando propiedades de colaboracion...",
+    "empty": "Aun no hay propiedades de colaboracion. Apareceran cuando a tus contactos se les muestren listados de otras oficinas.",
+    "showingCount": "Mostrando {{count}} propiedades de colaboracion",
+    "selected": "{{count}} seleccionados",
+    "activate": "Activar",
+    "deactivate": "Desactivar",
+    "filterAll": "Todos",
+    "filterActive": "Solo activos",
+    "filterInactive": "Solo inactivos",
+    "table": {
+      "property": "Propiedad",
+      "officeId": "Oficina",
+      "contact": "Contacto",
+      "priceCommission": "Precio / Comisión",
+      "date": "Fecha",
+      "active": "Activo"
+    }
+  },
+  "searches": {
+    "title": "Búsquedas Guardadas",
+    "noSearches": "No hay búsquedas guardadas para este contacto.",
+    "loading": "Cargando búsquedas...",
+    "created": "Creada",
+    "lastRun": "Última Ejecución",
+    "viewSql": "Ver SQL",
+    "hideSql": "Ocultar SQL",
+    "params": "Criterios de Búsqueda",
+    "repeatSearch": "Repetir Búsqueda",
+    "every": "cada",
+    "days": "Días",
+    "weeks": "Semanas",
+    "saving": "Guardando...",
+    "save": "Guardar"
+  },
   "share": {
     "title": "Compartir / Invitar",
     "description": "Invita a colegas y contactos a probar tu asistente de IA por correo electronico o WhatsApp.",

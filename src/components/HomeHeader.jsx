@@ -46,7 +46,7 @@ export default function HomeHeader() {
   const getLogoConfig = () => {
     const hostname = domainInfo?.hostname || window.location.hostname;
 
-    if (hostname === 'localhost' || hostname?.includes('propel')) {
+    if (hostname?.includes('propel')) {
       return {
         src: '/img/logos/propel-agent-white.png',
         alt: 'PropelAgent',

@@ -19,7 +19,10 @@
     "totalSearches": "Property Searches",
     "viewingsScheduled": "Viewings Scheduled",
     "openHousesScheduled": "Open Houses Scheduled",
-    "consultationsScheduled": "Consultations Scheduled"
+    "consultationsScheduled": "Consultations Scheduled",
+    "collaborations": "Collaborations Found",
+    "totalCommission": "Total Potential Commission",
+    "uniqueLocations": "Locations Contacted From"
   },
   "locations": {
     "title": "User Locations",

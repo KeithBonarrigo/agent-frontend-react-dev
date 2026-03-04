@@ -19,7 +19,10 @@
     "totalSearches": "Búsquedas de Propiedades",
     "viewingsScheduled": "Visitas Programadas",
     "openHousesScheduled": "Casas Abiertas Programadas",
-    "consultationsScheduled": "Consultas Programadas"
+    "consultationsScheduled": "Consultas Programadas",
+    "collaborations": "Colaboraciones Encontradas",
+    "totalCommission": "Comisión Potencial Total",
+    "uniqueLocations": "Ubicaciones de Contacto"
   },
   "locations": {
     "title": "Ubicaciones de Usuarios",

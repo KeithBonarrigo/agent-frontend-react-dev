@@ -35,7 +35,7 @@ function formatDuration(firstTimestamp, lastTimestamp) {
   return `${seconds}s`;
 }
 
-export default function ConversationsTab({ clientId, user }) {
+export default function ConversationsTab({ clientId, user, expandAllLive: expandAllLiveProp, onExpandAllLiveDone }) {
   const { t } = useTranslation('conversations');
   const [conversations, setConversations] = useState([]);
   const [loadingConversations, setLoadingConversations] = useState(false);
@@ -288,6 +288,14 @@ export default function ConversationsTab({ clientId, user }) {
     setExpandedChannels(liveChannels);
     setExpandedUsers(liveUsers);
   };
+
+  // Auto-expand live sessions when navigated from metrics Active Users tile
+  useEffect(() => {
+    if (expandAllLiveProp && conversations.length > 0) {
+      expandAllLive();
+      onExpandAllLiveDone?.();
+    }
+  }, [expandAllLiveProp, conversations]);
 
   // Handle click from map popup - expand and scroll to user's conversation
   const handleMapUserClick = (userId) => {

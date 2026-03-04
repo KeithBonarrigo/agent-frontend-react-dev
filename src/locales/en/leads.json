@@ -23,6 +23,43 @@
     "notes": "Notes"
   },
   "showingCount": "Showing {{filtered}} of {{total}} leads",
+  "collaborations": {
+    "title": "Collaborations",
+    "description": "Properties from other offices that were shown to your contacts. These are potential collaboration opportunities.",
+    "loading": "Loading collaboration properties...",
+    "empty": "No collaboration properties found yet. These will appear when your contacts are shown listings from other offices.",
+    "showingCount": "Showing {{count}} collaboration properties",
+    "selected": "{{count}} selected",
+    "activate": "Activate",
+    "deactivate": "Deactivate",
+    "filterAll": "All",
+    "filterActive": "Active only",
+    "filterInactive": "Inactive only",
+    "table": {
+      "property": "Property",
+      "officeId": "Office",
+      "contact": "Contact",
+      "priceCommission": "Price / Commission",
+      "date": "Date",
+      "active": "Active"
+    }
+  },
+  "searches": {
+    "title": "Saved Searches",
+    "noSearches": "No saved searches for this contact.",
+    "loading": "Loading searches...",
+    "created": "Created",
+    "lastRun": "Last Run",
+    "viewSql": "View SQL",
+    "hideSql": "Hide SQL",
+    "params": "Search Criteria",
+    "repeatSearch": "Repeat Search",
+    "every": "every",
+    "days": "Days",
+    "weeks": "Weeks",
+    "saving": "Saving...",
+    "save": "Save"
+  },
   "share": {
     "title": "Share / Invite",
     "description": "Invite colleagues and contacts to try your AI assistant by email or WhatsApp.",

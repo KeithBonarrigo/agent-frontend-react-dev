@@ -50,6 +50,25 @@ button:active {
   color: #007bff;
 }
 
+.tab-badge-green,
+.tab-badge-blue {
+  font-size: 0.7em;
+  font-weight: 600;
+  color: #fff;
+  border-radius: 10px;
+  padding: 1px 6px;
+  margin-left: 6px;
+  vertical-align: middle;
+}
+
+.tab-badge-green {
+  background-color: #28a745;
+}
+
+.tab-badge-blue {
+  background-color: #007bff;
+}
+
 /* ==========================================
    LAYOUT CONTAINERS
    ========================================== */
