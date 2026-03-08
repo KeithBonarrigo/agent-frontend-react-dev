@@ -633,9 +633,9 @@ export default function StylingTab({ user, clientId, onNavigateToIntegrations }:
   };
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5em' }}>
+    <>
       {/* Branding Section */}
-      <div className="tab-container">
+      <div className="section" style={{ marginBottom: '1.5em' }}>
         <div
           onClick={() => setIsThemeCollapsed(!isThemeCollapsed)}
           className={`section-header ${!isThemeCollapsed ? 'section-header-expanded' : ''}`}
@@ -1013,7 +1013,7 @@ export default function StylingTab({ user, clientId, onNavigateToIntegrations }:
       </div>
 
       {/* Custom CSS Styling Section */}
-      <div className="tab-container">
+      <div className="section" style={{ marginBottom: '1.5em' }}>
         <div
           onClick={() => setIsCssCollapsed(!isCssCollapsed)}
           className={`section-header ${!isCssCollapsed ? 'section-header-expanded' : ''}`}
@@ -1075,7 +1075,7 @@ export default function StylingTab({ user, clientId, onNavigateToIntegrations }:
                   className="textarea-code"
                 />
 
-                <div className="flex flex-center gap-md mt-2">
+                <div className="flex gap-md mt-2">
                   <button
                     onClick={handleSave}
                     disabled={saving}
@@ -1116,6 +1116,6 @@ export default function StylingTab({ user, clientId, onNavigateToIntegrations }:
           </>
         )}
       </div>
-    </div>
+    </>
   );
 }

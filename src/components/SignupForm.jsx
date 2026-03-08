@@ -133,6 +133,7 @@ export default function SignupForm({ isOpen, allowedLevels }) {
     enterprise: { amount: 19900, name: "Enterprise" },
     easybroker: { amount: 7900, name: "Real Estate Agent (EasyBroker)" },
     mls: { amount: 7900, name: "Real Estate Agent (MLS)" },
+    calendar_assistant: { amount: 0, name: "Calendar Assistant" },
   };
 
   useEffect(() => {
@@ -360,7 +361,7 @@ export default function SignupForm({ isOpen, allowedLevels }) {
     setValidatedFormData(payload);
 
     // If free tier, skip payment and create user directly
-    if (agentForm.level === "free") {
+    if (agentForm.level === "free" || agentForm.level === "calendar_assistant") {
       await createUser(payload, null);
       return;
     }
@@ -910,12 +911,13 @@ export default function SignupForm({ isOpen, allowedLevels }) {
                       {(!allowedLevels || allowedLevels.includes('enterprise')) && <option value="enterprise">{t('plans.enterprise')}</option>}
                       {(!allowedLevels || allowedLevels.includes('easybroker')) && <option value="easybroker">{t('plans.easybroker')}</option>}
                       {(!allowedLevels || allowedLevels.includes('mls')) && <option value="mls">{t('plans.mls')}</option>}
+                      {(!allowedLevels || allowedLevels.includes('calendar_assistant')) && <option value="calendar_assistant">{t('plans.calendarAssistant')}</option>}
                     </select>
                   </div>
                 </div>
 
                 {/* Branding notice for free and basic plans */}
-                {(agentForm.level === 'free' || agentForm.level === 'basic') && (
+                {(agentForm.level === 'free' || agentForm.level === 'basic' || agentForm.level === 'calendar_assistant') && (
                   <div className="signup-branding-notice">
                     <i className="fa-solid fa-info-circle"></i>
                     <span>{t('plans.brandingNotice')}</span>
@@ -1050,7 +1052,7 @@ export default function SignupForm({ isOpen, allowedLevels }) {
                     className="home-btn home-btn-green signup-submit-btn"
                     disabled={emailExists || checkingEmail}
                   >
-                    {agentForm.level === "free" ? t('buttons.letsGo') : t('buttons.startFreeTrial')}
+                    {(agentForm.level === "free" || agentForm.level === "calendar_assistant") ? t('buttons.letsGo') : t('buttons.startFreeTrial')}
                   </button>
                 </div>
               </div>

@@ -1,0 +1,46 @@
+{
+  "title": "Audience Insights",
+  "description": "Analyze your chatbot conversations to discover who your audience is, what they want, and how to target them with ads.",
+  "noClient": "Please select an agent to view audience insights.",
+  "timeRange": "Time Range",
+  "days": "days",
+  "generateBtn": "Generate Insights",
+  "generating": "Generating...",
+  "generatingMsg": "Analyzing conversations and generating audience insights...",
+  "generatingHint": "This may take 10-15 seconds while we process your data.",
+  "generateError": "Failed to generate report. Please try again.",
+  "noData": "No conversation data found for the selected time period.",
+  "rateLimited": "Rate limited. Next report available in {{minutes}} minutes.",
+  "pastReports": "Past Reports",
+  "selectReport": "-- Select a report --",
+  "downloadPdf": "Download PDF",
+  "sections": {
+    "summary": "Executive Summary",
+    "intent": "Intent Distribution",
+    "clusters": "Top Interest Clusters",
+    "geo": "Geographic Signals",
+    "seasonal": "Seasonal Patterns",
+    "budget": "Budget Signals",
+    "segments": "Recommended Meta Segments"
+  },
+  "intent": {
+    "high": "High Intent",
+    "medium": "Medium Intent",
+    "low": "Low Intent"
+  },
+  "geo": {
+    "interestMarkets": "Where They Want to Buy",
+    "userOrigins": "Where They're From",
+    "relocationSignal": "Strong relocation signal detected — users are searching from different locations than their target market."
+  },
+  "seasonal": {
+    "peakMonths": "Peak Inquiry Months",
+    "purchaseWindow": "Predicted Purchase Window",
+    "adStart": "Recommended Ad Start"
+  },
+  "meta": {
+    "sessions": "Sessions",
+    "messages": "Messages",
+    "generatedAt": "Generated"
+  }
+}

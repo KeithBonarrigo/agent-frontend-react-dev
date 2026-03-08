@@ -95,5 +95,17 @@
     "sendSuccess": "Message sent successfully!",
     "sendError": "Failed to send message. Please try again."
   },
+  "googleCalendar": {
+    "title": "Google Calendar",
+    "description": "Sync your Google Calendar so your AI agent can check availability and book appointments.",
+    "connect": "Connect",
+    "disconnect": "Disconnect",
+    "connected": "Connected",
+    "notConnected": "Not connected",
+    "checking": "Checking connection...",
+    "connectError": "Failed to connect Google Calendar.",
+    "confirmDisconnect": "Are you sure you want to disconnect Google Calendar?",
+    "signInWithGoogle": "Sign in with Google"
+  },
   "noSubscription": "Please select a subscription to configure integrations."
 }

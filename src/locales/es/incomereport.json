@@ -1,0 +1,32 @@
+{
+  "title": "Reporte de Ingresos",
+  "description": "Genera un reporte PDF de ingresos para cualquier propiedad buscando sus datos de listado y conversaciones relacionadas del chatbot.",
+  "noClient": "Selecciona un agente para ver los reportes de ingresos.",
+  "generating": "Generando...",
+  "generatingMsg": "Buscando propiedad y generando tu reporte PDF...",
+  "generatingHint": "Esto puede tomar 10-15 segundos.",
+  "generateError": "Error al generar el reporte. Inténtalo de nuevo.",
+  "propertyNotFound": "Propiedad no encontrada. Verifica el ID y la fuente.",
+  "noData": "No se encontraron conversaciones que mencionen esta propiedad.",
+  "rateLimited": "Límite de solicitudes alcanzado. Próximo reporte disponible en {{minutes}} minutos.",
+  "downloadSuccess": "Reporte descargado exitosamente!",
+  "form": {
+    "title": "Buscar Reporte de Propiedad",
+    "source": "Fuente de Propiedad",
+    "propertyId": "ID de Propiedad",
+    "placeholderMls": "ej. 12345678",
+    "placeholderEb": "ej. EB-ABC123",
+    "submit": "Generar Reporte PDF"
+  },
+  "pastReports": {
+    "title": "Historial de Reportes de Ingresos",
+    "empty": "No se han generado reportes aún.",
+    "date": "Fecha",
+    "property": "ID de Propiedad",
+    "name": "Nombre de Propiedad",
+    "price": "Precio",
+    "type": "Tipo",
+    "source": "Fuente",
+    "download": "PDF"
+  }
+}

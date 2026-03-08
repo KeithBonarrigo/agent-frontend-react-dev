@@ -53,12 +53,13 @@
     "configurations": "Configuraciones",
     "training": "Entrenamiento",
     "models": "Modelos",
-    "addons": "Complementos",
     "integrations": "Integraciones",
     "conversations": "Conversaciones",
     "metrics": "Métricas",
     "leads": "Prospectos",
-    "styling": "Estilos"
+    "styling": "Estilos",
+    "audienceinsights": "Audiencia",
+    "incomereport": "Ingresos"
   },
   "language": {
     "select": "Idioma",

@@ -58,7 +58,10 @@
     "editSettings": "Editar Configuración",
     "restrictResponse": "Restringir Respuesta por Horario",
     "restrictResponseStart": "Restringir Respuesta Desde",
-    "restrictResponseEnd": "Restringir Respuesta Hasta"
+    "restrictResponseEnd": "Restringir Respuesta Hasta",
+    "sectionAgent": "Agente y Empresa",
+    "sectionContact": "Información de Contacto",
+    "sectionLocation": "Ubicación y Horario"
   },
   "summary": {
     "noSettings": "No hay configuración de agente. Haga clic en Editar para agregar detalles.",

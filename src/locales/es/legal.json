@@ -85,13 +85,26 @@
         "title": "11. Integración con Plataformas Externas",
         "content": "Ciertas ofertas de {{companyName}} incorporan plataformas de terceros a través de APIs o conexiones técnicas similares. El compromiso con estos servicios externos permanece completamente opcional y dirigido por el usuario. {{companyName}} no asume responsabilidad por los enfoques de privacidad de plataformas externas y aconseja consultar sus políticas individuales."
       },
+      "googleOauth": {
+        "title": "12. Integración con Google OAuth y Calendario",
+        "content": "{{companyName}} utiliza Google OAuth para conectar los Calendarios de Google de los usuarios. La aplicación accede a la disponibilidad del calendario y permisos de creación de eventos únicamente para programar citas solicitadas por el usuario.",
+        "items": {
+          "scope": "El acceso se limita a leer la disponibilidad del calendario y crear eventos;",
+          "purpose": "Los datos del calendario se utilizan exclusivamente para programar citas en nombre del usuario;",
+          "storage": "No almacenamos datos del calendario más allá de lo necesario para completar la solicitud de programación;",
+          "revoke": "Los usuarios pueden revocar el acceso al calendario en cualquier momento a través de la configuración de su cuenta de Google."
+        },
+        "individual": "Cada conexión de Google Calendar es autorizada por un usuario individual y se utiliza únicamente para la automatización de programación de ese usuario. BotWerx es una plataforma SaaS utilizada por múltiples empresas. Cada empresa conecta independientemente su propio Google Calendar a través de OAuth.",
+        "tokenStorage": "BotWerx almacena los tokens de OAuth de forma segura y solo los utiliza para acceder a Google Calendar cuando el usuario programa o modifica una cita a través del bot.",
+        "minimumAccess": "BotWerx solo accede a los datos mínimos del calendario necesarios para verificar la disponibilidad y crear eventos."
+      },
       "updates": {
-        "title": "12. Actualizaciones de la Política",
+        "title": "13. Actualizaciones de la Política",
         "revise": "Mantenemos la prerrogativa de revisar o enmendar esta Política de Privacidad a nuestra discreción. Las modificaciones sustanciales serán publicadas en esta página.",
         "acceptance": "El uso continuo del sitio después de tales revisiones significa su aceptación de los términos modificados."
       },
       "contact": {
-        "title": "13. Información de Contacto",
+        "title": "14. Información de Contacto",
         "content": "Para consultas o inquietudes sobre esta Política de Privacidad o nuestras prácticas de manejo de datos personales, contáctenos en:"
       }
     }

@@ -117,6 +117,20 @@ export default function PrivacyPolicy() {
           </div>
 
           <div className="policy-section">
+            <h2>{t('privacy.sections.googleOauth.title')}</h2>
+            <p>{t('privacy.sections.googleOauth.content', { companyName })}</p>
+            <ul>
+              <li>{t('privacy.sections.googleOauth.items.scope')}</li>
+              <li>{t('privacy.sections.googleOauth.items.purpose')}</li>
+              <li>{t('privacy.sections.googleOauth.items.storage')}</li>
+              <li>{t('privacy.sections.googleOauth.items.revoke')}</li>
+            </ul>
+            <p>{t('privacy.sections.googleOauth.individual')}</p>
+            <p>{t('privacy.sections.googleOauth.tokenStorage')}</p>
+            <p>{t('privacy.sections.googleOauth.minimumAccess')}</p>
+          </div>
+
+          <div className="policy-section">
             <h2>{t('privacy.sections.updates.title')}</h2>
             <p>{t('privacy.sections.updates.revise')}</p>
             <p>{t('privacy.sections.updates.acceptance')}</p>

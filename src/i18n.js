@@ -11,13 +11,15 @@ import enIntegrations from './locales/en/integrations.json';
 import enHome from './locales/en/home.json';
 import enConfigurations from './locales/en/configurations.json';
 import enStyling from './locales/en/styling.json';
-import enAddons from './locales/en/addons.json';
+
 import enConversations from './locales/en/conversations.json';
 import enMetrics from './locales/en/metrics.json';
 import enLeads from './locales/en/leads.json';
 import enLegal from './locales/en/legal.json';
 import enLogin from './locales/en/login.json';
 import enAgent from './locales/en/agent.json';
+import enAudienceinsights from './locales/en/audienceinsights.json';
+import enIncomereport from './locales/en/incomereport.json';
 
 import esCommon from './locales/es/common.json';
 import esDashboard from './locales/es/dashboard.json';
@@ -27,13 +29,15 @@ import esIntegrations from './locales/es/integrations.json';
 import esHome from './locales/es/home.json';
 import esConfigurations from './locales/es/configurations.json';
 import esStyling from './locales/es/styling.json';
-import esAddons from './locales/es/addons.json';
+
 import esConversations from './locales/es/conversations.json';
 import esMetrics from './locales/es/metrics.json';
 import esLeads from './locales/es/leads.json';
 import esLegal from './locales/es/legal.json';
 import esLogin from './locales/es/login.json';
 import esAgent from './locales/es/agent.json';
+import esAudienceinsights from './locales/es/audienceinsights.json';
+import esIncomereport from './locales/es/incomereport.json';
 
 const resources = {
   en: {
@@ -45,13 +49,15 @@ const resources = {
     home: enHome,
     configurations: enConfigurations,
     styling: enStyling,
-    addons: enAddons,
+
     conversations: enConversations,
     metrics: enMetrics,
     leads: enLeads,
     legal: enLegal,
     login: enLogin,
-    agent: enAgent
+    agent: enAgent,
+    audienceinsights: enAudienceinsights,
+    incomereport: enIncomereport
   },
   es: {
     common: esCommon,
@@ -62,13 +68,15 @@ const resources = {
     home: esHome,
     configurations: esConfigurations,
     styling: esStyling,
-    addons: esAddons,
+
     conversations: esConversations,
     metrics: esMetrics,
     leads: esLeads,
     legal: esLegal,
     login: esLogin,
-    agent: esAgent
+    agent: esAgent,
+    audienceinsights: esAudienceinsights,
+    incomereport: esIncomereport
   }
 };
 
@@ -79,7 +87,7 @@ i18n
     resources,
     fallbackLng: 'en',
     defaultNS: 'common',
-    ns: ['common', 'dashboard', 'signup', 'models', 'integrations', 'home', 'configurations', 'styling', 'addons', 'conversations', 'metrics', 'leads', 'legal', 'login', 'agent'],
+    ns: ['common', 'dashboard', 'signup', 'models', 'integrations', 'home', 'configurations', 'styling', 'conversations', 'metrics', 'leads', 'legal', 'login', 'agent', 'audienceinsights', 'incomereport'],
 
     detection: {
       order: ['localStorage', 'navigator', 'htmlTag'],

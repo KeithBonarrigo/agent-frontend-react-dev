@@ -36,6 +36,7 @@
     "enterprise": "Empresarial - $199/mes",
     "easybroker": "Agente Inmobiliario (EasyBroker) - $79/mes",
     "mls": "Agente Inmobiliario (MLS) - $79/mes",
+    "calendarAssistant": "Asistente de Calendario - Gratis",
     "brandingNotice": "Este plan incluye un mensaje \"Powered by BotWerx\" en la parte inferior de tu chatbot web. Puedes eliminar esto en cualquier momento actualizando a Pro o Empresarial."
   },
   "buttons": {

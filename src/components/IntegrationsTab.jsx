@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect } from "react";
+import { useSearchParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { getApiUrl } from "../utils/getApiUrl";
 import { loadFacebookSdk } from "../utils/loadFacebookSdk";
@@ -10,6 +11,7 @@ import "./Tabs.css";
 // Includes Messenger page connection via Facebook Login
 export default function IntegrationsTab({ user, clientId, onClientUpdate }) {
   const { t } = useTranslation('integrations');
+  const [searchParams, setSearchParams] = useSearchParams();
 
   const [copied, setCopied] = useState(false);
   const [chatbotLoaded, setChatbotLoaded] = useState(false);
@@ -88,6 +90,100 @@ export default function IntegrationsTab({ user, clientId, onClientUpdate }) {
   const [igTestMessage, setIgTestMessage] = useState('');
   const [igTestLoading, setIgTestLoading] = useState(false);
   const [igTestResult, setIgTestResult] = useState({ type: '', message: '' });
+
+  // Google Calendar state
+  const [gcalConnected, setGcalConnected] = useState(false);
+  const [gcalEmail, setGcalEmail] = useState('');
+  const [gcalLoading, setGcalLoading] = useState(false);
+  const [gcalChecking, setGcalChecking] = useState(true);
+  const [gcalError, setGcalError] = useState('');
+
+  // Check for OAuth redirect (Google Calendar)
+  useEffect(() => {
+    const oauthResult = searchParams.get('oauth');
+    const provider = searchParams.get('provider');
+    if (oauthResult && provider === 'google-calendar') {
+      if (oauthResult === 'success') {
+        fetchGcalStatus();
+      } else {
+        setGcalError(searchParams.get('message') || t('googleCalendar.connectError'));
+        setTimeout(() => setGcalError(''), 5000);
+      }
+      setSearchParams({});
+    }
+  }, [searchParams]);
+
+  // Fetch Google Calendar OAuth status on mount
+  useEffect(() => {
+    if (clientId) fetchGcalStatus();
+  }, [clientId]);
+
+  const fetchGcalStatus = async () => {
+    if (!clientId) return;
+    setGcalChecking(true);
+    try {
+      const apiBaseUrl = getApiUrl();
+      const res = await fetch(`${apiBaseUrl}/api/integrations/google-calendar/status/${clientId}`, {
+        credentials: 'include'
+      });
+      if (res.ok) {
+        const data = await res.json();
+        setGcalConnected(data.connected || false);
+        setGcalEmail(data.email || '');
+      } else {
+        setGcalConnected(false);
+      }
+    } catch {
+      setGcalConnected(false);
+    } finally {
+      setGcalChecking(false);
+    }
+  };
+
+  const handleGcalConnect = async () => {
+    if (!clientId) return;
+    setGcalLoading(true);
+    setGcalError('');
+    try {
+      const apiBaseUrl = getApiUrl();
+      const res = await fetch(`${apiBaseUrl}/api/integrations/google-calendar/oauth-url?clientId=${clientId}&origin=${encodeURIComponent(window.location.origin)}`, {
+        credentials: 'include'
+      });
+      if (!res.ok) throw new Error('Failed to get OAuth URL');
+      const data = await res.json();
+      if (data.url) {
+        window.location.href = data.url;
+      } else {
+        throw new Error('No OAuth URL returned');
+      }
+    } catch (err) {
+      setGcalError(err.message);
+      setTimeout(() => setGcalError(''), 5000);
+    } finally {
+      setGcalLoading(false);
+    }
+  };
+
+  const handleGcalDisconnect = async () => {
+    if (!clientId || !confirm(t('googleCalendar.confirmDisconnect'))) return;
+    setGcalLoading(true);
+    try {
+      const apiBaseUrl = getApiUrl();
+      const res = await fetch(`${apiBaseUrl}/api/clients/${clientId}/decorators/google-calendar`, {
+        method: 'DELETE',
+        credentials: 'include'
+      });
+      if (res.ok) {
+        setGcalConnected(false);
+        setGcalEmail('');
+      }
+    } catch (err) {
+      setGcalError(err.message);
+      setTimeout(() => setGcalError(''), 5000);
+    } finally {
+      setGcalLoading(false);
+    }
+  };
 
   // Send verification code to the entered phone number
   const handleSendCode = async () => {
@@ -587,155 +683,306 @@ export default function IntegrationsTab({ user, clientId, onClientUpdate }) {
         </div>
       </div>
 
-      {/* WhatsApp Registration */}
-      <div style={{ marginTop: "2em", paddingTop: "2em", borderTop: "1px solid #ddd" }}>
-        <h2 className="section-title section-title-centered" style={{ marginBottom: "1em" }}>
-          <i className="fa-brands fa-whatsapp" style={{ color: "#25D366" }}></i>
-          {' '}{t('whatsapp.title')}
-        </h2>
-        <div style={{
-          display: 'flex',
-          alignItems: 'flex-start',
-          gap: '0.6em',
-          padding: '0.75em 1em',
-          backgroundColor: '#e8f4fd',
-          border: '1px solid #bee5eb',
-          borderRadius: '6px',
-          color: '#0c5460',
-          fontSize: '0.85em',
-          lineHeight: '1.5',
-          width: '70%',
-          marginLeft: 'auto',
-          marginRight: 'auto',
-          marginBottom: '1.5em'
-        }}>
-          <i className="fa-solid fa-circle-info" style={{ marginTop: '0.2em', flexShrink: 0 }}></i>
-          <span>
-            {t('whatsapp.description')}
-            {wspStatus !== 'active' && (<><br /><br />{t('whatsapp.prerequisiteWarning')}</>)}
-          </span>
-        </div>
+      {/* Integration Cards */}
+      <div className="grid grid-cards" style={{ marginTop: '2em' }}>
 
-        {/* State: Connected */}
-        {wspStatus === 'active' && savedWspPhone ? (
-          <div style={{
-            backgroundColor: "#fff",
-            padding: "1.25em",
-            borderRadius: "4px",
-            boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)",
-            border: "1px solid #ddd",
-            width: "70%",
-            marginLeft: "auto",
-            marginRight: "auto",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between"
-          }}>
-            <div>
-              <span style={{ fontSize: "0.85em", color: "#888" }}>{t('whatsapp.currentNumber')}</span>
-              <p style={{ margin: "0.25em 0 0", fontSize: "1.1em", fontWeight: "600", color: "#333" }}>
-                <i className="fa-brands fa-whatsapp" style={{ color: "#25D366", marginRight: "0.5em" }}></i>
-                {savedWspPhone}
-              </p>
-            </div>
-            <div style={{ display: "flex", alignItems: "center", gap: "0.75em" }}>
-              <span style={{
-                backgroundColor: "#d4edda",
-                color: "#155724",
-                padding: "0.25em 0.75em",
-                borderRadius: "12px",
-                fontSize: "0.8em",
-                fontWeight: "600"
-              }}>
-                {t('whatsapp.registered')}
-              </span>
-              <button
-                onClick={handleDisconnect}
-                disabled={wspLoading}
-                style={{
-                  background: "none",
-                  border: "none",
-                  color: "#dc3545",
-                  cursor: wspLoading ? "default" : "pointer",
-                  fontSize: "0.85em",
-                  textDecoration: "underline",
-                  padding: 0
-                }}
-              >
-                {wspLoading ? t('whatsapp.removing') : t('whatsapp.remove')}
-              </button>
-            </div>
+        {/* WhatsApp Card */}
+        <div style={{
+          backgroundColor: "#fff",
+          border: `2px solid ${wspStatus === 'active' && savedWspPhone ? "#28a745" : "#dee2e6"}`,
+          borderRadius: "8px",
+          padding: "1.25em",
+          transition: "all 0.2s ease",
+          boxShadow: wspStatus === 'active' && savedWspPhone ? "0 2px 8px rgba(40, 167, 69, 0.15)" : "0 2px 4px rgba(0,0,0,0.05)"
+        }}>
+          {/* Header */}
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: "0.5em", marginBottom: "0.75em" }}>
+            <i className="fa-brands fa-whatsapp" style={{ fontSize: "2.2em", color: "#25D366" }}></i>
+            <h4 style={{ margin: 0, color: "#333", fontSize: "1.1em" }}>
+              {t('whatsapp.title')}
+            </h4>
           </div>
 
-        /* State: Not connected - show registration form */
-        ) : (
-          <div style={{
-            backgroundColor: "#fff",
-            padding: "1.5em",
-            borderRadius: "4px",
-            boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)",
-            border: "1px solid #ddd",
-            width: "70%",
-            marginLeft: "auto",
-            marginRight: "auto"
-          }}>
-            {/* Step 1: Phone number input */}
-            <div style={{ marginBottom: wspStep === 'verify' ? "1.25em" : 0 }}>
-              <label style={{ display: "block", fontSize: "0.85em", color: "#555", marginBottom: "0.4em", fontWeight: "600" }}>
-                {t('whatsapp.phoneLabel')}
-              </label>
-              <div style={{ display: "flex", gap: "0.5em" }}>
-                <input
-                  type="tel"
-                  value={wspPhone}
-                  onChange={(e) => setWspPhone(e.target.value)}
-                  placeholder={t('whatsapp.phonePlaceholder')}
-                  disabled={wspStep === 'verify' || wspLoading}
-                  style={{
-                    flex: 1,
-                    padding: "0.6em 0.8em",
-                    border: "1px solid #ccc",
-                    borderRadius: "4px",
-                    fontSize: "1em",
-                    backgroundColor: wspStep === 'verify' ? '#f0f0f0' : '#fff'
-                  }}
-                />
-                <button
-                  onClick={handleSendCode}
-                  disabled={!wspPhone.trim() || wspLoading || wspStep === 'verify'}
-                  style={{
-                    padding: "0.6em 1.2em",
-                    backgroundColor: (!wspPhone.trim() || wspLoading || wspStep === 'verify') ? "#ccc" : "#25D366",
-                    color: "white",
-                    border: "none",
-                    borderRadius: "4px",
-                    cursor: (!wspPhone.trim() || wspLoading || wspStep === 'verify') ? "default" : "pointer",
-                    fontSize: "0.9em",
-                    fontWeight: "600",
-                    whiteSpace: "nowrap"
-                  }}
-                >
-                  {wspLoading && wspStep === 'input' ? t('whatsapp.sending') : t('whatsapp.sendCode')}
-                </button>
-              </div>
-              <p style={{ fontSize: "0.8em", color: "#888", marginTop: "0.4em", marginBottom: 0 }}>
-                {t('whatsapp.phoneHelper')}
-              </p>
-            </div>
+          {/* Content */}
+          <div>
+            <p style={{ margin: 0, fontSize: "0.9em", color: "#666", lineHeight: "1.5" }}>
+              {t('whatsapp.description')}
+              {wspStatus !== 'active' && <><br />{t('whatsapp.prerequisiteWarning')}</>}
+            </p>
 
-            {/* Step 2: Verification code input */}
-            {wspStep === 'verify' && (
-              <div>
+            {/* Connected: show phone number */}
+            {wspStatus === 'active' && savedWspPhone ? (
+              <div style={{ marginTop: "0.75em", paddingTop: "0.75em", borderTop: "1px solid #eee", fontSize: "0.85em" }}>
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                  <div>
+                    <span style={{ color: "#28a745", fontWeight: "600" }}>
+                      <i className="fa-solid fa-check-circle" style={{ marginRight: "0.4em" }}></i>
+                      {t('whatsapp.registered')}
+                    </span>
+                    <span style={{ color: "#666", marginLeft: "0.5em", fontSize: "0.9em" }}>
+                      ({savedWspPhone})
+                    </span>
+                  </div>
+                  <button
+                    onClick={handleDisconnect}
+                    disabled={wspLoading}
+                    style={{
+                      padding: "0.4em 0.8em",
+                      borderRadius: "4px",
+                      border: "none",
+                      backgroundColor: wspLoading ? "#ccc" : "#dc3545",
+                      color: "#fff",
+                      cursor: wspLoading ? "not-allowed" : "pointer",
+                      fontSize: "0.85em",
+                      fontWeight: "500",
+                      display: "flex",
+                      alignItems: "center",
+                      gap: "0.4em",
+                      flexShrink: 0,
+                      minWidth: "120px",
+                      justifyContent: "center"
+                    }}
+                  >
+                    {wspLoading ? (
+                      <i className="fa-solid fa-spinner fa-spin"></i>
+                    ) : (
+                      <><i className="fa-solid fa-unlink"></i> {t('whatsapp.remove')}</>
+                    )}
+                  </button>
+                </div>
+              </div>
+            ) : (
+              /* Not connected: show registration form */
+              <div style={{ marginTop: "1em", paddingTop: "0.75em", borderTop: "1px solid #eee" }}>
+                {/* Step 1: Phone number input */}
+                <div style={{ marginBottom: wspStep === 'verify' ? "1.25em" : 0 }}>
+                  <label style={{ display: "block", fontSize: "0.85em", color: "#555", marginBottom: "0.4em", fontWeight: "600" }}>
+                    {t('whatsapp.phoneLabel')}
+                  </label>
+                  <div style={{ display: "flex", gap: "0.5em" }}>
+                    <input
+                      type="tel"
+                      value={wspPhone}
+                      onChange={(e) => setWspPhone(e.target.value)}
+                      placeholder={t('whatsapp.phonePlaceholder')}
+                      disabled={wspStep === 'verify' || wspLoading}
+                      style={{
+                        flex: 1,
+                        padding: "0.6em 0.8em",
+                        border: "1px solid #ccc",
+                        borderRadius: "4px",
+                        fontSize: "1em",
+                        backgroundColor: wspStep === 'verify' ? '#f0f0f0' : '#fff'
+                      }}
+                    />
+                    <button
+                      onClick={handleSendCode}
+                      disabled={!wspPhone.trim() || wspLoading || wspStep === 'verify'}
+                      style={{
+                        padding: "0.6em 1.2em",
+                        backgroundColor: (!wspPhone.trim() || wspLoading || wspStep === 'verify') ? "#ccc" : "#25D366",
+                        color: "white",
+                        border: "none",
+                        borderRadius: "4px",
+                        cursor: (!wspPhone.trim() || wspLoading || wspStep === 'verify') ? "default" : "pointer",
+                        fontSize: "0.9em",
+                        fontWeight: "600",
+                        whiteSpace: "nowrap"
+                      }}
+                    >
+                      {wspLoading && wspStep === 'input' ? t('whatsapp.sending') : t('whatsapp.sendCode')}
+                    </button>
+                  </div>
+                  <p style={{ fontSize: "0.8em", color: "#888", marginTop: "0.4em", marginBottom: 0 }}>
+                    {t('whatsapp.phoneHelper')}
+                  </p>
+                </div>
+
+                {/* Step 2: Verification code input */}
+                {wspStep === 'verify' && (
+                  <div>
+                    <label style={{ display: "block", fontSize: "0.85em", color: "#555", marginBottom: "0.4em", fontWeight: "600" }}>
+                      {t('whatsapp.codeLabel')}
+                    </label>
+                    <div style={{ display: "flex", gap: "0.5em" }}>
+                      <input
+                        type="text"
+                        value={wspCode}
+                        onChange={(e) => setWspCode(e.target.value)}
+                        placeholder={t('whatsapp.codePlaceholder')}
+                        disabled={wspLoading}
+                        style={{
+                          flex: 1,
+                          padding: "0.6em 0.8em",
+                          border: "1px solid #ccc",
+                          borderRadius: "4px",
+                          fontSize: "1em"
+                        }}
+                      />
+                      <button
+                        onClick={handleVerifyCode}
+                        disabled={!wspCode.trim() || wspPin.trim().length !== 6 || wspLoading}
+                        style={{
+                          padding: "0.6em 1.2em",
+                          backgroundColor: (!wspCode.trim() || wspPin.trim().length !== 6 || wspLoading) ? "#ccc" : "#007bff",
+                          color: "white",
+                          border: "none",
+                          borderRadius: "4px",
+                          cursor: (!wspCode.trim() || wspPin.trim().length !== 6 || wspLoading) ? "default" : "pointer",
+                          fontSize: "0.9em",
+                          fontWeight: "600",
+                          whiteSpace: "nowrap"
+                        }}
+                      >
+                        {wspLoading ? t('whatsapp.verifying') : t('whatsapp.verify')}
+                      </button>
+                    </div>
+                    {/* PIN input */}
+                    <label style={{ display: "block", fontSize: "0.85em", color: "#555", marginBottom: "0.4em", marginTop: "1em", fontWeight: "600" }}>
+                      {t('whatsapp.pinLabel')}
+                    </label>
+                    <input
+                      type="text"
+                      inputMode="numeric"
+                      maxLength={6}
+                      value={wspPin}
+                      onChange={(e) => setWspPin(e.target.value.replace(/[^0-9]/g, ''))}
+                      placeholder={t('whatsapp.pinPlaceholder')}
+                      disabled={wspLoading}
+                      style={{
+                        width: "100%",
+                        padding: "0.6em 0.8em",
+                        border: "1px solid #ccc",
+                        borderRadius: "4px",
+                        fontSize: "1em",
+                        boxSizing: "border-box"
+                      }}
+                    />
+                    <p style={{ fontSize: "0.8em", color: "#888", marginTop: "0.4em", marginBottom: 0 }}>
+                      {t('whatsapp.pinHelper')}
+                    </p>
+
+                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: "0.4em" }}>
+                      <p style={{ fontSize: "0.8em", color: "#888", margin: 0 }}>
+                        {t('whatsapp.codeHelper')}
+                      </p>
+                      <button
+                        onClick={() => { setWspStep('input'); setWspCode(''); setWspPin(''); setWspError(''); }}
+                        style={{
+                          background: "none",
+                          border: "none",
+                          color: "#007bff",
+                          cursor: "pointer",
+                          fontSize: "0.8em",
+                          textDecoration: "underline",
+                          padding: 0
+                        }}
+                      >
+                        {t('whatsapp.changeNumber')}
+                      </button>
+                    </div>
+                  </div>
+                )}
+
+                {/* Status: Not Connected */}
+                <div style={{ marginTop: "0.75em", paddingTop: "0.75em", borderTop: "1px solid #eee", fontSize: "0.85em" }}>
+                  <span style={{ color: "#999" }}>
+                    <i className="fa-solid fa-circle" style={{ marginRight: "0.4em" }}></i>
+                    {t('whatsapp.notConnected') || 'Not connected'}
+                  </span>
+                </div>
+              </div>
+            )}
+          </div>
+
+          {/* Success / Error messages */}
+          {wspSuccess && (
+            <p style={{ textAlign: "center", color: "#28a745", marginTop: "0.75em", fontWeight: "600", marginBottom: 0 }}>
+              {wspSuccess}
+            </p>
+          )}
+          {wspError && (
+            <p style={{ textAlign: "center", color: "#dc3545", marginTop: "0.75em", fontWeight: "600", marginBottom: 0 }}>
+              {wspError}
+            </p>
+          )}
+        </div>
+
+        {/* Messenger Card */}
+        <div style={{
+          backgroundColor: "#fff",
+          border: `2px solid ${msgStatus === 'active' && msgPageName ? "#28a745" : "#dee2e6"}`,
+          borderRadius: "8px",
+          padding: "1.25em",
+          transition: "all 0.2s ease",
+          boxShadow: msgStatus === 'active' && msgPageName ? "0 2px 8px rgba(40, 167, 69, 0.15)" : "0 2px 4px rgba(0,0,0,0.05)"
+        }}>
+          {/* Header */}
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: "0.5em", marginBottom: "0.75em" }}>
+            <i className="fa-brands fa-facebook-messenger" style={{ fontSize: "2.2em", color: "#0084FF" }}></i>
+            <h4 style={{ margin: 0, color: "#333", fontSize: "1.1em" }}>
+              {t('messenger.title')}
+            </h4>
+          </div>
+
+          {/* Content */}
+          <div>
+            <p style={{ margin: 0, fontSize: "0.9em", color: "#666", lineHeight: "1.5" }}>
+              {t('messenger.description')}
+            </p>
+
+            {/* Connected: show page name */}
+            {msgStatus === 'active' && msgPageName ? (
+              <div style={{ marginTop: "0.75em", paddingTop: "0.75em", borderTop: "1px solid #eee", fontSize: "0.85em" }}>
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                  <div>
+                    <span style={{ color: "#28a745", fontWeight: "600" }}>
+                      <i className="fa-solid fa-check-circle" style={{ marginRight: "0.4em" }}></i>
+                      {t('messenger.connected')}
+                    </span>
+                    <span style={{ color: "#666", marginLeft: "0.5em", fontSize: "0.9em" }}>
+                      ({msgPageName})
+                    </span>
+                  </div>
+                  <button
+                    onClick={handleMessengerDisconnect}
+                    disabled={msgLoading}
+                    style={{
+                      padding: "0.4em 0.8em",
+                      borderRadius: "4px",
+                      border: "none",
+                      backgroundColor: msgLoading ? "#ccc" : "#dc3545",
+                      color: "#fff",
+                      cursor: msgLoading ? "not-allowed" : "pointer",
+                      fontSize: "0.85em",
+                      fontWeight: "500",
+                      display: "flex",
+                      alignItems: "center",
+                      gap: "0.4em",
+                      flexShrink: 0,
+                      minWidth: "120px",
+                      justifyContent: "center"
+                    }}
+                  >
+                    {msgLoading ? (
+                      <i className="fa-solid fa-spinner fa-spin"></i>
+                    ) : (
+                      <><i className="fa-solid fa-unlink"></i> {t('messenger.disconnect')}</>
+                    )}
+                  </button>
+                </div>
+              </div>
+            ) : msgStep === 'select-page' ? (
+              /* Page selection state */
+              <div style={{ marginTop: "1em", paddingTop: "0.75em", borderTop: "1px solid #eee" }}>
                 <label style={{ display: "block", fontSize: "0.85em", color: "#555", marginBottom: "0.4em", fontWeight: "600" }}>
-                  {t('whatsapp.codeLabel')}
+                  {t('messenger.selectPageLabel')}
                 </label>
                 <div style={{ display: "flex", gap: "0.5em" }}>
-                  <input
-                    type="text"
-                    value={wspCode}
-                    onChange={(e) => setWspCode(e.target.value)}
-                    placeholder={t('whatsapp.codePlaceholder')}
-                    disabled={wspLoading}
+                  <select
+                    value={msgSelectedPageId}
+                    onChange={(e) => setMsgSelectedPageId(e.target.value)}
+                    disabled={msgLoading}
                     style={{
                       flex: 1,
                       padding: "0.6em 0.8em",
@@ -743,56 +990,36 @@ export default function IntegrationsTab({ user, clientId, onClientUpdate }) {
                       borderRadius: "4px",
                       fontSize: "1em"
                     }}
-                  />
+                  >
+                    <option value="">{t('messenger.selectPagePlaceholder')}</option>
+                    {msgPages.map(page => (
+                      <option key={page.id} value={page.id}>{page.name}</option>
+                    ))}
+                  </select>
                   <button
-                    onClick={handleVerifyCode}
-                    disabled={!wspCode.trim() || wspPin.trim().length !== 6 || wspLoading}
+                    onClick={handlePageSelectConfirm}
+                    disabled={!msgSelectedPageId || msgLoading}
                     style={{
                       padding: "0.6em 1.2em",
-                      backgroundColor: (!wspCode.trim() || wspPin.trim().length !== 6 || wspLoading) ? "#ccc" : "#007bff",
+                      backgroundColor: (!msgSelectedPageId || msgLoading) ? "#ccc" : "#0084FF",
                       color: "white",
                       border: "none",
                       borderRadius: "4px",
-                      cursor: (!wspCode.trim() || wspPin.trim().length !== 6 || wspLoading) ? "default" : "pointer",
+                      cursor: (!msgSelectedPageId || msgLoading) ? "default" : "pointer",
                       fontSize: "0.9em",
                       fontWeight: "600",
                       whiteSpace: "nowrap"
                     }}
                   >
-                    {wspLoading ? t('whatsapp.verifying') : t('whatsapp.verify')}
+                    {msgLoading ? t('messenger.connecting') : t('messenger.confirmPage')}
                   </button>
                 </div>
-                {/* PIN input */}
-                <label style={{ display: "block", fontSize: "0.85em", color: "#555", marginBottom: "0.4em", marginTop: "1em", fontWeight: "600" }}>
-                  {t('whatsapp.pinLabel')}
-                </label>
-                <input
-                  type="text"
-                  inputMode="numeric"
-                  maxLength={6}
-                  value={wspPin}
-                  onChange={(e) => setWspPin(e.target.value.replace(/[^0-9]/g, ''))}
-                  placeholder={t('whatsapp.pinPlaceholder')}
-                  disabled={wspLoading}
-                  style={{
-                    width: "100%",
-                    padding: "0.6em 0.8em",
-                    border: "1px solid #ccc",
-                    borderRadius: "4px",
-                    fontSize: "1em",
-                    boxSizing: "border-box"
-                  }}
-                />
                 <p style={{ fontSize: "0.8em", color: "#888", marginTop: "0.4em", marginBottom: 0 }}>
-                  {t('whatsapp.pinHelper')}
+                  {t('messenger.selectPageHelper')}
                 </p>
-
-                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: "0.4em" }}>
-                  <p style={{ fontSize: "0.8em", color: "#888", margin: 0 }}>
-                    {t('whatsapp.codeHelper')}
-                  </p>
+                <div style={{ marginTop: "0.6em" }}>
                   <button
-                    onClick={() => { setWspStep('input'); setWspCode(''); setWspPin(''); setWspError(''); }}
+                    onClick={() => { setMsgStep('connect'); setMsgPages([]); setMsgSelectedPageId(''); setMsgUserToken(''); }}
                     style={{
                       background: "none",
                       border: "none",
@@ -803,449 +1030,400 @@ export default function IntegrationsTab({ user, clientId, onClientUpdate }) {
                       padding: 0
                     }}
                   >
-                    {t('whatsapp.changeNumber')}
+                    {t('messenger.cancelSelection')}
+                  </button>
+                </div>
+
+                <div style={{ marginTop: "0.75em", paddingTop: "0.75em", borderTop: "1px solid #eee", fontSize: "0.85em" }}>
+                  <span style={{ color: "#999" }}>
+                    <i className="fa-solid fa-circle" style={{ marginRight: "0.4em" }}></i>
+                    {t('messenger.notConnected') || 'Not connected'}
+                  </span>
+                </div>
+              </div>
+            ) : (
+              /* Disconnected state */
+              <div style={{ marginTop: "0.75em", paddingTop: "0.75em", borderTop: "1px solid #eee", fontSize: "0.85em" }}>
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                  <span style={{ color: "#999" }}>
+                    <i className="fa-solid fa-circle" style={{ marginRight: "0.4em" }}></i>
+                    {t('messenger.notConnected') || 'Not connected'}
+                  </span>
+                  <button
+                    onClick={handleMessengerConnect}
+                    disabled={msgLoading}
+                    style={{
+                      padding: "0.4em 0.8em",
+                      borderRadius: "4px",
+                      border: "none",
+                      backgroundColor: msgLoading ? "#ccc" : "#007bff",
+                      color: "#fff",
+                      cursor: msgLoading ? "not-allowed" : "pointer",
+                      fontSize: "0.85em",
+                      fontWeight: "500",
+                      display: "flex",
+                      alignItems: "center",
+                      gap: "0.4em",
+                      flexShrink: 0,
+                      minWidth: "120px",
+                      justifyContent: "center"
+                    }}
+                  >
+                    {msgLoading ? (
+                      <i className="fa-solid fa-spinner fa-spin"></i>
+                    ) : (
+                      <><i className="fa-solid fa-link"></i> {t('messenger.connectButton')}</>
+                    )}
                   </button>
                 </div>
               </div>
             )}
           </div>
-        )}
 
-        {/* Success / Error messages */}
-        {wspSuccess && (
-          <p style={{ textAlign: "center", color: "#28a745", marginTop: "0.75em", fontWeight: "600" }}>
-            {wspSuccess}
-          </p>
-        )}
-        {wspError && (
-          <p style={{ textAlign: "center", color: "#dc3545", marginTop: "0.75em", fontWeight: "600" }}>
-            {wspError}
-          </p>
-        )}
-      </div>
-
-      {/* Messenger Integration */}
-      <div style={{ marginTop: "2em", paddingTop: "2em", borderTop: "1px solid #ddd" }}>
-        <h2 className="section-title section-title-centered" style={{ marginBottom: "1em" }}>
-          <i className="fa-brands fa-facebook-messenger" style={{ color: "#0084FF" }}></i>
-          {' '}{t('messenger.title')}
-        </h2>
-        <div style={{
-          display: 'flex',
-          alignItems: 'flex-start',
-          gap: '0.6em',
-          padding: '0.75em 1em',
-          backgroundColor: '#e8f4fd',
-          border: '1px solid #bee5eb',
-          borderRadius: '6px',
-          color: '#0c5460',
-          fontSize: '0.85em',
-          lineHeight: '1.5',
-          width: '70%',
-          marginLeft: 'auto',
-          marginRight: 'auto',
-          marginBottom: '1.5em'
-        }}>
-          <i className="fa-solid fa-circle-info" style={{ marginTop: '0.2em', flexShrink: 0 }}></i>
-          <span>{t('messenger.description')}</span>
+          {/* Success / Error messages */}
+          {msgSuccess && (
+            <p style={{ textAlign: "center", color: "#28a745", marginTop: "0.75em", fontWeight: "600", marginBottom: 0 }}>
+              {msgSuccess}
+            </p>
+          )}
+          {msgError && (
+            <p style={{ textAlign: "center", color: "#dc3545", marginTop: "0.75em", fontWeight: "600", marginBottom: 0 }}>
+              {msgError}
+            </p>
+          )}
         </div>
 
-        {/* Connected state */}
-        {msgStatus === 'active' && msgPageName ? (
-          <div style={{
-            backgroundColor: "#fff",
-            padding: "1.25em",
-            borderRadius: "4px",
-            boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)",
-            border: "1px solid #ddd",
-            width: "70%",
-            marginLeft: "auto",
-            marginRight: "auto",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between"
-          }}>
-            <div>
-              <span style={{ fontSize: "0.85em", color: "#888" }}>{t('messenger.connectedPage')}</span>
-              <p style={{ margin: "0.25em 0 0", fontSize: "1.1em", fontWeight: "600", color: "#333" }}>
-                <i className="fa-brands fa-facebook-messenger" style={{ color: "#0084FF", marginRight: "0.5em" }}></i>
-                {msgPageName}
-              </p>
-            </div>
-            <div style={{ display: "flex", alignItems: "center", gap: "0.75em" }}>
-              <span style={{
-                backgroundColor: "#d4edda",
-                color: "#155724",
-                padding: "0.25em 0.75em",
-                borderRadius: "12px",
-                fontSize: "0.8em",
-                fontWeight: "600"
-              }}>
-                {t('messenger.connected')}
-              </span>
-              <button
-                onClick={handleMessengerDisconnect}
-                disabled={msgLoading}
-                style={{
-                  background: "none",
-                  border: "none",
-                  color: "#dc3545",
-                  cursor: msgLoading ? "default" : "pointer",
-                  fontSize: "0.85em",
-                  textDecoration: "underline",
-                  padding: 0
-                }}
-              >
-                {msgLoading ? t('messenger.disconnecting') : t('messenger.disconnect')}
-              </button>
-            </div>
-          </div>
-
-        ) : msgStep === 'select-page' ? (
-          /* Page selection state */
-          <div style={{
-            backgroundColor: "#fff",
-            padding: "1.5em",
-            borderRadius: "4px",
-            boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)",
-            border: "1px solid #ddd",
-            width: "70%",
-            marginLeft: "auto",
-            marginRight: "auto"
-          }}>
-            <label style={{ display: "block", fontSize: "0.85em", color: "#555", marginBottom: "0.4em", fontWeight: "600" }}>
-              {t('messenger.selectPageLabel')}
-            </label>
-            <div style={{ display: "flex", gap: "0.5em" }}>
-              <select
-                value={msgSelectedPageId}
-                onChange={(e) => setMsgSelectedPageId(e.target.value)}
-                disabled={msgLoading}
-                style={{
-                  flex: 1,
-                  padding: "0.6em 0.8em",
-                  border: "1px solid #ccc",
-                  borderRadius: "4px",
-                  fontSize: "1em"
-                }}
-              >
-                <option value="">{t('messenger.selectPagePlaceholder')}</option>
-                {msgPages.map(page => (
-                  <option key={page.id} value={page.id}>{page.name}</option>
-                ))}
-              </select>
-              <button
-                onClick={handlePageSelectConfirm}
-                disabled={!msgSelectedPageId || msgLoading}
-                style={{
-                  padding: "0.6em 1.2em",
-                  backgroundColor: (!msgSelectedPageId || msgLoading) ? "#ccc" : "#0084FF",
-                  color: "white",
-                  border: "none",
-                  borderRadius: "4px",
-                  cursor: (!msgSelectedPageId || msgLoading) ? "default" : "pointer",
-                  fontSize: "0.9em",
-                  fontWeight: "600",
-                  whiteSpace: "nowrap"
-                }}
-              >
-                {msgLoading ? t('messenger.connecting') : t('messenger.confirmPage')}
-              </button>
-            </div>
-            <p style={{ fontSize: "0.8em", color: "#888", marginTop: "0.4em", marginBottom: 0 }}>
-              {t('messenger.selectPageHelper')}
-            </p>
-            <div style={{ marginTop: "0.6em" }}>
-              <button
-                onClick={() => { setMsgStep('connect'); setMsgPages([]); setMsgSelectedPageId(''); setMsgUserToken(''); }}
-                style={{
-                  background: "none",
-                  border: "none",
-                  color: "#007bff",
-                  cursor: "pointer",
-                  fontSize: "0.8em",
-                  textDecoration: "underline",
-                  padding: 0
-                }}
-              >
-                {t('messenger.cancelSelection')}
-              </button>
-            </div>
-          </div>
-
-        ) : (
-          /* Disconnected state */
-          <div style={{
-            backgroundColor: "#fff",
-            padding: "1.5em",
-            borderRadius: "4px",
-            boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)",
-            border: "1px solid #ddd",
-            width: "70%",
-            marginLeft: "auto",
-            marginRight: "auto",
-            textAlign: "center"
-          }}>
-            <button
-              onClick={handleMessengerConnect}
-              disabled={msgLoading}
-              style={{
-                padding: "0.75em 2em",
-                backgroundColor: msgLoading ? "#ccc" : "#0084FF",
-                color: "white",
-                border: "none",
-                borderRadius: "4px",
-                cursor: msgLoading ? "default" : "pointer",
-                fontSize: "1em",
-                fontWeight: "600",
-                display: "inline-flex",
-                alignItems: "center",
-                gap: "0.5em"
-              }}
-            >
-              <i className="fa-brands fa-facebook"></i>
-              {msgLoading ? t('messenger.connecting') : t('messenger.connectButton')}
-            </button>
-            <p style={{ fontSize: "0.8em", color: "#888", marginTop: "0.75em", marginBottom: 0 }}>
-              {t('messenger.connectHelper')}
-            </p>
-          </div>
-        )}
-
-        {msgSuccess && (
-          <p style={{ textAlign: "center", color: "#28a745", marginTop: "0.75em", fontWeight: "600" }}>
-            {msgSuccess}
-          </p>
-        )}
-        {msgError && (
-          <p style={{ textAlign: "center", color: "#dc3545", marginTop: "0.75em", fontWeight: "600" }}>
-            {msgError}
-          </p>
-        )}
-      </div>
-
-      {/* Instagram Integration */}
-      <div style={{ marginTop: "2em", paddingTop: "2em", borderTop: "1px solid #ddd" }}>
-        <h2 className="section-title section-title-centered" style={{ marginBottom: "1em" }}>
-          <i className="fa-brands fa-instagram" style={{ color: "#E4405F" }}></i>
-          {' '}{t('instagram.title')}
-        </h2>
+        {/* Google Calendar Card */}
         <div style={{
-          display: 'flex',
-          alignItems: 'flex-start',
-          gap: '0.6em',
-          padding: '0.75em 1em',
-          backgroundColor: '#e8f4fd',
-          border: '1px solid #bee5eb',
-          borderRadius: '6px',
-          color: '#0c5460',
-          fontSize: '0.85em',
-          lineHeight: '1.5',
-          width: '70%',
-          marginLeft: 'auto',
-          marginRight: 'auto',
-          marginBottom: '1.5em'
+          backgroundColor: "#fff",
+          border: `2px solid ${gcalConnected ? "#28a745" : "#dee2e6"}`,
+          borderRadius: "8px",
+          padding: "1.25em",
+          transition: "all 0.2s ease",
+          boxShadow: gcalConnected ? "0 2px 8px rgba(40, 167, 69, 0.15)" : "0 2px 4px rgba(0,0,0,0.05)"
         }}>
-          <i className="fa-solid fa-circle-info" style={{ marginTop: '0.2em', flexShrink: 0 }}></i>
-          <span>
-            {t('instagram.description')}
-            {igStatus !== 'active' && (<><br /><br />{t('instagram.prerequisiteWarning')}</>)}
-          </span>
+          {/* Header - centered logo + title like other cards */}
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: "0.5em", marginBottom: "0.75em" }}>
+            <img
+              src="/img/add-ons/free-google-calendar-logo-icon.webp"
+              alt="Google Calendar"
+              style={{ width: "2.2em", height: "2.2em", objectFit: "contain" }}
+              onError={(e) => { e.target.style.display = 'none'; }}
+            />
+            <h4 style={{ margin: 0, color: "#333", fontSize: "1.1em" }}>
+              {t('googleCalendar.title')}
+            </h4>
+          </div>
+
+          {/* Content */}
+          <div>
+            {/* Sign in with Google badge */}
+            <span style={{
+              fontSize: "0.75em",
+              backgroundColor: "#e7f3ff",
+              color: "#0066cc",
+              padding: "0.2em 0.5em",
+              borderRadius: "4px",
+              display: "inline-block",
+              marginBottom: "0.5em"
+            }}>
+              <i className="fa-brands fa-google" style={{ marginRight: "0.3em" }}></i>
+              {t('googleCalendar.signInWithGoogle')}
+            </span>
+
+            <p style={{ margin: 0, fontSize: "0.9em", color: "#666", lineHeight: "1.5" }}>
+              {t('googleCalendar.description')}
+            </p>
+
+            {/* Status + connect/disconnect */}
+            <div style={{ marginTop: "0.75em", paddingTop: "0.75em", borderTop: "1px solid #eee", fontSize: "0.85em" }}>
+              {gcalChecking ? (
+                <span style={{ color: "#666" }}>
+                  <i className="fa-solid fa-spinner fa-spin" style={{ marginRight: "0.4em" }}></i>
+                  {t('googleCalendar.checking')}
+                </span>
+              ) : gcalConnected ? (
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                  <div>
+                    <span style={{ color: "#28a745", fontWeight: "600" }}>
+                      <i className="fa-solid fa-check-circle" style={{ marginRight: "0.4em" }}></i>
+                      {t('googleCalendar.connected')}
+                    </span>
+                    {gcalEmail && (
+                      <span style={{ color: "#666", marginLeft: "0.5em", fontSize: "0.9em" }}>
+                        ({gcalEmail})
+                      </span>
+                    )}
+                  </div>
+                  <button
+                    onClick={handleGcalDisconnect}
+                    disabled={gcalLoading}
+                    style={{
+                      padding: "0.4em 0.8em",
+                      borderRadius: "4px",
+                      border: "none",
+                      backgroundColor: gcalLoading ? "#ccc" : "#dc3545",
+                      color: "#fff",
+                      cursor: gcalLoading ? "not-allowed" : "pointer",
+                      fontSize: "0.85em",
+                      fontWeight: "500",
+                      display: "flex",
+                      alignItems: "center",
+                      gap: "0.4em",
+                      flexShrink: 0,
+                      minWidth: "120px",
+                      justifyContent: "center"
+                    }}
+                  >
+                    {gcalLoading ? (
+                      <i className="fa-solid fa-spinner fa-spin"></i>
+                    ) : (
+                      <><i className="fa-solid fa-unlink"></i> {t('googleCalendar.disconnect')}</>
+                    )}
+                  </button>
+                </div>
+              ) : (
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                  <span style={{ color: "#999" }}>
+                    <i className="fa-solid fa-circle" style={{ marginRight: "0.4em" }}></i>
+                    {t('googleCalendar.notConnected')}
+                  </span>
+                  <button
+                    onClick={handleGcalConnect}
+                    disabled={gcalLoading}
+                    style={{
+                      padding: "0.4em 0.8em",
+                      borderRadius: "4px",
+                      border: "none",
+                      backgroundColor: gcalLoading ? "#ccc" : "#007bff",
+                      color: "#fff",
+                      cursor: gcalLoading ? "not-allowed" : "pointer",
+                      fontSize: "0.85em",
+                      fontWeight: "500",
+                      display: "flex",
+                      alignItems: "center",
+                      gap: "0.4em",
+                      flexShrink: 0,
+                      minWidth: "120px",
+                      justifyContent: "center"
+                    }}
+                  >
+                    {gcalLoading ? (
+                      <i className="fa-solid fa-spinner fa-spin"></i>
+                    ) : (
+                      <><i className="fa-solid fa-link"></i> {t('googleCalendar.connect')}</>
+                    )}
+                  </button>
+                </div>
+              )}
+            </div>
+          </div>
+
+          {gcalError && (
+            <p style={{ textAlign: "center", color: "#dc3545", marginTop: "0.75em", fontWeight: "600", marginBottom: 0 }}>
+              {gcalError}
+            </p>
+          )}
         </div>
 
-        {/* Connected state */}
-        {igStatus === 'active' && igAccountName ? (
-          <>
-          <div style={{
-            backgroundColor: "#fff",
-            padding: "1.25em",
-            borderRadius: "4px",
-            boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)",
-            border: "1px solid #ddd",
-            width: "70%",
-            marginLeft: "auto",
-            marginRight: "auto",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between"
-          }}>
-            <div>
-              <span style={{ fontSize: "0.85em", color: "#888" }}>{t('instagram.connectedAccount')}</span>
-              <p style={{ margin: "0.25em 0 0", fontSize: "1.1em", fontWeight: "600", color: "#333" }}>
-                <i className="fa-brands fa-instagram" style={{ color: "#E4405F", marginRight: "0.5em" }}></i>
-                @{igAccountName}
-              </p>
-            </div>
-            <div style={{ display: "flex", alignItems: "center", gap: "0.75em" }}>
-              <span style={{
-                backgroundColor: "#d4edda",
-                color: "#155724",
-                padding: "0.25em 0.75em",
-                borderRadius: "12px",
-                fontSize: "0.8em",
-                fontWeight: "600"
-              }}>
-                {t('instagram.connected')}
-              </span>
-              <button
-                onClick={handleInstagramDisconnect}
-                disabled={igLoading}
-                style={{
-                  background: "none",
-                  border: "none",
-                  color: "#dc3545",
-                  cursor: igLoading ? "default" : "pointer",
-                  fontSize: "0.85em",
-                  textDecoration: "underline",
-                  padding: 0
-                }}
-              >
-                {igLoading ? t('instagram.disconnecting') : t('instagram.disconnect')}
-              </button>
-            </div>
+        {/* Instagram Card */}
+        <div style={{
+          backgroundColor: "#fff",
+          border: `2px solid ${igStatus === 'active' && igAccountName ? "#28a745" : "#dee2e6"}`,
+          borderRadius: "8px",
+          padding: "1.25em",
+          transition: "all 0.2s ease",
+          boxShadow: igStatus === 'active' && igAccountName ? "0 2px 8px rgba(40, 167, 69, 0.15)" : "0 2px 4px rgba(0,0,0,0.05)"
+        }}>
+          {/* Header */}
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: "0.5em", marginBottom: "0.75em" }}>
+            <i className="fa-brands fa-instagram" style={{ fontSize: "2.2em", color: "#E4405F" }}></i>
+            <h4 style={{ margin: 0, color: "#333", fontSize: "1.1em" }}>
+              {t('instagram.title')}
+            </h4>
           </div>
 
-          {/* Send Test Message */}
-          <div style={{
-            backgroundColor: "#fff",
-            padding: "1.25em",
-            borderRadius: "4px",
-            boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)",
-            border: "1px solid #ddd",
-            width: "70%",
-            marginLeft: "auto",
-            marginRight: "auto",
-            marginTop: "1em"
-          }}>
-            <h3 style={{ fontSize: "0.95em", fontWeight: "600", color: "#333", marginTop: 0, marginBottom: "0.75em" }}>
-              <i className="fa-solid fa-paper-plane" style={{ color: "#E4405F", marginRight: "0.5em" }}></i>
-              {t('instagram.testTitle')}
-            </h3>
+          {/* Content */}
+          <div>
+            <p style={{ margin: 0, fontSize: "0.9em", color: "#666", lineHeight: "1.5" }}>
+              {t('instagram.description')}
+              {igStatus !== 'active' && <><br />{t('instagram.prerequisiteWarning')}</>}
+            </p>
 
-            <div style={{ marginBottom: "0.75em" }}>
-              <label style={{ display: "block", fontSize: "0.85em", fontWeight: "600", color: "#555", marginBottom: "0.25em" }}>
-                {t('instagram.recipientLabel')}
-              </label>
-              <input
-                type="text"
-                value={igTestRecipient}
-                onChange={(e) => setIgTestRecipient(e.target.value)}
-                placeholder={t('instagram.recipientPlaceholder')}
-                style={{
-                  width: "100%",
-                  padding: "0.5em 0.75em",
-                  border: "1px solid #ccc",
-                  borderRadius: "4px",
-                  fontSize: "0.9em",
-                  boxSizing: "border-box"
-                }}
-              />
-              <span style={{ fontSize: "0.75em", color: "#888", marginTop: "0.25em", display: "block" }}>
-                {t('instagram.recipientHelper')}
-              </span>
-            </div>
+            {/* Connected: show account + test message */}
+            {igStatus === 'active' && igAccountName ? (
+              <>
+                <div style={{ marginTop: "0.75em", paddingTop: "0.75em", borderTop: "1px solid #eee", fontSize: "0.85em" }}>
+                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                    <div>
+                      <span style={{ color: "#28a745", fontWeight: "600" }}>
+                        <i className="fa-solid fa-check-circle" style={{ marginRight: "0.4em" }}></i>
+                        {t('instagram.connected')}
+                      </span>
+                      <span style={{ color: "#666", marginLeft: "0.5em", fontSize: "0.9em" }}>
+                        (@{igAccountName})
+                      </span>
+                    </div>
+                    <button
+                      onClick={handleInstagramDisconnect}
+                      disabled={igLoading}
+                      style={{
+                        padding: "0.4em 0.8em",
+                        borderRadius: "4px",
+                        border: "none",
+                        backgroundColor: igLoading ? "#ccc" : "#dc3545",
+                        color: "#fff",
+                        cursor: igLoading ? "not-allowed" : "pointer",
+                        fontSize: "0.85em",
+                        fontWeight: "500",
+                        display: "flex",
+                        alignItems: "center",
+                        gap: "0.4em",
+                        flexShrink: 0
+                      }}
+                    >
+                      {igLoading ? (
+                        <i className="fa-solid fa-spinner fa-spin"></i>
+                      ) : (
+                        <><i className="fa-solid fa-unlink"></i> {t('instagram.disconnect')}</>
+                      )}
+                    </button>
+                  </div>
+                </div>
 
-            <div style={{ marginBottom: "0.75em" }}>
-              <label style={{ display: "block", fontSize: "0.85em", fontWeight: "600", color: "#555", marginBottom: "0.25em" }}>
-                {t('instagram.messageLabel')}
-              </label>
-              <textarea
-                value={igTestMessage}
-                onChange={(e) => setIgTestMessage(e.target.value)}
-                placeholder={t('instagram.messagePlaceholder')}
-                rows={3}
-                style={{
-                  width: "100%",
-                  padding: "0.5em 0.75em",
-                  border: "1px solid #ccc",
-                  borderRadius: "4px",
-                  fontSize: "0.9em",
-                  boxSizing: "border-box",
-                  resize: "vertical"
-                }}
-              />
-            </div>
+                {/* Send Test Message */}
+                <div style={{ marginTop: "1em", paddingTop: "0.75em", borderTop: "1px solid #eee" }}>
+                  <h4 style={{ fontSize: "0.95em", fontWeight: "600", color: "#333", marginTop: 0, marginBottom: "0.75em" }}>
+                    <i className="fa-solid fa-paper-plane" style={{ marginRight: "0.5em" }}></i>
+                    {t('instagram.testTitle')}
+                  </h4>
 
-            <button
-              onClick={handleInstagramTestMessage}
-              disabled={igTestLoading || !igTestRecipient.trim() || !igTestMessage.trim()}
-              style={{
-                padding: "0.5em 1.5em",
-                backgroundColor: (igTestLoading || !igTestRecipient.trim() || !igTestMessage.trim()) ? "#ccc" : "#E4405F",
-                color: "white",
-                border: "none",
-                borderRadius: "4px",
-                cursor: (igTestLoading || !igTestRecipient.trim() || !igTestMessage.trim()) ? "default" : "pointer",
-                fontSize: "0.9em",
-                fontWeight: "600"
-              }}
-            >
-              {igTestLoading ? t('instagram.sending') : t('instagram.sendButton')}
-            </button>
+                  <div style={{ marginBottom: "0.75em" }}>
+                    <label style={{ display: "block", fontSize: "0.85em", fontWeight: "600", color: "#555", marginBottom: "0.25em" }}>
+                      {t('instagram.recipientLabel')}
+                    </label>
+                    <input
+                      type="text"
+                      value={igTestRecipient}
+                      onChange={(e) => setIgTestRecipient(e.target.value)}
+                      placeholder={t('instagram.recipientPlaceholder')}
+                      style={{
+                        width: "100%",
+                        padding: "0.5em 0.75em",
+                        border: "1px solid #ccc",
+                        borderRadius: "4px",
+                        fontSize: "0.9em",
+                        boxSizing: "border-box"
+                      }}
+                    />
+                    <span style={{ fontSize: "0.75em", color: "#888", marginTop: "0.25em", display: "block" }}>
+                      {t('instagram.recipientHelper')}
+                    </span>
+                  </div>
 
-            {igTestResult.message && (
-              <p style={{
-                fontSize: "0.85em",
-                fontWeight: "600",
-                marginTop: "0.5em",
-                marginBottom: 0,
-                color: igTestResult.type === 'success' ? '#28a745' : '#dc3545'
-              }}>
-                {igTestResult.message}
-              </p>
+                  <div style={{ marginBottom: "0.75em" }}>
+                    <label style={{ display: "block", fontSize: "0.85em", fontWeight: "600", color: "#555", marginBottom: "0.25em" }}>
+                      {t('instagram.messageLabel')}
+                    </label>
+                    <textarea
+                      value={igTestMessage}
+                      onChange={(e) => setIgTestMessage(e.target.value)}
+                      placeholder={t('instagram.messagePlaceholder')}
+                      rows={3}
+                      style={{
+                        width: "100%",
+                        padding: "0.5em 0.75em",
+                        border: "1px solid #ccc",
+                        borderRadius: "4px",
+                        fontSize: "0.9em",
+                        boxSizing: "border-box",
+                        resize: "vertical"
+                      }}
+                    />
+                  </div>
+
+                  <button
+                    onClick={handleInstagramTestMessage}
+                    disabled={igTestLoading || !igTestRecipient.trim() || !igTestMessage.trim()}
+                    style={{
+                      padding: "0.5em 1.5em",
+                      backgroundColor: (igTestLoading || !igTestRecipient.trim() || !igTestMessage.trim()) ? "#ccc" : "#E4405F",
+                      color: "white",
+                      border: "none",
+                      borderRadius: "4px",
+                      cursor: (igTestLoading || !igTestRecipient.trim() || !igTestMessage.trim()) ? "default" : "pointer",
+                      fontSize: "0.9em",
+                      fontWeight: "600"
+                    }}
+                  >
+                    {igTestLoading ? t('instagram.sending') : t('instagram.sendButton')}
+                  </button>
+
+                  {igTestResult.message && (
+                    <p style={{
+                      fontSize: "0.85em",
+                      fontWeight: "600",
+                      marginTop: "0.5em",
+                      marginBottom: 0,
+                      color: igTestResult.type === 'success' ? '#28a745' : '#dc3545'
+                    }}>
+                      {igTestResult.message}
+                    </p>
+                  )}
+                </div>
+              </>
+            ) : (
+              /* Not connected status */
+              <div style={{ marginTop: "0.75em", paddingTop: "0.75em", borderTop: "1px solid #eee", fontSize: "0.85em" }}>
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                  <span style={{ color: "#999" }}>
+                    <i className="fa-solid fa-circle" style={{ marginRight: "0.4em" }}></i>
+                    {t('instagram.notConnected') || 'Not connected'}
+                  </span>
+                  <button
+                    onClick={handleInstagramConnect}
+                    disabled={igLoading}
+                    style={{
+                      padding: "0.4em 0.8em",
+                      borderRadius: "4px",
+                      border: "none",
+                      backgroundColor: igLoading ? "#ccc" : "#007bff",
+                      color: "#fff",
+                      cursor: igLoading ? "not-allowed" : "pointer",
+                      fontSize: "0.85em",
+                      fontWeight: "500",
+                      display: "flex",
+                      alignItems: "center",
+                      gap: "0.4em",
+                      flexShrink: 0,
+                      minWidth: "120px",
+                      justifyContent: "center"
+                    }}
+                  >
+                    {igLoading ? (
+                      <i className="fa-solid fa-spinner fa-spin"></i>
+                    ) : (
+                      <><i className="fa-solid fa-link"></i> {t('instagram.connectButton')}</>
+                    )}
+                  </button>
+                </div>
+              </div>
             )}
           </div>
-          </>
 
-        ) : (
-          /* Disconnected state */
-          <div style={{
-            backgroundColor: "#fff",
-            padding: "1.5em",
-            borderRadius: "4px",
-            boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)",
-            border: "1px solid #ddd",
-            width: "70%",
-            marginLeft: "auto",
-            marginRight: "auto",
-            textAlign: "center"
-          }}>
-            <button
-              onClick={handleInstagramConnect}
-              disabled={igLoading}
-              style={{
-                padding: "0.75em 2em",
-                backgroundColor: igLoading ? "#ccc" : "#E4405F",
-                color: "white",
-                border: "none",
-                borderRadius: "4px",
-                cursor: igLoading ? "default" : "pointer",
-                fontSize: "1em",
-                fontWeight: "600",
-                display: "inline-flex",
-                alignItems: "center",
-                gap: "0.5em"
-              }}
-            >
-              <i className="fa-brands fa-instagram"></i>
-              {igLoading ? t('instagram.connecting') : t('instagram.connectButton')}
-            </button>
-            <p style={{ fontSize: "0.8em", color: "#888", marginTop: "0.75em", marginBottom: 0 }}>
-              {t('instagram.connectHelper')}
+          {/* Success / Error messages */}
+          {igSuccess && (
+            <p style={{ textAlign: "center", color: "#28a745", marginTop: "0.75em", fontWeight: "600", marginBottom: 0 }}>
+              {igSuccess}
             </p>
-          </div>
-        )}
+          )}
+          {igError && (
+            <p style={{ textAlign: "center", color: "#dc3545", marginTop: "0.75em", fontWeight: "600", marginBottom: 0 }}>
+              {igError}
+            </p>
+          )}
+        </div>
 
-        {igSuccess && (
-          <p style={{ textAlign: "center", color: "#28a745", marginTop: "0.75em", fontWeight: "600" }}>
-            {igSuccess}
-          </p>
-        )}
-        {igError && (
-          <p style={{ textAlign: "center", color: "#dc3545", marginTop: "0.75em", fontWeight: "600" }}>
-            {igError}
-          </p>
-        )}
       </div>
     </div>
   );

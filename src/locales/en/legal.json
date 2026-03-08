@@ -85,13 +85,26 @@
         "title": "11. External Platform Integration",
         "content": "Certain offerings from {{companyName}} incorporate third-party platforms through APIs or similar technical connections. Engagement with these external services remains completely optional and user-directed. {{companyName}} bears no responsibility for external platform privacy approaches and advises consulting their individual policies."
       },
+      "googleOauth": {
+        "title": "12. Google OAuth & Calendar Integration",
+        "content": "{{companyName}} uses Google OAuth to connect user Google Calendars. The application accesses calendar availability and event creation permissions solely to schedule appointments requested by the user.",
+        "items": {
+          "scope": "Access is limited to reading calendar availability and creating calendar events;",
+          "purpose": "Calendar data is used exclusively for scheduling appointments on the user's behalf;",
+          "storage": "We do not store calendar data beyond what is necessary to complete the scheduling request;",
+          "revoke": "Users may revoke calendar access at any time through their Google Account settings."
+        },
+        "individual": "Each Google Calendar connection is authorized by an individual user and used only for that user's scheduling automation. BotWerx is a SaaS platform used by multiple businesses. Each business independently connects its own Google Calendar via OAuth.",
+        "tokenStorage": "BotWerx stores OAuth tokens securely and only uses them to access Google Calendar when the user schedules or modifies an appointment through the bot.",
+        "minimumAccess": "BotWerx only accesses the minimum calendar data required to check availability and create events."
+      },
       "updates": {
-        "title": "12. Policy Updates",
+        "title": "13. Policy Updates",
         "revise": "We maintain the prerogative to revise or amend this Privacy Policy at our discretion. Substantial modifications will be published on this page.",
         "acceptance": "Ongoing site usage following such revisions signifies your acceptance of modified terms."
       },
       "contact": {
-        "title": "13. Contact Information",
+        "title": "14. Contact Information",
         "content": "For inquiries or concerns about this Privacy Policy or our personal data handling practices, contact us at:"
       }
     }

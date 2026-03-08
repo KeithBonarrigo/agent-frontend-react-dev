@@ -84,7 +84,7 @@ export default function OAuthCallback() {
         setStatus('success');
         // Redirect back to dashboard with success message
         setTimeout(() => {
-          navigate(`/dashboard?oauth=success&provider=${provider}&tab=addons`);
+          navigate(`/dashboard?oauth=success&provider=${provider}&tab=integrations`);
         }, 1500);
 
       } catch (err) {

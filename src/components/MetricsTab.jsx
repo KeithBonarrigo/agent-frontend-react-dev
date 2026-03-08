@@ -5,6 +5,7 @@ import "./Tabs.css";
 
 export default function MetricsTab({ clientId, subscription, tokensUsed, user, onNavigateToConversations, onNavigateToActiveUsers, onNavigateToLeads, onNavigateToCollaborations }) {
   const { t } = useTranslation('metrics');
+  const [isCollapsed, setIsCollapsed] = useState(true);
   const [metrics, setMetrics] = useState(null);
   const [leadsCount, setLeadsCount] = useState(null);
   const [locations, setLocations] = useState([]);
@@ -169,12 +170,18 @@ export default function MetricsTab({ clientId, subscription, tokensUsed, user, o
   const usagePercentage = getUsagePercentage(tokensUsed, subscription?.token_limit);
 
   return (
-    <div className="tab-container">
-      <h2 className="section-title section-title-centered" style={{ marginBottom: "1em" }}>
-        <i className="fa-solid fa-chart-line"></i>
-        {t('title')}
-      </h2>
+    <div className="section" style={{ marginBottom: '1.5em' }}>
+      <div
+        onClick={() => setIsCollapsed(!isCollapsed)}
+        className={`section-header ${!isCollapsed ? 'section-header-expanded' : ''}`}
+      >
+        <h2 className="section-title">
+          <i className="fa-solid fa-chart-line"></i> {t('title')}
+        </h2>
+        <i className={`fa-solid fa-chevron-${isCollapsed ? 'down' : 'up'} section-chevron`}></i>
+      </div>
 
+      {!isCollapsed && <>
       {loading ? (
         <div className="tab-loading-state">
           <p>{t('loading')}</p>
@@ -396,6 +403,7 @@ export default function MetricsTab({ clientId, subscription, tokensUsed, user, o
       <div className="info-box info-box-info">
         <p>{t('comingSoon')}</p>
       </div>
+      </>}
     </div>
   );
 }

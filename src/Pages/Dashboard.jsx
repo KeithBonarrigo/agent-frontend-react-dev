@@ -5,11 +5,13 @@ import { useUser } from '../contexts/UserContext';
 import { getApiUrl } from '../utils/getApiUrl';
 import ConfigurationsTab from '../components/ConfigurationsTab';
 import IntegrationsTab from '../components/IntegrationsTab';
-import AddOnsTab from '../components/AddOnsTab';
+
 import ConversationsTab from '../components/ConversationsTab';
 import MetricsTab from '../components/MetricsTab';
 import LeadsTab from '../components/LeadsTab';
 import StylingTab from '../components/StylingTab';
+import AudienceInsightsTab from '../components/AudienceInsightsTab';
+import IncomeReportTab from '../components/IncomeReportTab';
 import "../styles/Dashboard.css";
 
 export default function Dashboard() {
@@ -164,12 +166,12 @@ export default function Dashboard() {
         // Set initial selections
         if (data.subscriptions?.length > 0) {
           const firstSub = data.subscriptions[0];
-          setSelectedSubscriptionId(firstSub.subscriptionid);
+          setSelectedSubscriptionId(prev => prev || firstSub.subscriptionid);
           
           // Find first agent in this subscription - use String() for type-safe comparison
           const firstAgent = data.clients?.find(c => String(c.subscriptionid) === String(firstSub.subscriptionid));
           if (firstAgent) {
-            setSelectedClientId(firstAgent.clientid);
+            setSelectedClientId(prev => prev || firstAgent.clientid);
           }
         }
       } catch (error) {
@@ -309,7 +311,7 @@ export default function Dashboard() {
       setAgentEditError(null);
       setAgentEditSuccess(null);
     }
-  }, [selectedClient]);
+  }, [selectedClientId]);
 
   // Load Google API scripts when Google Drive is selected as file source
   useEffect(() => {
@@ -733,10 +735,14 @@ export default function Dashboard() {
       setAgentEditSuccess('Agent updated successfully!');
       setIsEditingAgent(false);
 
-      // Refresh data to show updated values
-      setTimeout(() => {
-        window.location.reload();
-      }, 1500);
+      // Update local clients state with server response instead of reloading
+      if (data.client) {
+        setClients(prev => prev.map(c =>
+          String(c.clientid) === String(selectedClientId)
+            ? { ...c, ...data.client }
+            : c
+        ));
+      }
 
     } catch (error) {
       console.error('Update agent error:', error);
@@ -1288,7 +1294,7 @@ export default function Dashboard() {
         {selectedSubscription && (
           <div className="subscription-details">
             {/* Plan details and agent selector container - full width */}
-            <div className="box">
+            <div style={{ margin: '-1.25em -1.5em 0', padding: '1.25em 1.5em', backgroundColor: '#fff', borderBottom: '1px solid #dee2e6' }}>
               <div className="flex flex-between flex-align-center flex-wrap gap-sm">
                 {/* Subscription name, status, and plan details - inline on large screens */}
                 <div className="flex flex-align-center gap-sm flex-wrap">
@@ -1361,227 +1367,150 @@ export default function Dashboard() {
 
             {/* Agent Settings Form */}
             {selectedClient && (
-              <div className="box mt-md">
-                <div className="flex flex-between flex-align-center" style={{ marginBottom: isEditingAgent ? '1em' : 0 }}>
-                  <h4 className="m-0 flex flex-align-center gap-sm">
+              <div style={{ overflow: 'hidden', margin: '1em -1.5em -1.25em' }}>
+                <div className="subscription-header flex flex-between flex-align-center" style={{ padding: '0.6em 1.2em' }}>
+                  <h4 className="m-0 flex flex-align-center gap-sm text-white" style={{ fontSize: '1em' }}>
                     <span>⚙</span> {t('agentSettings')}
                   </h4>
                   {!isEditingAgent && (
-                    <button onClick={() => setIsEditingAgent(true)} className="btn btn-primary btn-sm btn-icon">
+                    <button onClick={() => {
+                      setIsEditingAgent(true);
+                      setAgentEditSuccess(null);
+                      if (selectedClient) {
+                        setAgentEditForm({
+                          agent_name: selectedClient.agent_name || '',
+                          contact_email: selectedClient.contact_email || '',
+                          contact_phone: selectedClient.contact_phone || '',
+                          contact_phone_wsp: selectedClient.contact_phone_wsp || false,
+                          office_lat: selectedClient.office_lat || '',
+                          office_long: selectedClient.office_long || '',
+                          office_address: selectedClient.office_address || '',
+                          office_wsp_phone: selectedClient.office_wsp_phone || '',
+                          company: selectedClient.company || '',
+                          timezone: selectedClient.timezone || 'America/Mazatlan',
+                          domain_to_install_bot: selectedClient.domain_to_install_bot || '',
+                          restrict_response: selectedClient.restrict_response || false,
+                          restrict_response_start: parseTimeForInput(selectedClient.restrict_response_start),
+                          restrict_response_end: parseTimeForInput(selectedClient.restrict_response_end)
+                        });
+                      }
+                    }} className="btn btn-primary btn-sm btn-icon">
                       <span>✎</span> {t('common:buttons.edit')}
                     </button>
                   )}
                 </div>
 
+                <div style={{ margin: '1.25em 1.5em' }}>
                 {isEditingAgent ? (
                   <form onSubmit={handleUpdateAgent}>
-                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '1em' }}>
-                      {/* Agent Name */}
-                      <div>
-                        <label className="form-label">{t('form.agentName')}</label>
-                        <input
-                          type="text"
-                          name="agent_name"
-                          value={agentEditForm.agent_name}
-                          onChange={handleAgentEditChange}
-                          placeholder="My AI Agent"
-                          className="form-input form-input-sm"
-                        />
+                    {/* Section 1: Agent & Company */}
+                    <div style={{ marginBottom: '1.25em' }}>
+                      <div style={{ fontSize: '0.75em', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.05em', color: '#6c757d', marginBottom: '0.6em', display: 'flex', alignItems: 'center', gap: '0.4em' }}>
+                        <i className="fa-solid fa-building" style={{ color: '#495057' }}></i> {t('form.sectionAgent')}
                       </div>
-
-                      {/* Company */}
-                      <div>
-                        <label className="form-label">{t('form.company')}</label>
-                        <input
-                          type="text"
-                          name="company"
-                          value={agentEditForm.company}
-                          onChange={handleAgentEditChange}
-                          placeholder="Acme Inc"
-                          className="form-input form-input-sm"
-                        />
-                      </div>
-
-                      {/* Domain to Install Bot */}
-                      <div>
-                        <label className="form-label">
-                          {t('form.domainToInstall')}<span className="error-text">*</span>
-                        </label>
-                        <input
-                          type="text"
-                          name="domain_to_install_bot"
-                          value={agentEditForm.domain_to_install_bot}
-                          onChange={handleAgentEditChange}
-                          placeholder="myexampledomain.com"
-                          required
-                          className="form-input form-input-sm"
-                        />
-                      </div>
-
-                      {/* Contact Email */}
-                      <div>
-                        <label className="form-label">{t('form.contactEmail')}</label>
-                        <input
-                          type="email"
-                          name="contact_email"
-                          value={agentEditForm.contact_email}
-                          onChange={handleAgentEditChange}
-                          placeholder="contact@example.com"
-                          className="form-input form-input-sm"
-                        />
-                      </div>
-
-                      {/* Phone Numbers Row */}
-                      <div className="flex gap-md flex-wrap" style={{ gridColumn: '1 / -1', alignItems: 'flex-end' }}>
-                        {/* Contact Phone */}
-                        <div style={{ width: '160px' }}>
-                          <label className="form-label">{t('form.contactPhone')}</label>
-                          <input
-                            type="tel"
-                            name="contact_phone"
-                            value={agentEditForm.contact_phone}
-                            onChange={handleAgentEditChange}
-                            placeholder="+1 234 567 8900"
-                            className="form-input form-input-sm"
-                          />
+                      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '0.75em' }}>
+                        <div>
+                          <label className="form-label">{t('form.agentName')}</label>
+                          <input type="text" name="agent_name" value={agentEditForm.agent_name} onChange={handleAgentEditChange} placeholder="My AI Agent" className="form-input form-input-sm" />
                         </div>
-
-                        {/* Office WhatsApp Phone */}
-                        <div style={{ width: '160px' }}>
-                          <label className="form-label">{t('form.whatsappPhone')}</label>
-                          <input
-                            type="tel"
-                            name="office_wsp_phone"
-                            value={agentEditForm.office_wsp_phone}
-                            onChange={handleAgentEditChange}
-                            placeholder="+1 234 567 8900"
-                            className="form-input form-input-sm"
-                          />
+                        <div>
+                          <label className="form-label">{t('form.company')}</label>
+                          <input type="text" name="company" value={agentEditForm.company} onChange={handleAgentEditChange} placeholder="Acme Inc" className="form-input form-input-sm" />
                         </div>
-
-                        {/* Contact Phone is WhatsApp - Checkbox */}
-                        <div className="flex flex-align-center gap-sm" style={{ paddingBottom: '0.5em' }}>
-                          <input
-                            type="checkbox"
-                            id="contact_phone_wsp"
-                            name="contact_phone_wsp"
-                            checked={agentEditForm.contact_phone_wsp}
-                            onChange={handleAgentEditChange}
-                            className="form-checkbox"
-                          />
-                          <label htmlFor="contact_phone_wsp" className="form-label text-nowrap" style={{ marginBottom: 0, cursor: 'pointer' }}>
-                            {t('common:labels.whatsappEnabled')}
-                          </label>
+                        <div>
+                          <label className="form-label">{t('form.domainToInstall')}<span className="error-text">*</span></label>
+                          <input type="text" name="domain_to_install_bot" value={agentEditForm.domain_to_install_bot} onChange={handleAgentEditChange} placeholder="myexampledomain.com" required className="form-input form-input-sm" />
                         </div>
-
-                      </div>
-
-                      {/* Office Address - Full Width */}
-                      <div style={{ gridColumn: '1 / -1' }}>
-                        <label className="form-label">{t('form.officeAddress')}</label>
-                        <input
-                          type="text"
-                          name="office_address"
-                          value={agentEditForm.office_address}
-                          onChange={handleAgentEditChange}
-                          placeholder="123 Main St, City, State 12345"
-                          className="form-input form-input-sm"
-                        />
-                      </div>
-
-                      {/* Office Latitude */}
-                      <div>
-                        <label className="form-label">{t('form.latitude')}</label>
-                        <input
-                          type="number"
-                          step="any"
-                          name="office_lat"
-                          value={agentEditForm.office_lat}
-                          onChange={handleAgentEditChange}
-                          placeholder="40.7128"
-                          className="form-input form-input-sm"
-                        />
-                      </div>
-
-                      {/* Office Longitude */}
-                      <div>
-                        <label className="form-label">{t('form.longitude')}</label>
-                        <input
-                          type="number"
-                          step="any"
-                          name="office_long"
-                          value={agentEditForm.office_long}
-                          onChange={handleAgentEditChange}
-                          placeholder="-74.0060"
-                          className="form-input form-input-sm"
-                        />
-                      </div>
-
-                      {/* Timezone */}
-                      <div>
-                        <label className="form-label">{t('form.timezone')}</label>
-                        <select
-                          name="timezone"
-                          value={agentEditForm.timezone}
-                          onChange={handleAgentEditChange}
-                          className="form-select form-input-sm"
-                        >
-                          <option value="America/New_York">Eastern Time (America/New_York)</option>
-                          <option value="America/Chicago">Central Time (America/Chicago)</option>
-                          <option value="America/Denver">Mountain Time (America/Denver)</option>
-                          <option value="America/Phoenix">Arizona (America/Phoenix)</option>
-                          <option value="America/Los_Angeles">Pacific Time (America/Los_Angeles)</option>
-                          <option value="America/Anchorage">Alaska (America/Anchorage)</option>
-                          <option value="America/Honolulu">Hawaii (America/Honolulu)</option>
-                          <option value="America/Mexico_City">Mexico Central (America/Mexico_City)</option>
-                          <option value="America/Mazatlan">Mexico Mountain (America/Mazatlan)</option>
-                          <option value="America/Tijuana">Mexico Pacific (America/Tijuana)</option>
-                          <option value="UTC">UTC</option>
-                        </select>
                       </div>
                     </div>
 
-                    {/* Response Restriction */}
-                    <div className="restrict-response-section">
-                      <div className="flex flex-align-center gap-md flex-wrap">
-                        <div className="flex flex-align-center gap-sm">
-                          <input
-                            type="checkbox"
-                            id="restrict_response"
-                            name="restrict_response"
-                            checked={agentEditForm.restrict_response}
-                            onChange={(e) => setAgentEditForm(prev => ({ ...prev, restrict_response: e.target.checked }))}
-                            className="form-checkbox"
-                          />
-                          <label htmlFor="restrict_response" className="form-label text-nowrap" style={{ marginBottom: 0, cursor: 'pointer' }}>
-                            {t('form.restrictResponse')}
-                          </label>
-                        </div>
+                    <hr style={{ border: 'none', borderTop: '1px solid #e9ecef', margin: '0 0 1.25em' }} />
 
-                        {agentEditForm.restrict_response && (
-                          <>
-                            <div className="flex flex-align-center gap-sm">
-                              <label className="form-label-inline">{t('form.restrictResponseStart')}:</label>
-                              <input
-                                type="time"
-                                name="restrict_response_start"
-                                value={agentEditForm.restrict_response_start}
-                                onChange={handleAgentEditChange}
-                                className="form-time"
-                              />
-                            </div>
-                            <div className="flex flex-align-center gap-sm">
-                              <label className="form-label-inline">{t('form.restrictResponseEnd')}:</label>
-                              <input
-                                type="time"
-                                name="restrict_response_end"
-                                value={agentEditForm.restrict_response_end}
-                                onChange={handleAgentEditChange}
-                                className="form-time"
-                              />
-                            </div>
-                          </>
-                        )}
+                    {/* Section 2: Contact Information */}
+                    <div style={{ marginBottom: '1.25em' }}>
+                      <div style={{ fontSize: '0.75em', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.05em', color: '#6c757d', marginBottom: '0.6em', display: 'flex', alignItems: 'center', gap: '0.4em' }}>
+                        <i className="fa-solid fa-address-book" style={{ color: '#495057' }}></i> {t('form.sectionContact')}
+                      </div>
+                      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '0.75em', alignItems: 'end' }}>
+                        <div>
+                          <label className="form-label">{t('form.contactEmail')}</label>
+                          <input type="email" name="contact_email" value={agentEditForm.contact_email} onChange={handleAgentEditChange} placeholder="contact@example.com" className="form-input form-input-sm" />
+                        </div>
+                        <div>
+                          <label className="form-label">{t('form.contactPhone')}</label>
+                          <input type="tel" name="contact_phone" value={agentEditForm.contact_phone} onChange={handleAgentEditChange} placeholder="+1 234 567 8900" className="form-input form-input-sm" />
+                        </div>
+                        <div>
+                          <label className="form-label">{t('form.whatsappPhone')}</label>
+                          <input type="tel" name="office_wsp_phone" value={agentEditForm.office_wsp_phone} onChange={handleAgentEditChange} placeholder="+1 234 567 8900" className="form-input form-input-sm" />
+                        </div>
+                        <div className="flex flex-align-center gap-sm" style={{ paddingBottom: '0.4em' }}>
+                          <input type="checkbox" id="contact_phone_wsp" name="contact_phone_wsp" checked={agentEditForm.contact_phone_wsp} onChange={handleAgentEditChange} className="form-checkbox" />
+                          <label htmlFor="contact_phone_wsp" className="form-label text-nowrap" style={{ marginBottom: 0, cursor: 'pointer' }}><i className="fa-brands fa-whatsapp" style={{ color: '#25D366' }}></i> {t('common:labels.whatsappEnabled')}</label>
+                        </div>
+                      </div>
+                    </div>
+
+                    <hr style={{ border: 'none', borderTop: '1px solid #e9ecef', margin: '0 0 1.25em' }} />
+
+                    {/* Section 3: Location & Schedule */}
+                    <div style={{ marginBottom: '0.5em' }}>
+                      <div style={{ fontSize: '0.75em', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.05em', color: '#6c757d', marginBottom: '0.6em', display: 'flex', alignItems: 'center', gap: '0.4em' }}>
+                        <i className="fa-solid fa-location-dot" style={{ color: '#495057' }}></i> {t('form.sectionLocation')}
+                      </div>
+                      <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '0.75em', marginBottom: '0.75em' }}>
+                        <div>
+                          <label className="form-label">{t('form.officeAddress')}</label>
+                          <input type="text" name="office_address" value={agentEditForm.office_address} onChange={handleAgentEditChange} placeholder="123 Main St, City, State 12345" className="form-input form-input-sm" />
+                        </div>
+                      </div>
+                      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '0.75em' }}>
+                        <div>
+                          <label className="form-label">{t('form.latitude')}</label>
+                          <input type="number" step="any" name="office_lat" value={agentEditForm.office_lat} onChange={handleAgentEditChange} placeholder="40.7128" className="form-input form-input-sm" />
+                        </div>
+                        <div>
+                          <label className="form-label">{t('form.longitude')}</label>
+                          <input type="number" step="any" name="office_long" value={agentEditForm.office_long} onChange={handleAgentEditChange} placeholder="-74.0060" className="form-input form-input-sm" />
+                        </div>
+                        <div>
+                          <label className="form-label">{t('form.timezone')}</label>
+                          <select name="timezone" value={agentEditForm.timezone} onChange={handleAgentEditChange} className="form-select form-input-sm">
+                            <option value="America/New_York">Eastern Time (America/New_York)</option>
+                            <option value="America/Chicago">Central Time (America/Chicago)</option>
+                            <option value="America/Denver">Mountain Time (America/Denver)</option>
+                            <option value="America/Phoenix">Arizona (America/Phoenix)</option>
+                            <option value="America/Los_Angeles">Pacific Time (America/Los_Angeles)</option>
+                            <option value="America/Anchorage">Alaska (America/Anchorage)</option>
+                            <option value="America/Honolulu">Hawaii (America/Honolulu)</option>
+                            <option value="America/Mexico_City">Mexico Central (America/Mexico_City)</option>
+                            <option value="America/Mazatlan">Mexico Mountain (America/Mazatlan)</option>
+                            <option value="America/Tijuana">Mexico Pacific (America/Tijuana)</option>
+                            <option value="UTC">UTC</option>
+                          </select>
+                        </div>
+                      </div>
+
+                      {/* Response Restriction */}
+                      <div className="restrict-response-section" style={{ marginTop: '1em' }}>
+                        <div className="flex flex-align-center gap-md flex-wrap">
+                          <div className="flex flex-align-center gap-sm">
+                            <input type="checkbox" id="restrict_response" name="restrict_response" checked={agentEditForm.restrict_response} onChange={(e) => setAgentEditForm(prev => ({ ...prev, restrict_response: e.target.checked }))} className="form-checkbox" />
+                            <label htmlFor="restrict_response" className="form-label text-nowrap" style={{ marginBottom: 0, cursor: 'pointer' }}>{t('form.restrictResponse')}</label>
+                          </div>
+                          {agentEditForm.restrict_response && (
+                            <>
+                              <div className="flex flex-align-center gap-sm">
+                                <label className="form-label-inline">{t('form.restrictResponseStart')}:</label>
+                                <input type="time" name="restrict_response_start" value={agentEditForm.restrict_response_start} onChange={handleAgentEditChange} className="form-time" />
+                              </div>
+                              <div className="flex flex-align-center gap-sm">
+                                <label className="form-label-inline">{t('form.restrictResponseEnd')}:</label>
+                                <input type="time" name="restrict_response_end" value={agentEditForm.restrict_response_end} onChange={handleAgentEditChange} className="form-time" />
+                              </div>
+                            </>
+                          )}
+                        </div>
                       </div>
                     </div>
 
@@ -1635,41 +1564,98 @@ export default function Dashboard() {
                     </div>
                   </form>
                 ) : (
-                  /* Read-only view - compact single line */
-                  <div className="flex flex-wrap gap-sm text-sm mt-sm">
-                    {agentEditForm.agent_name && (
-                      <span><strong className="text-muted">{t('dashboard:summary.agent')}:</strong> {agentEditForm.agent_name}</span>
-                    )}
-                    {agentEditForm.company && (
-                      <span><strong className="text-muted">{t('dashboard:summary.company')}:</strong> {agentEditForm.company}</span>
-                    )}
-                    {agentEditForm.domain_to_install_bot && (
-                      <span><strong className="text-muted">{t('dashboard:summary.installDomain')}:</strong> {agentEditForm.domain_to_install_bot}</span>
-                    )}
-                    {agentEditForm.contact_email && (
-                      <span><strong className="text-muted">{t('dashboard:summary.email')}:</strong> {agentEditForm.contact_email}</span>
-                    )}
-                    {agentEditForm.contact_phone && (
-                      <span><strong className="text-muted">{t('dashboard:summary.officePhone')}:</strong> {agentEditForm.contact_phone}{agentEditForm.contact_phone_wsp && <span style={{ color: '#25D366' }}> ({t('dashboard:summary.whatsappEnabled')})</span>}</span>
-                    )}
-                    {agentEditForm.office_wsp_phone && agentEditForm.office_wsp_phone !== agentEditForm.contact_phone && (
-                      <span><strong className="text-muted">{t('dashboard:summary.whatsapp')}:</strong> {agentEditForm.office_wsp_phone}</span>
-                    )}
-                    {(agentEditForm.office_address || agentEditForm.timezone) && (
-                      <div className="flex gap-lg flex-wrap mt-sm" style={{ flexBasis: '100%' }}>
-                        {agentEditForm.office_address && (
-                          <span><strong className="text-muted">{t('dashboard:summary.address')}:</strong> {agentEditForm.office_address}</span>
+                  /* Read-only view - two column layout */
+                  <>
+                    <div style={{ display: 'flex', gap: '0.75em', marginTop: '0.25em' }}>
+                      {/* Left column: Agent & Company */}
+                      <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '0.75em' }}>
+                        {agentEditForm.agent_name && (
+                          <div style={{ padding: '0.75em', backgroundColor: '#f8f9fa', borderRadius: '8px', border: '1px solid #e9ecef', textAlign: 'center' }}>
+                            <i className="fa-solid fa-user-tie" style={{ color: '#495057', fontSize: '1.1em', marginBottom: '0.3em', display: 'block' }}></i>
+                            <div style={{ fontSize: '0.65em', textTransform: 'uppercase', letterSpacing: '0.05em', color: '#868e96', fontWeight: 600, marginBottom: '0.2em' }}>{t('dashboard:summary.agent')}</div>
+                            <div style={{ fontSize: '0.9em', fontWeight: 500, color: '#212529' }}>{agentEditForm.agent_name}</div>
+                          </div>
                         )}
-                        {agentEditForm.timezone && (
-                          <span><strong className="text-muted">{t('dashboard:summary.timezone')}:</strong> {agentEditForm.timezone}</span>
+                        {(agentEditForm.company || agentEditForm.office_address) && (
+                          <div style={{ padding: '0.75em', backgroundColor: '#f8f9fa', borderRadius: '8px', border: '1px solid #e9ecef', textAlign: 'center' }}>
+                            <i className="fa-solid fa-building" style={{ color: '#495057', fontSize: '1.1em', marginBottom: '0.3em', display: 'block' }}></i>
+                            <div style={{ fontSize: '0.65em', textTransform: 'uppercase', letterSpacing: '0.05em', color: '#868e96', fontWeight: 600, marginBottom: '0.2em' }}>{t('dashboard:summary.company')}</div>
+                            {agentEditForm.company && <div style={{ fontSize: '0.9em', fontWeight: 500, color: '#212529' }}>{agentEditForm.company}</div>}
+                            {agentEditForm.office_address && <div style={{ fontSize: '0.8em', color: '#495057', marginTop: '0.2em' }}>{agentEditForm.office_lat && agentEditForm.office_long ? <a href={`https://www.google.com/maps?q=${agentEditForm.office_lat},${agentEditForm.office_long}`} target="_blank" rel="noopener noreferrer" style={{ color: '#007bff', textDecoration: 'none' }}>{agentEditForm.office_address} <i className="fa-solid fa-arrow-up-right-from-square" style={{ fontSize: '0.75em' }}></i></a> : agentEditForm.office_address}</div>}
+                          </div>
                         )}
                       </div>
-                    )}
+                      {/* Right column: Contact & Settings */}
+                      <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '0.75em' }}>
+                        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75em' }}>
+                          {agentEditForm.contact_phone && (
+                            <div style={{ padding: '0.75em', backgroundColor: '#f8f9fa', borderRadius: '8px', border: '1px solid #e9ecef', textAlign: 'center' }}>
+                              <i className="fa-solid fa-phone" style={{ color: '#495057', fontSize: '1.1em', marginBottom: '0.3em', display: 'block' }}></i>
+                              <div style={{ fontSize: '0.65em', textTransform: 'uppercase', letterSpacing: '0.05em', color: '#868e96', fontWeight: 600, marginBottom: '0.2em' }}>{t('dashboard:summary.officePhone')}</div>
+                              <div style={{ fontSize: '0.9em', fontWeight: 500, color: '#212529' }}>{agentEditForm.contact_phone}{agentEditForm.contact_phone_wsp && <span style={{ color: '#25D366' }}> <i className="fa-brands fa-whatsapp"></i></span>}</div>
+                            </div>
+                          )}
+                          {agentEditForm.contact_email && (
+                            <div style={{ padding: '0.75em', backgroundColor: '#f8f9fa', borderRadius: '8px', border: '1px solid #e9ecef', textAlign: 'center' }}>
+                              <i className="fa-solid fa-envelope" style={{ color: '#495057', fontSize: '1.1em', marginBottom: '0.3em', display: 'block' }}></i>
+                              <div style={{ fontSize: '0.65em', textTransform: 'uppercase', letterSpacing: '0.05em', color: '#868e96', fontWeight: 600, marginBottom: '0.2em' }}>{t('dashboard:summary.email')}</div>
+                              <div style={{ fontSize: '0.9em', fontWeight: 500, color: '#212529' }}>{agentEditForm.contact_email}</div>
+                            </div>
+                          )}
+                          {agentEditForm.domain_to_install_bot && (
+                            <div style={{ padding: '0.75em', backgroundColor: '#f8f9fa', borderRadius: '8px', border: '1px solid #e9ecef', textAlign: 'center' }}>
+                              <i className="fa-solid fa-globe" style={{ color: '#495057', fontSize: '1.1em', marginBottom: '0.3em', display: 'block' }}></i>
+                              <div style={{ fontSize: '0.65em', textTransform: 'uppercase', letterSpacing: '0.05em', color: '#868e96', fontWeight: 600, marginBottom: '0.2em' }}>{t('dashboard:summary.installDomain')}</div>
+                              <div style={{ fontSize: '0.9em', fontWeight: 500, color: '#212529' }}>{agentEditForm.domain_to_install_bot}</div>
+                            </div>
+                          )}
+                          {agentEditForm.office_wsp_phone && agentEditForm.office_wsp_phone !== agentEditForm.contact_phone && (
+                            <div style={{ padding: '0.75em', backgroundColor: '#f8f9fa', borderRadius: '8px', border: '1px solid #e9ecef', textAlign: 'center' }}>
+                              <i className="fa-brands fa-whatsapp" style={{ color: '#495057', fontSize: '1.1em', marginBottom: '0.3em', display: 'block' }}></i>
+                              <div style={{ fontSize: '0.65em', textTransform: 'uppercase', letterSpacing: '0.05em', color: '#868e96', fontWeight: 600, marginBottom: '0.2em' }}>{t('dashboard:summary.whatsapp')}</div>
+                              <div style={{ fontSize: '0.9em', fontWeight: 500, color: '#212529' }}>{agentEditForm.office_wsp_phone}</div>
+                            </div>
+                          )}
+                          {agentEditForm.timezone && (
+                            <div style={{ padding: '0.75em', backgroundColor: '#f8f9fa', borderRadius: '8px', border: '1px solid #e9ecef', textAlign: 'center' }}>
+                              <i className="fa-solid fa-clock" style={{ color: '#495057', fontSize: '1.1em', marginBottom: '0.3em', display: 'block' }}></i>
+                              <div style={{ fontSize: '0.65em', textTransform: 'uppercase', letterSpacing: '0.05em', color: '#868e96', fontWeight: 600, marginBottom: '0.2em' }}>{t('dashboard:summary.timezone')}</div>
+                              <div style={{ fontSize: '0.9em', fontWeight: 500, color: '#212529' }}>{agentEditForm.timezone}</div>
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    </div>
                     {!agentEditForm.agent_name && !agentEditForm.company && !agentEditForm.contact_email && !agentEditForm.contact_phone && !agentEditForm.office_address && (
-                      <span className="text-muted" style={{ fontStyle: 'italic' }}>{t('dashboard:summary.noSettings')}</span>
+                      <span className="text-muted" style={{ fontStyle: 'italic', fontSize: '0.9em', marginTop: '0.5em', display: 'block' }}>{t('dashboard:summary.noSettings')}</span>
                     )}
-                  </div>
+                  </>
                 )}
+                </div>
+                <div style={{
+                  backgroundColor: '#d4edda',
+                  padding: '0.6em 1.2em',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: '0.5em'
+                }}>
+                  <i className="fa-solid fa-bullhorn" style={{ color: '#155724', fontSize: '1.1em' }}></i>
+                  <span style={{ color: '#155724', fontSize: '0.9em' }}>
+                    {t('dashboard:inviteBanner.text')}{' '}
+                    <a
+                      href="#"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        setExpandShare(true);
+                        setActiveTab('leads');
+                      }}
+                      style={{ color: '#155724', fontWeight: 700, textDecoration: 'underline' }}
+                    >
+                      {t('dashboard:inviteBanner.link')} →
+                    </a>
+                  </span>
+                </div>
               </div>
             )}
 
@@ -1681,36 +1667,6 @@ export default function Dashboard() {
 
       </div>
 
-      {/* Invite Banner */}
-      {selectedClient && (
-        <div style={{
-          backgroundColor: '#d4edda',
-          border: '1px solid #c3e6cb',
-          borderRadius: '6px',
-          padding: '0.75em 1.25em',
-          marginBottom: '1em',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          gap: '0.5em'
-        }}>
-          <i className="fa-solid fa-bullhorn" style={{ color: '#155724', fontSize: '1.1em' }}></i>
-          <span style={{ color: '#155724', fontSize: '0.95em' }}>
-            {t('dashboard:inviteBanner.text')}{' '}
-            <a
-              href="#"
-              onClick={(e) => {
-                e.preventDefault();
-                setExpandShare(true);
-                setActiveTab('leads');
-              }}
-              style={{ color: '#155724', fontWeight: 700, textDecoration: 'underline' }}
-            >
-              {t('dashboard:inviteBanner.link')} →
-            </a>
-          </span>
-        </div>
-      )}
 
       {/* Agent Details + Tabs Container */}
       {selectedClient && (
@@ -1730,12 +1686,12 @@ export default function Dashboard() {
           {/* Training tab: RAG embeddings, Add-Ons tab: selectable decorators/integrations */}
           <div className="flex flex-center flex-wrap" style={{ borderBottom: '2px solid #ddd', backgroundColor: '#e9ecef' }}>
             <button className={`dashboard-tab ${activeTab === 'configurations' ? 'dashboard-tab-active' : ''}`} onClick={() => setActiveTab('configurations')}>⚙ {t('common:navigation.configurations')}</button>
-            <button className={`dashboard-tab ${activeTab === 'addons' ? 'dashboard-tab-active' : ''}`} onClick={() => setActiveTab('addons')}>⊕ {t('common:navigation.addons')}</button>
-            <button className={`dashboard-tab ${activeTab === 'styling' ? 'dashboard-tab-active' : ''}`} onClick={() => setActiveTab('styling')}>◉ {t('common:navigation.styling')}</button>
+
             <button className={`dashboard-tab ${activeTab === 'integrations' ? 'dashboard-tab-active' : ''}`} onClick={() => setActiveTab('integrations')}>⇄ {t('common:navigation.integrations')}</button>
             <button className={`dashboard-tab ${activeTab === 'conversations' ? 'dashboard-tab-active' : ''}`} onClick={() => setActiveTab('conversations')}>◐ {t('common:navigation.conversations')}</button>
             <button className={`dashboard-tab ${activeTab === 'leads' ? 'dashboard-tab-active' : ''}`} onClick={() => setActiveTab('leads')}>⊛ {t('common:navigation.leads')}{leadsCount > 0 && <span className="tab-badge-blue">{leadsCount}</span>}{leadsCollabCount > 0 && <span className="tab-badge-green">{leadsCollabCount}</span>}</button>
-            <button className={`dashboard-tab ${activeTab === 'metrics' ? 'dashboard-tab-active' : ''}`} onClick={() => setActiveTab('metrics')}>▦ {t('common:navigation.metrics')}</button>
+            <button className={`dashboard-tab ${activeTab === 'audienceinsights' ? 'dashboard-tab-active' : ''}`} onClick={() => setActiveTab('audienceinsights')}>◎ {t('common:navigation.audienceinsights')}</button>
+            <button className={`dashboard-tab ${activeTab === 'incomereport' ? 'dashboard-tab-active' : ''}`} onClick={() => setActiveTab('incomereport')}>$ {t('common:navigation.incomereport')}</button>
           </div>
 
           {/* Tab Content */}
@@ -1743,14 +1699,19 @@ export default function Dashboard() {
             <div className="dashboard-loading"><p>Loading...</p></div>
           ) : (
             <>
-          {activeTab === 'configurations' && <ConfigurationsTab user={selectedClient} clientId={selectedClientId} onClientUpdate={handleClientUpdate} />}
-          {/* Add-Ons Tab - Selectable decorators/integrations from server's decorator registry */}
-          {activeTab === 'addons' && <AddOnsTab user={selectedClient} clientId={selectedClientId} />}
+          {activeTab === 'configurations' && <div className="tab-container">
+            <StylingTab user={selectedClient} clientId={selectedClientId} onNavigateToIntegrations={() => setActiveTab('integrations')} />
+            <ConfigurationsTab user={selectedClient} clientId={selectedClientId} onClientUpdate={handleClientUpdate} />
+          </div>}
+
           {activeTab === 'integrations' && <IntegrationsTab user={selectedClient} clientId={selectedClientId} onClientUpdate={handleClientUpdate} />}
           {activeTab === 'conversations' && <ConversationsTab user={selectedClient} clientId={selectedClientId} expandAllLive={expandAllLive} onExpandAllLiveDone={() => setExpandAllLive(false)} />}
-          {activeTab === 'metrics' && <MetricsTab user={selectedClient} clientId={selectedClientId} subscription={selectedSubscription} tokensUsed={subscriptionTokensUsed} onNavigateToConversations={() => setActiveTab('conversations')} onNavigateToActiveUsers={() => { setExpandAllLive(true); setActiveTab('conversations'); }} onNavigateToLeads={() => setActiveTab('leads')} onNavigateToCollaborations={() => { setExpandCollaborations(true); setActiveTab('leads'); }} />}
           {activeTab === 'leads' && <LeadsTab user={selectedClient} clientId={selectedClientId} expandShare={expandShare} onShareExpanded={() => setExpandShare(false)} expandCollaborations={expandCollaborations} onCollaborationsExpanded={() => setExpandCollaborations(false)} />}
-          {activeTab === 'styling' && <StylingTab user={selectedClient} clientId={selectedClientId} onNavigateToIntegrations={() => setActiveTab('integrations')} />}
+          {activeTab === 'audienceinsights' && <div className="tab-container">
+            <AudienceInsightsTab user={selectedClient} clientId={selectedClientId} />
+            <MetricsTab user={selectedClient} clientId={selectedClientId} subscription={selectedSubscription} tokensUsed={subscriptionTokensUsed} onNavigateToConversations={() => setActiveTab('conversations')} onNavigateToActiveUsers={() => { setExpandAllLive(true); setActiveTab('conversations'); }} onNavigateToLeads={() => setActiveTab('leads')} onNavigateToCollaborations={() => { setExpandCollaborations(true); setActiveTab('leads'); }} />
+          </div>}
+          {activeTab === 'incomereport' && <IncomeReportTab user={selectedClient} clientId={selectedClientId} />}
             </>
           )}
         </div>

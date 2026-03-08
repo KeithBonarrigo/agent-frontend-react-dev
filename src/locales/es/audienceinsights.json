@@ -1,0 +1,46 @@
+{
+  "title": "Inteligencia de Audiencia",
+  "description": "Analiza las conversaciones de tu chatbot para descubrir quién es tu audiencia, qué quiere y cómo segmentarla con anuncios.",
+  "noClient": "Selecciona un agente para ver los insights de audiencia.",
+  "timeRange": "Periodo",
+  "days": "días",
+  "generateBtn": "Generar Insights",
+  "generating": "Generando...",
+  "generatingMsg": "Analizando conversaciones y generando insights de audiencia...",
+  "generatingHint": "Esto puede tomar 10-15 segundos mientras procesamos tus datos.",
+  "generateError": "Error al generar el reporte. Inténtalo de nuevo.",
+  "noData": "No se encontraron conversaciones para el periodo seleccionado.",
+  "rateLimited": "Límite de solicitudes alcanzado. Próximo reporte disponible en {{minutes}} minutos.",
+  "pastReports": "Reportes Anteriores",
+  "selectReport": "-- Seleccionar reporte --",
+  "downloadPdf": "Descargar PDF",
+  "sections": {
+    "summary": "Resumen Ejecutivo",
+    "intent": "Distribución de Intención",
+    "clusters": "Principales Grupos de Interés",
+    "geo": "Señales Geográficas",
+    "seasonal": "Patrones Estacionales",
+    "budget": "Señales de Presupuesto",
+    "segments": "Segmentos Meta Recomendados"
+  },
+  "intent": {
+    "high": "Alta Intención",
+    "medium": "Intención Media",
+    "low": "Baja Intención"
+  },
+  "geo": {
+    "interestMarkets": "Dónde Quieren Comprar",
+    "userOrigins": "De Dónde Son",
+    "relocationSignal": "Se detectó una fuerte señal de reubicación — los usuarios buscan desde ubicaciones diferentes a su mercado objetivo."
+  },
+  "seasonal": {
+    "peakMonths": "Meses Pico de Consultas",
+    "purchaseWindow": "Ventana de Compra Estimada",
+    "adStart": "Inicio Recomendado de Anuncios"
+  },
+  "meta": {
+    "sessions": "Sesiones",
+    "messages": "Mensajes",
+    "generatedAt": "Generado"
+  }
+}

@@ -539,8 +539,8 @@
    Accordion / Expandable Panels
    ----------------------------------------- */
 .accordion-item {
-  border: 1px solid #ddd;
-  border-radius: 8px;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
   margin-bottom: 10px;
   overflow: hidden;
 }
@@ -715,8 +715,8 @@
   width: 100%;
   border-collapse: collapse;
   background-color: #fff;
-  border: 1px solid #dee2e6;
-  border-radius: 8px;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
   overflow: hidden;
 }
 
@@ -725,15 +725,15 @@
   text-align: left;
   font-weight: 600;
   font-size: 0.85em;
-  color: #495057;
-  background-color: #f8f9fa;
-  border-bottom: 2px solid #dee2e6;
+  color: #64748b;
+  background-color: #f8fafc;
+  border-bottom: 2px solid #e2e8f0;
 }
 
 .table td {
   padding: 0.75em 1em;
   font-size: 0.9em;
-  border-bottom: 1px solid #dee2e6;
+  border-bottom: 1px solid #e2e8f0;
   vertical-align: top;
 }
 
@@ -913,7 +913,7 @@
    ----------------------------------------- */
 .metric-card {
   padding: 1.5em;
-  background-color: #f8f9fa;
+  background-color: #fff;
   border-radius: 8px;
   border: 1px solid #ddd;
   text-align: center;
@@ -1171,8 +1171,8 @@
 .section {
   padding: 2em;
   background-color: #f8f9fa;
-  border-radius: 8px;
-  border: 1px solid #dee2e6;
+  border-radius: 12px;
+  border: 1px solid #e2e8f0;
 }
 
 .section-header {
@@ -1227,8 +1227,8 @@
 .subsection {
   background-color: white;
   padding: 1.5em;
-  border-radius: 8px;
-  border: 1px solid #dee2e6;
+  border-radius: 12px;
+  border: 1px solid #e2e8f0;
   margin-bottom: 1.5em;
 }
 
@@ -1731,4 +1731,61 @@
   gap: 10px;
   margin-top: 20px;
   margin-left: 45px;
+}
+
+/* -----------------------------------------
+   Audience Insights
+   ----------------------------------------- */
+.ai-intent-bar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.85em;
+  font-weight: 700;
+  color: #fff;
+  transition: flex 0.3s ease;
+  min-width: 40px;
+}
+
+.ai-intent-high {
+  background-color: #28a745;
+  border-radius: 8px 0 0 8px;
+}
+
+.ai-intent-medium {
+  background-color: #ffc107;
+  color: #333;
+}
+
+.ai-intent-low {
+  background-color: #dee2e6;
+  color: #666;
+  border-radius: 0 8px 8px 0;
+}
+
+.ai-legend-dot {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  margin-right: 4px;
+}
+
+.ai-budget-value {
+  font-size: 1.8em;
+  font-weight: 700;
+  color: #28a745;
+}
+
+.ai-segment-card {
+  background-color: #f8f9fa;
+  border: 1px solid #dee2e6;
+  border-radius: 8px;
+  padding: 1.25em;
+  border-left: 4px solid #1877f2;
+  transition: box-shadow 0.2s ease;
+}
+
+.ai-segment-card:hover {
+  box-shadow: 0 2px 8px rgba(24, 119, 242, 0.15);
 }

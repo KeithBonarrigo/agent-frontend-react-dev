@@ -95,5 +95,17 @@
     "sendSuccess": "Mensaje enviado exitosamente!",
     "sendError": "Error al enviar el mensaje. Intentelo de nuevo."
   },
+  "googleCalendar": {
+    "title": "Google Calendar",
+    "description": "Sincroniza tu Google Calendar para que tu agente de IA pueda verificar disponibilidad y agendar citas.",
+    "connect": "Conectar",
+    "disconnect": "Desconectar",
+    "connected": "Conectado",
+    "notConnected": "No conectado",
+    "checking": "Verificando conexión...",
+    "connectError": "Error al conectar Google Calendar.",
+    "confirmDisconnect": "¿Estás seguro de que quieres desconectar Google Calendar?",
+    "signInWithGoogle": "Iniciar sesión con Google"
+  },
   "noSubscription": "Por favor selecciona una suscripcion para configurar integraciones."
 }

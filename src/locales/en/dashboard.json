@@ -58,7 +58,10 @@
     "editSettings": "Edit Settings",
     "restrictResponse": "Restrict Response By Time",
     "restrictResponseStart": "Restrict Response Starting at",
-    "restrictResponseEnd": "Restrict Response Ending at"
+    "restrictResponseEnd": "Restrict Response Ending at",
+    "sectionAgent": "Agent & Company",
+    "sectionContact": "Contact Information",
+    "sectionLocation": "Location & Schedule"
   },
   "summary": {
     "noSettings": "No agent settings configured. Click Edit to add details.",

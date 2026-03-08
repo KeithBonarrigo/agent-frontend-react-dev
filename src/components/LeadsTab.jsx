@@ -35,7 +35,7 @@ export default function LeadsTab({ user, clientId, expandShare, onShareExpanded,
   const [expandedServiceLead, setExpandedServiceLead] = useState(null);
 
   // Leads section collapsed state
-  const [isLeadsCollapsed, setIsLeadsCollapsed] = useState(false);
+  const [isLeadsCollapsed, setIsLeadsCollapsed] = useState(true);
 
   // Share / Invite state
   const [isShareCollapsed, setIsShareCollapsed] = useState(true);
@@ -550,317 +550,122 @@ export default function LeadsTab({ user, clientId, expandShare, onShareExpanded,
             )}
             */}
 
-            {/* Email Sharing */}
-            <div style={{ width: '70%', marginLeft: 'auto', marginRight: 'auto', marginBottom: '1.5em' }}>
-              <h3 style={{ fontSize: '1em', color: '#333', marginBottom: '0.75em' }}>
-                <i className="fa-solid fa-envelope" style={{ color: '#007bff', marginRight: '0.4em' }}></i>
-                {t('share.emailTitle')}
-              </h3>
-              <div style={{ marginBottom: '0.75em' }}>
-                <label style={{ display: 'block', fontSize: '0.85em', color: '#555', marginBottom: '0.4em', fontWeight: '600' }}>
-                  {t('share.emailAddressesLabel')}
-                </label>
-                <textarea
-                  value={emailAddresses}
-                  onChange={(e) => setEmailAddresses(e.target.value)}
-                  placeholder={t('share.emailAddressesPlaceholder')}
-                  className="form-input"
-                  style={{ minHeight: '60px', resize: 'vertical', width: '100%', boxSizing: 'border-box' }}
-                  disabled={emailSending}
-                />
-              </div>
-              <div style={{ marginBottom: '0.75em' }}>
-                <label style={{ display: 'block', fontSize: '0.85em', color: '#555', marginBottom: '0.4em', fontWeight: '600' }}>
-                  {t('share.emailSubjectLabel')}
-                </label>
-                <input
-                  type="text"
-                  value={emailSubject}
-                  onChange={(e) => setEmailSubject(e.target.value)}
-                  placeholder={t('share.emailSubjectPlaceholder')}
-                  className="form-input"
-                  style={{ width: '100%', boxSizing: 'border-box' }}
-                  disabled={emailSending}
-                />
-              </div>
-              <div style={{ marginBottom: '0.75em' }}>
-                <label style={{ display: 'block', fontSize: '0.85em', color: '#555', marginBottom: '0.4em', fontWeight: '600' }}>
-                  {t('share.messageLabel')}
-                </label>
-                <textarea
-                  value={emailMessage}
-                  onChange={(e) => setEmailMessage(e.target.value)}
-                  className="form-input"
-                  style={{ minHeight: '100px', resize: 'vertical', width: '100%', boxSizing: 'border-box' }}
-                  disabled={emailSending}
-                />
-              </div>
-              <button
-                onClick={handleShareEmail}
-                disabled={!emailAddresses.trim() || emailSending}
-                className={`btn ${!emailAddresses.trim() || emailSending ? 'btn-secondary' : 'btn-primary'}`}
-              >
-                {emailSending ? t('share.sending') : t('share.sendEmail')}
-              </button>
-              {emailSuccess && <p style={{ color: '#28a745', marginTop: '0.5em', fontWeight: '600', fontSize: '0.85em' }}>{emailSuccess}</p>}
-              {emailError && <p style={{ color: '#dc3545', marginTop: '0.5em', fontWeight: '600', fontSize: '0.85em' }}>{emailError}</p>}
-            </div>
+            <div style={{ display: 'grid', gridTemplateColumns: hasActiveWhatsApp ? 'repeat(auto-fit, minmax(340px, 1fr))' : '1fr', gap: '1.5em', maxWidth: '900px', margin: '0 auto' }}>
 
-            {/* WhatsApp Sharing (only if WhatsApp is active) */}
-            {hasActiveWhatsApp && (
-              <div style={{ width: '70%', marginLeft: 'auto', marginRight: 'auto', borderTop: '1px solid #ddd', paddingTop: '1.5em' }}>
-                <h3 style={{ fontSize: '1em', color: '#333', marginBottom: '0.75em' }}>
-                  <i className="fa-brands fa-whatsapp" style={{ color: '#25D366', marginRight: '0.4em' }}></i>
-                  {t('share.wspTitle')}
+              {/* Email Sharing Card */}
+              <div style={{
+                background: '#fff',
+                border: '1px solid #e2e8f0',
+                borderRadius: '12px',
+                padding: '1.5em'
+              }}>
+                <h3 style={{ fontSize: '1.05em', color: '#333', marginTop: 0, marginBottom: '1.25em', display: 'flex', alignItems: 'center', gap: '0.5em' }}>
+                  <i className="fa-solid fa-envelope" style={{ color: '#007bff', fontSize: '1.2em' }}></i>
+                  {t('share.emailTitle')}
                 </h3>
-                <div style={{ marginBottom: '0.75em' }}>
-                  <label style={{ display: 'block', fontSize: '0.85em', color: '#555', marginBottom: '0.4em', fontWeight: '600' }}>
-                    {t('share.wspNumbersLabel')}
+                <div style={{ marginBottom: '1em' }}>
+                  <label style={{ display: 'block', fontSize: '0.8em', color: '#64748b', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '0.5em' }}>
+                    {t('share.emailAddressesLabel')}
                   </label>
                   <textarea
-                    value={wspNumbers}
-                    onChange={(e) => setWspNumbers(e.target.value)}
-                    placeholder={t('share.wspNumbersPlaceholder')}
+                    value={emailAddresses}
+                    onChange={(e) => setEmailAddresses(e.target.value)}
+                    placeholder={t('share.emailAddressesPlaceholder')}
                     className="form-input"
                     style={{ minHeight: '60px', resize: 'vertical', width: '100%', boxSizing: 'border-box' }}
-                    disabled={wspSending}
+                    disabled={emailSending}
                   />
                 </div>
-                <div style={{ marginBottom: '0.75em' }}>
-                  <label style={{ display: 'block', fontSize: '0.85em', color: '#555', marginBottom: '0.4em', fontWeight: '600' }}>
+                <div style={{ marginBottom: '1em' }}>
+                  <label style={{ display: 'block', fontSize: '0.8em', color: '#64748b', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '0.5em' }}>
+                    {t('share.emailSubjectLabel')}
+                  </label>
+                  <input
+                    type="text"
+                    value={emailSubject}
+                    onChange={(e) => setEmailSubject(e.target.value)}
+                    placeholder={t('share.emailSubjectPlaceholder')}
+                    className="form-input"
+                    style={{ width: '100%', boxSizing: 'border-box' }}
+                    disabled={emailSending}
+                  />
+                </div>
+                <div style={{ marginBottom: '1em' }}>
+                  <label style={{ display: 'block', fontSize: '0.8em', color: '#64748b', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '0.5em' }}>
                     {t('share.messageLabel')}
                   </label>
                   <textarea
-                    value={wspMessage}
-                    onChange={(e) => setWspMessage(e.target.value)}
+                    value={emailMessage}
+                    onChange={(e) => setEmailMessage(e.target.value)}
                     className="form-input"
                     style={{ minHeight: '100px', resize: 'vertical', width: '100%', boxSizing: 'border-box' }}
-                    disabled={wspSending}
+                    disabled={emailSending}
                   />
                 </div>
                 <button
-                  onClick={handleShareWhatsApp}
-                  disabled={!wspNumbers.trim() || wspSending}
-                  className={`btn ${!wspNumbers.trim() || wspSending ? 'btn-secondary' : 'btn-success'}`}
+                  onClick={handleShareEmail}
+                  disabled={!emailAddresses.trim() || emailSending}
+                  className={`btn ${!emailAddresses.trim() || emailSending ? 'btn-secondary' : 'btn-primary'}`}
                 >
-                  {wspSending ? t('share.sending') : t('share.sendWhatsApp')}
+                  {emailSending ? t('share.sending') : t('share.sendEmail')}
                 </button>
-                {wspShareSuccess && <p style={{ color: '#28a745', marginTop: '0.5em', fontWeight: '600', fontSize: '0.85em' }}>{wspShareSuccess}</p>}
-                {wspShareError && <p style={{ color: '#dc3545', marginTop: '0.5em', fontWeight: '600', fontSize: '0.85em' }}>{wspShareError}</p>}
+                {emailSuccess && <p style={{ color: '#28a745', marginTop: '0.5em', fontWeight: '600', fontSize: '0.85em' }}>{emailSuccess}</p>}
+                {emailError && <p style={{ color: '#dc3545', marginTop: '0.5em', fontWeight: '600', fontSize: '0.85em' }}>{emailError}</p>}
               </div>
-            )}
+
+              {/* WhatsApp Sharing Card (only if WhatsApp is active) */}
+              {hasActiveWhatsApp && (
+                <div style={{
+                  background: '#fff',
+                  border: '1px solid #e2e8f0',
+                  borderRadius: '12px',
+                  padding: '1.5em'
+                }}>
+                  <h3 style={{ fontSize: '1.05em', color: '#333', marginTop: 0, marginBottom: '1.25em', display: 'flex', alignItems: 'center', gap: '0.5em' }}>
+                    <i className="fa-brands fa-whatsapp" style={{ color: '#25D366', fontSize: '1.2em' }}></i>
+                    {t('share.wspTitle')}
+                  </h3>
+                  <div style={{ marginBottom: '1em' }}>
+                    <label style={{ display: 'block', fontSize: '0.8em', color: '#64748b', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '0.5em' }}>
+                      {t('share.wspNumbersLabel')}
+                    </label>
+                    <textarea
+                      value={wspNumbers}
+                      onChange={(e) => setWspNumbers(e.target.value)}
+                      placeholder={t('share.wspNumbersPlaceholder')}
+                      className="form-input"
+                      style={{ minHeight: '60px', resize: 'vertical', width: '100%', boxSizing: 'border-box' }}
+                      disabled={wspSending}
+                    />
+                  </div>
+                  <div style={{ marginBottom: '1em' }}>
+                    <label style={{ display: 'block', fontSize: '0.8em', color: '#64748b', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '0.5em' }}>
+                      {t('share.messageLabel')}
+                    </label>
+                    <textarea
+                      value={wspMessage}
+                      onChange={(e) => setWspMessage(e.target.value)}
+                      className="form-input"
+                      style={{ minHeight: '100px', resize: 'vertical', width: '100%', boxSizing: 'border-box' }}
+                      disabled={wspSending}
+                    />
+                  </div>
+                  <button
+                    onClick={handleShareWhatsApp}
+                    disabled={!wspNumbers.trim() || wspSending}
+                    className={`btn ${!wspNumbers.trim() || wspSending ? 'btn-secondary' : 'btn-success'}`}
+                  >
+                    {wspSending ? t('share.sending') : t('share.sendWhatsApp')}
+                  </button>
+                  {wspShareSuccess && <p style={{ color: '#28a745', marginTop: '0.5em', fontWeight: '600', fontSize: '0.85em' }}>{wspShareSuccess}</p>}
+                  {wspShareError && <p style={{ color: '#dc3545', marginTop: '0.5em', fontWeight: '600', fontSize: '0.85em' }}>{wspShareError}</p>}
+                </div>
+              )}
+
+            </div>
           </div>
         )}
       </div>
-
-      {/* Collaborations Section - EasyBroker only */}
-      {isEasyBrokerLevel && (
-        <div className="section" style={{ marginBottom: '1.5em' }}>
-          <div
-            onClick={() => setIsCollaborationsCollapsed(!isCollaborationsCollapsed)}
-            className={`section-header ${!isCollaborationsCollapsed ? 'section-header-expanded' : ''}`}
-          >
-            <h2 className="section-title">
-              <i className="fa-solid fa-handshake"></i>
-              {t('collaborations.title')}
-              {collabProperties.length > 0 && (
-                <span className="section-count-badge">{collabProperties.length}</span>
-              )}
-            </h2>
-            <i className={`fa-solid fa-chevron-${isCollaborationsCollapsed ? 'down' : 'up'} section-chevron`}></i>
-          </div>
-
-          {!isCollaborationsCollapsed && (
-            <div style={{ padding: '1em 0' }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.75em' }}>
-                <p className="section-description" style={{ margin: 0 }}>{t('collaborations.description')}</p>
-                <select
-                  value={collabFilter}
-                  onChange={(e) => { setCollabFilter(e.target.value); setSelectedCollabs(new Set()); }}
-                  className="input"
-                  style={{ width: 'auto', minWidth: '120px', fontSize: '0.85em' }}
-                >
-                  <option value="all">{t('collaborations.filterAll')}</option>
-                  <option value="active">{t('collaborations.filterActive')}</option>
-                  <option value="inactive">{t('collaborations.filterInactive')}</option>
-                </select>
-              </div>
-
-              {collabLoading ? (
-                <p className="text-muted" style={{ textAlign: 'center', padding: '1em 0' }}>{t('collaborations.loading')}</p>
-              ) : collabError ? (
-                <div className="alert alert-error">
-                  <strong>{t('error')}</strong> {collabError}
-                </div>
-              ) : collabProperties.length === 0 ? (
-                <p className="text-muted" style={{ textAlign: 'center', padding: '2em 0', fontSize: '0.9em' }}>
-                  {t('collaborations.empty')}
-                </p>
-              ) : (
-                <div className="table-container">
-                  <table className="table collab-table">
-                    <thead>
-                      <tr>
-                        <th>{t('collaborations.table.property')}</th>
-                        <th>{t('collaborations.table.officeId')}</th>
-                        <th>{t('collaborations.table.contact')}</th>
-                        <th>{t('collaborations.table.priceCommission')}</th>
-                        <th>{t('collaborations.table.date')}</th>
-                        <th style={{ textAlign: 'center' }}>
-                          <input
-                            type="checkbox"
-                            checked={filteredCollabs.length > 0 && selectedCollabs.size === filteredCollabs.length}
-                            onChange={toggleSelectAllCollabs}
-                            style={{ width: '16px', height: '16px', cursor: 'pointer' }}
-                          />
-                        </th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {filteredCollabs.map((prop, idx) => (
-                        <tr key={prop.property_id + '-' + idx}>
-                          <td>
-                            <div>
-                              {prop.public_url ? (
-                                <a href={prop.public_url} target="_blank" rel="noopener noreferrer" className="table-link">
-                                  {prop.property_id}
-                                </a>
-                              ) : <span>{prop.property_id}</span>}
-                              {prop.property_type && (
-                                <span className="table-badge" style={{ marginLeft: '0.5em', fontSize: '0.75em' }}>{prop.property_type}</span>
-                              )}
-                            </div>
-                            <div style={{ fontSize: '0.9em', color: '#555', marginTop: '0.2em' }}>
-                              {prop.title || '—'}
-                            </div>
-                          </td>
-                          <td>
-                            <div>
-                              <strong style={{ fontSize: '1.1em' }}>{prop.office_name || prop.office_id || '—'}</strong>
-                              {prop.office_owner && (
-                                <div style={{ fontSize: '1em', color: '#555', marginTop: '0.2em' }}>
-                                  <i className="fa-solid fa-user" style={{ marginRight: '0.3em', fontSize: '0.85em' }}></i>
-                                  {prop.office_owner}
-                                </div>
-                              )}
-                              {prop.office_phone && (() => {
-                                const phone = prop.office_phone.replace(/[^0-9+]/g, '');
-                                const firstName = adminUser?.first_name || '';
-                                const lastName = adminUser?.last_name || '';
-                                const company = user?.company || '';
-                                const propertyLink = prop.public_url || '';
-                                const propertyId = prop.property_id || '';
-                                const propertyTitle = prop.title || '';
-                                const waMsg = encodeURIComponent(
-                                  `Hola,\nMi nombre es ${firstName} ${lastName} de ${company}\n\nMe gustaría hablar contigo de su propiedad:\n${propertyId} - ${propertyTitle}\n${propertyLink}\n\nGracias\n\n---\n\nHi,\nMy name is ${firstName} ${lastName} from ${company}\n\nI would like to talk to you about property:\n${propertyId} - ${propertyTitle}\n${propertyLink}\n\nThank you`
-                                );
-                                return (
-                                  <div style={{ fontSize: '1em', marginTop: '0.15em' }}>
-                                    <a href={`https://wa.me/${phone}?text=${waMsg}`} target="_blank" rel="noopener noreferrer" className="table-link">
-                                      <i className="fa-brands fa-whatsapp" style={{ marginRight: '0.3em', fontSize: '0.95em', color: '#25D366' }}></i>
-                                      {prop.office_phone}
-                                    </a>
-                                  </div>
-                                );
-                              })()}
-                              {prop.office_email && (
-                                <div style={{ fontSize: '1em', marginTop: '0.15em' }}>
-                                  <i className="fa-solid fa-envelope" style={{ marginRight: '0.3em', fontSize: '0.85em', color: '#666' }}></i>
-                                  <a href={`mailto:${prop.office_email}`} className="table-link">{prop.office_email}</a>
-                                </div>
-                              )}
-                            </div>
-                          </td>
-                          <td>
-                            {prop.contact_name ? (
-                              <a
-                                href="#"
-                                className="table-link"
-                                onClick={(e) => { e.preventDefault(); scrollToLead(prop.contact_name); }}
-                              >
-                                {prop.contact_name}
-                              </a>
-                            ) : '—'}
-                          </td>
-                          <td>
-                            <div>
-                              {prop.price ? `$${Number(prop.price).toLocaleString()} ${prop.currency || 'MXN'}` : '—'}
-                            </div>
-                            <div style={{ color: '#28a745', fontWeight: 600, marginTop: '0.2em' }}>
-                              {(() => {
-                                if (!prop.commission_on_price || prop.commission_on_price === 'Unknown' || prop.commission_on_price === 'None/Not Shared') return '—';
-                                const commVal = Number(String(prop.commission_on_price).replace(/[^0-9.-]/g, ''));
-                                return (
-                                  <>
-                                    ${commVal.toLocaleString()} {prop.currency || 'MXN'}
-                                    {commVal >= 50000 && <i className="fa-solid fa-fire" style={{ color: '#ff6600', marginLeft: '0.4em' }}></i>}
-                                  </>
-                                );
-                              })()}
-                            </div>
-                          </td>
-                          <td style={{ whiteSpace: 'nowrap' }} className="text-xs text-muted">
-                            {formatDate(prop.date_run)?.split(',')[0] || '—'}
-                          </td>
-                          <td style={{ textAlign: 'center' }}>
-                            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.4em' }}>
-                              <input
-                                type="checkbox"
-                                checked={selectedCollabs.has(prop.property_id)}
-                                onChange={() => toggleCollabSelected(prop.property_id)}
-                                style={{ width: '18px', height: '18px', cursor: 'pointer' }}
-                              />
-                              {prop.active_colab === false
-                                ? <i className="fa-solid fa-eye-slash" style={{ color: '#dc3545', fontSize: '0.95em' }}></i>
-                                : <i className="fa-solid fa-eye" style={{ color: '#28a745', fontSize: '0.95em' }}></i>
-                              }
-                            </div>
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                  <div className="table-footer" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                    <span>{t('collaborations.showingCount', { count: filteredCollabs.length })}</span>
-                    {selectedCollabs.size > 0 && (
-                      <div style={{ display: 'flex', gap: '0.5em', alignItems: 'center' }}>
-                        <span style={{ fontSize: '0.85em', color: '#666' }}>
-                          {t('collaborations.selected', { count: selectedCollabs.size })}
-                        </span>
-                        <button
-                          onClick={() => bulkSetCollabActive(true)}
-                          disabled={collabSaving}
-                          className="btn btn-sm"
-                          style={{ backgroundColor: '#28a745', color: '#fff', border: 'none' }}
-                        >
-                          {t('collaborations.activate')}
-                        </button>
-                        <button
-                          onClick={() => bulkSetCollabActive(false)}
-                          disabled={collabSaving}
-                          className="btn btn-sm"
-                          style={{ backgroundColor: '#dc3545', color: '#fff', border: 'none' }}
-                        >
-                          {t('collaborations.deactivate')}
-                        </button>
-                      </div>
-                    )}
-                  </div>
-                </div>
-              )}
-
-              <button
-                onClick={fetchCollaborations}
-                disabled={collabLoading}
-                className={`btn btn-sm ${collabLoading ? 'btn-secondary' : 'btn-primary'}`}
-                style={{ marginTop: '0.75em' }}
-              >
-                {collabLoading ? t('buttons.loading') : t('buttons.refresh')}
-              </button>
-            </div>
-          )}
-        </div>
-      )}
 
       {/* Leads Section - Collapsible */}
       <div className="section" style={{ marginBottom: '1.5em' }}>
@@ -1093,6 +898,216 @@ export default function LeadsTab({ user, clientId, expandShare, onShareExpanded,
           </div>
         )}
       </div>
+
+      {/* Collaborations Section - EasyBroker only */}
+      {isEasyBrokerLevel && (
+        <div className="section" style={{ marginBottom: '1.5em' }}>
+          <div
+            onClick={() => setIsCollaborationsCollapsed(!isCollaborationsCollapsed)}
+            className={`section-header ${!isCollaborationsCollapsed ? 'section-header-expanded' : ''}`}
+          >
+            <h2 className="section-title">
+              <i className="fa-solid fa-handshake"></i>
+              {t('collaborations.title')}
+              {collabProperties.length > 0 && (
+                <span className="section-count-badge">{collabProperties.length}</span>
+              )}
+            </h2>
+            <i className={`fa-solid fa-chevron-${isCollaborationsCollapsed ? 'down' : 'up'} section-chevron`}></i>
+          </div>
+
+          {!isCollaborationsCollapsed && (
+            <div style={{ padding: '1em 0' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.75em' }}>
+                <p className="section-description" style={{ margin: 0 }}>{t('collaborations.description')}</p>
+                <select
+                  value={collabFilter}
+                  onChange={(e) => { setCollabFilter(e.target.value); setSelectedCollabs(new Set()); }}
+                  className="input"
+                  style={{ width: 'auto', minWidth: '120px', fontSize: '0.85em' }}
+                >
+                  <option value="all">{t('collaborations.filterAll')}</option>
+                  <option value="active">{t('collaborations.filterActive')}</option>
+                  <option value="inactive">{t('collaborations.filterInactive')}</option>
+                </select>
+              </div>
+
+              {collabLoading ? (
+                <p className="text-muted" style={{ textAlign: 'center', padding: '1em 0' }}>{t('collaborations.loading')}</p>
+              ) : collabError ? (
+                <div className="alert alert-error">
+                  <strong>{t('error')}</strong> {collabError}
+                </div>
+              ) : collabProperties.length === 0 ? (
+                <p className="text-muted" style={{ textAlign: 'center', padding: '2em 0', fontSize: '0.9em' }}>
+                  {t('collaborations.empty')}
+                </p>
+              ) : (
+                <div className="table-container">
+                  <table className="table collab-table">
+                    <thead>
+                      <tr>
+                        <th>{t('collaborations.table.property')}</th>
+                        <th>{t('collaborations.table.officeId')}</th>
+                        <th>{t('collaborations.table.contact')}</th>
+                        <th>{t('collaborations.table.priceCommission')}</th>
+                        <th>{t('collaborations.table.date')}</th>
+                        <th style={{ textAlign: 'center' }}>
+                          <input
+                            type="checkbox"
+                            checked={filteredCollabs.length > 0 && selectedCollabs.size === filteredCollabs.length}
+                            onChange={toggleSelectAllCollabs}
+                            style={{ width: '16px', height: '16px', cursor: 'pointer' }}
+                          />
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {filteredCollabs.map((prop, idx) => (
+                        <tr key={prop.property_id + '-' + idx}>
+                          <td>
+                            <div>
+                              {prop.public_url ? (
+                                <a href={prop.public_url} target="_blank" rel="noopener noreferrer" className="table-link">
+                                  {prop.property_id}
+                                </a>
+                              ) : <span>{prop.property_id}</span>}
+                              {prop.property_type && (
+                                <span className="table-badge" style={{ marginLeft: '0.5em', fontSize: '0.75em' }}>{prop.property_type}</span>
+                              )}
+                            </div>
+                            <div style={{ fontSize: '0.9em', color: '#555', marginTop: '0.2em' }}>
+                              {prop.title || '—'}
+                            </div>
+                          </td>
+                          <td>
+                            <div>
+                              <strong style={{ fontSize: '1.1em' }}>{prop.office_name || prop.office_id || '—'}</strong>
+                              {prop.office_owner && (
+                                <div style={{ fontSize: '1em', color: '#555', marginTop: '0.2em' }}>
+                                  <i className="fa-solid fa-user" style={{ marginRight: '0.3em', fontSize: '0.85em' }}></i>
+                                  {prop.office_owner}
+                                </div>
+                              )}
+                              {prop.office_phone && (() => {
+                                const phone = prop.office_phone.replace(/[^0-9+]/g, '');
+                                const firstName = adminUser?.first_name || '';
+                                const lastName = adminUser?.last_name || '';
+                                const company = user?.company || '';
+                                const propertyLink = prop.public_url || '';
+                                const propertyId = prop.property_id || '';
+                                const propertyTitle = prop.title || '';
+                                const waMsg = encodeURIComponent(
+                                  `Hola,\nMi nombre es ${firstName} ${lastName} de ${company}\n\nMe gustaría hablar contigo de su propiedad:\n${propertyId} - ${propertyTitle}\n${propertyLink}\n\nGracias\n\n---\n\nHi,\nMy name is ${firstName} ${lastName} from ${company}\n\nI would like to talk to you about property:\n${propertyId} - ${propertyTitle}\n${propertyLink}\n\nThank you`
+                                );
+                                return (
+                                  <div style={{ fontSize: '1em', marginTop: '0.15em' }}>
+                                    <a href={`https://wa.me/${phone}?text=${waMsg}`} target="_blank" rel="noopener noreferrer" className="table-link">
+                                      <i className="fa-brands fa-whatsapp" style={{ marginRight: '0.3em', fontSize: '0.95em', color: '#25D366' }}></i>
+                                      {prop.office_phone}
+                                    </a>
+                                  </div>
+                                );
+                              })()}
+                              {prop.office_email && (
+                                <div style={{ fontSize: '1em', marginTop: '0.15em' }}>
+                                  <i className="fa-solid fa-envelope" style={{ marginRight: '0.3em', fontSize: '0.85em', color: '#666' }}></i>
+                                  <a href={`mailto:${prop.office_email}`} className="table-link">{prop.office_email}</a>
+                                </div>
+                              )}
+                            </div>
+                          </td>
+                          <td>
+                            {prop.contact_name ? (
+                              <a
+                                href="#"
+                                className="table-link"
+                                onClick={(e) => { e.preventDefault(); scrollToLead(prop.contact_name); }}
+                              >
+                                {prop.contact_name}
+                              </a>
+                            ) : '—'}
+                          </td>
+                          <td>
+                            <div>
+                              {prop.price ? `$${Number(prop.price).toLocaleString()} ${prop.currency || 'MXN'}` : '—'}
+                            </div>
+                            <div style={{ color: '#28a745', fontWeight: 600, marginTop: '0.2em' }}>
+                              {(() => {
+                                if (!prop.commission_on_price || prop.commission_on_price === 'Unknown' || prop.commission_on_price === 'None/Not Shared') return '—';
+                                const commVal = Number(String(prop.commission_on_price).replace(/[^0-9.-]/g, ''));
+                                return (
+                                  <>
+                                    ${commVal.toLocaleString()} {prop.currency || 'MXN'}
+                                    {commVal >= 50000 && <i className="fa-solid fa-fire" style={{ color: '#ff6600', marginLeft: '0.4em' }}></i>}
+                                  </>
+                                );
+                              })()}
+                            </div>
+                          </td>
+                          <td style={{ whiteSpace: 'nowrap' }} className="text-xs text-muted">
+                            {formatDate(prop.date_run)?.split(',')[0] || '—'}
+                          </td>
+                          <td style={{ textAlign: 'center' }}>
+                            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.4em' }}>
+                              <input
+                                type="checkbox"
+                                checked={selectedCollabs.has(prop.property_id)}
+                                onChange={() => toggleCollabSelected(prop.property_id)}
+                                style={{ width: '18px', height: '18px', cursor: 'pointer' }}
+                              />
+                              {prop.active_colab === false
+                                ? <i className="fa-solid fa-eye-slash" style={{ color: '#dc3545', fontSize: '0.95em' }}></i>
+                                : <i className="fa-solid fa-eye" style={{ color: '#28a745', fontSize: '0.95em' }}></i>
+                              }
+                            </div>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                  <div className="table-footer" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <span>{t('collaborations.showingCount', { count: filteredCollabs.length })}</span>
+                    {selectedCollabs.size > 0 && (
+                      <div style={{ display: 'flex', gap: '0.5em', alignItems: 'center' }}>
+                        <span style={{ fontSize: '0.85em', color: '#666' }}>
+                          {t('collaborations.selected', { count: selectedCollabs.size })}
+                        </span>
+                        <button
+                          onClick={() => bulkSetCollabActive(true)}
+                          disabled={collabSaving}
+                          className="btn btn-sm"
+                          style={{ backgroundColor: '#28a745', color: '#fff', border: 'none' }}
+                        >
+                          {t('collaborations.activate')}
+                        </button>
+                        <button
+                          onClick={() => bulkSetCollabActive(false)}
+                          disabled={collabSaving}
+                          className="btn btn-sm"
+                          style={{ backgroundColor: '#dc3545', color: '#fff', border: 'none' }}
+                        >
+                          {t('collaborations.deactivate')}
+                        </button>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              )}
+
+              <button
+                onClick={fetchCollaborations}
+                disabled={collabLoading}
+                className={`btn btn-sm ${collabLoading ? 'btn-secondary' : 'btn-primary'}`}
+                style={{ marginTop: '0.75em' }}
+              >
+                {collabLoading ? t('buttons.loading') : t('buttons.refresh')}
+              </button>
+            </div>
+          )}
+        </div>
+      )}
+
     </div>
   );
 }

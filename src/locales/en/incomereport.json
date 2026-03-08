@@ -1,0 +1,32 @@
+{
+  "title": "Income Report",
+  "description": "Generate a PDF income report for any property by looking up its listing data and related chatbot conversations.",
+  "noClient": "Please select an agent to view income reports.",
+  "generating": "Generating...",
+  "generatingMsg": "Looking up property and generating your PDF report...",
+  "generatingHint": "This may take 10-15 seconds.",
+  "generateError": "Failed to generate report. Please try again.",
+  "propertyNotFound": "Property not found. Please check the ID and source.",
+  "noData": "No conversation data found referencing this property.",
+  "rateLimited": "Rate limited. Next report available in {{minutes}} minutes.",
+  "downloadSuccess": "Report downloaded successfully!",
+  "form": {
+    "title": "Property Report Lookup",
+    "source": "Property Source",
+    "propertyId": "Property ID",
+    "placeholderMls": "e.g. 12345678",
+    "placeholderEb": "e.g. EB-ABC123",
+    "submit": "Generate PDF Report"
+  },
+  "pastReports": {
+    "title": "Income Report History",
+    "empty": "No reports generated yet.",
+    "date": "Date",
+    "property": "Property ID",
+    "name": "Property Name",
+    "price": "Price",
+    "type": "Type",
+    "source": "Source",
+    "download": "PDF"
+  }
+}

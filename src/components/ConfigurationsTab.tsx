@@ -897,10 +897,10 @@ export default function ConfigurationsTab({ user, clientId, onClientUpdate }: Co
   }, [clientId]);
 
   return (
-    <div className="flex" style={{ flexDirection: 'column', gap: '1.5em' }}>
+    <>
       {/* MLS API Token Section - Only for MLS level */}
       {isMlsLevel && (
-        <div className="section">
+        <div className="section" style={{ marginBottom: '1.5em' }}>
           <div
             onClick={() => setIsMlsTokenCollapsed(!isMlsTokenCollapsed)}
             className={`section-header ${!isMlsTokenCollapsed ? 'section-header-expanded' : ''}`}
@@ -1054,7 +1054,7 @@ export default function ConfigurationsTab({ user, clientId, onClientUpdate }: Co
       )}
 
       {/* Instructions Section */}
-      <div className="section">
+      <div className="section" style={{ marginBottom: '1.5em' }}>
         <div>
           <div
             onClick={() => setIsInstructionsCollapsed(!isInstructionsCollapsed)}
@@ -1178,7 +1178,7 @@ export default function ConfigurationsTab({ user, clientId, onClientUpdate }: Co
       </div>
 
       {/* Training Section */}
-      <div className="section">
+      <div className="section" style={{ marginBottom: '1.5em' }}>
         <div
           onClick={() => setIsTrainingCollapsed(!isTrainingCollapsed)}
           className={`section-header ${!isTrainingCollapsed ? 'section-header-expanded' : ''}`}
@@ -1608,7 +1608,7 @@ export default function ConfigurationsTab({ user, clientId, onClientUpdate }: Co
       </div>
 
       {/* Models Section - hidden for MLS level (model is fixed) */}
-      {!isMlsLevel && <div className="section">
+      {!isMlsLevel && <div className="section" style={{ marginBottom: '1.5em' }}>
         <div
           onClick={() => setIsModelsCollapsed(!isModelsCollapsed)}
           className={`section-header ${!isModelsCollapsed ? 'section-header-expanded' : ''}`}
@@ -1749,7 +1749,7 @@ export default function ConfigurationsTab({ user, clientId, onClientUpdate }: Co
       </div>}
 
       {/* History Section */}
-      <div className="section">
+      <div className="section" style={{ marginBottom: '1.5em' }}>
         <div
           onClick={() => setIsHistoryCollapsed(!isHistoryCollapsed)}
           className={`section-header ${!isHistoryCollapsed ? 'section-header-expanded' : ''}`}
@@ -1895,6 +1895,6 @@ export default function ConfigurationsTab({ user, clientId, onClientUpdate }: Co
           </div>
         </div>
       )}
-    </div>
+    </>
   );
 }

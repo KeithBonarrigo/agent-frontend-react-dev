@@ -53,12 +53,13 @@
     "configurations": "Configurations",
     "training": "Training",
     "models": "Models",
-    "addons": "Add-Ons",
     "integrations": "Integrations",
     "conversations": "Conversations",
     "metrics": "Metrics",
     "leads": "Leads",
-    "styling": "Styling"
+    "styling": "Styling",
+    "audienceinsights": "Audience",
+    "incomereport": "Income"
   },
   "language": {
     "select": "Language",
