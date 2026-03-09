@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { useTranslation } from "react-i18next";
+import { Helmet } from "react-helmet-async";
 import SignupForm from "../components/SignupForm";
 import { getApiUrl } from "../utils/getApiUrl";
 import "../styles/Home.css";
@@ -215,6 +216,10 @@ export default function Home() {
 
   return (
     <div id="home-hero" className="home-page">
+      <Helmet>
+        <title>BotWerx - AI Agent Platform</title>
+        <meta name="description" content="BotWerx is an AI agent platform that automates customer engagement, scheduling, and lead management for your business." />
+      </Helmet>
       {/* Hero Section - Redesigned with left/right layout */}
       <section className="home-hero">
         <div className="home-container">

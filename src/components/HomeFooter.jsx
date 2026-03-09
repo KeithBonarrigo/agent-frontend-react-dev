@@ -17,9 +17,9 @@ function HomeFooter() {
   // Get company address based on domain
   const getCompanyAddress = () => {
     if (domainInfo?.domainType === 'botwerx') {
-      return 'Botwerx, LLC - 45 S 3rd St. Pacific Beach, WA 98571-5071';
+      return 'Botwerx, LLC - 45 S 3rd St. Pacific Beach, WA 98571-5017';
     }
-    return 'AI Bridge - 45 S 3rd St. Pacific Beach, WA 98571-5071';
+    return 'AI Bridge - 45 S 3rd St. Pacific Beach, WA 98571-5017';
   };
 
   return (
@@ -58,22 +58,22 @@ function HomeFooter() {
           </div>
 
           <div className="home-social-icons">
-            
-              <a href="#"
+            {/* Social links commented out until active profiles are set up
+            <a href="#"
               target="_blank"
               rel="noopener noreferrer"
               className="home-social-link"
             >
               <i className="fab fa-linkedin"></i>
             </a>
-            
-              <a href="#"
+            <a href="#"
               target="_blank"
               rel="noopener noreferrer"
               className="home-social-link"
             >
               <i className="fab fa-twitter"></i>
             </a>
+            */}
           </div>
         </div>
       </div>

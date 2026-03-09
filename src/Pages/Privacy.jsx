@@ -1,4 +1,5 @@
 import { useTranslation } from "react-i18next";
+import { Helmet } from "react-helmet-async";
 import "../styles/ContentStyles.css";
 import { useDomain } from "../contexts/DomainContext";
 
@@ -8,6 +9,10 @@ export default function PrivacyPolicy() {
 
   return (
     <div className="policy-page">
+      <Helmet>
+        <title>Privacy Policy - BotWerx</title>
+        <meta name="description" content="BotWerx Privacy Policy — how we collect, use, and protect your data, including Google Calendar integration and OAuth access." />
+      </Helmet>
       <section className="policy-header">
         <div className="home-container">
           <h1>{t('privacy.title')}</h1>

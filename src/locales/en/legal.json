@@ -79,7 +79,7 @@
       "cookies": {
         "title": "10. Cookie Usage",
         "usage": "Both first-party and third-party cookies may be deployed on our platform to examine traffic patterns, enhance functionality, and refine user experiences.",
-        "control": "Cookie preferences remain under your control via browser configurations. Additional information appears in our Cookie Policy (coming soon)."
+        "control": "We use essential cookies required for the platform to function, and optional analytics cookies to understand usage patterns. You can control cookie preferences through your browser settings. To opt out of analytics cookies, adjust your browser's cookie settings or use a browser extension such as uBlock Origin."
       },
       "external": {
         "title": "11. External Platform Integration",

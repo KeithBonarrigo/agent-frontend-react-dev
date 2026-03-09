@@ -1,4 +1,5 @@
 import { useTranslation } from "react-i18next";
+import { Helmet } from "react-helmet-async";
 import "../styles/ContentStyles.css";
 import { useDomain } from "../contexts/DomainContext";
 
@@ -8,6 +9,10 @@ export default function DataDeletionPolicy() {
 
   return (
     <div className="policy-page">
+      <Helmet>
+        <title>Data Deletion Policy - BotWerx</title>
+        <meta name="description" content="How to request deletion of your personal data or revoke Google Calendar access from BotWerx." />
+      </Helmet>
       {/* Header Section */}
       <section className="policy-header">
         <div className="home-container">

@@ -79,7 +79,7 @@
       "cookies": {
         "title": "10. Uso de Cookies",
         "usage": "Tanto cookies propias como de terceros pueden ser desplegadas en nuestra plataforma para examinar patrones de tráfico, mejorar la funcionalidad y refinar las experiencias de usuario.",
-        "control": "Las preferencias de cookies permanecen bajo su control a través de las configuraciones del navegador. Información adicional aparece en nuestra Política de Cookies (próximamente)."
+        "control": "Utilizamos cookies esenciales necesarias para el funcionamiento de la plataforma y cookies analíticas opcionales para comprender los patrones de uso. Puede controlar las preferencias de cookies a través de la configuración de su navegador. Para desactivar las cookies analíticas, ajuste la configuración de cookies de su navegador o use una extensión como uBlock Origin."
       },
       "external": {
         "title": "11. Integración con Plataformas Externas",

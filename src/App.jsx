@@ -1,4 +1,5 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { HelmetProvider } from "react-helmet-async";
 import HomeLayout from "./components/HomeLayout";
 import Layout from "./components/Layout"; // Make sure the path is correct
 import LanguageSelector from "./components/LanguageSelector";
@@ -54,13 +55,15 @@ function AppRoutes() {
 
 function App() {
   return (
-    <DomainProvider>
-      <UserProvider>
-        <BrowserRouter>
-          <AppRoutes />
-        </BrowserRouter>
-      </UserProvider>
-    </DomainProvider>
+    <HelmetProvider>
+      <DomainProvider>
+        <UserProvider>
+          <BrowserRouter>
+            <AppRoutes />
+          </BrowserRouter>
+        </UserProvider>
+      </DomainProvider>
+    </HelmetProvider>
   );
 }
 

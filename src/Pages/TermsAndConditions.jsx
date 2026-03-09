@@ -1,4 +1,5 @@
 import { useTranslation } from "react-i18next";
+import { Helmet } from "react-helmet-async";
 import "../styles/ContentStyles.css";
 import { useDomain } from "../contexts/DomainContext";
 
@@ -8,6 +9,10 @@ export default function TermsAndConditions() {
 
   return (
     <div className="policy-page">
+      <Helmet>
+        <title>Terms and Conditions - BotWerx</title>
+        <meta name="description" content="BotWerx Terms and Conditions — the rules governing use of the BotWerx AI agent platform." />
+      </Helmet>
       <section className="policy-header">
         <div className="home-container">
           <h1>{t('terms.title')}</h1>
@@ -439,6 +444,20 @@ export default function TermsAndConditions() {
 
             <h3>{t('terms.sections.general.subtitle6')}</h3>
             <p>{t('terms.sections.general.contact')}</p>
+          </div>
+
+          {/* Google Calendar Integration */}
+          <div className="policy-section">
+            <h2>Google Calendar Integration</h2>
+            <p>
+              When you connect your Google Calendar to Botwerx, you authorize us to access
+              your calendar data solely for the purpose of scheduling appointments on your behalf.
+              This access is governed by our{" "}
+              <a href="/privacy">Privacy Policy</a>, which includes a dedicated section on
+              Google OAuth &amp; Calendar Integration. You may revoke this access at any time
+              through your Google Account settings or from the Integrations page in your
+              Botwerx dashboard.
+            </p>
           </div>
 
           {/* Footer */}
