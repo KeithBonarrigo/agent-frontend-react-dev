@@ -121,19 +121,25 @@ export default function IntegrationsTab({ user, clientId, onClientUpdate }) {
   const fetchGcalStatus = async () => {
     if (!clientId) return;
     setGcalChecking(true);
+    console.log('[GCal] Fetching status for clientId:', clientId);
     try {
       const apiBaseUrl = getApiUrl();
-      const res = await fetch(`${apiBaseUrl}/api/integrations/google-calendar/status/${clientId}`, {
-        credentials: 'include'
-      });
+      const url = `${apiBaseUrl}/api/integrations/google-calendar/status/${clientId}`;
+      console.log('[GCal] Status URL:', url);
+      const res = await fetch(url, { credentials: 'include' });
+      console.log('[GCal] Status response:', res.status, res.statusText);
       if (res.ok) {
         const data = await res.json();
+        console.log('[GCal] Status data:', data);
         setGcalConnected(data.connected || false);
         setGcalEmail(data.email || '');
       } else {
+        const text = await res.text();
+        console.log('[GCal] Status error body:', text);
         setGcalConnected(false);
       }
-    } catch {
+    } catch (err) {
+      console.error('[GCal] Status fetch error:', err);
       setGcalConnected(false);
     } finally {
       setGcalChecking(false);
@@ -169,17 +175,26 @@ export default function IntegrationsTab({ user, clientId, onClientUpdate }) {
     setGcalLoading(true);
     try {
       const apiBaseUrl = getApiUrl();
-      const res = await fetch(`${apiBaseUrl}/api/clients/${clientId}/decorators/googleAvailabilityDecorator`, {
+      const url = `${apiBaseUrl}/api/clients/${clientId}/decorators/googleAvailabilityDecorator`;
+      console.log('[GCal] Disconnect URL:', url);
+      console.log('[GCal] Disconnect method: DELETE');
+      const res = await fetch(url, {
         method: 'DELETE',
         credentials: 'include'
       });
+      console.log('[GCal] Disconnect response:', res.status, res.statusText);
+      const resBody = await res.text();
+      console.log('[GCal] Disconnect response body:', resBody);
       if (res.ok) {
+        console.log('[GCal] Disconnect successful, setting state to disconnected');
         setGcalConnected(false);
         setGcalEmail('');
       } else {
-        throw new Error('Failed to disconnect');
+        console.error('[GCal] Disconnect failed:', res.status, resBody);
+        throw new Error(`Failed to disconnect (${res.status})`);
       }
     } catch (err) {
+      console.error('[GCal] Disconnect error:', err);
       setGcalError(err.message);
       setTimeout(() => setGcalError(''), 5000);
     } finally {
