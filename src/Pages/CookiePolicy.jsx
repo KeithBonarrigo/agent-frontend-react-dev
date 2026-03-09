@@ -1,4 +1,5 @@
 import { useTranslation } from "react-i18next";
+import { Helmet } from "react-helmet-async";
 import "../styles/ContentStyles.css";
 import { useDomain } from "../contexts/DomainContext";
 
@@ -8,6 +9,10 @@ export default function CookiePolicy() {
 
   return (
     <div className="policy-page">
+      <Helmet>
+        <title>Cookie Policy - BotWerx</title>
+        <meta name="description" content="BotWerx Cookie Policy — how we use essential and analytics cookies, and how to control your cookie preferences." />
+      </Helmet>
       <section className="policy-header">
         <div className="home-container">
           <h1>{t('cookies.title')}</h1>
