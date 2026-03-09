@@ -169,13 +169,15 @@ export default function IntegrationsTab({ user, clientId, onClientUpdate }) {
     setGcalLoading(true);
     try {
       const apiBaseUrl = getApiUrl();
-      const res = await fetch(`${apiBaseUrl}/api/clients/${clientId}/decorators/google-calendar`, {
+      const res = await fetch(`${apiBaseUrl}/api/clients/${clientId}/decorators/googleAvailabilityDecorator`, {
         method: 'DELETE',
         credentials: 'include'
       });
       if (res.ok) {
         setGcalConnected(false);
         setGcalEmail('');
+      } else {
+        throw new Error('Failed to disconnect');
       }
     } catch (err) {
       setGcalError(err.message);
