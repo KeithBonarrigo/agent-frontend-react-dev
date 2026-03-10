@@ -566,6 +566,19 @@ export default function StylingTab({ user, clientId, onNavigateToIntegrations }:
     }
   };
 
+  // Remove any loaded chatbot so the next "Try it out" loads fresh styles
+  const removeChatbot = () => {
+    const container = document.getElementById('chatbot-container');
+    if (container) container.remove();
+    const launcher = document.getElementById('chatbot-launcher');
+    if (launcher) launcher.remove();
+    // Remove injected chatbot script(s)
+    document.querySelectorAll(`script[src*="chatbot.js"]`).forEach(s => s.remove());
+    // Remove injected custom CSS
+    const customStyle = document.getElementById(`custom-css-${clientId}`);
+    if (customStyle) customStyle.remove();
+  };
+
   const handleSave = async () => {
     setSaving(true);
     setSaveMessage("");
@@ -585,6 +598,7 @@ export default function StylingTab({ user, clientId, onNavigateToIntegrations }:
         throw new Error('Failed to save styling');
       }
 
+      removeChatbot();
       setSaveMessage("Styling saved successfully!");
       setTimeout(() => setSaveMessage(""), 3000);
     } catch (error) {
@@ -614,6 +628,7 @@ export default function StylingTab({ user, clientId, onNavigateToIntegrations }:
         throw new Error('Failed to save branding');
       }
 
+      removeChatbot();
       setBrandingSaveMessage("success");
       setTimeout(() => setBrandingSaveMessage(""), 3000);
     } catch (error) {
