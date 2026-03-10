@@ -727,7 +727,7 @@ export default function Dashboard() {
             ...((['easybroker', 'mls'].includes(selectedSubscription?.level?.toLowerCase())) && {
               ...(agentEditForm._ebKeyEdited && { easy_broker_key: agentEditForm.easy_broker_key?.trim() || null }),
               ...(agentEditForm._mlsTokenEdited && { mls_token: agentEditForm.mls_token?.trim() || null }),
-              eb_office_id: agentEditForm.eb_office_id?.trim() || null
+              office_id: agentEditForm.office_id?.trim() || null
             })
           }),
           credentials: 'include'
@@ -1404,7 +1404,7 @@ export default function Dashboard() {
                           restrict_response_end: parseTimeForInput(selectedClient.restrict_response_end),
                           easy_broker_key: selectedClient.easy_broker_key || '',
                           mls_token: selectedClient.mls_token || '',
-                          eb_office_id: selectedClient.eb_office_id || ''
+                          office_id: selectedClient.office_id || ''
                         });
                       }
                     }} className="btn btn-primary btn-sm btn-icon">
@@ -1566,7 +1566,7 @@ export default function Dashboard() {
                           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '0.75em', marginTop: '0.75em' }}>
                             <div>
                               <label className="form-label">EasyBroker Office ID</label>
-                              <input type="text" name="eb_office_id" value={agentEditForm.eb_office_id || ''} onChange={handleAgentEditChange} placeholder="Enter EasyBroker Office ID" className="form-input form-input-sm" />
+                              <input type="text" name="office_id" value={agentEditForm.office_id || ''} onChange={handleAgentEditChange} placeholder="Enter EasyBroker Office ID" className="form-input form-input-sm" />
                             </div>
                           </div>
                         </div>
@@ -1614,7 +1614,7 @@ export default function Dashboard() {
                               restrict_response_end: parseTimeForInput(selectedClient.restrict_response_end),
                               easy_broker_key: selectedClient.easy_broker_key || '',
                               mls_token: selectedClient.mls_token || '',
-                              eb_office_id: selectedClient.eb_office_id || ''
+                              office_id: selectedClient.office_id || ''
                             });
                           }
                         }}
