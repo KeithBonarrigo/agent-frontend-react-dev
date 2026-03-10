@@ -616,8 +616,8 @@ export default function IntegrationsTab({ user, clientId, onClientUpdate }) {
 
   const userLevel = (user?.level || user?.subscription_level || '').toLowerCase();
   const isSpecialtyLevel = userLevel === 'easybroker' || userLevel === 'mls';
-  const hasMlsToken = user?.mls_token && user.mls_token.trim() !== '';
-  const hasEbKey = user?.easy_broker_key && user.easy_broker_key.trim() !== '';
+  const hasMlsToken = !!user?.mls_token;
+  const hasEbKey = !!user?.easy_broker_key;
   const missingTokens = isSpecialtyLevel && (!hasMlsToken || !hasEbKey);
 
   return (

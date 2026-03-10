@@ -66,7 +66,7 @@ export default function ConfigurationsTab({ user, clientId, onClientUpdate }: Co
   const [mlsTokenMessage, setMlsTokenMessage] = useState('');
   const [mlsDisclaimerAccepted, setMlsDisclaimerAccepted] = useState(false);
   const [mlsTermsRecord, setMlsTermsRecord] = useState<{ accepted_at: string; ip_address: string } | null>(null);
-  const hasMlsToken = !!(user?.mls_token && user.mls_token.trim() !== '');
+  const hasMlsToken = !!user?.mls_token;
   const [companyFlexUrl, setCompanyFlexUrl] = useState(user?.company_flex_url || '');
   const [flexUrlSaving, setFlexUrlSaving] = useState(false);
   const [flexUrlMessage, setFlexUrlMessage] = useState('');
