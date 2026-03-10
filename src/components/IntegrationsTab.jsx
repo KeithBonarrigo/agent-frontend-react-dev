@@ -614,30 +614,39 @@ export default function IntegrationsTab({ user, clientId, onClientUpdate }) {
     document.body.appendChild(script);
   };
 
-  const isMlsDomain = user?.domain === 'mls.aibridge.global';
+  const userLevel = (user?.level || user?.subscription_level || '').toLowerCase();
+  const isSpecialtyLevel = userLevel === 'easybroker' || userLevel === 'mls';
   const hasMlsToken = user?.mls_token && user.mls_token.trim() !== '';
+  const hasEbKey = user?.easy_broker_key && user.easy_broker_key.trim() !== '';
+  const missingTokens = isSpecialtyLevel && (!hasMlsToken || !hasEbKey);
 
   return (
     <div style={{ padding: "2em", backgroundColor: "#f8f9fa", borderRadius: "8px", border: "1px solid #dee2e6" }}>
-      {/* MLS Token Warning */}
-      {isMlsDomain && !hasMlsToken && (
+      {/* API Token Warning for EasyBroker/MLS levels */}
+      {missingTokens && (
         <div style={{
           display: 'flex',
           alignItems: 'flex-start',
           gap: '0.6em',
           padding: '0.75em 1em',
-          backgroundColor: '#e8f4fd',
-          border: '1px solid #bee5eb',
+          backgroundColor: '#f8d7da',
+          border: '1px solid #f5c6cb',
           borderRadius: '6px',
-          color: '#0c5460',
+          color: '#721c24',
           fontSize: '0.85em',
           lineHeight: '1.5',
           marginBottom: '1.5em'
         }}>
-          <i className="fa-solid fa-circle-info" style={{ marginTop: '0.2em', flexShrink: 0 }}></i>
+          <i className="fa-solid fa-triangle-exclamation" style={{ marginTop: '0.2em', flexShrink: 0 }}></i>
           <span>
-            <strong>{t('mlsWarning.title')}</strong> {t('mlsWarning.message')}
-            <br /><span style={{ fontStyle: 'italic' }}>{t('mlsWarning.note')}</span>
+            <strong>Missing API Token{!hasMlsToken && !hasEbKey ? 's' : ''}:</strong>{' '}
+            {!hasEbKey && !hasMlsToken
+              ? 'EasyBroker API Key and MLS Token are not configured.'
+              : !hasEbKey
+                ? 'EasyBroker API Key is not configured.'
+                : 'MLS Token is not configured.'}
+            {' '}Property search will not work without {!hasMlsToken && !hasEbKey ? 'these tokens' : 'this token'}.
+            <br /><span style={{ fontStyle: 'italic' }}>Add {!hasMlsToken && !hasEbKey ? 'them' : 'it'} in the Agent Settings section above.</span>
           </span>
         </div>
       )}

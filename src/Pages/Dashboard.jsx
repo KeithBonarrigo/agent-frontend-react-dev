@@ -723,7 +723,11 @@ export default function Dashboard() {
             domain_to_install_bot: agentEditForm.domain_to_install_bot.trim(),
             restrict_response: agentEditForm.restrict_response,
             restrict_response_start: agentEditForm.restrict_response_start || null,
-            restrict_response_end: agentEditForm.restrict_response_end || null
+            restrict_response_end: agentEditForm.restrict_response_end || null,
+            ...((['easybroker', 'mls'].includes(selectedSubscription?.level?.toLowerCase())) && {
+              ...(agentEditForm._ebKeyEdited && { easy_broker_key: agentEditForm.easy_broker_key?.trim() || null }),
+              ...(agentEditForm._mlsTokenEdited && { mls_token: agentEditForm.mls_token?.trim() || null })
+            })
           }),
           credentials: 'include'
         }
@@ -1391,7 +1395,9 @@ export default function Dashboard() {
                           domain_to_install_bot: selectedClient.domain_to_install_bot || '',
                           restrict_response: selectedClient.restrict_response || false,
                           restrict_response_start: parseTimeForInput(selectedClient.restrict_response_start),
-                          restrict_response_end: parseTimeForInput(selectedClient.restrict_response_end)
+                          restrict_response_end: parseTimeForInput(selectedClient.restrict_response_end),
+                          easy_broker_key: selectedClient.easy_broker_key || '',
+                          mls_token: selectedClient.mls_token || ''
                         });
                       }
                     }} className="btn btn-primary btn-sm btn-icon">
@@ -1514,6 +1520,46 @@ export default function Dashboard() {
                       </div>
                     </div>
 
+                    {/* Section 4: API Tokens - Only for EasyBroker/MLS levels */}
+                    {['easybroker', 'mls'].includes(selectedSubscription?.level?.toLowerCase()) && (
+                      <>
+                        <hr style={{ border: 'none', borderTop: '1px solid #e9ecef', margin: '1.25em 0' }} />
+                        <div style={{ marginBottom: '0.5em' }}>
+                          <div style={{ fontSize: '0.75em', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.05em', color: '#6c757d', marginBottom: '0.6em', display: 'flex', alignItems: 'center', gap: '0.4em' }}>
+                            <i className="fa-solid fa-key" style={{ color: '#495057' }}></i> API Tokens
+                          </div>
+                          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '0.75em' }}>
+                            <div>
+                              <label className="form-label">EasyBroker API Key</label>
+                              <input
+                                type="password"
+                                name="easy_broker_key"
+                                value={agentEditForm._ebKeyEdited ? agentEditForm.easy_broker_key || '' : (selectedClient?.easy_broker_key ? '••••••••••••••••' : '')}
+                                onFocus={() => { if (!agentEditForm._ebKeyEdited) setAgentEditForm(prev => ({ ...prev, _ebKeyEdited: true, easy_broker_key: '' })); }}
+                                onChange={handleAgentEditChange}
+                                placeholder="Enter EasyBroker API key"
+                                className="form-input form-input-sm"
+                                autoComplete="off"
+                              />
+                            </div>
+                            <div>
+                              <label className="form-label">MLS Token</label>
+                              <input
+                                type="password"
+                                name="mls_token"
+                                value={agentEditForm._mlsTokenEdited ? agentEditForm.mls_token || '' : (selectedClient?.mls_token ? '••••••••••••••••' : '')}
+                                onFocus={() => { if (!agentEditForm._mlsTokenEdited) setAgentEditForm(prev => ({ ...prev, _mlsTokenEdited: true, mls_token: '' })); }}
+                                onChange={handleAgentEditChange}
+                                placeholder="Enter MLS API token"
+                                className="form-input form-input-sm"
+                                autoComplete="off"
+                              />
+                            </div>
+                          </div>
+                        </div>
+                      </>
+                    )}
+
                     {/* Error/Success Messages */}
                     {agentEditError && (
                       <div className="message-box message-error mt-md">❌ {agentEditError}</div>
@@ -1552,7 +1598,9 @@ export default function Dashboard() {
                               domain_to_install_bot: selectedClient.domain_to_install_bot || '',
                               restrict_response: selectedClient.restrict_response || false,
                               restrict_response_start: parseTimeForInput(selectedClient.restrict_response_start),
-                              restrict_response_end: parseTimeForInput(selectedClient.restrict_response_end)
+                              restrict_response_end: parseTimeForInput(selectedClient.restrict_response_end),
+                              easy_broker_key: selectedClient.easy_broker_key || '',
+                              mls_token: selectedClient.mls_token || ''
                             });
                           }
                         }}
