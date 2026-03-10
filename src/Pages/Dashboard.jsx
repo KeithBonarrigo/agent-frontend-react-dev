@@ -726,7 +726,8 @@ export default function Dashboard() {
             restrict_response_end: agentEditForm.restrict_response_end || null,
             ...((['easybroker', 'mls'].includes(selectedSubscription?.level?.toLowerCase())) && {
               ...(agentEditForm._ebKeyEdited && { easy_broker_key: agentEditForm.easy_broker_key?.trim() || null }),
-              ...(agentEditForm._mlsTokenEdited && { mls_token: agentEditForm.mls_token?.trim() || null })
+              ...(agentEditForm._mlsTokenEdited && { mls_token: agentEditForm.mls_token?.trim() || null }),
+              eb_office_id: agentEditForm.eb_office_id?.trim() || null
             })
           }),
           credentials: 'include'
@@ -747,6 +748,11 @@ export default function Dashboard() {
             : c
         ));
       }
+
+      // Scroll back to Agent Settings after save
+      setTimeout(() => {
+        document.getElementById('agent-settings-section')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }, 100);
 
     } catch (error) {
       console.error('Update agent error:', error);
@@ -1371,7 +1377,7 @@ export default function Dashboard() {
 
             {/* Agent Settings Form */}
             {selectedClient && (
-              <div style={{ overflow: 'hidden', margin: '1em -1.5em -1.25em' }}>
+              <div id="agent-settings-section" style={{ overflow: 'hidden', margin: '1em -1.5em -1.25em' }}>
                 <div className="subscription-header flex flex-between flex-align-center" style={{ padding: '0.6em 1.2em' }}>
                   <h4 className="m-0 flex flex-align-center gap-sm text-white" style={{ fontSize: '1em' }}>
                     <span>⚙</span> {t('agentSettings')}
@@ -1397,7 +1403,8 @@ export default function Dashboard() {
                           restrict_response_start: parseTimeForInput(selectedClient.restrict_response_start),
                           restrict_response_end: parseTimeForInput(selectedClient.restrict_response_end),
                           easy_broker_key: selectedClient.easy_broker_key || '',
-                          mls_token: selectedClient.mls_token || ''
+                          mls_token: selectedClient.mls_token || '',
+                          eb_office_id: selectedClient.eb_office_id || ''
                         });
                       }
                     }} className="btn btn-primary btn-sm btn-icon">
@@ -1556,6 +1563,12 @@ export default function Dashboard() {
                               />
                             </div>
                           </div>
+                          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '0.75em', marginTop: '0.75em' }}>
+                            <div>
+                              <label className="form-label">EasyBroker Office ID</label>
+                              <input type="text" name="eb_office_id" value={agentEditForm.eb_office_id || ''} onChange={handleAgentEditChange} placeholder="Enter EasyBroker Office ID" className="form-input form-input-sm" />
+                            </div>
+                          </div>
                         </div>
                       </>
                     )}
@@ -1600,7 +1613,8 @@ export default function Dashboard() {
                               restrict_response_start: parseTimeForInput(selectedClient.restrict_response_start),
                               restrict_response_end: parseTimeForInput(selectedClient.restrict_response_end),
                               easy_broker_key: selectedClient.easy_broker_key || '',
-                              mls_token: selectedClient.mls_token || ''
+                              mls_token: selectedClient.mls_token || '',
+                              eb_office_id: selectedClient.eb_office_id || ''
                             });
                           }
                         }}
