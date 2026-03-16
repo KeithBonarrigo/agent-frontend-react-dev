@@ -98,13 +98,18 @@
         "tokenStorage": "BotWerx almacena los tokens de OAuth de forma segura y solo los utiliza para acceder a Google Calendar cuando el usuario programa o modifica una cita a través del bot.",
         "minimumAccess": "BotWerx solo accede a los datos mínimos del calendario necesarios para verificar la disponibilidad y crear eventos."
       },
+      "aiProcessing": {
+        "title": "13. Procesamiento de IA",
+        "intro": "Nuestra plataforma ofrece funciones impulsadas por inteligencia artificial que generan respuestas basadas en la entrada del usuario.",
+        "transmission": "Cuando los usuarios interactúan con estas funciones, el contenido de los mensajes u otros datos enviados pueden ser transmitidos de forma segura a proveedores externos de servicios de IA para generar respuestas."
+      },
       "updates": {
-        "title": "13. Actualizaciones de la Política",
+        "title": "14. Actualizaciones de la Política",
         "revise": "Mantenemos la prerrogativa de revisar o enmendar esta Política de Privacidad a nuestra discreción. Las modificaciones sustanciales serán publicadas en esta página.",
         "acceptance": "El uso continuo del sitio después de tales revisiones significa su aceptación de los términos modificados."
       },
       "contact": {
-        "title": "14. Información de Contacto",
+        "title": "15. Información de Contacto",
         "content": "Para consultas o inquietudes sobre esta Política de Privacidad o nuestras prácticas de manejo de datos personales, contáctenos en:"
       }
     }

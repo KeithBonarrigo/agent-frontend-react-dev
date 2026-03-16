@@ -41,7 +41,8 @@
     "pinLabel": "Security PIN",
     "pinPlaceholder": "Choose a 6-digit PIN",
     "pinHelper": "Choose a 6-digit PIN. Save this — you'll need it to re-register this number.",
-    "prerequisiteWarning": "The phone number must not be active on WhatsApp or WhatsApp Business App. Delete WhatsApp from that phone first if needed."
+    "prerequisiteWarning": "The phone number must not be active on WhatsApp or WhatsApp Business App. Delete WhatsApp from that phone first if needed.",
+    "notConnected": "Not connected"
   },
   "messenger": {
     "title": "Messenger",
@@ -65,7 +66,8 @@
     "disconnect": "Disconnect",
     "disconnecting": "Disconnecting...",
     "removeError": "Failed to disconnect Messenger. Please try again.",
-    "removeConfirm": "Are you sure you want to disconnect this Facebook Page from Messenger?"
+    "removeConfirm": "Are you sure you want to disconnect this Facebook Page from Messenger?",
+    "notConnected": "Not connected"
   },
   "instagram": {
     "title": "Instagram",
@@ -93,7 +95,8 @@
     "sendButton": "Send Message",
     "sending": "Sending...",
     "sendSuccess": "Message sent successfully!",
-    "sendError": "Failed to send message. Please try again."
+    "sendError": "Failed to send message. Please try again.",
+    "notConnected": "Not connected"
   },
   "googleCalendar": {
     "title": "Google Calendar",

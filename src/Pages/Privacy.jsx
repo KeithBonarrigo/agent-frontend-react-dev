@@ -136,6 +136,12 @@ export default function PrivacyPolicy() {
           </div>
 
           <div className="policy-section">
+            <h2>{t('privacy.sections.aiProcessing.title')}</h2>
+            <p>{t('privacy.sections.aiProcessing.intro')}</p>
+            <p>{t('privacy.sections.aiProcessing.transmission')}</p>
+          </div>
+
+          <div className="policy-section">
             <h2>{t('privacy.sections.updates.title')}</h2>
             <p>{t('privacy.sections.updates.revise')}</p>
             <p>{t('privacy.sections.updates.acceptance')}</p>
