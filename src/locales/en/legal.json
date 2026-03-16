@@ -98,18 +98,24 @@
         "tokenStorage": "BotWerx stores OAuth tokens securely and only uses them to access Google Calendar when the user schedules or modifies an appointment through the bot.",
         "minimumAccess": "BotWerx only accesses the minimum calendar data required to check availability and create events."
       },
+      "googleUserData": {
+        "title": "13. Google User Data",
+        "content": "If you grant the application access to Google services (such as Google Calendar), the data obtained from Google APIs is used only to provide the functionality requested by the user. We do not use Google user data for advertising or unrelated purposes."
+      },
       "aiProcessing": {
-        "title": "13. AI Processing",
-        "intro": "Our platform provides AI-powered features that generate responses based on user input.",
-        "transmission": "When users interact with these features, message content or other submitted data may be securely transmitted to third-party AI service providers in order to generate responses."
+        "title": "14. AI Services and Automated Processing",
+        "intro": "Our platform includes features that use artificial intelligence to generate responses and assist users. When you interact with these features, information that you provide (such as messages, prompts, or other user-submitted content) may be processed by third-party AI service providers in order to generate responses.",
+        "providers": "These third-party providers may include AI model providers such as Anthropic (Claude) or similar services used to power AI functionality.",
+        "minimumData": "Only the minimum information necessary to generate responses is transmitted to these providers. The information is processed solely for the purpose of generating responses and providing the requested service.",
+        "noTraining": "We do not use user content submitted through these AI features to train our own AI models. Third-party AI providers process data in accordance with their own privacy policies and data handling practices."
       },
       "updates": {
-        "title": "14. Policy Updates",
+        "title": "15. Policy Updates",
         "revise": "We maintain the prerogative to revise or amend this Privacy Policy at our discretion. Substantial modifications will be published on this page.",
         "acceptance": "Ongoing site usage following such revisions signifies your acceptance of modified terms."
       },
       "contact": {
-        "title": "15. Contact Information",
+        "title": "16. Contact Information",
         "content": "For inquiries or concerns about this Privacy Policy or our personal data handling practices, contact us at:"
       }
     }

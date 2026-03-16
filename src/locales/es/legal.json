@@ -98,18 +98,24 @@
         "tokenStorage": "BotWerx almacena los tokens de OAuth de forma segura y solo los utiliza para acceder a Google Calendar cuando el usuario programa o modifica una cita a través del bot.",
         "minimumAccess": "BotWerx solo accede a los datos mínimos del calendario necesarios para verificar la disponibilidad y crear eventos."
       },
+      "googleUserData": {
+        "title": "13. Datos de Usuario de Google",
+        "content": "Si otorga a la aplicación acceso a servicios de Google (como Google Calendar), los datos obtenidos de las APIs de Google se utilizan únicamente para proporcionar la funcionalidad solicitada por el usuario. No utilizamos los datos de usuario de Google para publicidad ni para fines no relacionados."
+      },
       "aiProcessing": {
-        "title": "13. Procesamiento de IA",
-        "intro": "Nuestra plataforma ofrece funciones impulsadas por inteligencia artificial que generan respuestas basadas en la entrada del usuario.",
-        "transmission": "Cuando los usuarios interactúan con estas funciones, el contenido de los mensajes u otros datos enviados pueden ser transmitidos de forma segura a proveedores externos de servicios de IA para generar respuestas."
+        "title": "14. Servicios de IA y Procesamiento Automatizado",
+        "intro": "Nuestra plataforma incluye funciones que utilizan inteligencia artificial para generar respuestas y asistir a los usuarios. Cuando interactúa con estas funciones, la información que proporciona (como mensajes, indicaciones u otro contenido enviado por el usuario) puede ser procesada por proveedores externos de servicios de IA para generar respuestas.",
+        "providers": "Estos proveedores externos pueden incluir proveedores de modelos de IA como Anthropic (Claude) u otros servicios similares utilizados para impulsar la funcionalidad de IA.",
+        "minimumData": "Solo se transmite a estos proveedores la información mínima necesaria para generar respuestas. La información se procesa únicamente con el fin de generar respuestas y proporcionar el servicio solicitado.",
+        "noTraining": "No utilizamos el contenido enviado por los usuarios a través de estas funciones de IA para entrenar nuestros propios modelos de IA. Los proveedores externos de IA procesan los datos de acuerdo con sus propias políticas de privacidad y prácticas de manejo de datos."
       },
       "updates": {
-        "title": "14. Actualizaciones de la Política",
+        "title": "15. Actualizaciones de la Política",
         "revise": "Mantenemos la prerrogativa de revisar o enmendar esta Política de Privacidad a nuestra discreción. Las modificaciones sustanciales serán publicadas en esta página.",
         "acceptance": "El uso continuo del sitio después de tales revisiones significa su aceptación de los términos modificados."
       },
       "contact": {
-        "title": "15. Información de Contacto",
+        "title": "16. Información de Contacto",
         "content": "Para consultas o inquietudes sobre esta Política de Privacidad o nuestras prácticas de manejo de datos personales, contáctenos en:"
       }
     }

@@ -136,9 +136,16 @@ export default function PrivacyPolicy() {
           </div>
 
           <div className="policy-section">
+            <h2>{t('privacy.sections.googleUserData.title')}</h2>
+            <p>{t('privacy.sections.googleUserData.content')}</p>
+          </div>
+
+          <div className="policy-section">
             <h2>{t('privacy.sections.aiProcessing.title')}</h2>
             <p>{t('privacy.sections.aiProcessing.intro')}</p>
-            <p>{t('privacy.sections.aiProcessing.transmission')}</p>
+            <p>{t('privacy.sections.aiProcessing.providers')}</p>
+            <p>{t('privacy.sections.aiProcessing.minimumData')}</p>
+            <p>{t('privacy.sections.aiProcessing.noTraining')}</p>
           </div>
 
           <div className="policy-section">
