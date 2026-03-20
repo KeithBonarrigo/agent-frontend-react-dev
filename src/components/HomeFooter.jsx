@@ -77,8 +77,11 @@ function HomeFooter() {
           </div>
         </div>
       </div>
-      <div style={{ textAlign: 'center', padding: '12px 0 4px', fontSize: '11px', color: '#888' }}>
-        This application is powered by Anthropic's Claude API.
+      <div style={{ textAlign: 'center', padding: '12px 0 4px', fontSize: '11px', color: '#fff' }}>
+        This application is powered by{' '}
+        <a href="https://www.anthropic.com" target="_blank" rel="noopener noreferrer" style={{ color: '#fff' }}>
+          Anthropic's Claude API
+        </a>.
       </div>
     </footer>
   );
