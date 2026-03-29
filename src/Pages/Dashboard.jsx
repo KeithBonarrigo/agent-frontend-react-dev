@@ -24,6 +24,7 @@ export default function Dashboard() {
   const [expandCollaborations, setExpandCollaborations] = useState(false);
   const [leadsCollabCount, setLeadsCollabCount] = useState(0);
   const [leadsCount, setLeadsCount] = useState(0);
+  const [hasLiveUsers, setHasLiveUsers] = useState(false);
   const [tokenLimits, setTokenLimits] = useState(null);
   const [loadingLimits, setLoadingLimits] = useState(true);
   
@@ -311,6 +312,30 @@ export default function Dashboard() {
       setAgentEditError(null);
       setAgentEditSuccess(null);
     }
+  }, [selectedClientId]);
+
+  // Poll for live users to show green dot on Conversations tab
+  useEffect(() => {
+    if (!selectedClientId) return;
+    const checkLiveUsers = async () => {
+      try {
+        const apiBaseUrl = getApiUrl();
+        const response = await fetch(`${apiBaseUrl}/admin/active-sessions`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          credentials: 'include',
+          body: JSON.stringify({ clientId: selectedClientId })
+        });
+        if (response.ok) {
+          const data = await response.json();
+          const sessions = data.activeSessions || {};
+          setHasLiveUsers(Object.keys(sessions).some(k => !k.startsWith('web:')));
+        }
+      } catch {}
+    };
+    checkLiveUsers();
+    const interval = setInterval(checkLiveUsers, 30000);
+    return () => clearInterval(interval);
   }, [selectedClientId]);
 
   // Load Google API scripts when Google Drive is selected as file source
@@ -1750,7 +1775,7 @@ export default function Dashboard() {
             <button className={`dashboard-tab ${activeTab === 'configurations' ? 'dashboard-tab-active' : ''}`} onClick={() => setActiveTab('configurations')}>⚙ {t('common:navigation.configurations')}</button>
 
             <button className={`dashboard-tab ${activeTab === 'integrations' ? 'dashboard-tab-active' : ''}`} onClick={() => setActiveTab('integrations')}>⇄ {t('common:navigation.integrations')}</button>
-            <button className={`dashboard-tab ${activeTab === 'conversations' ? 'dashboard-tab-active' : ''}`} onClick={() => setActiveTab('conversations')}>◐ {t('common:navigation.conversations')}</button>
+            <button className={`dashboard-tab ${activeTab === 'conversations' ? 'dashboard-tab-active' : ''}`} onClick={() => setActiveTab('conversations')}>◐ {t('common:navigation.conversations')}{hasLiveUsers && <span className="status-dot status-dot-online" style={{ marginLeft: '6px' }} />}</button>
             <button className={`dashboard-tab ${activeTab === 'leads' ? 'dashboard-tab-active' : ''}`} onClick={() => setActiveTab('leads')}>⊛ {t('common:navigation.leads')}{leadsCount > 0 && <span className="tab-badge-blue">{leadsCount}</span>}{leadsCollabCount > 0 && <span className="tab-badge-green">{leadsCollabCount}</span>}</button>
             <button className={`dashboard-tab ${activeTab === 'audienceinsights' ? 'dashboard-tab-active' : ''}`} onClick={() => setActiveTab('audienceinsights')}>◎ {t('common:navigation.audienceinsights')}</button>
             <button className={`dashboard-tab ${activeTab === 'incomereport' ? 'dashboard-tab-active' : ''}`} onClick={() => setActiveTab('incomereport')}>$ {t('common:navigation.incomereport')}</button>
