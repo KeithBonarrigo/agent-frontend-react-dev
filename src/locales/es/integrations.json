@@ -42,7 +42,10 @@
     "pinPlaceholder": "Elige un PIN de 6 digitos",
     "pinHelper": "Elige un PIN de 6 digitos. Guardalo — lo necesitaras para volver a registrar este numero.",
     "prerequisiteWarning": "El numero de telefono no debe estar activo en WhatsApp o WhatsApp Business App. Si lo esta, elimina WhatsApp de ese telefono primero.",
-    "notConnected": "No conectado"
+    "notConnected": "No conectado",
+    "connectButton": "Conectar WhatsApp",
+    "connecting": "Conectando...",
+    "connectError": "Error al conectar WhatsApp. Por favor intenta de nuevo."
   },
   "messenger": {
     "title": "Messenger",

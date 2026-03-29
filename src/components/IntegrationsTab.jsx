@@ -58,10 +58,12 @@ export default function IntegrationsTab({ user, clientId, onClientUpdate }) {
   // WhatsApp registration state
   const [wspStatus, setWspStatus] = useState(user?.wsp_status || null);
   const [savedWspPhone, setSavedWspPhone] = useState(user?.office_wsp_phone || '');
-  const [wspPhone, setWspPhone] = useState('');
-  const [wspCode, setWspCode] = useState('');
-  const [wspPin, setWspPin] = useState('');
-  const [wspStep, setWspStep] = useState('input'); // 'input' or 'verify'
+  // --- Old manual SMS flow state (commented out for Embedded Signup) ---
+  // const [wspPhone, setWspPhone] = useState('');
+  // const [wspCode, setWspCode] = useState('');
+  // const [wspPin, setWspPin] = useState('');
+  // const [wspStep, setWspStep] = useState('input'); // 'input' or 'verify'
+  // --- End old state ---
   const [wspLoading, setWspLoading] = useState(false);
   const [wspError, setWspError] = useState('');
   const [wspSuccess, setWspSuccess] = useState('');
@@ -202,7 +204,8 @@ export default function IntegrationsTab({ user, clientId, onClientUpdate }) {
     }
   };
 
-  // Send verification code to the entered phone number
+  // --- Old manual SMS flow handlers (commented out for Embedded Signup) ---
+  /*
   const handleSendCode = async () => {
     if (!wspPhone.trim()) return;
     setWspLoading(true);
@@ -231,7 +234,6 @@ export default function IntegrationsTab({ user, clientId, onClientUpdate }) {
     }
   };
 
-  // Verify the code entered by the user
   const handleVerifyCode = async () => {
     if (!wspCode.trim() || !wspPin.trim() || wspPin.trim().length !== 6) return;
     setWspLoading(true);
@@ -266,6 +268,91 @@ export default function IntegrationsTab({ user, clientId, onClientUpdate }) {
       setWspLoading(false);
     }
   };
+  */
+  // --- End old handlers ---
+
+  // WhatsApp Embedded Signup: opens Meta popup for business to connect their WABA
+  const handleWhatsAppEmbeddedSignup = async () => {
+    setWspLoading(true);
+    setWspError('');
+    setWspSuccess('');
+
+    // Listen for session info (phone_number_id, waba_id) from the embedded signup popup
+    let sessionInfo = null;
+    const sessionInfoListener = (event) => {
+      if (event.origin !== 'https://www.facebook.com' && event.origin !== 'https://web.facebook.com') return;
+      try {
+        const data = JSON.parse(event.data);
+        if (data.type === 'WA_EMBEDDED_SIGNUP') {
+          sessionInfo = data.data;
+        }
+      } catch { /* ignore non-JSON messages */ }
+    };
+    window.addEventListener('message', sessionInfoListener);
+
+    try {
+      const FB = await loadFacebookSdk();
+
+      FB.login((response) => {
+        window.removeEventListener('message', sessionInfoListener);
+
+        if (!response.authResponse) {
+          setWspError(t('whatsapp.connectError') || 'Login cancelled');
+          setWspLoading(false);
+          return;
+        }
+
+        const code = response.authResponse.code;
+
+        if (!code || !sessionInfo?.phone_number_id || !sessionInfo?.waba_id) {
+          setWspError('Embedded signup incomplete — missing session info. Please try again.');
+          setWspLoading(false);
+          return;
+        }
+
+        // Send to backend for token exchange and webhook subscription
+        const apiBaseUrl = getApiUrl();
+        fetch(`${apiBaseUrl}/api/clients/${clientId}/whatsapp-embedded-signup`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          credentials: 'include',
+          body: JSON.stringify({
+            code,
+            phone_number_id: sessionInfo.phone_number_id,
+            waba_id: sessionInfo.waba_id
+          })
+        })
+          .then(res => res.json().then(data => ({ ok: res.ok, data })))
+          .then(({ ok, data }) => {
+            if (!ok) throw new Error(data.error || 'Failed to complete WhatsApp signup');
+
+            setWspStatus('active');
+            setSavedWspPhone(data.phone_number || '');
+            setWspSuccess(t('whatsapp.success'));
+            onClientUpdate?.({ wsp_status: 'active', office_wsp_phone: data.phone_number || '' });
+            saveIntegrationState({ wspStatus: 'active', wspPhone: data.phone_number || '' });
+            setTimeout(() => setWspSuccess(''), 5000);
+          })
+          .catch(err => setWspError(err.message))
+          .finally(() => setWspLoading(false));
+
+      }, {
+        config_id: import.meta.env.VITE_WA_CONFIG_ID,
+        response_type: 'code',
+        override_default_response_type: true,
+        extras: {
+          setup: {},
+          featureType: '',
+          sessionInfoVersion: '3'
+        }
+      });
+
+    } catch (err) {
+      window.removeEventListener('message', sessionInfoListener);
+      setWspError(err.message || 'Failed to load Facebook SDK');
+      setWspLoading(false);
+    }
+  };
 
   // Disconnect the registered WhatsApp number
   const handleDisconnect = async () => {
@@ -285,7 +372,6 @@ export default function IntegrationsTab({ user, clientId, onClientUpdate }) {
       }
       setSavedWspPhone('');
       setWspStatus(null);
-      setWspStep('input');
       onClientUpdate?.({ wsp_status: null, office_wsp_phone: '' });
       saveIntegrationState({ wspStatus: null, wspPhone: '' });
     } catch (err) {
@@ -778,140 +864,36 @@ export default function IntegrationsTab({ user, clientId, onClientUpdate }) {
                 </div>
               </div>
             ) : (
-              /* Not connected: show registration form */
+              /* Not connected: Embedded Signup button */
               <div style={{ marginTop: "1em", paddingTop: "0.75em", borderTop: "1px solid #eee" }}>
-                {/* Step 1: Phone number input */}
-                <div style={{ marginBottom: wspStep === 'verify' ? "1.25em" : 0 }}>
-                  <label style={{ display: "block", fontSize: "0.85em", color: "#555", marginBottom: "0.4em", fontWeight: "600" }}>
-                    {t('whatsapp.phoneLabel')}
-                  </label>
-                  <div style={{ display: "flex", gap: "0.5em" }}>
-                    <input
-                      type="tel"
-                      value={wspPhone}
-                      onChange={(e) => setWspPhone(e.target.value)}
-                      placeholder={t('whatsapp.phonePlaceholder')}
-                      disabled={wspStep === 'verify' || wspLoading}
-                      style={{
-                        flex: 1,
-                        padding: "0.6em 0.8em",
-                        border: "1px solid #ccc",
-                        borderRadius: "4px",
-                        fontSize: "1em",
-                        backgroundColor: wspStep === 'verify' ? '#f0f0f0' : '#fff'
-                      }}
-                    />
-                    <button
-                      onClick={handleSendCode}
-                      disabled={!wspPhone.trim() || wspLoading || wspStep === 'verify'}
-                      style={{
-                        padding: "0.6em 1.2em",
-                        backgroundColor: (!wspPhone.trim() || wspLoading || wspStep === 'verify') ? "#ccc" : "#25D366",
-                        color: "white",
-                        border: "none",
-                        borderRadius: "4px",
-                        cursor: (!wspPhone.trim() || wspLoading || wspStep === 'verify') ? "default" : "pointer",
-                        fontSize: "0.9em",
-                        fontWeight: "600",
-                        whiteSpace: "nowrap"
-                      }}
-                    >
-                      {wspLoading && wspStep === 'input' ? t('whatsapp.sending') : t('whatsapp.sendCode')}
-                    </button>
-                  </div>
-                  <p style={{ fontSize: "0.8em", color: "#888", marginTop: "0.4em", marginBottom: 0 }}>
-                    {t('whatsapp.phoneHelper')}
-                  </p>
+                <div style={{ display: "flex", justifyContent: "center", marginBottom: "0.75em" }}>
+                  <button
+                    onClick={handleWhatsAppEmbeddedSignup}
+                    disabled={wspLoading}
+                    style={{
+                      padding: "0.7em 1.5em",
+                      backgroundColor: wspLoading ? "#ccc" : "#25D366",
+                      color: "white",
+                      border: "none",
+                      borderRadius: "6px",
+                      cursor: wspLoading ? "not-allowed" : "pointer",
+                      fontSize: "0.95em",
+                      fontWeight: "600",
+                      display: "flex",
+                      alignItems: "center",
+                      gap: "0.5em"
+                    }}
+                  >
+                    {wspLoading ? (
+                      <><i className="fa-solid fa-spinner fa-spin"></i> {t('whatsapp.connecting') || 'Connecting...'}</>
+                    ) : (
+                      <><i className="fa-brands fa-whatsapp"></i> {t('whatsapp.connectButton') || 'Connect WhatsApp'}</>
+                    )}
+                  </button>
                 </div>
 
-                {/* Step 2: Verification code input */}
-                {wspStep === 'verify' && (
-                  <div>
-                    <label style={{ display: "block", fontSize: "0.85em", color: "#555", marginBottom: "0.4em", fontWeight: "600" }}>
-                      {t('whatsapp.codeLabel')}
-                    </label>
-                    <div style={{ display: "flex", gap: "0.5em" }}>
-                      <input
-                        type="text"
-                        value={wspCode}
-                        onChange={(e) => setWspCode(e.target.value)}
-                        placeholder={t('whatsapp.codePlaceholder')}
-                        disabled={wspLoading}
-                        style={{
-                          flex: 1,
-                          padding: "0.6em 0.8em",
-                          border: "1px solid #ccc",
-                          borderRadius: "4px",
-                          fontSize: "1em"
-                        }}
-                      />
-                      <button
-                        onClick={handleVerifyCode}
-                        disabled={!wspCode.trim() || wspPin.trim().length !== 6 || wspLoading}
-                        style={{
-                          padding: "0.6em 1.2em",
-                          backgroundColor: (!wspCode.trim() || wspPin.trim().length !== 6 || wspLoading) ? "#ccc" : "#007bff",
-                          color: "white",
-                          border: "none",
-                          borderRadius: "4px",
-                          cursor: (!wspCode.trim() || wspPin.trim().length !== 6 || wspLoading) ? "default" : "pointer",
-                          fontSize: "0.9em",
-                          fontWeight: "600",
-                          whiteSpace: "nowrap"
-                        }}
-                      >
-                        {wspLoading ? t('whatsapp.verifying') : t('whatsapp.verify')}
-                      </button>
-                    </div>
-                    {/* PIN input */}
-                    <label style={{ display: "block", fontSize: "0.85em", color: "#555", marginBottom: "0.4em", marginTop: "1em", fontWeight: "600" }}>
-                      {t('whatsapp.pinLabel')}
-                    </label>
-                    <input
-                      type="text"
-                      inputMode="numeric"
-                      maxLength={6}
-                      value={wspPin}
-                      onChange={(e) => setWspPin(e.target.value.replace(/[^0-9]/g, ''))}
-                      placeholder={t('whatsapp.pinPlaceholder')}
-                      disabled={wspLoading}
-                      style={{
-                        width: "100%",
-                        padding: "0.6em 0.8em",
-                        border: "1px solid #ccc",
-                        borderRadius: "4px",
-                        fontSize: "1em",
-                        boxSizing: "border-box"
-                      }}
-                    />
-                    <p style={{ fontSize: "0.8em", color: "#888", marginTop: "0.4em", marginBottom: 0 }}>
-                      {t('whatsapp.pinHelper')}
-                    </p>
-
-                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: "0.4em" }}>
-                      <p style={{ fontSize: "0.8em", color: "#888", margin: 0 }}>
-                        {t('whatsapp.codeHelper')}
-                      </p>
-                      <button
-                        onClick={() => { setWspStep('input'); setWspCode(''); setWspPin(''); setWspError(''); }}
-                        style={{
-                          background: "none",
-                          border: "none",
-                          color: "#007bff",
-                          cursor: "pointer",
-                          fontSize: "0.8em",
-                          textDecoration: "underline",
-                          padding: 0
-                        }}
-                      >
-                        {t('whatsapp.changeNumber')}
-                      </button>
-                    </div>
-                  </div>
-                )}
-
                 {/* Status: Not Connected */}
-                <div style={{ marginTop: "0.75em", paddingTop: "0.75em", borderTop: "1px solid #eee", fontSize: "0.85em" }}>
+                <div style={{ paddingTop: "0.75em", borderTop: "1px solid #eee", fontSize: "0.85em", textAlign: "center" }}>
                   <span style={{ color: "#999" }}>
                     <i className="fa-solid fa-circle" style={{ marginRight: "0.4em" }}></i>
                     {t('whatsapp.notConnected') || 'Not connected'}
