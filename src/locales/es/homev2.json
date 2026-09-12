@@ -1,0 +1,123 @@
+{
+  "hero": {
+    "title": "Captura Más Leads con Agentes de IA Avanzados",
+    "benefits": {
+      "zeroCode": {
+        "title": "Implementación Sin Código",
+        "description": "Lanza tu agente de IA <strong>en minutos</strong>—sin necesidad de desarrolladores. Nuestra interfaz intuitiva permite que cualquiera construya <strong>automatización poderosa</strong> con una configuración simple de apuntar y hacer clic."
+      },
+      "multiChannel": {
+        "title": "Comunicación Multicanal",
+        "description": "Tu agente de IA trabaja <strong>24/7</strong> en web, WhatsApp, Messenger e Instagram—interactuando con clientes <strong>donde sea que estén</strong>, cuando te necesiten. Más canales próximamente."
+      },
+      "insights": {
+        "title": "Análisis Impulsado por IA",
+        "description": "Conoce <strong>quién te contacta</strong>, de dónde vienen y qué les interesa. Las métricas impulsadas por IA te dan <strong>visibilidad de tus leads</strong> para mejorar el alcance de marketing y la segmentación."
+      },
+      "secure": {
+        "title": "Seguro y Compatible con PCI",
+        "description": "Tus datos están protegidos con <strong>seguridad de nivel empresarial</strong>. Nunca almacenamos información de tarjetas de crédito, y todos los datos personales están <strong>altamente encriptados</strong> para mantener tu negocio y clientes seguros."
+      }
+    }
+  },
+  "slider": {
+    "title": "¿Qué Pueden Hacer los Agentes de IA por Tu Negocio?",
+    "items": {
+      "automate": "Automatiza Conversaciones",
+      "qualify": "Califica Leads al Instante",
+      "handle": "Gestiona Consultas",
+      "scale": "Escala el Soporte Sin Esfuerzo",
+      "personalize": "Personaliza Interacciones",
+      "freeUp": "Libera a Tu Equipo"
+    }
+  },
+  "services": {
+    "title": "Beneficios Adicionales",
+    "learnMore": "Más Información",
+    "items": {
+      "analytics": {
+        "title": "Análisis Impulsado por IA",
+        "description": "<strong>Desbloquea información poderosa sobre el comportamiento de tus clientes.</strong> Accede a métricas personalizadas impulsadas por IA que te ayudan a entender a tus usuarios, rastrear patrones de interacción y <strong>mejorar la segmentación de tu audiencia.</strong> Nuestro panel de análisis inteligente presenta datos accionables, ayudándote a identificar clientes de alto valor, optimizar embudos de conversión y <strong>tomar decisiones basadas en datos</strong> que impulsan el crecimiento."
+      },
+      "support": {
+        "title": "Soporte al Cliente 24/7",
+        "description": "<strong>Nunca más pierdas una consulta de cliente.</strong> Nuestros agentes de IA trabajan las 24 horas, proporcionando respuestas instantáneas a preguntas de clientes en cualquier momento del día o la noche. Ya sea a las 3 PM o 3 AM, tus clientes reciben <strong>asistencia inmediata y útil</strong> que los mantiene comprometidos y satisfechos. Esta disponibilidad continua asegura que <strong>captures cada oportunidad</strong> y mantengas la confianza del cliente, incluso fuera del horario comercial."
+      },
+      "instant": {
+        "title": "Tiempos de Respuesta Instantáneos",
+        "description": "<strong>Despídete de los largos tiempos de espera.</strong> Nuestros agentes de IA responden a consultas de clientes en milisegundos, <strong>reduciendo dramáticamente los tiempos de respuesta de horas o días a segundos.</strong> Este compromiso inmediato mantiene a los clientes interesados, evita que se vayan a la competencia y crea una experiencia fluida que los consumidores modernos esperan. <strong>Las respuestas rápidas llevan a mayores tasas de satisfacción y mayor conversión.</strong>"
+      },
+      "qualification": {
+        "title": "Calificación Automatizada de Leads",
+        "description": "<strong>Deja que la IA maneje el trabajo pesado de calificar leads.</strong> Nuestros agentes inteligentes hacen las preguntas correctas, recopilan información esencial y <strong>automáticamente califican y dirigen leads</strong> según su valor potencial. Esto asegura que tu equipo de ventas <strong>se enfoque solo en prospectos de alta calidad,</strong> ahorrando tiempo y aumentando las tasas de cierre. El sistema aprende de cada interacción, mejorando continuamente su precisión de calificación."
+      },
+      "costs": {
+        "title": "Costos Operativos Reducidos",
+        "description": "<strong>Reduce significativamente tus gastos de servicio al cliente mientras mejoras la calidad.</strong> Los agentes de IA manejan consultas rutinarias a <strong>una fracción del costo de agentes humanos,</strong> permitiéndote escalar el soporte sin escalar proporcionalmente el personal. <strong>Reduce costos generales</strong> incluyendo capacitación, beneficios e infraestructura mientras mantienes o incluso mejoras la calidad del servicio. Los ahorros se acumulan a medida que tu negocio crece."
+      },
+      "scalable": {
+        "title": "Interacción Escalable con Clientes",
+        "description": "<strong>Maneja miles de conversaciones simultáneas sin esfuerzo.</strong> A diferencia de los equipos humanos que requieren contratación y capacitación para escalar, los agentes de IA pueden <strong>acomodar instantáneamente picos de tráfico, aumentos estacionales o crecimiento rápido del negocio.</strong> Ya sea que manejes 10 o 10,000 conversaciones, <strong>mantén la misma experiencia de alta calidad para cada cliente</strong> sin costos o retrasos adicionales."
+      }
+    }
+  },
+  "faq": {
+    "title": "Preguntas Frecuentes",
+    "items": [
+      {
+        "question": "¿Puedo probarlo antes de comprometerme con un plan de pago?",
+        "answer": "Absolutamente. Ofrecemos una <strong>prueba gratuita</strong> para que puedas experimentar exactamente cómo funciona un agente de IA para tu negocio <strong>antes de hacer cualquier compromiso financiero</strong>. Configura tu agente, pruébalo con escenarios reales y ve los resultados por ti mismo. Estamos seguros de que una vez que veas el <strong>tiempo ahorrado y los leads capturados</strong>, entenderás el valor inmediatamente."
+      },
+      {
+        "question": "¿Los agentes de IA harán que mis interacciones con clientes se sientan impersonales?",
+        "answer": "<strong>Para nada</strong>. Los agentes de IA modernos están diseñados para proporcionar <strong>experiencias cálidas y conversacionales</strong> que se sienten naturales y útiles. Pueden recordar preferencias del cliente, usar lenguaje amigable y <strong>transferir sin problemas a agentes humanos</strong> cuando se necesita un toque personal. Muchos clientes realmente prefieren la <strong>asistencia instantánea y sin juicios</strong> que la IA proporciona para preguntas rutinarias, mientras tu equipo permanece disponible para situaciones complejas."
+      },
+      {
+        "question": "¿Qué pasa si la IA da información incorrecta a mis clientes?",
+        "answer": "Los agentes de IA están <strong>entrenados específicamente con la información de tu negocio</strong> y configurados con límites para mantenerse dentro de sus conocimientos. Cuando encuentran preguntas fuera de su alcance, están diseñados para <strong>reconocer limitaciones y escalar al soporte humano</strong> en lugar de adivinar. Mantienes <strong>control total</strong> sobre la información que comparten, y el monitoreo continuo ayuda a identificar y corregir cualquier problema rápidamente."
+      },
+      {
+        "question": "¿Mi negocio es demasiado pequeño para beneficiarse de agentes de IA?",
+        "answer": "<strong>Los agentes de IA son particularmente valiosos para pequeñas empresas</strong> porque te permiten competir con empresas más grandes sin contratar personal adicional. Un emprendedor individual puede ofrecer <strong>soporte 24/7</strong>, y un equipo pequeño puede manejar volúmenes de consultas que de otra manera requerirían múltiples empleados. Nuestros <strong>precios escalonados</strong> significan que solo pagas por lo que necesitas, haciendo la IA accesible sin importar el tamaño de tu negocio."
+      },
+      {
+        "question": "¿Cuánto tiempo toma configurar un agente de IA?",
+        "answer": "La mayoría de los negocios tienen su agente de IA <strong>activo en minutos, no semanas</strong>. Nuestra plataforma sin código te permite configurar tu agente simplemente proporcionando la información y preferencias de tu negocio. <strong>No se requiere experiencia técnica</strong>, no hay desarrolladores que contratar y no hay integraciones complejas que manejar. Puedes empezar a capturar leads y responder preguntas de clientes <strong>el mismo día que te registras</strong>."
+      },
+      {
+        "question": "¿Perderé control sobre mis relaciones con clientes?",
+        "answer": "Ganas <strong>más control, no menos</strong>. Los agentes de IA capturan información detallada sobre cada interacción, dándote información sobre qué preguntan los clientes, qué necesitan y de dónde vienen. <strong>Tú estableces las reglas</strong> de cómo responde la IA, cuándo escala y qué información recopila. <strong>Cada conversación se registra y es accesible</strong>, así que siempre estás informado sobre lo que sucede con tus clientes."
+      },
+      {
+        "question": "¿Qué pasa cuando la IA no puede responder una pregunta?",
+        "answer": "<strong>La escalación inteligente está integrada en cada agente de IA.</strong> Cuando una pregunta está fuera del conocimiento de la IA o un cliente solicita asistencia humana, la conversación se <strong>transfiere sin problemas a tu equipo con contexto completo</strong>. La IA puede recopilar información de contacto y programar llamadas de retorno, asegurando que <strong>ninguna consulta se pierda</strong> incluso fuera del horario comercial."
+      },
+      {
+        "question": "¿Los agentes de IA son seguros? ¿Qué pasa con los datos de mis clientes?",
+        "answer": "La seguridad es fundamental en nuestra plataforma. Todos los datos están <strong>encriptados en tránsito y en reposo</strong>, nunca almacenamos información de tarjetas de pago y mantenemos estricto cumplimiento con regulaciones de privacidad. <strong>Los datos de tus clientes te pertenecen</strong> y nunca se usan para entrenar modelos ni se comparten con terceros. Realizamos <strong>auditorías de seguridad regulares</strong> para asegurar que tu información permanezca protegida."
+      },
+      {
+        "question": "¿Mis clientes sabrán que están hablando con una IA?",
+        "answer": "<strong>La transparencia genera confianza.</strong> Nuestros agentes de IA pueden presentarse honestamente mientras proporcionan un excelente servicio. Las investigaciones muestran que los clientes aprecian saber que están interactuando con IA cuando significa <strong>respuestas más rápidas y disponibilidad 24/7</strong>. La clave es entregar valor genuino—los clientes se preocupan mucho más por <strong>obtener sus preguntas respondidas rápidamente</strong> que si un humano o IA los está ayudando."
+      },
+      {
+        "question": "¿Qué pasa si la tecnología de IA cambia y mi inversión se vuelve obsoleta?",
+        "answer": "Nuestra plataforma <strong>evoluciona continuamente con los avances de IA</strong>, y tu suscripción incluye todas las actualizaciones automáticamente. A medida que la tecnología mejora, tu agente de IA se vuelve más inteligente <strong>sin ningún esfuerzo o costo adicional</strong> de tu parte. No estás atado a tecnología obsoleta—estás asociándote con una plataforma comprometida a mantenerte <strong>a la vanguardia de las capacidades de IA</strong>."
+      }
+    ]
+  },
+  "contact": {
+    "title": "Contáctanos",
+    "form": {
+      "name": "Nombre",
+      "email": "Correo Electrónico",
+      "phone": "Teléfono",
+      "company": "Empresa",
+      "website": "Sitio Web",
+      "comments": "Comentarios",
+      "submit": "Enviar"
+    },
+    "success": "¡Mensaje enviado exitosamente!",
+    "error": "Error del servidor. Por favor intenta de nuevo más tarde."
+  }
+}

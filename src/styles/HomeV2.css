@@ -1,0 +1,1235 @@
+/* HomeV2.css - sandbox stylesheet for the mock home page.
+   Every class is namespaced hv2-* so nothing here can affect the live
+   home page. Shared header/footer styles still come from Home.css.
+   Do not edit Home.css: that file styles the live site. */
+
+/* ============================================
+   AI BRIDGE HOME PAGE - EXACT MATCH
+   Primary Purple: #310956
+   ============================================ */
+:root {
+    --logo: 293.6px;
+    --font-size: 16px;
+    --font-1: "Inter";
+    --color: #859099;
+    --color1: #445765;
+    --color2: #66ADD9;
+    --color3: #B145BF;
+    --color4: #EFF8FF;
+    --color5: #020659;
+    --icon-width: 48px;
+    --icon-height: 48px;
+    --nav-a: #445765;
+    --a: #445765;
+    --ahover: #B145BF;
+    --nav-fs: 16px;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 170px;
+}
+
+body {
+  font-family: 'Roboto', sans-serif;
+  line-height: 1.6;
+  color: #333;
+  background: #fff;
+}
+
+.hv2-page {
+  width: 100%;
+  overflow-x: hidden;
+}
+
+/* ============================================
+   HEADER & NAVIGATION
+   ============================================ */
+
+.hv2-header {
+  background: #fff;
+  padding: 1rem 0;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  border-bottom: 1px solid rgb(44, 62, 80);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+.hv2-nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+.hv2-logo img {
+  /*height: 110px;
+  width: 110px;*/
+  width: 150px;
+  height: 130px;
+}
+
+.hv2-logo img.propel-logo {
+  height: auto;
+  width: auto;
+  max-width: 200px;
+}
+
+.propel-byline {
+  display: block;
+  text-align: center;
+  font-size: 0.75rem;
+  color: #94a3b8;
+  margin-top: -8px;
+  letter-spacing: 0.05em;
+}
+
+.propel-byline a {
+  color: inherit;
+  text-decoration: underline;
+}
+
+.hv2-nav-links {
+  display: flex;
+  list-style: none;
+  gap: 1rem;
+  margin: 0;
+  padding: 0;
+}
+
+.hv2-nav-links a {
+  text-decoration: none;
+  color: #333;
+  font-weight: 500;
+  font-size: 1.05rem;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.hv2-nav-links a::after {
+  content: '';
+  position: absolute;
+  bottom: 0.25rem;
+  left: 50%;
+  transform: translateX(-50%) scaleX(0);
+  width: 80%;
+  height: 2px;
+  background: linear-gradient(90deg, #310956, #5a189a);
+  transition: transform 0.3s ease;
+}
+
+.hv2-nav-links a:hover {
+  color: #310956;
+  background: rgba(49, 9, 86, 0.05);
+}
+
+.hv2-nav-links a:hover::after {
+  transform: translateX(-50%) scaleX(1);
+}
+
+/* ============================================
+   BUTTONS
+   ============================================ */
+
+.hv2-btn {
+  /*background: #310956;
+  color: white;
+  padding: 15px 30px;
+  text-decoration: none;
+  border-radius: 5px;
+  border: none;
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: 500;
+  transition: background 0.3s;
+  display: inline-block;*/
+
+    border: 2px solid var(--color3);
+    height: 44px;
+    border-radius: 44px;
+    padding: 9px 18px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    text-transform: uppercase;
+    font-weight: 700;
+    transition: all 0.3s ease;
+}
+
+.hv2-btn:hover {
+  background: var(--color3);
+  color: var(--color4);
+  text-decoration: none;
+  box-shadow: 0 4px 12px rgba(49, 9, 86, 0.3);
+}
+
+.hv2-btn-green {
+  background: #22c55e;
+  /*border: 2px solid #15803d;*/
+  color: #ffffff;
+  letter-spacing:.2em;
+
+  /* NEW: size boost */
+  padding: 14px 28px;     /* bigger click target */
+  font-size: 1.05rem;    /* slightly larger text */
+  min-height: 48px;      /* accessibility-friendly */
+  border-radius: 8px;    /* optional, feels more modern */
+  transition: all 0.3s ease;
+}
+
+.hv2-btn-green:hover {
+  background: #16a34a;
+  /*border-color: #166534;*/
+  box-shadow: 0 4px 12px rgba(22, 163, 74, 0.4);
+}
+
+.hv2-btn-green:active {
+  background: #15803d;
+  /*border-color: #14532d;*/
+}
+
+
+/* ============================================
+   HERO SECTION
+   ============================================ */
+
+.hv2-hero {
+  background: linear-gradient(135deg, rgb(52, 73, 94) 0%, rgb(44, 62, 80) 50%, rgb(26, 37, 47) 100%);
+  padding: 24px 0 28px;
+  text-align: center;
+  border-bottom: 1px solid rgb(44, 62, 80);
+  box-shadow: 0 4px 20px rgba(49, 9, 86, 0.1);
+}
+
+.hv2-hero-title {
+  font-family: 'Poppins', sans-serif;
+  font-size: 2.75rem;
+  letter-spacing: 0.02em;
+  margin: 1em auto 1em;
+  color: #fff;
+  font-weight: 600;
+  order: 1;
+  animation: fadeIn 2s ease-in forwards;
+}
+
+.hv2-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+/* ============================================
+   HERO CONTENT - Two Column Layout
+   Left: Benefits list, Right: Signup form
+   ============================================ */
+
+.hv2-hero-content {
+  display: flex;
+  gap: 1rem;
+  align-items: flex-start;
+  margin-top: 1rem;
+}
+
+/* Left column - Benefits (33% width) */
+.hv2-hero-benefits {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  text-align: left;
+}
+
+/* Individual benefit item */
+.hv2-hero-benefit-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 1rem;
+  background: linear-gradient(135deg, #f8f8f8 0%, #ffffff 100%);
+  border-radius: 12px;
+  border: 1px solid #e0e0e0;
+  transition: all 0.3s ease;
+}
+
+.hv2-hero-benefit-item:hover {
+  transform: translateX(8px);
+  border-color: #310956;
+  box-shadow: 0 4px 16px rgba(49, 9, 86, 0.15);
+}
+
+/* Large icon on the left */
+.hv2-hero-benefit-icon {
+  font-size: 2.5rem;
+  color: #310956;
+  flex-shrink: 0;
+  width: 60px;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #310956 0%, #5a189a 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.hv2-hero-benefit-item:hover .hv2-hero-benefit-icon {
+  animation: jiggle 0.6s ease-in-out;
+}
+
+/* Text content container */
+.hv2-hero-benefit-text {
+  width: 100%;
+  text-align: center;
+}
+
+/* Icon and description row */
+.hv2-hero-benefit-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  width: 100%;
+}
+
+.hv2-hero-benefit-title {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: #310956;
+  margin: 0;
+  letter-spacing: 0.02em;
+  text-align: center;
+  width: 100%;
+}
+
+.hv2-hero-benefit-description {
+  font-size: 0.95rem;
+  color: #555;
+  line-height: 1.5;
+  margin: 0;
+}
+
+/* Right column - Form container (66% width) */
+.hv2-hero-form-container {
+  flex: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  width: 100%;
+}
+
+/* ============================================
+   HERO RESPONSIVE - Stack on smaller screens
+   ============================================ */
+
+@media (max-width: 992px) {
+  .hv2-hero-content {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .hv2-hero-benefits {
+    width: 100%;
+    max-width: 600px;
+  }
+
+  .hv2-hero-form-container {
+    width: 100%;
+    max-width: 600px;
+    margin-top: 2rem;
+  }
+}
+
+@media (max-width: 600px) {
+  .hv2-hero-benefit-item {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 1rem;
+    padding: 1.5rem 1rem;
+  }
+
+  .hv2-hero-benefit-icon {
+    font-size: 3rem;
+    width: 70px;
+    height: 70px;
+  }
+
+  .hv2-hero-benefit-title {
+    font-size: 1.1rem;
+  }
+
+  .hv2-hero-benefit-description {
+    font-size: 0.9rem;
+  }
+}
+
+/* ============================================
+   CARDS SECTION (Legacy - kept for reference)
+   ============================================ */
+
+.hv2-cards-section {
+  padding: 60px 0;
+  background: #fff;
+}
+
+.hv2-cards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+  margin-top: 0rem;
+}
+
+.hv2-card {
+  background-size: cover;
+  transition: all 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  text-align: center;
+  min-height: 350px;
+  position: relative;
+  padding-top: 30px;
+}
+
+.hv2-card:hover {
+  transform: scale(1.05);
+}
+
+.hv2-card:hover .hv2-card-body {
+  box-shadow: 0 8px 20px rgba(49, 9, 86, 0.25);
+}
+
+.hv2-card-body {
+  background: linear-gradient(to bottom, #e0dfdf, #FFF);
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  border: 1px solid #310956;
+  border-radius: 10px;
+  /*margin-top: 2rem;*/
+  color: #333;
+  width: 100%;
+  min-height:21em;
+}
+
+.hv2-black-bar {
+  width: 100%;
+  height: 10px;
+  background-color: #310956;
+  position: absolute;
+  top: 30px;
+  border-radius: 10px 10px 0 0;
+}
+
+.hv2-card-upper {
+  background-color: #fff;
+  width: 100%;
+  border: 1px solid #310956;
+  border-width: 0px 0px 1px 0px;
+  padding: 1.25rem 1rem 1rem;
+}
+
+.hv2-card-icon {
+  font-size: 64px;
+  margin-bottom: 10px;
+  color: #310956;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: transform 0.3s ease;
+}
+
+.hv2-card:hover .hv2-card-icon {
+  animation: jiggle 0.6s ease-in-out;
+}
+
+/* Jiggle animation - triggered on card icon hover
+   Changed from more aggressive values (±15deg, 1.1 scale) to subtle values (±5deg, 1.05 scale)
+   This makes the animation less distracting while still providing visual feedback */
+@keyframes jiggle {
+  0%, 100% {
+    transform: rotate(0deg);
+  }
+  10%, 30%, 50%, 70%, 90% {
+    transform: rotate(-5deg) scale(1.05);
+  }
+  20%, 40%, 60%, 80% {
+    transform: rotate(5deg) scale(1.05);
+  }
+}
+
+.hv2-card-title {
+  text-align: center;
+  color: black;
+  letter-spacing: 0.15rem;
+  font-size: 1.5rem;
+  margin: 0;
+}
+
+.hv2-card-text {
+  /*text-indent: 20px;*/
+  text-align: left;
+  letter-spacing: 1px;
+  word-spacing: 2px;
+  line-height: 1.6;
+  padding: 1rem;
+}
+
+/* ============================================
+   BUILD YOUR AGENT SECTION
+   ============================================ */
+.hv2-agent-collapsible-header {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 6px;
+  margin-bottom: 12px;
+}
+
+.hv2-agent-title {
+  margin: 0;
+}
+
+.hv2-agent-subtext {
+  margin: 0;
+  opacity: 0.75;
+  font-size: 0.95rem;
+}
+
+/* "Get Started!" toggle button */
+.hv2-agent-toggle-btn {
+  background: #22c55e;         /* green */
+  border: 2px solid #15803d;   /* darker green */
+  color: #083b1b;
+  border-radius: 10px;
+  padding: 14px 20px;          /* slightly bigger */
+  cursor: pointer;
+  font-weight: 800;
+  transition: all 0.3s ease;
+}
+
+.hv2-agent-toggle-btn:hover {
+  filter: brightness(0.96);
+  box-shadow: 0 4px 12px rgba(22, 163, 74, 0.4);
+}
+
+/* Animated collapsible area */
+.hv2-agent-collapsible {
+  overflow: hidden;
+  max-height: 0px;       /* JS sets this when opened */
+  opacity: 0;
+  transition: max-height 360ms ease, opacity 260ms ease;
+  will-change: max-height, opacity;
+}
+
+
+
+/* ============================================
+   SERVICES SECTION
+   ============================================ */
+
+.hv2-services-section {
+  padding: 60px 0;
+  background: #fff;
+}
+
+/* Services Grid - Redesigned layout for service/benefit cards
+   Changed from: single-column list (.hv2-services-list) with modal popups
+   Changed to: 2-column responsive grid with hover-expandable cards
+   This new design shows content inline without modal interruption */
+.hv2-services-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);  /* 2 columns on desktop */
+  gap: 2rem;
+  margin-bottom: 3rem;
+  align-items: start;  /* Cards align to top, allowing variable heights */
+}
+
+/* Service Item Card - Container for each benefit card
+   Redesigned from clickable list items to expandable cards
+   Previous: .hv2-service-item was a simple list item with checkmark
+   New: Full card with header section and collapsible description */
+.hv2-service-item {
+  border: 2px solid #6b4a9a;
+  border-radius: 16px;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;  /* Required for description max-height animation */
+  background: linear-gradient(180deg, #ffffff 0%, #f8f8f8 100%);
+}
+
+/* Hover state - lifts card and changes border to orange accent */
+.hv2-service-item:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 8px 24px rgba(255, 152, 0, 0.3);  /* Orange glow on hover */
+  border-color: #ff9800;
+}
+
+/* Service Header - New component containing icon and title
+   Always visible; dark purple gradient background
+   Replaces the old checkmark + title inline layout */
+.hv2-service-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  padding: 2rem;
+  background: linear-gradient(135deg, #4a3668 0%, #3a2656 100%);
+  min-height: 100px;
+}
+
+/* Header lightens slightly on hover for visual feedback */
+.hv2-service-item:hover .hv2-service-header {
+  background: linear-gradient(135deg, #5a4678 0%, #4a3666 100%);
+}
+
+/* Service Icon - New styled icon replacing the checkmark
+   Uses gradient text effect for orange color
+   Triggers jiggle animation on card hover */
+.hv2-service-icon {
+  font-size: 2.5rem;
+  color: #ff9800;
+  background: linear-gradient(135deg, #ff9800 0%, #ffa726 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  flex-shrink: 0;
+  transition: transform 0.3s ease;
+}
+
+.hv2-service-item:hover .hv2-service-icon {
+  animation: jiggle 0.6s ease-in-out;
+}
+
+/* Service Title - Heading text in the header */
+.hv2-service-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #f0f0f0;
+  margin: 0;
+}
+
+/* Service Description - Collapsible content area
+   Hidden by default (max-height: 0), expands on hover
+   This replaces the modal popup from the previous design
+   Uses max-height transition for smooth expand/collapse animation */
+.hv2-service-description {
+  font-size: 1rem;
+  line-height: 1.7;
+  color: #333;
+  margin: 0;
+  padding: 0 2rem;
+  max-height: 0;  /* Collapsed state - content hidden */
+  overflow: hidden;
+  transition: max-height 0.4s ease, padding 0.4s ease;
+}
+
+/* Expanded state - description becomes visible on card hover */
+.hv2-service-item:hover .hv2-service-description {
+  max-height: 500px;  /* Large enough for any description */
+  padding: 2rem;
+}
+
+/* Bold text styling within descriptions - uses brand purple color */
+.hv2-service-description strong {
+  color: #310956;
+  font-weight: 600;
+}
+
+/* Services CTA - "Learn More" button container
+   Added margin-top: 1rem (was previously not explicitly set) */
+.hv2-services-cta {
+  text-align: center;
+  margin-top: 1rem;
+}
+
+/* Services Grid Responsive - Stack to single column on smaller screens */
+@media (max-width: 768px) {
+  .hv2-services-grid {
+    grid-template-columns: 1fr;  /* Single column on mobile */
+  }
+}
+
+/* ============================================
+   SERVICE MODAL
+   ============================================ */
+
+.hv2-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 20px;
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.hv2-modal-content {
+  background: linear-gradient(to bottom, #ffffff 0%, #dce0f0 100%);
+  border-radius: 16px;
+  padding: 40px;
+  max-width: 600px;
+  width: 100%;
+  position: relative;
+  box-shadow: 0 20px 60px rgba(49, 9, 86, 0.3);
+  animation: slideUp 0.3s ease;
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(50px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.hv2-modal-close {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  background: transparent !important;
+  border: none;
+  outline: none;
+  font-size: 2.5rem;
+  color: #ffffff;
+  cursor: pointer;
+  line-height: 1;
+  padding: 0;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 0.3s ease;
+}
+
+.hv2-modal-close:hover {
+  color: #999;
+  background: transparent !important;
+}
+
+.hv2-modal-close:focus {
+  background: transparent !important;
+  outline: none;
+}
+
+.hv2-modal-title {
+  color: #f0f0f0;
+  background: linear-gradient(135deg, #4a3668 0%, #3a2656 100%);
+  font-size: 2rem;
+  margin: -40px -40px 1.5rem -40px;
+  padding: 2rem 40px;
+  font-weight: 600;
+  border-radius: 16px 16px 0 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  border-bottom: 2px solid #6b4a9a;
+}
+
+.hv2-modal-icon {
+  font-size: 1.8rem;
+  flex-shrink: 0;
+  color: #ff9800;
+  background: linear-gradient(135deg, #ff9800 0%, #ffa726 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.hv2-modal-description {
+  color: #333;
+  font-size: 1.1rem;
+  line-height: 1.8;
+  margin: 0;
+}
+
+/* ============================================
+   SLIDER SECTION
+   ============================================ */
+
+.hv2-slider-section {
+  padding: 0;
+  background: #ffffff;
+  text-align: center;
+  border-top: 3px solid #1e3a8a;
+  border-bottom: 3px solid #1e3a8a;
+}
+
+.hv2-slider-section .hv2-container {
+  max-width: 100%;
+  padding: 60px 0;
+}
+
+.hv2-section-title {
+  font-family: 'Poppins', sans-serif;
+  font-size: 2.5rem;
+  margin: 0;
+  padding: 2.5rem 20px;
+  color: #ffffff;
+  background: linear-gradient(135deg, rgb(52, 73, 94) 0%, rgb(44, 62, 80) 50%, rgb(26, 37, 47) 100%);
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  text-align: center;
+}
+
+.hv2-section-title.inverted {
+  background: #ffffff;
+  color: rgb(44, 62, 80);
+  text-shadow: none;
+}
+
+.hv2-slider-container {
+  display: flex;
+  overflow-x: auto;
+  gap: 2rem;
+  padding: 2rem 20px;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+  scroll-behavior: smooth;
+  justify-content: flex-start;
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE and Edge */
+}
+
+.hv2-slider-container::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Opera */
+}
+
+.hv2-slider-item {
+  flex: 0 0 300px;
+  min-width: 450px;
+  max-width: 350px;
+  scroll-snap-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  text-align: center;
+}
+
+/* Responsive carousel behavior */
+@media (max-width: 1400px) {
+  .hv2-slider-item {
+    flex: 0 0 280px;
+    min-width: 230px;
+  }
+}
+
+@media (max-width: 1200px) {
+  .hv2-slider-item {
+    flex: 0 0 260px;
+    min-width: 220px;
+  }
+}
+
+@media (max-width: 992px) {
+  .hv2-slider-item {
+    flex: 0 0 240px;
+    min-width: 200px;
+  }
+}
+
+@media (max-width: 768px) {
+  .hv2-slider-item {
+    flex: 0 0 220px;
+    min-width: 180px;
+  }
+}
+
+@media (max-width: 480px) {
+  .hv2-slider-item {
+    flex: 0 0 calc(90% - 1rem);
+    min-width: 200px;
+    max-width: 100%;
+  }
+}
+
+.hv2-slider-image {
+  width: 100px;
+  height: 100px;
+  object-fit: contain;
+  margin-bottom: 10px;
+}
+
+.hv2-slider-text {
+  font-size: 16px;
+  font-weight: bold;
+  color: #000;
+  height: 1rem;
+}
+
+/* ============================================
+   FAQ SECTION
+   ============================================ */
+
+.hv2-faq-section {
+  padding: 0;
+  background: #fff;
+  border-top: 3px solid #1e3a8a;
+  border-bottom: 3px solid #1e3a8a;
+}
+
+.hv2-faq-section .hv2-container {
+  padding: 60px 20px;
+}
+
+.hv2-faq-header {
+  text-align: center;
+  margin-bottom: 3rem;
+}
+
+.hv2-faq-title {
+  font-size: 2rem;
+  color: #FFF;
+  margin-bottom: 1rem;
+  background: #310956;
+  padding: 1rem;
+  border-radius: 10px;
+}
+
+.hv2-faq-subtitle {
+  color: #FFF;
+  font-size: 1.1rem;
+  background: #310956;
+  padding: 0.5rem 1rem;
+  border-radius: 10px;
+  display: inline-block;
+}
+
+.hv2-faq-list {
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.hv2-faq-item {
+  margin-bottom: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.hv2-faq-question {
+  padding: 1.5rem;
+  background: #f9f9f9;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-weight: 500;
+  font-size: 1.1rem;
+  color: #333;
+  transition: all 0.3s ease;
+}
+
+.hv2-faq-question:hover {
+  background: #e0dfdf;
+  box-shadow: 0 2px 8px rgba(49, 9, 86, 0.1);
+}
+
+.hv2-faq-icon {
+  font-size: 1.5rem;
+  transition: transform 0.3s;
+  color: #310956;
+  flex-shrink: 0;
+  margin-left: 1rem;
+  font-weight: bold;
+}
+
+.hv2-faq-item.active .hv2-faq-icon {
+  transform: rotate(45deg);
+}
+
+.hv2-faq-answer {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.4s ease, padding 0.4s ease;
+  background: #fff;
+  padding: 0 1.5rem;
+}
+
+.hv2-faq-item.active .hv2-faq-answer {
+  max-height: 500px;
+  padding: 1.5rem;
+}
+
+.hv2-faq-answer p {
+  color: #666;
+  line-height: 1.8;
+  margin: 0;
+}
+
+/* ============================================
+   CONTACT SECTION
+   ============================================ */
+
+.hv2-contact-section {
+  padding: 60px 0;
+  background: #fff;
+}
+
+.hv2-form {
+  width: 100%;
+  max-width: 900px;
+  margin: 0 auto 20px;
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  background-color: #f9f9f9;
+}
+
+.hv2-form h2 {
+  margin-bottom: 20px;
+  color: #310956;
+  text-align: center;
+}
+
+.hv2-form-row {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 10px;
+}
+
+.hv2-form-row .hv2-form-group {
+  flex: 1;
+  margin-bottom: 0;
+}
+
+.hv2-form-group {
+  margin-bottom: 10px;
+}
+
+.hv2-form-label {
+  display: block;
+  margin-bottom: 2px;
+  font-weight: bold;
+  color: #333;
+}
+
+.hv2-form-input,
+.hv2-form-textarea {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-family: 'Roboto', sans-serif;
+  font-size: 1rem;
+}
+
+.hv2-form-textarea {
+  min-height: 100px;
+  resize: vertical;
+}
+
+.hv2-form button[type="submit"] {
+  /*background-color: #310956; */
+  color: white;
+  border: none;
+  cursor: pointer;
+  padding: 15px;
+  width: 50%;
+  border-radius: 5px;
+  font-size: 1rem;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  display: block;
+  margin: 0 auto;
+}
+
+.hv2-form button[type="submit"]:hover {
+  background-color: #4b148b;
+  box-shadow: 0 4px 12px rgba(49, 9, 86, 0.3);
+}
+
+.hv2-form-error {
+  color: #e74c3c;
+  margin-bottom: 1em;
+  padding: 0.75rem;
+  background: #ffeaea;
+  border-radius: 6px;
+}
+
+.hv2-form-success {
+  color: #27ae60;
+  margin-bottom: 1em;
+  padding: 0.75rem;
+  background: #eafff0;
+  border-radius: 6px;
+}
+
+/* ============================================
+   FOOTER
+   ============================================ */
+
+.hv2-footer {
+  background: #2c3e50;
+  color: white;
+  padding: 1.5rem 0 1rem;
+}
+
+.hv2-footer-content {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+  align-items: center;
+  text-align: center;
+}
+
+.hv2-footer-left {
+    flex: 1;
+    text-align: center;
+}
+
+.hv2-footer-logo {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: white;
+  border-radius: 50%;
+  padding: 20px;
+  width: 150px;
+  height: 150px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.hv2-footer-logo img {
+  /*height: 73px;*/
+  width: 110px;
+  object-fit: contain;
+}
+
+.hv2-footer-tagline {
+  font-size: 1.1rem;
+  margin-top: 1rem;
+}
+
+.hv2-social-icons {
+  display: flex;
+  gap: 1rem;
+  text-align: center;
+}
+
+.hv2-social-link {
+  color: white;
+  font-size: 1.5rem;
+  text-decoration: none;
+  transition: color 0.3s;
+}
+
+.hv2-social-link:hover {
+  color: #310956;
+}
+
+.hv2-copyright {
+    flex: 1;
+    text-align: center;
+  }
+
+.hv2-copyright p {
+  margin: 5px 0;
+  font-size: 0.9rem;
+}
+
+.hv2-footer-links {
+  margin: 10px 0;
+}
+
+.hv2-footer-link {
+  color: white;
+  text-decoration: none;
+  transition: color 0.3s;
+}
+
+.hv2-footer-link:hover {
+  color: #b0b0b0;
+  text-decoration: underline;
+}
+
+/* ============================================
+   RESPONSIVE
+   ============================================ */
+
+@media (min-width: 768px) {
+  .hv2-footer-content {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: flex-start;
+    text-align: left;
+  }
+
+  .hv2-footer-left {
+    flex: 1;
+  }
+
+  .hv2-copyright {
+    flex: 1;
+    text-align: center;
+  }
+
+  .hv2-social-icons {
+    flex: 1;
+    display: flex;
+    justify-content: flex-end;
+    text-align: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .hv2-hero-title {
+    font-size: 1.5rem;
+  }
+  
+  .hv2-card {
+    min-height: auto;
+  }
+  
+  .hv2-section-title {
+    font-size: 1.5rem;
+  }
+}
+
+/* Fade in animation */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}

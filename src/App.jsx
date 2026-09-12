@@ -18,6 +18,7 @@ import PasswordResetCheckEmail from "./Pages/PasswordResetCheckEmail";
 import PasswordResetConfirm from "./Pages/PasswordResetConfirm";
 import OAuthCallback from "./Pages/OAuthCallback";
 import Agent from "./Pages/Agent";
+import HomeV2 from "./Pages/HomeV2";
 import { UserProvider } from './contexts/UserContext';
 import { DomainProvider, useDomain } from './contexts/DomainContext';
 
@@ -32,6 +33,9 @@ function AppRoutes() {
       <Routes>
         <Route element={<HomeLayout />}>
           <Route path="/" element={isPropel ? <Agent /> : <Home />} />
+          {/* Unlisted mock of the home page redesign. Not linked from anywhere,
+              noindex, and safe to change without touching the live home page. */}
+          <Route path="/preview/home-v2" element={<HomeV2 />} />
           <Route path="/data-deletion" element={<DataDeletion />} />
           <Route path="/cookies" element={<CookiePolicy />} />
           <Route path="/terms-and-conditions" element={<TermsAndConditions />} />
