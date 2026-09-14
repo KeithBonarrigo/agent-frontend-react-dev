@@ -1,0 +1,372 @@
+{
+  "meta": {
+    "title": "BotWerx - Plataforma de agentes de IA",
+    "description": "BotWerx es una plataforma de agentes de IA que automatiza la atención a clientes, la agenda y la gestión de prospectos para tu negocio."
+  },
+  "nav": {
+    "home": "Inicio",
+    "benefits": "Beneficios",
+    "solutions": "Soluciones",
+    "faq": "Preguntas Frecuentes",
+    "contactUs": "Contáctanos",
+    "myDashboard": "Mi Panel",
+    "logIn": "Iniciar Sesión",
+    "logOut": "Cerrar Sesión",
+    "agent": "Agent",
+    "how": "Cómo funciona"
+  },
+  "tabs": {
+    "bidconnect": "BidConnect",
+    "botwerx": "Botwerx Bot",
+    "heading": "Nuestros productos:"
+  },
+  "bidconnect": {
+    "hero": {
+      "titleLead": "Organiza una subasta benéfica moderna y en tiempo real",
+      "titleEm": "con Salesforce y StoreConnect",
+      "subtitle": "BidConnect le da a tu organización su propio sitio de subastas con tu marca, donde los postores compiten en vivo desde su teléfono, la puja automática se encarga del ir y venir, y los avisos instantáneos mantienen a todos atentos hasta el cierre. Por detrás, todo se sincroniza directamente con Salesforce: los contactos, los artículos y las pujas ganadoras llegan solos, para que tu equipo se concentre en el evento y no en la hoja de cálculo.",
+      "storePre": "El catálogo y el pago funcionan con ",
+      "storeLink": "StoreConnect",
+      "storePost": ", así que cada ganador recibe un solo carrito y un solo enlace de pago, sin importar cuántos artículos haya ganado.",
+      "ctaPrimary": "Crea tu subasta",
+      "ctaSecondary": "Iniciar sesión"
+    },
+    "demo": {
+      "url": "lakeside-rescue.bidconnect.app",
+      "org": "Lakeside Animal Rescue",
+      "closes": "Cierra en 02:14:09",
+      "statusWinning": "Ganando",
+      "statusOutbid": "Superada",
+      "items": [
+        {
+          "icon": "🍽",
+          "name": "Ruta por restaurantes locales",
+          "meta": "7 pujas · Gastronomía",
+          "amount": "$105",
+          "amountLabel": "tu puja",
+          "status": "winning"
+        },
+        {
+          "icon": "🧵",
+          "name": "Colcha hecha a mano",
+          "meta": "12 pujas · Hogar",
+          "amount": "$240",
+          "amountLabel": "puja actual",
+          "status": "outbid"
+        },
+        {
+          "icon": "🏈",
+          "name": "Balón firmado",
+          "meta": "4 pujas · Deportes",
+          "amount": "$180",
+          "amountLabel": "puja actual",
+          "status": "winning"
+        }
+      ],
+      "alertTitle": "Aviso de puja superada enviado",
+      "alertItem": "Colcha hecha a mano · $240",
+      "alertSub": "Por mensaje y correo, en menos de un segundo"
+    },
+    "features": {
+      "f1Title": "Pujas en tiempo real",
+      "f1Text": "Pujas automáticas, desempates y avisos instantáneos cuando alguien te supera. Tus simpatizantes fijan un tope y lo dejan correr, y cada quien se entera en el momento en que pierde la delantera, así los artículos siguen moviéndose sin que nadie tenga que recorrer el salón.",
+      "f2Title": "Nativo de Salesforce",
+      "f2Text": "Los contactos, los artículos y las pujas se sincronizan automáticamente. La actividad de cada participante, no solo la de quienes ganan, se registra en tu propia org, así que el público que construiste sigue ahí el próximo año.",
+      "f3Title": "Tu propia subasta",
+      "f3Text": "Un sitio aislado y con tu marca para tu organización. Tu subdominio, tu logo y tu zona horaria, sin datos de ninguna otra organización cerca."
+    },
+    "record": {
+      "title": "Casi todo el software de subastas solo recuerda a quien ganó.",
+      "text": "Todos los demás —quien pujó una vez y se detuvo, quien persiguió un artículo hasta el último minuto y lo perdió— desaparecen cuando cierra el evento. BidConnect guarda la actividad de cada participante en cada artículo y la registra en Salesforce, junto con el resto de los datos de tus donantes, de forma permanente: cuántas veces pujó cada persona, hasta dónde estaba dispuesta a llegar, qué disputó y qué dejó pasar. Ese historial es tuyo para conservarlo y aprovecharlo: qué artículos y categorías generaron competencia real, cuáles no despegaron y a quién llamar antes de armar el catálogo del próximo año. Analizado, visualizado y reportado hasta el nivel de un solo postor y un solo artículo."
+    },
+    "how": {
+      "title": "Cuatro pasos para una subasta en vivo.",
+      "intro": "Sin hojas de pujas en papel, sin tablillas y sin hojas de cálculo después. Configúrala, comparte el enlace y el evento funciona solo.",
+      "s1Num": "PASO 01",
+      "s1Title": "Crea tu organización",
+      "s1Text": "Regístrate y obtén tu propio sitio de subastas con tu marca: tu subdominio, tu logo y tu zona horaria, aislado de cualquier otra organización.",
+      "s2Num": "PASO 02",
+      "s2Title": "Conecta tu org",
+      "s2Text": "Vincula BidConnect con tu org de Salesforce, con StoreConnect a cargo del catálogo y el pago. A partir de ahí, los contactos, los artículos y las pujas se sincronizan solos.",
+      "s3Num": "PASO 03",
+      "s3Title": "Agrega tus artículos",
+      "s3Text": "Asigna a cada artículo una categoría y una puja inicial, y define cuándo abren y cierran las pujas. Tus simpatizantes pueden ver el catálogo antes de que empiecen, con los precios ocultos hasta entonces.",
+      "s4Num": "PASO 04",
+      "s4Title": "Comparte el enlace",
+      "s4Text": "Tus simpatizantes pujan desde su teléfono, sin instalar ninguna app. La puja automática y los avisos de puja superada mantienen los artículos en movimiento, y al cierre cada ganador recibe un solo enlace de pago mientras cada puja queda registrada en Salesforce."
+    },
+    "access": {
+      "newTitle": "¿Primera vez en BidConnect?",
+      "newCta": "Crea tu subasta",
+      "signinTitle": "¿Ya tienes cuenta?",
+      "signinCta": "Iniciar sesión"
+    },
+    "faq": {
+      "title": "Preguntas frecuentes",
+      "items": [
+        {
+          "question": "Las subastas consumen mucho tiempo del personal y los voluntarios. ¿Esto realmente lo reduce?",
+          "answer": "Considerablemente, y justo donde más duele. La noche funciona sola: sin hojas de pujas en papel, sin nadie sumando totales en una tablilla, sin perseguir a los asistentes al cierre y sin capturar a los ganadores en una hoja de cálculo y luego en tu base de datos. Las pujas, el cierre, el aviso a los ganadores, los enlaces de pago y el registro en Salesforce ocurren sin que nadie tenga que estar encima. Tu equipo pasa la noche conversando con simpatizantes en lugar de administrar una subasta. Conseguir los artículos sigue siendo tarea tuya, porque es trabajo de relaciones; todo lo que viene después queda resuelto."
+        },
+        {
+          "question": "Solo unos cuantos invitados adinerados llegan a pujar. ¿Cómo amplía esto la participación?",
+          "answer": "Las pujas se hacen en un navegador web, así que no se limitan a quien está junto a la mesa. Quienes vinieron a convivir pueden pujar desde donde estén, quienes no pudieron asistir también pueden participar, y la puja automática permite fijar un límite y dejar de estar pendiente. En la práctica, más personas pujan por más artículos durante todo el periodo de la subasta, en lugar de unas cuantas disputas al frente del salón."
+        },
+        {
+          "question": "Los artículos rara vez se venden por encima de su precio de lista. ¿Por qué cambiaría eso?",
+          "answer": "El precio sale de la competencia, y la competencia necesita que la gente sepa que la superaron mientras todavía hay tiempo de responder. Eso es exactamente lo que automatiza BidConnect: los avisos de puja superada salen en segundos, no con el siguiente anuncio desde el escenario, y la puja automática mantiene en la contienda a quien va en serio aunque esté cenando. Elimina la razón más común por la que una puja se queda corta —nadie se dio cuenta— y mantiene los artículos en movimiento hasta el cierre."
+        },
+        {
+          "question": "¿Cómo sabemos si realmente valió la pena hacer la subasta?",
+          "answer": "Porque te quedas con la evidencia. No solo el total recaudado, sino qué artículos generaron competencia real y cuáles recibieron una sola puja, qué categorías atrajeron, quién pujó y se detuvo, y quién llegó lejos y perdió. Todo está en tu org de Salesforce en cuanto cierra la subasta, así que el catálogo, los montos a solicitar y la lista de invitados del próximo año se deciden con base en lo que realmente pasó y no en lo que la gente recuerda."
+        },
+        {
+          "question": "¿Qué sigue requiriendo trabajo de nuestra parte?",
+          "answer": "Conseguir los artículos, y eso debe seguir siendo tuyo: es trabajo de relaciones y ahí es donde tu equipo aporta algo que ningún software puede. Lo que hace BidConnect es asegurar que ese esfuerzo rinda más allá de una noche. Cada artículo que consigues tiene su página en el catálogo, un registro de pujas en vivo y una entrada permanente en tu org de Salesforce que muestra exactamente quién lo quería y con cuántas ganas lo persiguió. La noche funciona sola, y lo que produce te sigue sirviendo el próximo año."
+        },
+        {
+          "question": "¿En qué se diferencia de otro software de subastas?",
+          "answer": "La mayoría de los sistemas registran la puja ganadora y descartan todo lo demás. BidConnect guarda la actividad de cada participante en cada artículo —con qué frecuencia pujó, hasta dónde estaba dispuesto a llegar, qué disputó y perdió— y la registra en tu org de Salesforce, donde se queda. Terminas la noche con tu público, no solo con tus recibos."
+        },
+        {
+          "question": "¿Necesitamos Salesforce para usarlo?",
+          "answer": "Sí, y esa es la ventaja. BidConnect funciona sobre tu propia org de Salesforce con <a href=\"https://storeconnect.com/\" target=\"_blank\" rel=\"noopener noreferrer\">StoreConnect</a> para el catálogo y el pago, así que tus artículos, precios y contactos viven donde tu equipo ya trabaja. Todo lo que produce la subasta regresa al mismo lugar, lo que significa nada que exportar, nada que importar y nada que conciliar la semana siguiente."
+        },
+        {
+          "question": "¿Cómo participan los postores? ¿Hay que instalar una app?",
+          "answer": "No hay app ni nada que tus simpatizantes tengan que aprender. Abren la dirección web de tu subasta en un teléfono, tableta o laptop, se registran con un correo electrónico, lo confirman y pujan. Confirmar el correo es obligatorio antes de la primera puja, así que la lista de postores que llega a tu org de Salesforce es real desde el principio."
+        },
+        {
+          "question": "¿Qué es la puja automática (proxy)?",
+          "answer": "El postor fija lo máximo que está dispuesto a pagar en lugar de estar vigilando el artículo. BidConnect puja en su nombre, solo lo necesario, y se detiene en su límite. Así siguen en la contienda quienes están comiendo, conversando o ni siquiera están en el salón. Los empates se resuelven con un monto de desempate, así que dos máximos idénticos nunca se atoran."
+        },
+        {
+          "question": "¿Cómo se enteran los postores cuando alguien los supera?",
+          "answer": "Por correo electrónico, a los pocos segundos de perder la delantera, con un enlace directo al artículo. También puedes agregar avisos por mensaje de texto conectando un proveedor de mensajería a tu cuenta. Los mensajes de texto son opcionales y quedan bajo el control del postor: marca una casilla, da un número de celular y puede desactivarlos desde la página de su cuenta cuando quiera."
+        },
+        {
+          "question": "¿Qué pasa cuando cierra la subasta?",
+          "answer": "Todo se resuelve solo. Se determina quién gana cada artículo y luego todo se agrupa en un solo carrito por persona, así que quien gana cuatro cosas paga una sola vez. Ese carrito se envía a <a href=\"https://storeconnect.com/\" target=\"_blank\" rel=\"noopener noreferrer\">StoreConnect</a> y cada ganador recibe por correo su enlace de pago, que solo esa persona puede abrir. Sin filas para pagar y sin nadie leyendo nombres de una tablilla."
+        },
+        {
+          "question": "¿Una organización puede hacer más de una subasta?",
+          "answer": "Sí, y los resultados se mantienen separados. Cada subasta tiene su propio periodo, y cada puja y registro de participación queda ligado a la subasta en la que ocurrió, así que el historial de un postor recurrente se acumula año con año en lugar de sobrescribirse. Para tu tercer evento puedes ver quién puja siempre, quién se ha ido alejando y qué persigue cada quien."
+        },
+        {
+          "question": "¿Qué vemos exactamente en Salesforce?",
+          "answer": "Tus postores como Contactos, un registro por postor, por artículo y por subasta con su número de pujas, su tope y si ganó, además de un resumen por persona por subasta. Abre un Contacto y verás las subastas en las que participó, qué persiguió y qué ganó. Se puede reportar como cualquier otro dato de Salesforce, así que alimenta los mismos tableros y campañas que tu equipo ya usa."
+        },
+        {
+          "question": "¿Tenemos nuestra propia dirección web?",
+          "answer": "Sí. Cada organización tiene su propio subdominio con su marca, su logo y su zona horaria, aislado de todas las demás organizaciones de la plataforma. Tus simpatizantes ven tu subasta y tu nombre en todo momento, sin nada que sugiera un sistema compartido detrás."
+        },
+        {
+          "question": "¿Y si solo hacemos un evento al año?",
+          "answer": "Es algo común y el precio lo contempla. Pon la cuenta en modo inactivo entre eventos y todo se conserva —tu conexión con Salesforce, tus artículos, tus resultados anteriores— con un costo mensual mucho menor. Un clic la reactiva sin nada que volver a configurar, así que la subasta del próximo año empieza donde terminó la anterior."
+        },
+        {
+          "question": "¿En qué época del año conviene hacerla?",
+          "answer": "AFP Global publicó un análisis de más de 4,200 subastas de organizaciones sin fines de lucro y más de tres millones de pujas realizadas durante 2024. Marzo, abril y noviembre fueron los meses con mayor recaudación, mientras que los eventos de verano y de principios del invierno se quedaron atrás. Sin embargo, el precio promedio por artículo alcanzó su punto más alto en diciembre y enero, así que una subasta navideña más pequeña puede incluir lotes de mayor valor. Son promedios del sector, y tus simpatizantes no son el sector. Cada subasta aquí tiene su propio inicio y fin, así que puedes mover la fecha libremente y comparar un año con otro con tus propios números."
+        },
+        {
+          "question": "¿Cuántos artículos deberíamos publicar?",
+          "answer": "La regla práctica de ese mismo análisis es un artículo por cada cuatro asistentes. Los dos extremos te cuestan: muy pocos dejan dinero sobre la mesa, y demasiados reparten a los mismos postores entre más lotes, así que nada se disputa. BidConnect te da lo necesario para acertar con tu propio público: cada artículo lleva su propio conteo de pujas, así que después del evento puedes ver con precisión qué lotes atrajeron a muchos y cuáles recibieron una puja por cortesía, y armar el siguiente catálogo con base en eso."
+        },
+        {
+          "question": "¿Qué tipo de artículos funcionan mejor?",
+          "answer": "Los datos del sector los separan de forma útil. Mascotas, viajes y experiencias, y vinos y gastronomía reciben la mayor cantidad de pujas. Deportes y pasatiempos, experiencias únicas como derechos de nombre o un día detrás de escena, y arte y entretenimiento se venden por los montos más altos. Son dos funciones distintas, y un buen catálogo cumple ambas: artículos que ponen a competir al salón y artículos que sostienen el total. Aquí cada artículo conserva su categoría, y esa categoría viaja con cada registro de participación a Salesforce, así que después de tu primer evento puedes responder esta pregunta con tus propios resultados en lugar de un promedio."
+        },
+        {
+          "question": "¿Cuál debería ser la puja inicial?",
+          "answer": "La recomendación habitual es abrir entre el 30 y el 50 por ciento del valor del artículo, y cada artículo tiene una puja inicial que tú defines, así que es fácil aplicarla. A partir de ahí, el ritmo lo marcan tus postores: pueden indicar un monto, subir lo que quieran o fijar un máximo y dejar que la puja automática los lleve. Nada limita un aumento a un incremento predefinido, así que un artículo que se prende puede subir libremente. Abre lo bastante bajo para invitar la primera puja y la competencia hará el resto."
+        },
+        {
+          "question": "¿De verdad pujar en línea es mejor que las hojas de pujas en papel?",
+          "answer": "Notablemente. Ese análisis sitúa las pujas en línea alrededor de un 30 por ciento por encima del papel en recaudación —es una tendencia más que una cifra exacta, ya que los registros provienen de una sola plataforma—, pero el mecanismo es bastante claro. Una hoja de pujas sobre una mesa solo la ve quien pasa junto a ella. Un artículo en un catálogo en vivo lo ve todo el mundo a la vez, incluidas las personas que no pudieron venir, y ese mismo efecto está detrás de una puja ganadora promedio de casi $380 en esos tres millones de pujas. BidConnect mantiene cada artículo frente a cada simpatizante durante todo el periodo de tu subasta."
+        },
+        {
+          "question": "¿Los simpatizantes pueden ver el catálogo antes de que abran las pujas?",
+          "answer": "Sí, y vale la pena incluirlo en tu plan. Antes de la hora de inicio que definas, el sitio de tu subasta muestra los artículos con los precios ocultos y las pujas cerradas, así que puedes dirigir a la gente al catálogo real semanas antes en lugar de a una página de espera. Mostrar los artículos con anticipación es una de las prácticas que los datos del sector asocian con mejores resultados, y no cuesta más que el correo."
+        }
+      ]
+    }
+  },
+  "botwerx": {
+    "hero": {
+      "title": "Captura Más Leads con Agentes de IA Avanzados",
+      "titleEm": "sin escribir código",
+      "benefits": {
+        "zeroCode": {
+          "title": "Implementación Sin Código",
+          "description": "Lanza tu agente de IA <strong>en minutos</strong>—sin necesidad de desarrolladores. Nuestra interfaz intuitiva permite que cualquiera construya <strong>automatización poderosa</strong> con una configuración simple de apuntar y hacer clic."
+        },
+        "multiChannel": {
+          "title": "Comunicación Multicanal",
+          "description": "Tu agente de IA trabaja <strong>24/7</strong> en web, WhatsApp, Messenger e Instagram—interactuando con clientes <strong>donde sea que estén</strong>, cuando te necesiten. Más canales próximamente."
+        },
+        "insights": {
+          "title": "Análisis Impulsado por IA",
+          "description": "Conoce <strong>quién te contacta</strong>, de dónde vienen y qué les interesa. Las métricas impulsadas por IA te dan <strong>visibilidad de tus leads</strong> para mejorar el alcance de marketing y la segmentación."
+        },
+        "secure": {
+          "title": "Seguro y Compatible con PCI",
+          "description": "Tus datos están protegidos con <strong>seguridad de nivel empresarial</strong>. Nunca almacenamos información de tarjetas de crédito, y todos los datos personales están <strong>altamente encriptados</strong> para mantener tu negocio y clientes seguros."
+        }
+      }
+    },
+    "slider": {
+      "title": "¿Qué Pueden Hacer los Agentes de IA por Tu Negocio?",
+      "items": {
+        "automate": "Automatiza Conversaciones",
+        "qualify": "Califica Leads al Instante",
+        "handle": "Gestiona Consultas",
+        "scale": "Escala el Soporte Sin Esfuerzo",
+        "personalize": "Personaliza Interacciones",
+        "freeUp": "Libera a Tu Equipo"
+      }
+    },
+    "services": {
+      "title": "Beneficios Adicionales",
+      "learnMore": "Más Información",
+      "items": {
+        "analytics": {
+          "title": "Análisis Impulsado por IA",
+          "description": "<strong>Desbloquea información poderosa sobre el comportamiento de tus clientes.</strong> Accede a métricas personalizadas impulsadas por IA que te ayudan a entender a tus usuarios, rastrear patrones de interacción y <strong>mejorar la segmentación de tu audiencia.</strong> Nuestro panel de análisis inteligente presenta datos accionables, ayudándote a identificar clientes de alto valor, optimizar embudos de conversión y <strong>tomar decisiones basadas en datos</strong> que impulsan el crecimiento."
+        },
+        "support": {
+          "title": "Soporte al Cliente 24/7",
+          "description": "<strong>Nunca más pierdas una consulta de cliente.</strong> Nuestros agentes de IA trabajan las 24 horas, proporcionando respuestas instantáneas a preguntas de clientes en cualquier momento del día o la noche. Ya sea a las 3 PM o 3 AM, tus clientes reciben <strong>asistencia inmediata y útil</strong> que los mantiene comprometidos y satisfechos. Esta disponibilidad continua asegura que <strong>captures cada oportunidad</strong> y mantengas la confianza del cliente, incluso fuera del horario comercial."
+        },
+        "instant": {
+          "title": "Tiempos de Respuesta Instantáneos",
+          "description": "<strong>Despídete de los largos tiempos de espera.</strong> Nuestros agentes de IA responden a consultas de clientes en milisegundos, <strong>reduciendo dramáticamente los tiempos de respuesta de horas o días a segundos.</strong> Este compromiso inmediato mantiene a los clientes interesados, evita que se vayan a la competencia y crea una experiencia fluida que los consumidores modernos esperan. <strong>Las respuestas rápidas llevan a mayores tasas de satisfacción y mayor conversión.</strong>"
+        },
+        "qualification": {
+          "title": "Calificación Automatizada de Leads",
+          "description": "<strong>Deja que la IA maneje el trabajo pesado de calificar leads.</strong> Nuestros agentes inteligentes hacen las preguntas correctas, recopilan información esencial y <strong>automáticamente califican y dirigen leads</strong> según su valor potencial. Esto asegura que tu equipo de ventas <strong>se enfoque solo en prospectos de alta calidad,</strong> ahorrando tiempo y aumentando las tasas de cierre. El sistema aprende de cada interacción, mejorando continuamente su precisión de calificación."
+        },
+        "costs": {
+          "title": "Costos Operativos Reducidos",
+          "description": "<strong>Reduce significativamente tus gastos de servicio al cliente mientras mejoras la calidad.</strong> Los agentes de IA manejan consultas rutinarias a <strong>una fracción del costo de agentes humanos,</strong> permitiéndote escalar el soporte sin escalar proporcionalmente el personal. <strong>Reduce costos generales</strong> incluyendo capacitación, beneficios e infraestructura mientras mantienes o incluso mejoras la calidad del servicio. Los ahorros se acumulan a medida que tu negocio crece."
+        },
+        "scalable": {
+          "title": "Interacción Escalable con Clientes",
+          "description": "<strong>Maneja miles de conversaciones simultáneas sin esfuerzo.</strong> A diferencia de los equipos humanos que requieren contratación y capacitación para escalar, los agentes de IA pueden <strong>acomodar instantáneamente picos de tráfico, aumentos estacionales o crecimiento rápido del negocio.</strong> Ya sea que manejes 10 o 10,000 conversaciones, <strong>mantén la misma experiencia de alta calidad para cada cliente</strong> sin costos o retrasos adicionales."
+        }
+      }
+    },
+    "faq": {
+      "title": "Preguntas Frecuentes",
+      "items": [
+        {
+          "question": "¿Puedo probarlo antes de comprometerme con un plan de pago?",
+          "answer": "Absolutamente. Ofrecemos una <strong>prueba gratuita</strong> para que puedas experimentar exactamente cómo funciona un agente de IA para tu negocio <strong>antes de hacer cualquier compromiso financiero</strong>. Configura tu agente, pruébalo con escenarios reales y ve los resultados por ti mismo. Estamos seguros de que una vez que veas el <strong>tiempo ahorrado y los leads capturados</strong>, entenderás el valor inmediatamente."
+        },
+        {
+          "question": "¿Los agentes de IA harán que mis interacciones con clientes se sientan impersonales?",
+          "answer": "<strong>Para nada</strong>. Los agentes de IA modernos están diseñados para proporcionar <strong>experiencias cálidas y conversacionales</strong> que se sienten naturales y útiles. Pueden recordar preferencias del cliente, usar lenguaje amigable y <strong>transferir sin problemas a agentes humanos</strong> cuando se necesita un toque personal. Muchos clientes realmente prefieren la <strong>asistencia instantánea y sin juicios</strong> que la IA proporciona para preguntas rutinarias, mientras tu equipo permanece disponible para situaciones complejas."
+        },
+        {
+          "question": "¿Qué pasa si la IA da información incorrecta a mis clientes?",
+          "answer": "Los agentes de IA están <strong>entrenados específicamente con la información de tu negocio</strong> y configurados con límites para mantenerse dentro de sus conocimientos. Cuando encuentran preguntas fuera de su alcance, están diseñados para <strong>reconocer limitaciones y escalar al soporte humano</strong> en lugar de adivinar. Mantienes <strong>control total</strong> sobre la información que comparten, y el monitoreo continuo ayuda a identificar y corregir cualquier problema rápidamente."
+        },
+        {
+          "question": "¿Mi negocio es demasiado pequeño para beneficiarse de agentes de IA?",
+          "answer": "<strong>Los agentes de IA son particularmente valiosos para pequeñas empresas</strong> porque te permiten competir con empresas más grandes sin contratar personal adicional. Un emprendedor individual puede ofrecer <strong>soporte 24/7</strong>, y un equipo pequeño puede manejar volúmenes de consultas que de otra manera requerirían múltiples empleados. Nuestros <strong>precios escalonados</strong> significan que solo pagas por lo que necesitas, haciendo la IA accesible sin importar el tamaño de tu negocio."
+        },
+        {
+          "question": "¿Cuánto tiempo toma configurar un agente de IA?",
+          "answer": "La mayoría de los negocios tienen su agente de IA <strong>activo en minutos, no semanas</strong>. Nuestra plataforma sin código te permite configurar tu agente simplemente proporcionando la información y preferencias de tu negocio. <strong>No se requiere experiencia técnica</strong>, no hay desarrolladores que contratar y no hay integraciones complejas que manejar. Puedes empezar a capturar leads y responder preguntas de clientes <strong>el mismo día que te registras</strong>."
+        },
+        {
+          "question": "¿Perderé control sobre mis relaciones con clientes?",
+          "answer": "Ganas <strong>más control, no menos</strong>. Los agentes de IA capturan información detallada sobre cada interacción, dándote información sobre qué preguntan los clientes, qué necesitan y de dónde vienen. <strong>Tú estableces las reglas</strong> de cómo responde la IA, cuándo escala y qué información recopila. <strong>Cada conversación se registra y es accesible</strong>, así que siempre estás informado sobre lo que sucede con tus clientes."
+        },
+        {
+          "question": "¿Qué pasa cuando la IA no puede responder una pregunta?",
+          "answer": "<strong>La escalación inteligente está integrada en cada agente de IA.</strong> Cuando una pregunta está fuera del conocimiento de la IA o un cliente solicita asistencia humana, la conversación se <strong>transfiere sin problemas a tu equipo con contexto completo</strong>. La IA puede recopilar información de contacto y programar llamadas de retorno, asegurando que <strong>ninguna consulta se pierda</strong> incluso fuera del horario comercial."
+        },
+        {
+          "question": "¿Los agentes de IA son seguros? ¿Qué pasa con los datos de mis clientes?",
+          "answer": "La seguridad es fundamental en nuestra plataforma. Todos los datos están <strong>encriptados en tránsito y en reposo</strong>, nunca almacenamos información de tarjetas de pago y mantenemos estricto cumplimiento con regulaciones de privacidad. <strong>Los datos de tus clientes te pertenecen</strong> y nunca se usan para entrenar modelos ni se comparten con terceros. Realizamos <strong>auditorías de seguridad regulares</strong> para asegurar que tu información permanezca protegida."
+        },
+        {
+          "question": "¿Mis clientes sabrán que están hablando con una IA?",
+          "answer": "<strong>La transparencia genera confianza.</strong> Nuestros agentes de IA pueden presentarse honestamente mientras proporcionan un excelente servicio. Las investigaciones muestran que los clientes aprecian saber que están interactuando con IA cuando significa <strong>respuestas más rápidas y disponibilidad 24/7</strong>. La clave es entregar valor genuino—los clientes se preocupan mucho más por <strong>obtener sus preguntas respondidas rápidamente</strong> que si un humano o IA los está ayudando."
+        },
+        {
+          "question": "¿Qué pasa si la tecnología de IA cambia y mi inversión se vuelve obsoleta?",
+          "answer": "Nuestra plataforma <strong>evoluciona continuamente con los avances de IA</strong>, y tu suscripción incluye todas las actualizaciones automáticamente. A medida que la tecnología mejora, tu agente de IA se vuelve más inteligente <strong>sin ningún esfuerzo o costo adicional</strong> de tu parte. No estás atado a tecnología obsoleta—estás asociándote con una plataforma comprometida a mantenerte <strong>a la vanguardia de las capacidades de IA</strong>."
+        }
+      ]
+    }
+  },
+  "contact": {
+    "title": "Contáctanos",
+    "form": {
+      "name": "Nombre",
+      "email": "Correo Electrónico",
+      "phone": "Teléfono",
+      "company": "Empresa",
+      "website": "Sitio Web",
+      "comments": "Comentarios",
+      "submit": "Enviar"
+    },
+    "success": "¡Mensaje enviado exitosamente!",
+    "error": "Error del servidor. Por favor intenta de nuevo más tarde."
+  },
+  "footer": {
+    "address": "Botwerx, LLC - 45 S 3rd St. Pacific Beach, WA 98571-5017",
+    "col1Title": "Producto",
+    "dashboard": "Panel",
+    "col2Title": "Empresa",
+    "contact": "Contáctanos",
+    "col3Title": "Legal",
+    "privacy": "Privacidad",
+    "terms": "Términos y condiciones",
+    "cookies": "Política de cookies",
+    "dataDeletion": "Eliminación de datos",
+    "allRightsReserved": "Todos los Derechos Reservados",
+    "poweredByPre": "Esta aplicación funciona con",
+    "poweredByLink": "la API Claude de Anthropic"
+  },
+  "login": {
+    "meta": {
+      "title": "Iniciar sesión - BotWerx"
+    },
+    "backHome": "Volver al inicio",
+    "pageTitle": {
+      "login": "Iniciar Sesión",
+      "createAccount": "Crear Cuenta"
+    },
+    "placeholders": {
+      "email": "Correo electrónico",
+      "password": "Contraseña",
+      "confirmPassword": "Confirmar Contraseña",
+      "firstName": "Nombre",
+      "lastName": "Apellido"
+    },
+    "buttons": {
+      "logIn": "Iniciar Sesión",
+      "createAccount": "Crear Cuenta"
+    },
+    "links": {
+      "forgotPassword": "¿Olvidaste tu contraseña?"
+    },
+    "prompts": {
+      "noAccount": "¿No tienes una cuenta?",
+      "hasAccount": "¿Ya tienes una cuenta?"
+    },
+    "errors": {
+      "passwordMismatch": "Las contraseñas no coinciden",
+      "signupFailed": "Error al registrarse",
+      "serverError": "❌ Error del servidor.",
+      "resetFailed": "Error al enviar el correo de restablecimiento",
+      "serverErrorRetry": "Error del servidor. Por favor, inténtalo de nuevo."
+    },
+    "success": {
+      "accountCreated": "✅ ¡Cuenta Creada!",
+      "switchingToLogin": "Cambiando a inicio de sesión..."
+    }
+  }
+}

@@ -9,6 +9,7 @@ import enSignup from './locales/en/signup.json';
 import enModels from './locales/en/models.json';
 import enIntegrations from './locales/en/integrations.json';
 import enHome from './locales/en/home.json';
+import enHomev3 from './locales/en/homev3.json';
 import enConfigurations from './locales/en/configurations.json';
 import enStyling from './locales/en/styling.json';
 
@@ -27,6 +28,7 @@ import esSignup from './locales/es/signup.json';
 import esModels from './locales/es/models.json';
 import esIntegrations from './locales/es/integrations.json';
 import esHome from './locales/es/home.json';
+import esHomev3 from './locales/es/homev3.json';
 import esConfigurations from './locales/es/configurations.json';
 import esStyling from './locales/es/styling.json';
 
@@ -47,6 +49,7 @@ const resources = {
     models: enModels,
     integrations: enIntegrations,
     home: enHome,
+    homev3: enHomev3,
     configurations: enConfigurations,
     styling: enStyling,
 
@@ -66,6 +69,7 @@ const resources = {
     models: esModels,
     integrations: esIntegrations,
     home: esHome,
+    homev3: esHomev3,
     configurations: esConfigurations,
     styling: esStyling,
 
@@ -87,7 +91,7 @@ i18n
     resources,
     fallbackLng: 'en',
     defaultNS: 'common',
-    ns: ['common', 'dashboard', 'signup', 'models', 'integrations', 'home', 'configurations', 'styling', 'conversations', 'metrics', 'leads', 'legal', 'login', 'agent', 'audienceinsights', 'incomereport'],
+    ns: ['common', 'dashboard', 'signup', 'models', 'integrations', 'home', 'homev3', 'configurations', 'styling', 'conversations', 'metrics', 'leads', 'legal', 'login', 'agent', 'audienceinsights', 'incomereport'],
 
     detection: {
       order: ['localStorage', 'navigator', 'htmlTag'],
