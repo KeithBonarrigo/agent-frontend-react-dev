@@ -90,7 +90,7 @@
       "s2Title": "Connect your org",
       "s2Text": "Link BidConnect to your Salesforce org, with StoreConnect handling the catalogue and checkout. From then on, contacts, items and bids sync automatically.",
       "s3Num": "STEP 03",
-      "s3Title": "Add your items",
+      "s3Title": "Sync your items",
       "s3Text": "Give each item a category and a starting bid, then set when bidding opens and closes. Supporters can browse the catalogue before bidding starts, with prices hidden until it does.",
       "s4Num": "STEP 04",
       "s4Title": "Share the Link",
