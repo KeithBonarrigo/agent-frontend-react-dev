@@ -433,6 +433,16 @@ body:has(.hv3-page) div[style*="z-index: 99999"]{display:none!important}
 .hv3-auc-winning{background:#DCFCE7;color:#166534}
 .hv3-auc-outbid{background:#FEE2E2;color:#991B1B}
 
+/* Wider heading block so "Pay for the auction, not the off-season." fits on one line */
+.hv3-bc-pricing-head{max-width:920px}
+/* BidConnect pricing: three equal plan cards, one column when stacked */
+.hv3-plans-3{grid-template-columns:repeat(3,1fr)}
+@media(max-width:1000px){
+  .hv3-plans-3{grid-template-columns:1fr}
+  .hv3-plans-3 .hv3-pl,.hv3-plans-3 .hv3-pl:nth-child(2){border-right:0}
+  .hv3-plans-3 .hv3-pl:last-child{border-bottom:0}
+  .hv3-plans-3 .hv3-pl-desc{min-height:0}
+}
 /* BidConnect's steps: four across, two by two on narrower screens, and the
    existing one-column rule for .hv3-steps takes over at 1000px and below. */
 .hv3-steps-4{grid-template-columns:repeat(4,1fr);gap:40px 32px}
@@ -456,6 +466,11 @@ body:has(.hv3-page) div[style*="z-index: 99999"]{display:none!important}
 
 /* "Already have an account?" is an h2 styled exactly like "New to BidConnect?" */
 #hv3-bc-access .hv3-start-cta h2{text-align:left}
+/* "Create Your Auction" matches the Sign In button's width: the column's width minus
+   the sign-in card's side padding + 1px border on each side (--hv3-bc-inset). */
+#hv3-bc-access{--hv3-bc-inset:41px}
+@media(max-width:640px){#hv3-bc-access{--hv3-bc-inset:19px}}
+#hv3-bc-access .hv3-start-in > div:first-child .hv3-hero-cta .hv3-btn{width:calc(100% - 2 * var(--hv3-bc-inset))}
 /* Sign In: links out to bidconnect.app's sign-in box */
 .hv3-page .hv3-bc-signin-btn{display:flex;width:100%;margin-top:18px}
 /* Side by side: equal-height columns with each button pinned to the bottom, so the
@@ -547,7 +562,7 @@ body:has(.hv3-page) div[style*="z-index: 99999"]{display:none!important}
 .hv3-bw-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:48px}
 .hv3-bw-card{background:var(--hv3-bg-card);border:1px solid var(--hv3-line-2);border-radius:11px;padding:26px}
 .hv3-bw-card-head{display:flex;gap:12px;align-items:center;margin-bottom:14px}
-.hv3-bw-cta{margin-top:36px}
+.hv3-bw-cta{margin-top:36px;display:flex;justify-content:center}   /* Learn More centred under the cards */
 
 /* ---------------- contact form (both tabs) ---------------- */
 .hv3-contact{padding:96px 0;background:var(--hv3-bg-3);border-top:1px solid var(--hv3-line);scroll-margin-top:68px}
@@ -687,4 +702,47 @@ body:has(.hv3-page) div[style*="z-index: 99999"]{display:none!important}
   .hv3-auth-card{padding:30px 20px}
   .hv3-auth-card h1{font-size:1.7rem}
   .hv3-auth-back{display:none}
+}
+
+/* ============================================================
+   LEGAL PAGES (/privacy, /terms-and-conditions, /cookies, /data-deletion)
+   LegalV3.jsx wraps the existing pages; these rules restyle their
+   shared policy-* markup (ContentStyles.css) only inside .hv3-legal,
+   so the pages keep their old look anywhere else.
+   ============================================================ */
+.hv3-legal{flex:1}
+.hv3-legal .policy-page{background:transparent;min-height:0}
+.hv3-legal .home-container{max-width:860px;margin:0 auto;padding:0 28px}
+.hv3-legal .policy-header{background:linear-gradient(180deg,var(--hv3-bg) 0%,var(--hv3-bg-2) 100%);
+  padding:72px 0 48px;text-align:left;border-bottom:1px solid var(--hv3-line);color:var(--hv3-txt)}
+.hv3-legal .policy-header h1{font-size:clamp(2.3rem,4.3vw,3.35rem);margin:0 0 14px;color:#fff;text-align:left}
+.hv3-legal .policy-header h4{margin:0;font-family:'IBM Plex Mono',monospace;font-size:.76rem;font-weight:500;
+  letter-spacing:.1em;text-transform:uppercase;color:var(--hv3-txt-3);opacity:1;text-align:left}
+.hv3-legal .policy-content-section{padding:48px 0 96px}
+.hv3-legal .policy-intro,.hv3-legal .policy-section{background:transparent;box-shadow:none;border-radius:0;
+  padding:32px 0;margin:0;border-top:1px solid var(--hv3-line)}
+.hv3-legal .home-container > :first-child{border-top:0;padding-top:0}
+.hv3-legal .policy-section h2{color:#fff;font-size:1.5rem;line-height:1.25;margin:0 0 14px;text-align:left}
+.hv3-legal .policy-section h3{color:var(--hv3-accent);font-size:1.1rem;line-height:1.35;margin:22px 0 10px;text-align:left}
+.hv3-legal .policy-section h4{color:var(--hv3-txt);font-size:1rem;margin:18px 0 8px;text-align:left}
+.hv3-legal .policy-intro p,.hv3-legal .policy-section p{color:var(--hv3-txt-2);font-size:1rem;line-height:1.7;margin:0 0 14px}
+.hv3-legal .policy-section ul,.hv3-legal .policy-section ol{margin:10px 0 16px;padding-left:22px}
+.hv3-legal .policy-section li{color:var(--hv3-txt-2);font-size:1rem;line-height:1.65;margin-bottom:8px}
+.hv3-legal .policy-section li::marker{color:var(--hv3-brand-lt)}
+.hv3-legal .policy-section strong{color:var(--hv3-txt);font-weight:600}
+.hv3-legal .policy-section a{color:var(--hv3-brand-lt);font-weight:500;text-decoration:underline;text-underline-offset:2px}
+.hv3-legal .policy-section a:hover{color:#fff}
+/* Data Deletion's intro box, option call-outs and contact block */
+.hv3-legal .policy-intro p{font-size:1.08rem;color:var(--hv3-txt)}
+.hv3-legal .policy-option{margin:20px 0;padding:18px 22px;background:var(--hv3-bg-card);
+  border:1px solid var(--hv3-line-2);border-left:3px solid var(--hv3-brand);border-radius:8px}
+.hv3-legal .policy-option h3{margin-top:0}
+.hv3-legal .policy-contact{margin-top:14px;padding:18px 22px;background:var(--hv3-bg-card);
+  border:1px solid var(--hv3-line-2);border-radius:8px}
+.hv3-legal .policy-contact p{margin:0;line-height:1.8}
+.hv3-auth-legal a[aria-current="page"]{color:#fff}
+@media(max-width:640px){
+  .hv3-legal .home-container{padding:0 20px}
+  .hv3-legal .policy-header{padding:48px 0 32px}
+  .hv3-legal .policy-section h2{font-size:1.3rem}
 }
