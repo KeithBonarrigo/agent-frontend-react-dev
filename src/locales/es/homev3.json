@@ -90,7 +90,7 @@
       "s2Title": "Conecta tu org",
       "s2Text": "Vincula BidConnect con tu org de Salesforce, con StoreConnect a cargo del catálogo y el pago. A partir de ahí, los contactos, los artículos y las pujas se sincronizan solos.",
       "s3Num": "PASO 03",
-      "s3Title": "Agrega tus artículos",
+      "s3Title": "Sincroniza tus artículos",
       "s3Text": "Asigna a cada artículo una categoría y una puja inicial, y define cuándo abren y cierran las pujas. Tus simpatizantes pueden ver el catálogo antes de que empiecen, con los precios ocultos hasta entonces.",
       "s4Num": "PASO 04",
       "s4Title": "Comparte el enlace",
