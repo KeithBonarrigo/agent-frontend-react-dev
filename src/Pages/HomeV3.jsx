@@ -53,6 +53,7 @@ const NAV_ITEMS = {
   bidconnect: [
     { id: 'hv3-top', label: 'nav.home' },
     { id: 'hv3-how', label: 'nav.how' },
+    { id: 'hv3-pricing', label: 'nav.pricing' },
     { id: 'hv3-faq', label: 'nav.faq' },
   ],
   botwerx: [
@@ -325,7 +326,10 @@ function BotwerxBotContent({ t }) {
             ))}
           </div>
           <div className="hv3-bw-cta">
-            <ScrollLink to="hv3-contact" className="hv3-btn hv3-btn-p">{b('services.learnMore')}</ScrollLink>
+            <ScrollLink to="hv3-contact" className="hv3-btn hv3-btn-p hv3-btn-lg">
+              <img src="/img/botwerx-icon.png" alt="" className="hv3-btn-icon" />
+              {b('services.learnMore')}
+            </ScrollLink>
           </div>
         </div>
       </section>
@@ -368,6 +372,7 @@ function BidConnectContent({ t }) {
 
   const demoItems = b('demo.items', { returnObjects: true });
   const faqs = b('faq.items', { returnObjects: true });
+  const plans = b('pricing.plans', { returnObjects: true });
 
   return (
     <>
@@ -488,6 +493,51 @@ function BidConnectContent({ t }) {
                   <h3>{b(`how.s${n}Title`)}</h3>
                 </div>
                 <p>{b(`how.s${n}Text`)}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ---------------- Pricing ----------------
+          V2's plan cards, three across with no featured tier. Trial goes to the
+          contact form (we issue a trial code); Active and Dormant go to
+          bidconnect.app's signup. Prices are placeholders from the user. */}
+      <section className="hv3-sec hv3-pricing" id="hv3-pricing">
+        <div className="hv3-wrap">
+          <div className="hv3-sec-head hv3-bc-pricing-head">
+            <h2>{b('pricing.title')}</h2>
+            <p>{b('pricing.intro')}</p>
+          </div>
+          <div className="hv3-plans hv3-plans-3">
+            {(Array.isArray(plans) ? plans : []).map((plan, i) => (
+              <div className="hv3-pl" key={plan.name}>
+                <div className="hv3-pl-name">{plan.name}</div>
+                <div className="hv3-pl-price">
+                  {plan.price}{plan.period && <small>{plan.period}</small>}
+                </div>
+                <div className="hv3-pl-desc">{plan.desc}</div>
+                <ul>
+                  {plan.features.map((feature) => (
+                    <li key={feature}>
+                      <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="2.6">
+                        <path d="M4 10.5l4 4 8-9" />
+                      </svg>
+                      {feature}
+                    </li>
+                  ))}
+                </ul>
+                {i === 0 ? (
+                  <ScrollLink to="hv3-contact" className="hv3-btn hv3-btn-p hv3-btn-lg">
+                    <img src="/img/botwerx-icon.png" alt="" className="hv3-btn-icon" />
+                    {plan.cta}
+                  </ScrollLink>
+                ) : (
+                  <a href={BIDCONNECT_SIGNUP_URL} className="hv3-btn hv3-btn-p hv3-btn-lg">
+                    <img src="/img/botwerx-icon.png" alt="" className="hv3-btn-icon" />
+                    {plan.cta}
+                  </a>
+                )}
               </div>
             ))}
           </div>

@@ -13,7 +13,8 @@
     "logIn": "Iniciar Sesión",
     "logOut": "Cerrar Sesión",
     "agent": "Agent",
-    "how": "Cómo funciona"
+    "how": "Cómo funciona",
+    "pricing": "Precios"
   },
   "tabs": {
     "bidconnect": "BidConnect",
@@ -94,6 +95,49 @@
       "s4Num": "PASO 04",
       "s4Title": "Comparte el enlace",
       "s4Text": "Tus simpatizantes pujan desde su teléfono, sin instalar ninguna app. La puja automática y los avisos de puja superada mantienen los artículos en movimiento, y al cierre cada ganador recibe un solo enlace de pago mientras cada puja queda registrada en Salesforce."
+    },
+    "pricing": {
+      "title": "Paga por la subasta, no por la temporada baja.",
+      "intro": "Solo pagas por BidConnect cuando lo necesitas. Empieza con una prueba gratis, pasa a Activo cuando llegue tu evento y cambia a Inactivo entre eventos para conservar todo por una fracción del costo.",
+      "plans": [
+        {
+          "name": "Prueba",
+          "price": "Gratis",
+          "period": "",
+          "desc": "Prueba BidConnect antes de tu evento. Cuéntanos sobre tu subasta y te enviaremos un código de prueba.",
+          "features": [
+            "Solicítala desde el formulario de contacto",
+            "Te enviamos un código de prueba",
+            "Explora la experiencia completa de la subasta"
+          ],
+          "cta": "Solicitar una prueba"
+        },
+        {
+          "name": "Activo",
+          "price": "$199",
+          "period": "/mes",
+          "desc": "Todo lo que necesitas para realizar tu subasta en vivo.",
+          "features": [
+            "Pujas en tiempo real y pujas automáticas",
+            "Avisos instantáneos de puja superada por correo (mensajes de texto opcionales)",
+            "Contactos, artículos y pujas sincronizados con Salesforce",
+            "Un carrito y un enlace de pago por ganador con StoreConnect"
+          ],
+          "cta": "Crea tu subasta"
+        },
+        {
+          "name": "Inactivo",
+          "price": "$19.99",
+          "period": "/mes",
+          "desc": "Entre eventos, conserva todo con un costo mensual mucho menor.",
+          "features": [
+            "Se conserva tu conexión con Salesforce",
+            "Se conservan tus artículos y resultados anteriores",
+            "Un clic reactiva tu cuenta"
+          ],
+          "cta": "Regístrate"
+        }
+      ]
     },
     "access": {
       "newTitle": "¿Primera vez en BidConnect?",
@@ -368,5 +412,8 @@
       "accountCreated": "✅ ¡Cuenta Creada!",
       "switchingToLogin": "Cambiando a inicio de sesión..."
     }
+  },
+  "shell": {
+    "backHome": "Volver al inicio"
   }
 }

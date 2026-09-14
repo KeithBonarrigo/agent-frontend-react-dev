@@ -21,6 +21,10 @@ Plans, handoff notes and similar working documents go in `plans/`, named
 - The pre-V3 pages stay in the repo, unedited, at `/legacy/home` (`Home.jsx`) and
   `/legacy/login` (`Login.jsx`); `robots.txt` disallows `/legacy/`.
   `/preview/home-v3` and `/preview/login-v3` redirect to `/` and `/login`.
+- Legal pages: on BotWerx domains `/privacy`, `/terms-and-conditions`, `/cookies` and `/data-deletion`
+  render inside `LegalV3.jsx` (V3 header, footer, favicon). The page components
+  and `legal.json` are unchanged; `HomeV3.css` restyles their `policy-*` markup
+  under `.hv3-legal`.
 - Backup: git tag `backup/pre-v3-home-2026-09-13` = `main` before the switch.
 - Rollback: in `src/App.jsx` point `/` back to `<Home />` and `/login` back to
   `<Login />` (or revert the merge commit).
@@ -117,7 +121,9 @@ They create real records wherever `getApiUrl()` points.
 
 **Shared components stay unchanged.** `SignupForm`, `UserContext`,
 `DomainContext` and `getApiUrl` are used by the live site; this page imports them
-but never edits them. `SignupForm` is light-themed, so the page's dark-theme
+but never edits them (one deliberate exception, at the user's request: the
+`SignupForm` submit label was backwards and now reads "Start Free Trial" for the
+$0 plans and "Let's Go!" for paid plans, on every page that uses the form). `SignupForm` is light-themed, so the page's dark-theme
 resets for headings, paragraphs and links skip anything inside `.hv3-bw-signup`.
 Layout tweaks to the form on this page (compact domain row, checkbox row) are
 CSS rules that start with `.hv3-bw-signup` and target the form's own

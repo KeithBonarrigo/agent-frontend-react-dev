@@ -20,6 +20,7 @@ import OAuthCallback from "./Pages/OAuthCallback";
 import Agent from "./Pages/Agent";
 import HomeV3 from "./Pages/HomeV3";
 import LoginV3 from "./Pages/LoginV3";
+import LegalV3 from "./Pages/LegalV3";
 import { UserProvider } from './contexts/UserContext';
 import { DomainProvider, useDomain } from './contexts/DomainContext';
 
@@ -46,10 +47,10 @@ function AppRoutes() {
           {/* Old preview addresses from the redesign, now live */}
           <Route path="/preview/home-v3" element={<Navigate to="/" replace />} />
           <Route path="/preview/login-v3" element={<Navigate to="/login" replace />} />
-          <Route path="/data-deletion" element={<DataDeletion />} />
-          <Route path="/cookies" element={<CookiePolicy />} />
-          <Route path="/terms-and-conditions" element={<TermsAndConditions />} />
-          <Route path="/privacy" element={<Privacy />} />
+          <Route path="/data-deletion" element={useV3 ? <LegalV3><DataDeletion /></LegalV3> : <DataDeletion />} />
+          <Route path="/cookies" element={useV3 ? <LegalV3><CookiePolicy /></LegalV3> : <CookiePolicy />} />
+          <Route path="/terms-and-conditions" element={useV3 ? <LegalV3><TermsAndConditions /></LegalV3> : <TermsAndConditions />} />
+          <Route path="/privacy" element={useV3 ? <LegalV3><Privacy /></LegalV3> : <Privacy />} />
         </Route>
         <Route element={<HomeLayout />}>
           <Route path="/login" element={useV3 ? <LoginV3 /> : <Login />} />

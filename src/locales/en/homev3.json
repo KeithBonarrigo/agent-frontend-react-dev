@@ -13,7 +13,8 @@
     "logIn": "Log In",
     "logOut": "Log Out",
     "agent": "Agent",
-    "how": "How it works"
+    "how": "How it works",
+    "pricing": "Pricing"
   },
   "tabs": {
     "bidconnect": "BidConnect",
@@ -94,6 +95,49 @@
       "s4Num": "STEP 04",
       "s4Title": "Share the Link",
       "s4Text": "Supporters bid from their phones, with no app to install. Proxy bids and outbid alerts keep items moving, and at the close each winner gets one payment link while every bid lands in Salesforce."
+    },
+    "pricing": {
+      "title": "Pay for the auction, not the off-season.",
+      "intro": "You only pay for BidConnect when you need it. Start with a free trial, go Active when your event comes around, and switch to Dormant between events to keep everything for a fraction of the cost.",
+      "plans": [
+        {
+          "name": "Trial",
+          "price": "Free",
+          "period": "",
+          "desc": "Try BidConnect before your event. Tell us about your auction and we'll send you a trial code.",
+          "features": [
+            "Request it through the contact form",
+            "We send you a trial code",
+            "Explore the full auction experience"
+          ],
+          "cta": "Request a Trial"
+        },
+        {
+          "name": "Active",
+          "price": "$199",
+          "period": "/mo",
+          "desc": "Everything you need to run your live auction.",
+          "features": [
+            "Real-time and proxy bidding",
+            "Instant outbid alerts by email (text optional)",
+            "Contacts, items and bids synced to Salesforce",
+            "One cart and payment link per winner via StoreConnect"
+          ],
+          "cta": "Create Your Auction"
+        },
+        {
+          "name": "Dormant",
+          "price": "$19.99",
+          "period": "/mo",
+          "desc": "Between events, keep everything at a much lower monthly cost.",
+          "features": [
+            "Your Salesforce connection is kept",
+            "Your items and past results are kept",
+            "One click brings it back"
+          ],
+          "cta": "Sign Up"
+        }
+      ]
     },
     "access": {
       "newTitle": "New to BidConnect?",
@@ -368,5 +412,8 @@
       "accountCreated": "✅ Account Created!",
       "switchingToLogin": "Switching to login..."
     }
+  },
+  "shell": {
+    "backHome": "Back to home"
   }
 }

@@ -1052,7 +1052,8 @@ export default function SignupForm({ isOpen, allowedLevels }) {
                     className="home-btn home-btn-green signup-submit-btn"
                     disabled={emailExists || checkingEmail}
                   >
-                    {(agentForm.level === "free" || agentForm.level === "calendar_assistant") ? t('buttons.letsGo') : t('buttons.startFreeTrial')}
+                    {/* Free ($0) plans start a free trial; paid plans go on to checkout */}
+                    {(agentForm.level === "free" || agentForm.level === "calendar_assistant") ? t('buttons.startFreeTrial') : t('buttons.letsGo')}
                   </button>
                 </div>
               </div>
