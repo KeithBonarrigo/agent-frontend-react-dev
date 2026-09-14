@@ -2,8 +2,8 @@
 
 React 19 + Vite 6 single-page app. Deployed from GitHub to Railway: a merge to
 `main` publishes to https://www.botwerx.ai within minutes (Railway runs
-`npm run build` on deploy). Branch `main` is **not** branch-protected, so any merge
-goes live; changes go through a pull request.
+`npm run build` on deploy). Branch `main` has the "protect main" ruleset: pull requests only, 1 approving
+review required, no force-push or deletion. Any merge goes live.
 
 Run it: `npm install`, then `npm run dev -- --port 5174 --strictPort`, then open
 http://localhost:5174/preview/home-v3
