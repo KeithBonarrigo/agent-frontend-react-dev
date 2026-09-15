@@ -99,11 +99,10 @@ function SiteHeader({ t, i18n, lang, tab }) {
     }
   };
 
-  // Same order and states as the live HomeHeader: section links, then the
-  // account links inline, with Contact Us as the only button.
+  // Section links, then the account links inline (My Dashboard / Log Out, or
+  // Log In), with Contact Us as the only button.
   const authLinks = isLoggedIn ? (
     <>
-      <Link to="/agent" className="hv3-nav-a" onClick={close}>{t('nav.agent')}</Link>
       <Link to="/dashboard" className="hv3-nav-a" onClick={close}>{t('nav.myDashboard')}</Link>
       <button type="button" className="hv3-nav-a hv3-nav-logout" onClick={handleLogout}>{t('nav.logOut')}</button>
     </>
