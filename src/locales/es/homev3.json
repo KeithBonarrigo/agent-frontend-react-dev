@@ -32,42 +32,7 @@
       "ctaPrimary": "Crea tu subasta",
       "ctaSecondary": "Iniciar sesión"
     },
-    "demo": {
-      "url": "lakeside-rescue.bidconnect.app",
-      "org": "Lakeside Animal Rescue",
-      "closes": "Cierra en 02:14:09",
-      "statusWinning": "Ganando",
-      "statusOutbid": "Superada",
-      "items": [
-        {
-          "icon": "🍽",
-          "name": "Ruta por restaurantes locales",
-          "meta": "7 pujas · Gastronomía",
-          "amount": "$105",
-          "amountLabel": "tu puja",
-          "status": "winning"
-        },
-        {
-          "icon": "🧵",
-          "name": "Colcha hecha a mano",
-          "meta": "12 pujas · Hogar",
-          "amount": "$240",
-          "amountLabel": "puja actual",
-          "status": "outbid"
-        },
-        {
-          "icon": "🏈",
-          "name": "Balón firmado",
-          "meta": "4 pujas · Deportes",
-          "amount": "$180",
-          "amountLabel": "puja actual",
-          "status": "winning"
-        }
-      ],
-      "alertTitle": "Aviso de puja superada enviado",
-      "alertItem": "Colcha hecha a mano · $240",
-      "alertSub": "Por mensaje y correo, en menos de un segundo"
-    },
+    "demoVideoLabel": "Demostración animada de BidConnect: desde las pujas en vivo hasta Salesforce",
     "features": {
       "f1Title": "Pujas en tiempo real",
       "f1Text": "Pujas automáticas, desempates y avisos instantáneos cuando alguien te supera. Tus simpatizantes fijan un tope y lo dejan correr, y cada quien se entera en el momento en que pierde la delantera, así los artículos siguen moviéndose sin que nadie tenga que recorrer el salón.",
