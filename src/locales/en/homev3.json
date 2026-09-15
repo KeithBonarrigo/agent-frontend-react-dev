@@ -25,10 +25,10 @@
     "hero": {
       "titleLead": "Run a modern, real-time fundraising auction",
       "titleEm": "with Salesforce and StoreConnect",
-      "subtitle": "BidConnect gives your organization its own branded auction site where bidders compete live from their phones, proxy bidding handles the back-and-forth automatically, and instant alerts keep everyone engaged until the final bell. Behind the scenes, everything syncs straight into Salesforce — contacts, items, and winning bids flow in automatically, so your team can focus on the event, not the spreadsheet.",
-      "storePre": "The catalogue and checkout run on ",
+      "subtitle": "BidConnect gives your organization its own branded auction site: bidders compete live from their phones, proxy bidding handles the back-and-forth, and instant alerts keep everyone engaged until the final bell.",
+      "storePre": "Contacts, items and winning bids sync straight into Salesforce, and ",
       "storeLink": "StoreConnect",
-      "storePost": ", so each winner gets one cart and one payment link, however many items they won.",
+      "storePost": " runs the catalogue and checkout, with one cart and payment link per winner.",
       "ctaPrimary": "Create Your Auction",
       "ctaSecondary": "Sign In"
     },
@@ -118,6 +118,10 @@
           "answer": "Substantially, and in the places that hurt most. The evening runs itself: no paper bid sheets, nobody running totals on a clipboard, no chasing the room at closing, no typing winners into a spreadsheet and then into your database. Bidding, closing, winner notification, payment links and the write-back to Salesforce all happen without anyone standing over them. Your team spends the night talking to supporters instead of administering an auction. Sourcing the items is still yours, because that is relationship work — everything downstream of it is handled."
         },
         {
+          "question": "Do we pay full price all year, even when we're not running an auction?",
+          "answer": "No — you only pay the Active rate while you're running an auction. Switch to Active as your event approaches, then put the account into Dormant once it's over. Dormant keeps everything — your Salesforce connection, your items and your past results — for a small fraction of the Active price, and one click brings it back with nothing to set up again, so next year's auction starts where the last one finished. See Pricing above for the current rates."
+        },
+        {
           "question": "Only a handful of wealthy guests ever bid. How does this widen the room?",
           "answer": "Bidding happens in a web browser, so it is not limited to whoever is standing near the table. People who came to socialise can bid from where they are, people who could not attend at all can take part, and proxy bidding lets someone set a limit and stop watching. The practical effect is more people bidding on more items, for the whole of your auction window, rather than a few contests at the front of the room."
         },
@@ -168,10 +172,6 @@
         {
           "question": "Do we get our own web address?",
           "answer": "Yes. Each organization gets its own subdomain carrying its own branding, logo and time zone, isolated from every other organization on the platform. Supporters see your auction and your name throughout, with nothing to suggest a shared system behind it."
-        },
-        {
-          "question": "What if we only run one event a year?",
-          "answer": "That is a common pattern, and it is priced for. Put the account into a dormant state between events and everything is kept — your Salesforce connection, your items, your past results — at a much lower monthly cost. One click brings it back with nothing to set up again, so next year’s auction starts from where the last one finished."
         },
         {
           "question": "When in the year should we run it?",
