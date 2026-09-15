@@ -367,10 +367,55 @@ const BIDCONNECT_FEATURE_ICONS = ['fa-solid fa-gavel', 'fa-brands fa-salesforce'
 // people to the sign-in box on bidconnect.app's home page, which asks for it.
 const BIDCONNECT_SIGNIN_URL = 'https://bidconnect.app/#signin';
 
+const BIDCONNECT_DEMO_VIDEO = '/media/bidconnect-demo.mp4';
+const BIDCONNECT_DEMO_POSTER = '/img/bidconnect-demo-poster.jpg';
+const REDUCED_MOTION_QUERY = '(prefers-reduced-motion: reduce)';
+
+// Tracks the OS/browser "reduce motion" setting, including changes while open.
+function usePrefersReducedMotion() {
+  const [reduced, setReduced] = useState(() => window.matchMedia?.(REDUCED_MOTION_QUERY).matches ?? false);
+  useEffect(() => {
+    const mq = window.matchMedia?.(REDUCED_MOTION_QUERY);
+    if (!mq) return;
+    const onChange = () => setReduced(mq.matches);
+    mq.addEventListener('change', onChange);
+    return () => mq.removeEventListener('change', onChange);
+  }, []);
+  return reduced;
+}
+
+// Silent looping product demo. Reduced-motion users get the poster frame as a
+// still image instead of a playing video.
+function BidConnectDemoVideo({ label }) {
+  const reducedMotion = usePrefersReducedMotion();
+
+  if (reducedMotion) {
+    return <img src={BIDCONNECT_DEMO_POSTER} alt={label} width="1920" height="1080" className="hv3-bc-demo" />;
+  }
+
+  return (
+    <video
+      className="hv3-bc-demo"
+      src={BIDCONNECT_DEMO_VIDEO}
+      poster={BIDCONNECT_DEMO_POSTER}
+      autoPlay
+      muted
+      loop
+      playsInline
+      preload="metadata"
+      width="1920"
+      height="1080"
+      aria-label={label}
+      // React does not always write the muted attribute, and Safari will not
+      // autoplay without it. defaultMuted adds the attribute; muted sets the property.
+      ref={(v) => { if (v) { v.defaultMuted = true; v.muted = true; } }}
+    />
+  );
+}
+
 function BidConnectContent({ t }) {
   const b = (key, opts) => t(`bidconnect.${key}`, opts);
 
-  const demoItems = b('demo.items', { returnObjects: true });
   const faqs = b('faq.items', { returnObjects: true });
   const plans = b('pricing.plans', { returnObjects: true });
 
@@ -398,53 +443,9 @@ function BidConnectContent({ t }) {
             </div>
           </div>
 
-          {/* The bidder's view of a fictional charity auction, as on bidconnect.app */}
+          {/* Animated product demo (muted loop); poster only for reduced motion */}
           <div className="hv3-hero-vis">
-            <div className="hv3-frame">
-              <div className="hv3-fbar">
-                <i></i><i></i><i></i>
-                <div className="hv3-furl">
-                  <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="2">
-                    <rect x="3" y="7" width="10" height="7" rx="1.5" />
-                    <path d="M5.5 7V5a2.5 2.5 0 015 0v2" />
-                  </svg>
-                  {b('demo.url')}
-                </div>
-              </div>
-              <div className="hv3-fbody hv3-auc">
-                <div className="hv3-auc-head">
-                  <span className="hv3-auc-org"><i className="hv3-auc-live" aria-hidden="true"></i>{b('demo.org')}</span>
-                  <span className="hv3-auc-clock">{b('demo.closes')}</span>
-                </div>
-                {(Array.isArray(demoItems) ? demoItems : []).map((item) => (
-                  <div className="hv3-auc-row" key={item.name}>
-                    <span className="hv3-auc-icon" aria-hidden="true">{item.icon}</span>
-                    <div className="hv3-auc-name">
-                      <strong>{item.name}</strong>
-                      <span>{item.meta}</span>
-                    </div>
-                    <div className="hv3-auc-bid">
-                      <strong>{item.amount}</strong>
-                      <span>{item.amountLabel}</span>
-                    </div>
-                    <span className={`hv3-auc-status hv3-auc-${item.status}`}>
-                      {b(item.status === 'outbid' ? 'demo.statusOutbid' : 'demo.statusWinning')}
-                    </span>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            <div className="hv3-pill">
-              <div className="hv3-pill-t">
-                <svg width="11" height="11" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="2.6">
-                  <path d="M4 10.5l4 4 8-9" />
-                </svg>
-                {b('demo.alertTitle')}
-              </div>
-              <div className="hv3-pill-n">{b('demo.alertItem')}</div>
-              <div className="hv3-pill-s">{b('demo.alertSub')}</div>
-            </div>
+            <BidConnectDemoVideo label={b('demoVideoLabel')} />
           </div>
         </div>
       </section>

@@ -143,7 +143,11 @@ body:has(.hv3-page) div[style*="z-index: 99999"]{display:none!important}
 .hv3-hero-sub a{color:var(--hv3-brand-lt);text-decoration:underline;text-underline-offset:2px}
 .hv3-hero-sub a:hover{color:#fff}
 .hv3-hero-fine{margin-top:18px;font-size:.86rem;color:var(--hv3-txt-3)}
-.hv3-hero-vis{position:relative;padding-bottom:76px}
+.hv3-hero-vis{position:relative}
+/* BidConnect demo video (or its poster for reduced motion): full container width,
+   natural 16:9 height, never stretched or cropped. */
+.hv3-bc-demo{display:block;width:100%;max-width:100%;height:auto;aspect-ratio:16/9;border-radius:11px;
+  border:1px solid var(--hv3-line-2);background:var(--hv3-bg-card);box-shadow:0 26px 60px -26px rgba(0,0,0,.6)}
 
 /* browser frame */
 .hv3-frame{

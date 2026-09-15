@@ -32,42 +32,7 @@
       "ctaPrimary": "Create Your Auction",
       "ctaSecondary": "Sign In"
     },
-    "demo": {
-      "url": "lakeside-rescue.bidconnect.app",
-      "org": "Lakeside Animal Rescue",
-      "closes": "Closes in 02:14:09",
-      "statusWinning": "Winning",
-      "statusOutbid": "Outbid",
-      "items": [
-        {
-          "icon": "🍽",
-          "name": "Local Restaurant Tour",
-          "meta": "7 bids · Dining",
-          "amount": "$105",
-          "amountLabel": "your bid",
-          "status": "winning"
-        },
-        {
-          "icon": "🧵",
-          "name": "Handmade Quilt",
-          "meta": "12 bids · Home",
-          "amount": "$240",
-          "amountLabel": "current bid",
-          "status": "outbid"
-        },
-        {
-          "icon": "🏈",
-          "name": "Signed Football",
-          "meta": "4 bids · Sports",
-          "amount": "$180",
-          "amountLabel": "current bid",
-          "status": "winning"
-        }
-      ],
-      "alertTitle": "Outbid alert sent",
-      "alertItem": "Handmade Quilt · $240",
-      "alertSub": "Text and email, in under a second"
-    },
+    "demoVideoLabel": "Animated demo of BidConnect: live bidding through to Salesforce",
     "features": {
       "f1Title": "Real-time bidding",
       "f1Text": "Proxy bids, tiebreakers, and instant outbid alerts. Supporters set a ceiling and let it run, and everyone hears the second they lose the lead — so items keep moving without anyone working the room.",
