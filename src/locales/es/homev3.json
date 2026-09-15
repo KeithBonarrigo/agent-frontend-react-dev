@@ -25,10 +25,10 @@
     "hero": {
       "titleLead": "Organiza una subasta benéfica moderna y en tiempo real",
       "titleEm": "con Salesforce y StoreConnect",
-      "subtitle": "BidConnect le da a tu organización su propio sitio de subastas con tu marca, donde los postores compiten en vivo desde su teléfono, la puja automática se encarga del ir y venir, y los avisos instantáneos mantienen a todos atentos hasta el cierre. Por detrás, todo se sincroniza directamente con Salesforce: los contactos, los artículos y las pujas ganadoras llegan solos, para que tu equipo se concentre en el evento y no en la hoja de cálculo.",
-      "storePre": "El catálogo y el pago funcionan con ",
+      "subtitle": "BidConnect le da a tu organización su propio sitio de subastas con tu marca: los postores compiten en vivo desde su teléfono, la puja automática se encarga del ir y venir y los avisos instantáneos mantienen a todos atentos hasta el cierre.",
+      "storePre": "Los contactos, los artículos y las pujas ganadoras se sincronizan directamente con Salesforce, y ",
       "storeLink": "StoreConnect",
-      "storePost": ", así que cada ganador recibe un solo carrito y un solo enlace de pago, sin importar cuántos artículos haya ganado.",
+      "storePost": " se encarga del catálogo y el pago, con un solo carrito y enlace de pago por ganador.",
       "ctaPrimary": "Crea tu subasta",
       "ctaSecondary": "Iniciar sesión"
     },
@@ -118,6 +118,10 @@
           "answer": "Considerablemente, y justo donde más duele. La noche funciona sola: sin hojas de pujas en papel, sin nadie sumando totales en una tablilla, sin perseguir a los asistentes al cierre y sin capturar a los ganadores en una hoja de cálculo y luego en tu base de datos. Las pujas, el cierre, el aviso a los ganadores, los enlaces de pago y el registro en Salesforce ocurren sin que nadie tenga que estar encima. Tu equipo pasa la noche conversando con simpatizantes en lugar de administrar una subasta. Conseguir los artículos sigue siendo tarea tuya, porque es trabajo de relaciones; todo lo que viene después queda resuelto."
         },
         {
+          "question": "¿Pagamos la tarifa completa todo el año, aunque no estemos haciendo una subasta?",
+          "answer": "No: solo pagas la tarifa de Activo mientras realizas una subasta. Cambia a Activo cuando se acerque tu evento y pasa la cuenta a Inactivo cuando termine. Inactivo conserva todo —tu conexión con Salesforce, tus artículos y tus resultados anteriores— por una pequeña fracción del precio de Activo, y un clic la reactiva sin nada que volver a configurar, así que la subasta del próximo año empieza donde terminó la anterior. Consulta las tarifas actuales en la sección de Precios, más arriba."
+        },
+        {
           "question": "Solo unos cuantos invitados adinerados llegan a pujar. ¿Cómo amplía esto la participación?",
           "answer": "Las pujas se hacen en un navegador web, así que no se limitan a quien está junto a la mesa. Quienes vinieron a convivir pueden pujar desde donde estén, quienes no pudieron asistir también pueden participar, y la puja automática permite fijar un límite y dejar de estar pendiente. En la práctica, más personas pujan por más artículos durante todo el periodo de la subasta, en lugar de unas cuantas disputas al frente del salón."
         },
@@ -168,10 +172,6 @@
         {
           "question": "¿Tenemos nuestra propia dirección web?",
           "answer": "Sí. Cada organización tiene su propio subdominio con su marca, su logo y su zona horaria, aislado de todas las demás organizaciones de la plataforma. Tus simpatizantes ven tu subasta y tu nombre en todo momento, sin nada que sugiera un sistema compartido detrás."
-        },
-        {
-          "question": "¿Y si solo hacemos un evento al año?",
-          "answer": "Es algo común y el precio lo contempla. Pon la cuenta en modo inactivo entre eventos y todo se conserva —tu conexión con Salesforce, tus artículos, tus resultados anteriores— con un costo mensual mucho menor. Un clic la reactiva sin nada que volver a configurar, así que la subasta del próximo año empieza donde terminó la anterior."
         },
         {
           "question": "¿En qué época del año conviene hacerla?",
