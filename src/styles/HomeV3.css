@@ -446,9 +446,6 @@ body:has(.hv3-page) div[style*="z-index: 99999"]{display:none!important}
 .hv3-sc-callout h3{margin:0 0 10px}
 .hv3-sc-callout p{color:var(--hv3-txt-2);font-size:.97rem}
 .hv3-sc-callout .hv3-sc-callout-close{margin-top:12px;color:var(--hv3-txt);font-weight:600}
-/* Partner logos sit on white chips so they read on the dark background */
-.hv3-sc-partners{display:flex;gap:14px;align-items:center;flex-wrap:wrap}
-.hv3-sc-partners img{height:76px;width:auto;max-width:100%;background:#fff;border-radius:10px;padding:8px}
 .hv3-sc-center{margin-left:auto;margin-right:auto;text-align:center}
 .hv3-sc-center h2{text-align:center}
 .hv3-sc-lead{color:var(--hv3-txt);font-size:1.12rem;margin-bottom:14px}
@@ -472,7 +469,6 @@ body:has(.hv3-page) div[style*="z-index: 99999"]{display:none!important}
 }
 @media(max-width:640px){
   .hv3-sc-badge{height:80px;margin-right:90px}
-  .hv3-sc-partners img{height:64px}
   .hv3-sc-callout{padding:20px}
 }
 

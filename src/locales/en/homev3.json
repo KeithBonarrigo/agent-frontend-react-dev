@@ -213,9 +213,7 @@
       "c1Close": "Imagine every system reading from the same record instead.",
       "c2Title": "One platform, one version of the truth",
       "c2Text": "StoreConnect runs natively on Salesforce, so online sales, customer records, service cases and stock levels live together and update the moment anything changes, shaped around the way you already work.",
-      "c2Close": "Less admin. More time for the work that matters.",
-      "partnerStoreConnect": "Certified StoreConnect Partner",
-      "partnerSalesforce": "Salesforce Partner"
+      "c2Close": "Less admin. More time for the work that matters."
     },
     "certs": {
       "title": "Credentials that back up the work",

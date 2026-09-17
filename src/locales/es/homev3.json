@@ -213,9 +213,7 @@
       "c1Close": "Imagina que todos tus sistemas consultaran el mismo registro.",
       "c2Title": "Una plataforma, una sola versión de los datos",
       "c2Text": "StoreConnect funciona de forma nativa en Salesforce, así que las ventas en línea, los clientes, los casos de servicio y el inventario conviven en un mismo lugar y se actualizan en cuanto algo cambia, adaptados a la forma en que ya trabajas.",
-      "c2Close": "Menos trabajo administrativo. Más tiempo para lo importante.",
-      "partnerStoreConnect": "Partner certificado de StoreConnect",
-      "partnerSalesforce": "Partner de Salesforce"
+      "c2Close": "Menos trabajo administrativo. Más tiempo para lo importante."
     },
     "certs": {
       "title": "Certificaciones que respaldan nuestro trabajo",
