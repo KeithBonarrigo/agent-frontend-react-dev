@@ -446,6 +446,9 @@ body:has(.hv3-page) div[style*="z-index: 99999"]{display:none!important}
 .hv3-sc-callout h3{margin:0 0 10px}
 .hv3-sc-callout p{color:var(--hv3-txt-2);font-size:.97rem}
 .hv3-sc-callout .hv3-sc-callout-close{margin-top:12px;color:var(--hv3-txt);font-weight:600}
+/* Links out to getstoreconnect.com in this tab's copy */
+.hv3-page .hv3-sc-link{color:var(--hv3-brand-lt);font-weight:500;text-decoration:underline;text-underline-offset:2px}
+.hv3-page .hv3-sc-link:hover{color:#fff}
 .hv3-sc-center{margin-left:auto;margin-right:auto;text-align:center}
 .hv3-sc-center h2{text-align:center}
 .hv3-sc-lead{color:var(--hv3-txt);font-size:1.12rem;margin-bottom:14px}

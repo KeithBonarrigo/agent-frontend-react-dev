@@ -598,6 +598,23 @@ function BidConnectContent({ t }) {
 // public/img/storeconnect.
 // ---------------------------------------------------------------------------
 const SC_IMG = '/img/storeconnect';
+const STORECONNECT_URL = 'https://getstoreconnect.com/';
+
+// Turns the first "StoreConnect" in a string into a link to their site, so the
+// mention is linked once per block of text in both languages.
+function linkStoreConnect(text) {
+  if (typeof text !== 'string') return text;
+  const at = text.indexOf('StoreConnect');
+  if (at === -1) return text;
+  const after = at + 'StoreConnect'.length;
+  return (
+    <>
+      {text.slice(0, at)}
+      <a href={STORECONNECT_URL} target="_blank" rel="noopener noreferrer" className="hv3-sc-link">StoreConnect</a>
+      {text.slice(after)}
+    </>
+  );
+}
 
 const STORECONNECT_BADGES = [
   { key: 'scFundamentals', src: `${SC_IMG}/badge-storeconnect-fundamentals.svg` },
@@ -625,7 +642,7 @@ function StoreConnectContent({ t }) {
         <i className={`fa-solid ${icons[i]} hv3-bw-icon`} aria-hidden="true"></i>
         <h3>{item.title}</h3>
       </div>
-      <p>{item.text}</p>
+      <p>{linkStoreConnect(item.text)}</p>
     </div>
   ));
 
@@ -645,14 +662,14 @@ function StoreConnectContent({ t }) {
             <h1>
               {s('hero.titleLead')} <em>{s('hero.titleEm')}</em>
             </h1>
-            <p className="hv3-hero-sub">{s('hero.subtitle')}</p>
+            <p className="hv3-hero-sub">{linkStoreConnect(s('hero.subtitle'))}</p>
             <div className="hv3-hero-cta">{getToWork}</div>
           </div>
           <div className="hv3-sc-callouts">
             {[1, 2].map((n) => (
               <div className="hv3-sc-callout" key={n}>
                 <h3>{s(`hero.c${n}Title`)}</h3>
-                <p>{s(`hero.c${n}Text`)}</p>
+                <p>{linkStoreConnect(s(`hero.c${n}Text`))}</p>
                 <p className="hv3-sc-callout-close">{s(`hero.c${n}Close`)}</p>
               </div>
             ))}
@@ -665,7 +682,7 @@ function StoreConnectContent({ t }) {
         <div className="hv3-wrap">
           <div className="hv3-sec-head hv3-sc-center">
             <h2>{s('certs.title')}</h2>
-            <p>{s('certs.intro')}</p>
+            <p>{linkStoreConnect(s('certs.intro'))}</p>
           </div>
         </div>
         <div className="hv3-sc-marquee">
@@ -693,7 +710,7 @@ function StoreConnectContent({ t }) {
         <div className="hv3-wrap">
           <div className="hv3-sec-head">
             <h2>{s('why.title')}</h2>
-            <p>{s('why.intro')}</p>
+            <p>{linkStoreConnect(s('why.intro'))}</p>
           </div>
           <div className="hv3-bw-cards">{iconCards(whyItems, STORECONNECT_WHY_ICONS)}</div>
         </div>
@@ -704,8 +721,8 @@ function StoreConnectContent({ t }) {
         <div className="hv3-wrap">
           <div className="hv3-sec-head hv3-bc-record">
             <h2>{s('experience.title')}</h2>
-            <p className="hv3-sc-lead">{s('experience.lead')}</p>
-            <p>{s('experience.text')}</p>
+            <p className="hv3-sc-lead">{linkStoreConnect(s('experience.lead'))}</p>
+            <p>{linkStoreConnect(s('experience.text'))}</p>
           </div>
         </div>
       </section>
@@ -715,7 +732,7 @@ function StoreConnectContent({ t }) {
         <div className="hv3-wrap">
           <div className="hv3-sec-head">
             <h2>{s('offerings.title')}</h2>
-            <p>{s('offerings.intro')}</p>
+            <p>{linkStoreConnect(s('offerings.intro'))}</p>
           </div>
           <div className="hv3-bw-cards">{iconCards(offeringItems, STORECONNECT_OFFERING_ICONS)}</div>
           <div className="hv3-bw-cta">{getToWork}</div>
