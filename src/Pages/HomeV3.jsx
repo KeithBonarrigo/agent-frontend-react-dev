@@ -647,10 +647,6 @@ function StoreConnectContent({ t }) {
             </h1>
             <p className="hv3-hero-sub">{s('hero.subtitle')}</p>
             <div className="hv3-hero-cta">{getToWork}</div>
-            <div className="hv3-sc-partners">
-              <img src={`${SC_IMG}/partner-storeconnect-certified.png`} alt={s('hero.partnerStoreConnect')} width="384" height="480" />
-              <img src={`${SC_IMG}/partner-salesforce.png`} alt={s('hero.partnerSalesforce')} width="301" height="320" />
-            </div>
           </div>
           <div className="hv3-sc-callouts">
             {[1, 2].map((n) => (
