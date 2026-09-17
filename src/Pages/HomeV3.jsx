@@ -13,7 +13,7 @@ import "../styles/HomeV3.css";  // this page's own styles - edit this one
 // getApiUrl() (http://localhost:3000 locally via VITE_API_URL, chat.botwerx.ai
 // on www.botwerx.ai), and site links are the app's own routes.
 
-const TABS = ['bidconnect', 'botwerx'];
+const TABS = ['bidconnect', 'storeconnect', 'botwerx'];
 
 const LANGUAGES = [
   { code: 'en', flagCode: 'us', fullName: 'English' },
@@ -55,6 +55,11 @@ const NAV_ITEMS = {
     { id: 'hv3-how', label: 'nav.how' },
     { id: 'hv3-pricing', label: 'nav.pricing' },
     { id: 'hv3-faq', label: 'nav.faq' },
+  ],
+  storeconnect: [
+    { id: 'hv3-top', label: 'nav.home' },
+    { id: 'hv3-sc-why', label: 'nav.whyUs' },
+    { id: 'hv3-sc-offerings', label: 'nav.offerings' },
   ],
   botwerx: [
     { id: 'hv3-top', label: 'nav.home' },
@@ -587,7 +592,145 @@ function BidConnectContent({ t }) {
 }
 
 // ---------------------------------------------------------------------------
-// Contact form, shared by both tabs: the live home page's form and endpoint.
+// StoreConnect tab: StoreConnect + Salesforce implementation services. The
+// message follows syncbridge.tech, rewritten in original wording with a neutral
+// "we / our team" voice; text lives under `storeconnect`. Certification badges and partner logos are in
+// public/img/storeconnect.
+// ---------------------------------------------------------------------------
+const SC_IMG = '/img/storeconnect';
+
+const STORECONNECT_BADGES = [
+  { key: 'scFundamentals', src: `${SC_IMG}/badge-storeconnect-fundamentals.svg` },
+  { key: 'scAdministrator', src: `${SC_IMG}/badge-storeconnect-administrator.svg` },
+  { key: 'scThemeDeveloper', src: `${SC_IMG}/badge-storeconnect-theme-developer.svg` },
+  { key: 'sfAdministrator', src: `${SC_IMG}/badge-salesforce-administrator.png` },
+  { key: 'sfPlatformDeveloper', src: `${SC_IMG}/badge-salesforce-platform-developer.png` },
+  { key: 'sfCommerceDeveloper', src: `${SC_IMG}/badge-salesforce-b2b-developer.png` },
+  { key: 'sfAiAssociate', src: `${SC_IMG}/badge-salesforce-ai-associate.png` },
+  { key: 'sfAssociate', src: `${SC_IMG}/badge-salesforce-associate.png` },
+];
+
+// Font Awesome icons, in the same order as the why.items / offerings.items text
+const STORECONNECT_WHY_ICONS = ['fa-users', 'fa-screwdriver-wrench', 'fa-certificate', 'fa-handshake', 'fa-bullseye', 'fa-clock'];
+const STORECONNECT_OFFERING_ICONS = ['fa-chess-knight', 'fa-cloud', 'fa-right-left', 'fa-chalkboard-user', 'fa-plug', 'fa-life-ring'];
+
+function StoreConnectContent({ t }) {
+  const s = (key, opts) => t(`storeconnect.${key}`, opts);
+  const whyItems = s('why.items', { returnObjects: true });
+  const offeringItems = s('offerings.items', { returnObjects: true });
+
+  const iconCards = (items, icons) => (Array.isArray(items) ? items : []).map((item, i) => (
+    <div className="hv3-bw-card" key={item.title}>
+      <div className="hv3-bw-card-head">
+        <i className={`fa-solid ${icons[i]} hv3-bw-icon`} aria-hidden="true"></i>
+        <h3>{item.title}</h3>
+      </div>
+      <p>{item.text}</p>
+    </div>
+  ));
+
+  const getToWork = (
+    <ScrollLink to="hv3-contact" className="hv3-btn hv3-btn-p hv3-btn-lg">
+      <img src="/img/botwerx-icon.png" alt="" className="hv3-btn-icon" />
+      {s('hero.cta')}
+    </ScrollLink>
+  );
+
+  return (
+    <>
+      {/* ---------------- Hero ---------------- */}
+      <section className="hv3-hero">
+        <div className="hv3-wrap hv3-hero-grid">
+          <div>
+            <h1>
+              {s('hero.titleLead')} <em>{s('hero.titleEm')}</em>
+            </h1>
+            <p className="hv3-hero-sub">{s('hero.subtitle')}</p>
+            <div className="hv3-hero-cta">{getToWork}</div>
+            <div className="hv3-sc-partners">
+              <img src={`${SC_IMG}/partner-storeconnect-certified.png`} alt={s('hero.partnerStoreConnect')} width="384" height="480" />
+              <img src={`${SC_IMG}/partner-salesforce.png`} alt={s('hero.partnerSalesforce')} width="301" height="320" />
+            </div>
+          </div>
+          <div className="hv3-sc-callouts">
+            {[1, 2].map((n) => (
+              <div className="hv3-sc-callout" key={n}>
+                <h3>{s(`hero.c${n}Title`)}</h3>
+                <p>{s(`hero.c${n}Text`)}</p>
+                <p className="hv3-sc-callout-close">{s(`hero.c${n}Close`)}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ---------------- Certifications (scrolling badges) ---------------- */}
+      <section className="hv3-sec" id="hv3-sc-certs">
+        <div className="hv3-wrap">
+          <div className="hv3-sec-head hv3-sc-center">
+            <h2>{s('certs.title')}</h2>
+            <p>{s('certs.intro')}</p>
+          </div>
+        </div>
+        <div className="hv3-sc-marquee">
+          <div className="hv3-sc-track">
+            {/* Listed twice so the scroll loops seamlessly; the copy is hidden from screen readers */}
+            {[...STORECONNECT_BADGES, ...STORECONNECT_BADGES].map(({ key, src }, i) => {
+              const duplicate = i >= STORECONNECT_BADGES.length;
+              return (
+                <img
+                  key={`${key}-${i}`}
+                  src={src}
+                  alt={duplicate ? '' : s(`certs.badges.${key}`)}
+                  aria-hidden={duplicate || undefined}
+                  className="hv3-sc-badge"
+                  loading="lazy"
+                />
+              );
+            })}
+          </div>
+        </div>
+      </section>
+
+      {/* ---------------- Why us ---------------- */}
+      <section className="hv3-sec hv3-pricing" id="hv3-sc-why">
+        <div className="hv3-wrap">
+          <div className="hv3-sec-head">
+            <h2>{s('why.title')}</h2>
+            <p>{s('why.intro')}</p>
+          </div>
+          <div className="hv3-bw-cards">{iconCards(whyItems, STORECONNECT_WHY_ICONS)}</div>
+        </div>
+      </section>
+
+      {/* ---------------- Experience ---------------- */}
+      <section className="hv3-sec">
+        <div className="hv3-wrap">
+          <div className="hv3-sec-head hv3-bc-record">
+            <h2>{s('experience.title')}</h2>
+            <p className="hv3-sc-lead">{s('experience.lead')}</p>
+            <p>{s('experience.text')}</p>
+          </div>
+        </div>
+      </section>
+
+      {/* ---------------- Our offerings ---------------- */}
+      <section className="hv3-sec hv3-pricing" id="hv3-sc-offerings">
+        <div className="hv3-wrap">
+          <div className="hv3-sec-head">
+            <h2>{s('offerings.title')}</h2>
+            <p>{s('offerings.intro')}</p>
+          </div>
+          <div className="hv3-bw-cards">{iconCards(offeringItems, STORECONNECT_OFFERING_ICONS)}</div>
+          <div className="hv3-bw-cta">{getToWork}</div>
+        </div>
+      </section>
+    </>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// Contact form, shared by all tabs: the live home page's form and endpoint.
 // ---------------------------------------------------------------------------
 const EMPTY_CONTACT = { name: "", email: "", phone: "", company: "", website: "", comments: "" };
 
@@ -796,7 +939,9 @@ export default function HomeV3() {
       </div>
 
       <div id="hv3-tabpanel" role="tabpanel" aria-labelledby={`hv3-tab-${tab}`}>
-        {tab === 'bidconnect' ? <BidConnectContent t={t} /> : <BotwerxBotContent t={t} />}
+        {tab === 'bidconnect' ? <BidConnectContent t={t} />
+          : tab === 'storeconnect' ? <StoreConnectContent t={t} />
+          : <BotwerxBotContent t={t} />}
       </div>
 
       <ContactSection t={t} />

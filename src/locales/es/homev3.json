@@ -13,11 +13,14 @@
     "logIn": "Iniciar Sesión",
     "logOut": "Cerrar Sesión",
     "how": "Cómo funciona",
-    "pricing": "Precios"
+    "pricing": "Precios",
+    "whyUs": "¿Por qué nosotros?",
+    "offerings": "Qué hacemos"
   },
   "tabs": {
     "bidconnect": "BidConnect",
-    "botwerx": "Botwerx Bot",
+    "storeconnect": "StoreConnect",
+    "botwerx": "BotwerxBot",
     "heading": "Nuestros productos:"
   },
   "bidconnect": {
@@ -195,6 +198,101 @@
         {
           "question": "¿Los simpatizantes pueden ver el catálogo antes de que abran las pujas?",
           "answer": "Sí, y vale la pena incluirlo en tu plan. Antes de la hora de inicio que definas, el sitio de tu subasta muestra los artículos con los precios ocultos y las pujas cerradas, así que puedes dirigir a la gente al catálogo real semanas antes en lugar de a una página de espera. Mostrar los artículos con anticipación es una de las prácticas que los datos del sector asocian con mejores resultados, y no cuesta más que el correo."
+        }
+      ]
+    }
+  },
+  "storeconnect": {
+    "hero": {
+      "titleLead": "Gestiona todo tu negocio con",
+      "titleEm": "StoreConnect + Salesforce",
+      "subtitle": "Una plataforma segura para tu tienda, tus clientes y tu operación, con las tareas repetitivas automatizadas.",
+      "cta": "Hablemos",
+      "c1Title": "Deja de operar tu negocio con una docena de herramientas",
+      "c1Text": "Cuando cada área tiene su propia aplicación, alguien termina capturando datos dos veces, parchando conexiones y cuadrando reportes que nunca coinciden del todo. Ese trabajo extra se acumula rápido.",
+      "c1Close": "Imagina que todos tus sistemas consultaran el mismo registro.",
+      "c2Title": "Una plataforma, una sola versión de los datos",
+      "c2Text": "StoreConnect funciona de forma nativa en Salesforce, así que las ventas en línea, los clientes, los casos de servicio y el inventario conviven en un mismo lugar y se actualizan en cuanto algo cambia, adaptados a la forma en que ya trabajas.",
+      "c2Close": "Menos trabajo administrativo. Más tiempo para lo importante.",
+      "partnerStoreConnect": "Partner certificado de StoreConnect",
+      "partnerSalesforce": "Partner de Salesforce"
+    },
+    "certs": {
+      "title": "Certificaciones que respaldan nuestro trabajo",
+      "intro": "Nuestro equipo está certificado en StoreConnect y Salesforce, con experiencia en administración, desarrollo e IA, para que tu proyecto quede en manos expertas.",
+      "badges": {
+        "scFundamentals": "Certificación StoreConnect Fundamentals",
+        "scAdministrator": "Certificación StoreConnect Administrator",
+        "scThemeDeveloper": "Certificación StoreConnect Theme Developer",
+        "sfAdministrator": "Salesforce Certified Administrator",
+        "sfPlatformDeveloper": "Salesforce Certified Platform Developer I",
+        "sfCommerceDeveloper": "Salesforce Certified Commerce Developer",
+        "sfAiAssociate": "Salesforce Certified AI Associate",
+        "sfAssociate": "Salesforce Certified Associate"
+      }
+    },
+    "why": {
+      "title": "¿Por qué trabajar con nosotros?",
+      "intro": "Muchos partners pueden configurar StoreConnect. Esto es lo que hace diferente nuestra forma de trabajar.",
+      "items": [
+        {
+          "title": "Conocemos la plataforma por dentro",
+          "text": "Parte de nuestro equipo trabajó en los equipos de soporte y fundador de StoreConnect, así que sabemos cómo está construida y cómo ponerla a trabajar para ti."
+        },
+        {
+          "title": "Probado en proyectos reales",
+          "text": "Hemos implementado StoreConnect para comercios, fabricantes, firmas de servicios profesionales y organizaciones sin fines de lucro, desde una sola tienda hasta despliegues en varias regiones con integraciones a la medida."
+        },
+        {
+          "title": "Un equipo totalmente certificado",
+          "text": "Todo el equipo cuenta con todos los niveles de certificación de StoreConnect, además de credenciales de Salesforce en administración, desarrollo e IA."
+        },
+        {
+          "title": "Pensado para tu negocio",
+          "text": "Primero entendemos cómo operas en realidad y después adaptamos cada recomendación e integración a tus objetivos, no a una plantilla."
+        },
+        {
+          "title": "Un proceso sin cabos sueltos",
+          "text": "El descubrimiento, la planeación, la construcción, las pruebas y el soporte siguen un método claro y documentado que reduce riesgos y mantiene presupuestos y plazos predecibles."
+        },
+        {
+          "title": "Un avance que no se detiene",
+          "text": "Calendarios realistas, actualizaciones frecuentes e iteraciones rápidas hacen que tu lanzamiento llegue cuando lo necesitas."
+        }
+      ]
+    },
+    "experience": {
+      "title": "Experiencia práctica en comercio con Salesforce",
+      "lead": "Hemos construido y afinado tiendas nativas de Salesforce con StoreConnect y con otros productos de comercio de Salesforce, siempre pensando en el crecimiento.",
+      "text": "Nuestros proyectos van desde empresas jóvenes que abren su primera tienda en línea hasta corporativos con operaciones multicanal complejas. En todos los casos conectamos StoreConnect de forma estrecha con Salesforce CRM y lo configuramos según la forma en que vende cada negocio. Trabajar con otras plataformas B2C, incluida Salesforce Commerce Cloud, nos da una visión más amplia de lo que rinde y escala. Ya sea que empieces desde cero o quieras mejorar una tienda que ya operas, diseñaremos algo práctico que siga funcionando a medida que creces."
+    },
+    "offerings": {
+      "title": "Qué hacemos",
+      "intro": "Servicios que te llevan del plan al lanzamiento y te mantienen en marcha después.",
+      "items": [
+        {
+          "title": "Estrategia digital",
+          "text": "Revisamos los sistemas que usas hoy y dónde te frenan, y te presentamos opciones claras para la adopción, el tráfico y el crecimiento en línea para que elijas tu camino."
+        },
+        {
+          "title": "Configuración de Salesforce CRM",
+          "text": "Ya sea tu primera org o una expansión, configuramos objetos, campos, Flows y Apex para que Salesforce y StoreConnect sean productivos desde el lanzamiento y estén listos para crecer."
+        },
+        {
+          "title": "Migración de datos",
+          "text": "Trasladamos y conciliamos tus registros e imágenes con precisión, preparamos nosotros los archivos de importación y coordinamos cualquier herramienta especializada que se necesite."
+        },
+        {
+          "title": "Habilitación de ventas y capacitación",
+          "text": "Education, Service, Health y las demás nubes de Salesforce funcionan de manera distinta. Ayudamos a tu equipo a aprovechar al máximo la que usas."
+        },
+        {
+          "title": "Soporte para sitios de StoreConnect existentes",
+          "text": "¿Ya operas en StoreConnect? Nos encargamos del mantenimiento y de los nuevos desarrollos para que tu tienda avance al ritmo de tu negocio."
+        },
+        {
+          "title": "Mantenimiento a largo plazo",
+          "text": "Cada proyecto incluye un periodo de garantía, y un acuerdo de soporte anual nos mantiene disponibles durante un año completo después."
         }
       ]
     }
