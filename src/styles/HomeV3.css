@@ -439,6 +439,43 @@ body:has(.hv3-page) div[style*="z-index: 99999"]{display:none!important}
 
 /* Wider heading block so "Pay for the auction, not the off-season." fits on one line */
 .hv3-bc-pricing-head{max-width:920px}
+/* ---------------- storeconnect tab ---------------- */
+.hv3-sc-callouts{display:flex;flex-direction:column;gap:16px}
+.hv3-sc-callout{background:var(--hv3-bg-card);border:1px solid var(--hv3-line-2);border-left:3px solid var(--hv3-accent);
+  border-radius:11px;padding:24px 26px}
+.hv3-sc-callout h3{margin:0 0 10px}
+.hv3-sc-callout p{color:var(--hv3-txt-2);font-size:.97rem}
+.hv3-sc-callout .hv3-sc-callout-close{margin-top:12px;color:var(--hv3-txt);font-weight:600}
+/* Partner logos sit on white chips so they read on the dark background */
+.hv3-sc-partners{display:flex;gap:14px;align-items:center;flex-wrap:wrap}
+.hv3-sc-partners img{height:76px;width:auto;max-width:100%;background:#fff;border-radius:10px;padding:8px}
+.hv3-sc-center{margin-left:auto;margin-right:auto;text-align:center}
+.hv3-sc-center h2{text-align:center}
+.hv3-sc-lead{color:var(--hv3-txt);font-size:1.12rem;margin-bottom:14px}
+/* Certification badges: an endless left scroll (the list is doubled and the
+   track moves by half its width). Pauses on hover; static for reduced motion. */
+.hv3-sc-marquee{position:relative;margin-top:44px;overflow:hidden;background:#fff;padding:32px 0;
+  border-top:1px solid var(--hv3-line);border-bottom:1px solid var(--hv3-line)}
+/* soft white fade at both ends of the white band */
+.hv3-sc-marquee::before,.hv3-sc-marquee::after{content:"";position:absolute;top:0;bottom:0;width:8%;z-index:1;pointer-events:none}
+.hv3-sc-marquee::before{left:0;background:linear-gradient(90deg,#fff,rgba(255,255,255,0))}
+.hv3-sc-marquee::after{right:0;background:linear-gradient(270deg,#fff,rgba(255,255,255,0))}
+.hv3-sc-track{display:flex;align-items:center;width:max-content;animation:hv3-sc-scroll 36s linear infinite}
+.hv3-sc-marquee:hover .hv3-sc-track{animation-play-state:paused}
+.hv3-sc-badge{height:104px;width:auto;flex:none;margin-right:150px}
+@keyframes hv3-sc-scroll{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+@media(prefers-reduced-motion:reduce){
+  .hv3-sc-marquee::before,.hv3-sc-marquee::after{display:none}
+  .hv3-sc-track{animation:none;width:auto;flex-wrap:wrap;justify-content:center;gap:32px 0;padding:0 16px}
+  .hv3-sc-track .hv3-sc-badge[aria-hidden="true"]{display:none}
+  .hv3-sc-badge{margin:0 56px}
+}
+@media(max-width:640px){
+  .hv3-sc-badge{height:80px;margin-right:90px}
+  .hv3-sc-partners img{height:64px}
+  .hv3-sc-callout{padding:20px}
+}
+
 /* BidConnect pricing: three equal plan cards, one column when stacked */
 .hv3-plans-3{grid-template-columns:repeat(3,1fr)}
 @media(max-width:1000px){
