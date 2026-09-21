@@ -21,6 +21,7 @@ import Agent from "./Pages/Agent";
 import HomeV3 from "./Pages/HomeV3";
 import LoginV3 from "./Pages/LoginV3";
 import LegalV3 from "./Pages/LegalV3";
+import PasswordResetRequestV3 from "./Pages/PasswordResetRequestV3";
 import { UserProvider } from './contexts/UserContext';
 import { DomainProvider, useDomain } from './contexts/DomainContext';
 
@@ -56,7 +57,7 @@ function AppRoutes() {
           <Route path="/login" element={useV3 ? <LoginV3 /> : <Login />} />
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/payment" element={<Checkout />} />
-          <Route path="/password-reset/request" element={<PasswordResetRequest />} />
+          <Route path="/password-reset/request" element={useV3 ? <PasswordResetRequestV3 /> : <PasswordResetRequest />} />
           <Route path="/password-reset/check-email" element={<PasswordResetCheckEmail />} />
           <Route path="/password-reset/confirm" element={<PasswordResetConfirm />} />
           <Route path="/agent" element={<Agent />} />

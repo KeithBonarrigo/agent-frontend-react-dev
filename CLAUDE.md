@@ -25,6 +25,9 @@ Plans, handoff notes and similar working documents go in `plans/`, named
   render inside `LegalV3.jsx` (V3 header, footer, favicon). The page components
   and `legal.json` are unchanged; `HomeV3.css` restyles their `policy-*` markup
   under `.hv3-legal`.
+- Password reset: on BotWerx domains `/password-reset/request` renders
+  `PasswordResetRequestV3.jsx` (text under `login.reset` in `homev3.json`).
+  `PasswordResetRequest.jsx` is unchanged and still serves the other domains.
 - Backup: git tag `backup/pre-v3-home-2026-09-13` = `main` before the switch.
 - Rollback: in `src/App.jsx` point `/` back to `<Home />` and `/login` back to
   `<Login />` (or revert the merge commit).

@@ -471,6 +471,19 @@
     "success": {
       "accountCreated": "✅ Account Created!",
       "switchingToLogin": "Switching to login..."
+    },
+    "reset": {
+      "meta": {
+        "title": "Reset Password - BotWerx"
+      },
+      "title": "Reset Password",
+      "description": "Enter your email and we'll send you a link to reset your password.",
+      "send": "Send Reset Link",
+      "sending": "Sending...",
+      "checkEmailTitle": "Check Your Email",
+      "checkEmailMessage": "If an account exists for <strong>{{email}}</strong>, you'll receive a password reset link shortly.",
+      "checkSpam": "Don't see it? Check your spam folder.",
+      "backToLogin": "← Back to login"
     }
   },
   "shell": {
