@@ -724,11 +724,17 @@ body:has(.hv3-page) div[style*="z-index: 99999"]{display:none!important}
 .hv3-auth-card h1{font-size:2rem;text-align:center;margin-bottom:28px}
 .hv3-auth-form .hv3-cform-row{gap:0 14px}
 .hv3-auth-forgot{text-align:right;margin:-6px 0 18px}
-.hv3-auth-forgot a,.hv3-auth-toggle button{color:var(--hv3-brand-lt);font-size:.9rem;text-decoration:underline;text-underline-offset:2px}
-.hv3-auth-forgot a:hover,.hv3-auth-toggle button:hover{color:#fff}
+.hv3-auth-forgot a,.hv3-auth-toggle button,.hv3-auth-toggle a{color:var(--hv3-brand-lt);font-size:.9rem;text-decoration:underline;text-underline-offset:2px}
+.hv3-auth-forgot a:hover,.hv3-auth-toggle button:hover,.hv3-auth-toggle a:hover{color:#fff}
 .hv3-page .hv3-auth-submit{display:flex;width:100%;margin:6px 0 0}
+.hv3-page .hv3-auth-submit:disabled{opacity:.6;cursor:wait}
 .hv3-auth-toggle{margin-top:24px;text-align:center;color:var(--hv3-txt-2);font-size:.92rem}
+.hv3-auth-toggle a{font-weight:600}
 .hv3-auth-toggle button{appearance:none;background:none;border:0;padding:0;margin:0;box-shadow:none;font-family:inherit;font-weight:600;cursor:pointer}
+/* Password reset request page: intro line under the heading, spam hint */
+.hv3-auth-lede{margin:-14px 0 26px;text-align:center;color:var(--hv3-txt-2);line-height:1.6}
+.hv3-auth-lede strong{color:var(--hv3-txt);overflow-wrap:anywhere}
+.hv3-auth-note{margin-top:-10px;text-align:center;color:var(--hv3-txt-3);font-size:.9rem}
 .hv3-auth-success{text-align:center;padding:24px 0}
 .hv3-auth-success h2{font-size:1.5rem;text-align:center;color:var(--hv3-ok)}
 .hv3-auth-success p{margin-top:10px;color:var(--hv3-txt-2)}

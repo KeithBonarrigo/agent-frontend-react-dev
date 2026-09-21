@@ -471,6 +471,19 @@
     "success": {
       "accountCreated": "✅ ¡Cuenta Creada!",
       "switchingToLogin": "Cambiando a inicio de sesión..."
+    },
+    "reset": {
+      "meta": {
+        "title": "Restablecer contraseña - BotWerx"
+      },
+      "title": "Restablecer Contraseña",
+      "description": "Escribe tu correo y te enviaremos un enlace para restablecer tu contraseña.",
+      "send": "Enviar Enlace",
+      "sending": "Enviando...",
+      "checkEmailTitle": "Revisa Tu Correo",
+      "checkEmailMessage": "Si existe una cuenta con <strong>{{email}}</strong>, en breve recibirás un enlace para restablecer tu contraseña.",
+      "checkSpam": "¿No lo ves? Revisa tu carpeta de spam.",
+      "backToLogin": "← Volver a iniciar sesión"
     }
   },
   "shell": {
