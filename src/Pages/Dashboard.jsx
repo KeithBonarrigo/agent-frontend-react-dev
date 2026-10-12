@@ -1105,7 +1105,7 @@ export default function Dashboard() {
   const getLevelColor = (level) => {
     const colors = {
       enterprise: '#6f42c1',
-      pro: '#007bff',
+      pro: 'var(--hv3-brand, #007bff)',
       basic: '#28a745',
       easybroker: '#fd7e14',
       free: '#6c757d'
@@ -1668,7 +1668,7 @@ export default function Dashboard() {
                             <i className="fa-solid fa-building" style={{ color: '#495057', fontSize: '1.1em', marginBottom: '0.3em', display: 'block' }}></i>
                             <div style={{ fontSize: '0.65em', textTransform: 'uppercase', letterSpacing: '0.05em', color: '#868e96', fontWeight: 600, marginBottom: '0.2em' }}>{t('dashboard:summary.company')}</div>
                             {agentEditForm.company && <div style={{ fontSize: '0.9em', fontWeight: 500, color: '#212529' }}>{agentEditForm.company}</div>}
-                            {agentEditForm.office_address && <div style={{ fontSize: '0.8em', color: '#495057', marginTop: '0.2em' }}>{agentEditForm.office_lat && agentEditForm.office_long ? <a href={`https://www.google.com/maps?q=${agentEditForm.office_lat},${agentEditForm.office_long}`} target="_blank" rel="noopener noreferrer" style={{ color: '#007bff', textDecoration: 'none' }}>{agentEditForm.office_address} <i className="fa-solid fa-arrow-up-right-from-square" style={{ fontSize: '0.75em' }}></i></a> : agentEditForm.office_address}</div>}
+                            {agentEditForm.office_address && <div style={{ fontSize: '0.8em', color: '#495057', marginTop: '0.2em' }}>{agentEditForm.office_lat && agentEditForm.office_long ? <a href={`https://www.google.com/maps?q=${agentEditForm.office_lat},${agentEditForm.office_long}`} target="_blank" rel="noopener noreferrer" style={{ color: 'var(--hv3-brand, #007bff)', textDecoration: 'none' }}>{agentEditForm.office_address} <i className="fa-solid fa-arrow-up-right-from-square" style={{ fontSize: '0.75em' }}></i></a> : agentEditForm.office_address}</div>}
                           </div>
                         )}
                       </div>

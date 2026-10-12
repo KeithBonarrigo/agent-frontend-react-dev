@@ -203,6 +203,28 @@ redirects back to `/dashboard`, are unchanged.
 Undo: rollback level 1 (the two routes). Then optionally remove the className,
 the `var()` and section F; without the frame they have no visible effect.
 
+### #10 Inline old blue → site blue (Integrations tab, level badge, address link)
+
+Nine inline `#007bff` values now read `var(--hv3-brand, #007bff)`. `--hv3-brand`
+(`#2F6BFF`) is only defined on `.dv3-page`, so they show the site blue inside the
+V3 frame. AI Bridge and Propel have no frame, so they fall back to `#007bff`, which
+is no change there.
+
+| File | Element | Before | After |
+| --- | --- | --- | --- |
+| `src/components/IntegrationsTab.jsx` | Web Embed **Copy** button background (green once copied, unchanged) | `#007bff` | `var(--hv3-brand, #007bff)` |
+| ″ | Domain name in "Copy this code … at **domain**" | `#007bff` | ″ |
+| ″ | **Try It Out** link (green once loaded, unchanged) | `#007bff` | ″ |
+| ″ | Messenger "choose another page" text button | `#007bff` | ″ |
+| ″ | **Connect with Facebook** (Messenger) background (`#ccc` while loading, unchanged) | `#007bff` | ″ |
+| ″ | Google Calendar **Connect** background (`#ccc` while loading, unchanged) | `#007bff` | ″ |
+| ″ | **Connect Instagram** background (`#ccc` while loading, unchanged) | `#007bff` | ″ |
+| `src/Pages/Dashboard.jsx` | `getLevelColor`: `pro` level badge in the agent bar | `'#007bff'` | `'var(--hv3-brand, #007bff)'` |
+| ″ | Agent Settings office-address map link | `color: '#007bff'` | `color: 'var(--hv3-brand, #007bff)'` |
+
+Undo: in both files, replace `var(--hv3-brand, #007bff)` with `#007bff`. Rollback
+level 1 also brings the old blue back, because without the frame the fallback applies.
+
 ## Verification (2026-10-12)
 
 - `npx eslint` on `DashboardV3.jsx` and `App.jsx`: clean. `Dashboard.jsx` has the
@@ -226,20 +248,23 @@ the `var()` and section F; without the frame they have no visible effect.
   rollback drill for the callback routes was done, then restored.
 - Lint for #8/#9: `App.jsx` and `DashboardV3.jsx` are clean. `OAuthCallback.jsx`
   (2) and `Dashboard.jsx` (28) have the same existing problems as on `main`.
+- #10: computed colors on the mock-backed dashboard were all `rgb(47,107,255)`:
+  Copy, Try It Out, Connect with Facebook, Connect, Connect Instagram, the domain
+  text, the `pro` badge and the address link. No page errors.
+  `IntegrationsTab.jsx` lint matches `main` (7 existing problems). The fallback was
+  proven with the same `var()` on the OAuth spinner (#9): `rgb(0,123,255)` without
+  the frame.
 - **Still to do by the user:** log in for real on the dev server and click
   through, opening (not submitting) the Change Plan and Cancel modals.
 
 ## Known and existing (not caused by this change)
 
-- Inline-styled blues still use `#007bff`: the Integrations tab's Copy / Connect /
-  Connect with Facebook / Connect Instagram buttons, and the agent-level badge
-  (`getLevelColor` in `Dashboard.jsx`).
+- 11 inline `#007bff` values remain in other tabs, mostly inside collapsed
+  sections: Configurations 3, Leads 3, Audience 2, Models 2, Add-ons 1.
 
 ## Next-phase candidates
 
-- Inline `#007bff` → site blue. Use `var(--hv3-brand, #007bff)` in the inline
-  styles, as the OAuth spinner now does (#9). The token is only defined under
-  `.dv3-page`, so AI Bridge and Propel keep their blue.
+- Those 11 values → `var(--hv3-brand, #007bff)`, the same way as #10.
 - Dark tab content (the inline styles in the 11 tab components).
 - The same frame for `/payment` and `/password-reset/*`, which still show the
   robot logo.
