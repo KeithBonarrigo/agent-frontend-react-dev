@@ -132,3 +132,13 @@ body:has(.dv3-page) > #root{display:block;height:auto;min-height:100vh;overflow:
 .dv3-page .btn-repeat-search{background:var(--hv3-brand)}
 .dv3-page .btn-repeat-search:hover{background:var(--hv3-brand-dk)}
 .dv3-page .btn-move:not(:disabled){background-color:var(--hv3-brand)}
+
+/* ---------------- F. OAuth callback page ---------------- */
+/* /oauth/.../callback (Google Calendar and other redirect connects) shows a short
+   status message on the way back to the dashboard. Its text is styled inline for
+   a light page, so it sits on a light card centred in the navy frame, like the
+   site's login card. !important beats the component's inline 60vh min-height. */
+.dv3-main:has(> .oauth-callback){display:flex;align-items:center;justify-content:center;padding:56px 20px}
+.dv3-page .oauth-callback{width:100%;max-width:480px;min-height:0!important;background:#fff;
+  border:1px solid var(--hv3-line-2);border-radius:11px;
+  box-shadow:0 26px 60px -26px rgba(0,0,0,.6),0 2px 6px rgba(0,0,0,.2)}

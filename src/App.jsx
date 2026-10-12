@@ -63,8 +63,9 @@ function AppRoutes() {
           <Route path="/password-reset/check-email" element={<PasswordResetCheckEmail />} />
           <Route path="/password-reset/confirm" element={<PasswordResetConfirm />} />
           <Route path="/agent" element={<Agent />} />
-          <Route path="/oauth/callback" element={<OAuthCallback />} />
-          <Route path="/oauth/:provider/callback" element={<OAuthCallback />} />
+          {/* Same V3 frame as the dashboard. Rollback = element={<OAuthCallback />} */}
+          <Route path="/oauth/callback" element={useV3 ? <DashboardV3><OAuthCallback /></DashboardV3> : <OAuthCallback />} />
+          <Route path="/oauth/:provider/callback" element={useV3 ? <DashboardV3><OAuthCallback /></DashboardV3> : <OAuthCallback />} />
         </Route>
       </Routes>
     </>

@@ -15,13 +15,16 @@ Plans, handoff notes and similar working documents go in `plans/`, named
 
 ## Dashboard V3 frame (2026-10-12)
 
-- On BotWerx domains `/dashboard` renders inside `DashboardV3.jsx` (V3 header with
-  the new logo, footer, favicon). `Dashboard.jsx` and the tab components are
-  unchanged apart from the tab strip's `dashboard-tabbar` class.
+- On BotWerx domains `/dashboard` and the OAuth callback (`/oauth/callback`,
+  `/oauth/:provider/callback`) render inside `DashboardV3.jsx` (V3 header with the
+  new logo, footer, favicon). `Dashboard.jsx` and the tab components are unchanged
+  apart from the tab strip's `dashboard-tabbar` class and the Agent Settings
+  `agent-grid` / `agent-summary` classes (responsive, defined in `Dashboard.css`).
 - All dashboard restyling lives in `src/styles/DashboardV3.css`, scoped to
   `.dv3-page` or `body:has(.dv3-page)`. Don't put `.hv3-page` on the dashboard:
   its heading and text resets wash out the light cards.
-- Rollback: in `src/App.jsx` point `/dashboard` back to `<Dashboard />`. Backup tag
+- Rollback: in `src/App.jsx` point `/dashboard` back to `<Dashboard />` (and the
+  `/oauth/...` routes to `<OAuthCallback />`). Backup tag
   `backup/pre-dashboard-v3-2026-10-12`. Every change, with before → after values:
   `plans/2026-10-12-dashboard-v3-style.md`.
 

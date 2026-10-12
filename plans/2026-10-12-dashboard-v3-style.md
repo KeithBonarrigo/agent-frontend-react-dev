@@ -11,8 +11,8 @@ is listed below with its before → after values and how to undo it on its own.
 | This work | Worktree `~/Botwerx/agent-frontend-react-dev-dashboard`, branch **`dashboard-v3-style`**, from `origin/main` at `a0ddcf5` |
 | Backup tag | `backup/pre-dashboard-v3-2026-10-12` → `a0ddcf5b487a86a2afad9f2b8e85b8c6b8c8740e` (`main` as deployed before this work). Local until pushed: `git push origin backup/pre-dashboard-v3-2026-10-12` |
 | Wrapper | `src/Pages/DashboardV3.jsx` |
-| Styles | `src/styles/DashboardV3.css` (sections A–E below) |
-| Applies to | `/dashboard` on BotWerx domains only (`useV3` in `src/App.jsx`). AI Bridge (`aibridge.global` / `base`) and Propel domains keep the old dashboard. |
+| Styles | `src/styles/DashboardV3.css` (sections A–F below) |
+| Applies to | `/dashboard`, `/oauth/callback` and `/oauth/:provider/callback` on BotWerx domains only (`useV3` in `src/App.jsx`). AI Bridge (`aibridge.global` / `base`) and Propel domains keep the old pages. Exception: the Agent Settings phone-layout fix (#8) is a bug fix and applies on every domain. |
 | Run it | `npm run dev -- --port 5175 --strictPort` in the worktree, then http://localhost:5175/dashboard (log in first) |
 
 The approach copies `LegalV3.jsx`: a wrapper draws the site's V3 header and footer
@@ -30,6 +30,9 @@ the light cards. `HomeV3.css` and `Home.css` are not edited.
    *Tested on 2026-10-12:* with that line the page measured identical to before
    (old header, footer and language pill showing, `#f4f4f4` page, Segoe UI, 8px
    cards, gray tab strip).
+   The OAuth callback works the same way: set both `/oauth/...` routes back to
+   `element={<OAuthCallback />}` (#9). *Tested:* the old page returned, with the old
+   header, the `#007bff` spinner and the 60vh layout.
 2. **Undo one piece.** Delete that rule group from `src/styles/DashboardV3.css`.
    Its section letters and comments match the tables below.
 3. **Full revert.** Before merge: delete the branch. After merge: open a PR with
@@ -147,6 +150,59 @@ These are the old inline values. Undo: remove the rule, together with #4.
 
 New section "Dashboard V3 frame" pointing here. Undo: remove the section.
 
+### #8 Agent Settings grids: phone layout fix (all domains)
+
+The bug: at phone width the Agent Settings read-only cards ran 146px past the
+right edge of the card, and the Edit form 135px (measured at 390px). The section's
+`overflow: hidden` clipped them, which cut off the Email card. The grid columns were
+inline styles, so they couldn't respond to screen width.
+
+`src/Pages/Dashboard.jsx`: seven inline layouts in the Agent Settings section now use classes.
+
+| Line (approx.) | Before | After |
+| --- | --- | --- |
+| Edit form, Agent & Company | `style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '0.75em' }}` | `className="agent-grid agent-grid-3"` |
+| Edit form, Contact | `style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '0.75em', alignItems: 'end' }}` | `className="agent-grid agent-grid-4" style={{ alignItems: 'end' }}` |
+| Edit form, Lat / Long / Timezone | same as Agent & Company | `className="agent-grid agent-grid-3"` |
+| Edit form, API tokens | `style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '0.75em' }}` | `className="agent-grid agent-grid-2"` |
+| Edit form, Office ID | `style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '0.75em', marginTop: '0.75em' }}` | `className="agent-grid agent-grid-2" style={{ marginTop: '0.75em' }}` |
+| Read-only, outer row | `style={{ display: 'flex', gap: '0.75em', marginTop: '0.25em' }}` | Same style, plus `className="agent-summary"` |
+| Read-only, contact cards | `style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75em' }}` | `className="agent-grid agent-grid-2"` |
+
+`src/styles/Dashboard.css`: new "AGENT SETTINGS GRIDS" block after `.grid-3`.
+
+- `.agent-grid` is `display: grid; gap: 0.75em`, and its children get `min-width: 0`.
+- `.agent-grid-2/-3/-4` are `repeat(2|3|4, 1fr)`, the same as the old inline values.
+- `.agent-summary` has `overflow-wrap: anywhere`, and its children get `min-width: 0`.
+- At ≤768px: `.agent-summary` stacks (`flex-direction: column`), and `-3`/`-4` drop to 2 columns.
+- At ≤480px: all `.agent-grid-*` become one column.
+
+Desktop is unchanged: same columns and gaps, and the screenshots match.
+
+Undo: restore the seven "Before" lines in `Dashboard.jsx` and delete the CSS
+block. Or restore both files from the tag; that also undoes #4/#5, which is harmless.
+
+### #9 OAuth callback page in the V3 frame
+
+`/oauth/callback` and `/oauth/:provider/callback` showed the old robot header.
+They are used by **Google Calendar and other redirect-based connects** (Google add-ons).
+WhatsApp, Messenger and Instagram connect through Facebook's `FB.login` popup and
+never open this page.
+
+| File | Before | After |
+| --- | --- | --- |
+| `src/App.jsx` | `<Route path="/oauth/callback" element={<OAuthCallback />} />` and the same for `/oauth/:provider/callback` | A comment, then `element={useV3 ? <DashboardV3><OAuthCallback /></DashboardV3> : <OAuthCallback />}` on both routes |
+| `src/Pages/OAuthCallback.jsx` | Root `<div style={{ … minHeight: '60vh' … }}>` | Same, plus `className="oauth-callback"` (no style outside the frame) |
+| `src/Pages/OAuthCallback.jsx` | Spinner `color: '#007bff'` | `color: 'var(--hv3-brand, #007bff)'`: site blue `#2F6BFF` inside the frame, `#007bff` everywhere else |
+| `src/styles/DashboardV3.css` | n/a | Section F: `.dv3-main:has(> .oauth-callback)` centers the content (flex, padding 56px 20px). `.dv3-page .oauth-callback` is a white card: max-width 480px, radius 11px, border `rgba(255,255,255,.12)`, dashboard card shadow, `min-height: 0 !important` to override the inline 60vh. |
+
+The page gets the frame's header with the new logo, the footer, the blue-rounded
+favicon and the navy page. The processing, success and error messages, and the
+redirects back to `/dashboard`, are unchanged.
+
+Undo: rollback level 1 (the two routes). Then optionally remove the className,
+the `var()` and section F; without the frame they have no visible effect.
+
 ## Verification (2026-10-12)
 
 - `npx eslint` on `DashboardV3.jsx` and `App.jsx`: clean. `Dashboard.jsx` has the
@@ -160,22 +216,30 @@ New section "Dashboard V3 frame" pointing here. Undo: remove the section.
   strip `rgb(22,30,44)`, active tab gradient. The only console errors were
   Facebook's SDK refusing `http://` pages, which is expected on localhost.
 - Rollback drill (level 1) done, then restored.
+- #8: overflow past the card's right edge in the Agent Settings section was measured
+  at 1366px, 768px and 390px, in the read-only view and the Edit form (opened, then
+  closed with Cancel). Without the fix: 146px and 135px at 390px. With it: 0 at
+  every width. The Edit form was never saved.
+- #9: `/oauth/google-calendar/callback` with the mock was captured in its
+  processing and success states, and `/oauth/callback` with no parameters in its
+  error state. The error redirect to `/dashboard?oauth=error…` still works. The
+  rollback drill for the callback routes was done, then restored.
+- Lint for #8/#9: `App.jsx` and `DashboardV3.jsx` are clean. `OAuthCallback.jsx`
+  (2) and `Dashboard.jsx` (28) have the same existing problems as on `main`.
 - **Still to do by the user:** log in for real on the dev server and click
   through, opening (not submitting) the Change Plan and Cancel modals.
 
 ## Known and existing (not caused by this change)
 
-- At phone width, the Agent Settings grid (inline styles) runs past the right edge
-  of its card. The frame gives it about 40px more width than before.
 - Inline-styled blues still use `#007bff`: the Integrations tab's Copy / Connect /
   Connect with Facebook / Connect Instagram buttons, and the agent-level badge
   (`getLevelColor` in `Dashboard.jsx`).
 
 ## Next-phase candidates
 
-- Inline `#007bff` → site blue. Use `var(--dv3-brand, #007bff)` in the inline
-  styles, defined only under `.dv3-page`, so AI Bridge and Propel keep their blue.
+- Inline `#007bff` → site blue. Use `var(--hv3-brand, #007bff)` in the inline
+  styles, as the OAuth spinner now does (#9). The token is only defined under
+  `.dv3-page`, so AI Bridge and Propel keep their blue.
 - Dark tab content (the inline styles in the 11 tab components).
-- The same frame for `/oauth/*/callback` (seen during the Instagram / Messenger
-  connect flow), `/payment` and `/password-reset/*`, which still show the robot
-  logo.
+- The same frame for `/payment` and `/password-reset/*`, which still show the
+  robot logo.
