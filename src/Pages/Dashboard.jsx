@@ -1771,7 +1771,7 @@ export default function Dashboard() {
 
           {/* Tabs - Navigation for different dashboard sections */}
           {/* Training tab: RAG embeddings, Add-Ons tab: selectable decorators/integrations */}
-          <div className="flex flex-center flex-wrap" style={{ borderBottom: '2px solid #ddd', backgroundColor: '#e9ecef' }}>
+          <div className="dashboard-tabbar flex flex-center flex-wrap">
             <button className={`dashboard-tab ${activeTab === 'configurations' ? 'dashboard-tab-active' : ''}`} onClick={() => setActiveTab('configurations')}>⚙ {t('common:navigation.configurations')}</button>
 
             <button className={`dashboard-tab ${activeTab === 'integrations' ? 'dashboard-tab-active' : ''}`} onClick={() => setActiveTab('integrations')}>⇄ {t('common:navigation.integrations')}</button>

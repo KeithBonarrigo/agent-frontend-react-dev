@@ -1,0 +1,134 @@
+/* ============================================================
+   BOTWERX - DASHBOARD V3 FRAME
+   The logged-in dashboard in the botwerx.ai V3 look: the site's
+   header, footer, navy page and new logo around light content
+   cards. Wrapper: src/Pages/DashboardV3.jsx.
+   Change and rollback log: plans/2026-10-12-dashboard-v3-style.md
+   (its section letters match the ones below).
+
+   Every rule is scoped to .dv3-page or body:has(.dv3-page), so
+   nothing here reaches the home, login or legal pages, or the AI
+   Bridge and Propel dashboards (App.jsx only wraps BotWerx domains).
+   ============================================================ */
+
+/* ---------------- A. tokens and base ---------------- */
+/* The same tokens as .hv3-page in HomeV3.css, so the shared hv3- header and
+   footer classes render exactly as they do on the site. */
+.dv3-page{
+  --hv3-bg:#0F1621;
+  --hv3-bg-2:#161E2C;
+  --hv3-bg-3:#1C2536;
+  --hv3-bg-card:#1A2332;
+  --hv3-txt:#E8EBF0;
+  --hv3-txt-2:#9CA3B0;
+  --hv3-txt-3:#848C9B;
+  --hv3-line:rgba(255,255,255,.08);
+  --hv3-line-2:rgba(255,255,255,.12);
+  --hv3-brand:#2F6BFF;
+  --hv3-brand-lt:#5A8CFF;
+  --hv3-brand-dk:#1A4ED6;
+  --hv3-brand-soft:rgba(47,107,255,.12);
+  --hv3-ok:#34D399;
+  --hv3-amber:#F59E0B;
+  --hv3-accent:#2DD4BF;
+  --hv3-accent-lt:#7CE8DA;
+  --hv3-accent-soft:rgba(45,212,191,.13);
+  --hv3-maxw:1220px;
+
+  min-height:100vh;
+  display:flex;
+  flex-direction:column;
+  background:var(--hv3-bg);
+  font-family:'Instrument Sans',system-ui,-apple-system,'Segoe UI',sans-serif;
+  -webkit-font-smoothing:antialiased;
+}
+/* Form controls don't inherit the font on their own. */
+.dv3-page :is(input,select,textarea){font-family:inherit}
+/* The cards keep the dashboard's light look. index.css sets color-scheme:light dark,
+   which in OS dark mode turns unstyled text and native controls light on the white
+   cards; pin them to the light-mode values (#213547 is index.css's light text). */
+.dv3-main{flex:1;color:#213547;color-scheme:light}
+
+/* ---------------- B. page gates ---------------- */
+/* HomeLayout renders the shared HomeHeader/HomeFooter (old robot logo) around
+   every route; the frame brings its own. Same technique as HomeV3.css. */
+body:has(.dv3-page) > #root > header,
+body:has(.dv3-page) > #root > footer{display:none}
+/* The floating white LanguageSelector pill (inline styles, no class); the header
+   has its own EN/ES toggle. Direct children of #root only, so nothing inside the
+   dashboard can match. */
+body:has(.dv3-page) > #root > div[style*="fixed"]{display:none!important}
+/* index.css and css/app.css make #root a full-height flex scroller (padded on
+   mobile); give the page back to normal document flow, as the V3 pages do. The
+   html background keeps a Mac's overscroll bounce navy instead of light gray. */
+body:has(.dv3-page){display:block;background:#0F1621;min-height:auto}
+body:has(.dv3-page),
+html:has(.dv3-page){height:auto!important}
+html:has(.dv3-page){background:#0F1621}
+body:has(.dv3-page) > #root{display:block;height:auto;min-height:100vh;overflow:visible;padding:0}
+
+/* ---------------- C. header and footer ---------------- */
+/* What .hv3-page gives the site's own header and footer: light text, left
+   alignment, its type metrics and border-box sizing. Links take their colours
+   from the hv3- component rules (.hv3-nav-a, .hv3-auth-legal a, .hv3-fbot a). */
+.dv3-page :is(.hv3-navbar,.hv3-footer){color:var(--hv3-txt);text-align:left;font-size:16.5px;line-height:1.62}
+.dv3-page :is(.hv3-navbar,.hv3-footer),
+.dv3-page :is(.hv3-navbar,.hv3-footer) *{box-sizing:border-box}
+/* The site's header scrolls away with the page (.hv3-page's overflow-x:hidden
+   cancels its sticky), so this one does too, and the tabs keep the height. */
+.dv3-page .hv3-navbar{position:relative}
+/* Second footer row: the address and the Claude notice the old footer showed. */
+.dv3-page .dv3-fbot-sub{margin-top:0;padding-top:6px;border-top:0}
+
+/* ---------------- D. dashboard surfaces ---------------- */
+/* Column lines up with the header logo (.hv3-wrap: 1220px wide, 28px sides). */
+.dv3-page .dashboard-container{max-width:var(--hv3-maxw);padding-left:28px;padding-right:28px}
+/* "Loading..." sits on the navy page, outside the cards. */
+.dv3-page .dashboard-loading{color:var(--hv3-txt-2)}
+
+/* The two top-level cards (subscription; agent and tabs). Cards inside the tabs keep their look. */
+.dv3-page .dashboard-container > .card{border-radius:11px;border-color:var(--hv3-line-2);
+  box-shadow:0 26px 60px -26px rgba(0,0,0,.6),0 2px 6px rgba(0,0,0,.2)}
+
+/* Title, subscription and agent bars: slate gradient -> V3 navy */
+.dv3-page .subscription-header{background:var(--hv3-bg-card);border-bottom:1px solid var(--hv3-line)}
+.dv3-page .subscription-welcome{color:var(--hv3-txt-2)}
+/* Log Out in the title bar: red button -> the site's outline button (.hv3-btn-s) */
+.dv3-page .subscription-header .btn-danger{background:transparent;color:var(--hv3-txt);
+  border:1px solid var(--hv3-line-2);border-radius:7px;box-shadow:none}
+.dv3-page .subscription-header .btn-danger:hover{background:rgba(255,255,255,.04);
+  border-color:rgba(255,255,255,.24);color:var(--hv3-txt)}
+
+/* Tab strip: light gray -> navy, with the site's product-tab pills (.hv3-tab) */
+.dv3-page .dashboard-tabbar{background:var(--hv3-bg-2);border-bottom:1px solid var(--hv3-line);padding:6px;gap:6px}
+.dv3-page .dashboard-tab{margin:0;border-radius:10px;background:none;color:var(--hv3-txt-2);
+  font-weight:500;box-shadow:none;transition:background .15s ease,color .15s ease}
+.dv3-page .dashboard-tab:hover:not(.dashboard-tab-active){background:rgba(255,255,255,.05);color:#fff}
+.dv3-page .dashboard-tab-active{background:linear-gradient(180deg,var(--hv3-brand) 0%,#4F86FF 100%);color:#fff;font-weight:600}
+.dv3-page .dashboard-tab:focus-visible{outline:2px solid var(--hv3-brand-lt);outline-offset:2px}
+.dv3-page .tab-badge-blue{background-color:var(--hv3-brand)}
+/* On the blue active pill the blue count badge would vanish */
+.dv3-page .dashboard-tab-active .tab-badge-blue{background-color:rgba(255,255,255,.25)}
+
+/* Buttons: the site's 7px corners and blue. Disabled buttons keep their gray. */
+.dv3-page .btn{border-radius:7px}
+.dv3-page .btn-primary:not(:disabled){background-color:var(--hv3-brand)}
+.dv3-page .btn-primary:not(:disabled):hover{background-color:var(--hv3-brand-dk)}
+
+/* Modal headers */
+.dv3-page :is(.modal-header-primary,.modal-header-success){background:linear-gradient(135deg,var(--hv3-brand) 0%,var(--hv3-brand-dk) 100%)}
+.dv3-page .modal-header-dark{background:linear-gradient(135deg,var(--hv3-bg-card) 0%,var(--hv3-bg) 100%)}
+
+/* Info boxes: Bootstrap light blue -> a tint of the site blue */
+.dv3-page :is(.alert-info,.box-blue){background-color:#EEF3FF;border-color:#C9D8FF}
+.dv3-page .alert-info,
+.dv3-page .alert-info p{color:var(--hv3-brand-dk)}
+
+/* ---------------- E. Tabs.css blues ---------------- */
+/* #007bff -> #2F6BFF; hovers #0056b3 -> #1A4ED6 */
+.dv3-page :is(.btn-link,.table-link,.metric-label-link,.metric-value-blue,.btn-text-link,.embedding-icon-url,.model-name){color:var(--hv3-brand)}
+.dv3-page .btn-text-link:hover{color:var(--hv3-brand-dk)}
+.dv3-page .input:focus{border-color:var(--hv3-brand);box-shadow:0 0 0 2px rgba(47,107,255,.25)}
+.dv3-page .btn-repeat-search{background:var(--hv3-brand)}
+.dv3-page .btn-repeat-search:hover{background:var(--hv3-brand-dk)}
+.dv3-page .btn-move:not(:disabled){background-color:var(--hv3-brand)}

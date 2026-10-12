@@ -50,6 +50,13 @@ button:active {
   color: #007bff;
 }
 
+/* Tab strip behind the tabs (was an inline style in Dashboard.jsx; a class lets
+   DashboardV3.css restyle it) */
+.dashboard-tabbar {
+  border-bottom: 2px solid #ddd;
+  background-color: #e9ecef;
+}
+
 .tab-badge-green,
 .tab-badge-blue {
   font-size: 0.7em;
