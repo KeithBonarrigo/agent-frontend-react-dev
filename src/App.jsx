@@ -21,6 +21,7 @@ import Agent from "./Pages/Agent";
 import HomeV3 from "./Pages/HomeV3";
 import LoginV3 from "./Pages/LoginV3";
 import LegalV3 from "./Pages/LegalV3";
+import DashboardV3 from "./Pages/DashboardV3";
 import { UserProvider } from './contexts/UserContext';
 import { DomainProvider, useDomain } from './contexts/DomainContext';
 
@@ -54,14 +55,17 @@ function AppRoutes() {
         </Route>
         <Route element={<HomeLayout />}>
           <Route path="/login" element={useV3 ? <LoginV3 /> : <Login />} />
-          <Route path="/dashboard" element={<Dashboard />} />
+          {/* V3 frame on BotWerx domains. Rollback = element={<Dashboard />}
+              (plans/2026-10-12-dashboard-v3-style.md). */}
+          <Route path="/dashboard" element={useV3 ? <DashboardV3><Dashboard /></DashboardV3> : <Dashboard />} />
           <Route path="/payment" element={<Checkout />} />
           <Route path="/password-reset/request" element={<PasswordResetRequest />} />
           <Route path="/password-reset/check-email" element={<PasswordResetCheckEmail />} />
           <Route path="/password-reset/confirm" element={<PasswordResetConfirm />} />
           <Route path="/agent" element={<Agent />} />
-          <Route path="/oauth/callback" element={<OAuthCallback />} />
-          <Route path="/oauth/:provider/callback" element={<OAuthCallback />} />
+          {/* Same V3 frame as the dashboard. Rollback = element={<OAuthCallback />} */}
+          <Route path="/oauth/callback" element={useV3 ? <DashboardV3><OAuthCallback /></DashboardV3> : <OAuthCallback />} />
+          <Route path="/oauth/:provider/callback" element={useV3 ? <DashboardV3><OAuthCallback /></DashboardV3> : <OAuthCallback />} />
         </Route>
       </Routes>
     </>

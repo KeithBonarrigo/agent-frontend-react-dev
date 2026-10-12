@@ -762,7 +762,7 @@ export default function IntegrationsTab({ user, clientId, onClientUpdate }) {
               top: "0.25em",
               right: "0.5em",
               padding: "0.4em 0.8em",
-              backgroundColor: copied ? "#28a745" : "#007bff",
+              backgroundColor: copied ? "#28a745" : "var(--hv3-brand, #007bff)",
               color: "white",
               border: "none",
               borderRadius: "4px",
@@ -774,7 +774,7 @@ export default function IntegrationsTab({ user, clientId, onClientUpdate }) {
           </button>
         </div>
         <p style={{ fontSize: "0.9em", color: "#666", marginTop: "0.5em", textAlign: "center" }}>
-          {t('webEmbed.copyInstruction')} <strong style={{ color: '#007bff' }}>{user?.domain_to_install_bot || t('webEmbed.yourDomain')}</strong>.
+          {t('webEmbed.copyInstruction')} <strong style={{ color: 'var(--hv3-brand, #007bff)' }}>{user?.domain_to_install_bot || t('webEmbed.yourDomain')}</strong>.
         </p>
         <div style={{ textAlign: "center", marginTop: "1em" }}>
           <button
@@ -783,7 +783,7 @@ export default function IntegrationsTab({ user, clientId, onClientUpdate }) {
             style={{
               background: "none",
               border: "none",
-              color: chatbotLoaded ? "#28a745" : "#007bff",
+              color: chatbotLoaded ? "#28a745" : "var(--hv3-brand, #007bff)",
               cursor: chatbotLoaded || chatbotLoading ? "default" : "pointer",
               fontSize: "1em",
               textDecoration: chatbotLoaded ? "none" : "underline",
@@ -1031,7 +1031,7 @@ export default function IntegrationsTab({ user, clientId, onClientUpdate }) {
                     style={{
                       background: "none",
                       border: "none",
-                      color: "#007bff",
+                      color: "var(--hv3-brand, #007bff)",
                       cursor: "pointer",
                       fontSize: "0.8em",
                       textDecoration: "underline",
@@ -1064,7 +1064,7 @@ export default function IntegrationsTab({ user, clientId, onClientUpdate }) {
                       padding: "0.4em 0.8em",
                       borderRadius: "4px",
                       border: "none",
-                      backgroundColor: msgLoading ? "#ccc" : "#007bff",
+                      backgroundColor: msgLoading ? "#ccc" : "var(--hv3-brand, #007bff)",
                       color: "#fff",
                       cursor: msgLoading ? "not-allowed" : "pointer",
                       fontSize: "0.85em",
@@ -1203,7 +1203,7 @@ export default function IntegrationsTab({ user, clientId, onClientUpdate }) {
                       padding: "0.4em 0.8em",
                       borderRadius: "4px",
                       border: "none",
-                      backgroundColor: gcalLoading ? "#ccc" : "#007bff",
+                      backgroundColor: gcalLoading ? "#ccc" : "var(--hv3-brand, #007bff)",
                       color: "#fff",
                       cursor: gcalLoading ? "not-allowed" : "pointer",
                       fontSize: "0.85em",
@@ -1395,7 +1395,7 @@ export default function IntegrationsTab({ user, clientId, onClientUpdate }) {
                       padding: "0.4em 0.8em",
                       borderRadius: "4px",
                       border: "none",
-                      backgroundColor: igLoading ? "#ccc" : "#007bff",
+                      backgroundColor: igLoading ? "#ccc" : "var(--hv3-brand, #007bff)",
                       color: "#fff",
                       cursor: igLoading ? "not-allowed" : "pointer",
                       fontSize: "0.85em",

@@ -101,7 +101,7 @@ export default function OAuthCallback() {
   }, [searchParams, navigate]);
 
   return (
-    <div style={{
+    <div className="oauth-callback" style={{
       display: 'flex',
       flexDirection: 'column',
       alignItems: 'center',
@@ -112,7 +112,8 @@ export default function OAuthCallback() {
     }}>
       {status === 'processing' && (
         <>
-          <i className="fa-solid fa-spinner fa-spin" style={{ fontSize: '3em', color: '#007bff', marginBottom: '1em' }}></i>
+          {/* Site blue inside the V3 frame (DashboardV3), the old blue everywhere else */}
+          <i className="fa-solid fa-spinner fa-spin" style={{ fontSize: '3em', color: 'var(--hv3-brand, #007bff)', marginBottom: '1em' }}></i>
           <h2 style={{ color: '#333', marginBottom: '0.5em' }}>Completing Authorization</h2>
           <p style={{ color: '#666' }}>Please wait while we connect your account...</p>
         </>

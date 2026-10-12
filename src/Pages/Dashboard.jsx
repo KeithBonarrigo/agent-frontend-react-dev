@@ -1105,7 +1105,7 @@ export default function Dashboard() {
   const getLevelColor = (level) => {
     const colors = {
       enterprise: '#6f42c1',
-      pro: '#007bff',
+      pro: 'var(--hv3-brand, #007bff)',
       basic: '#28a745',
       easybroker: '#fd7e14',
       free: '#6c757d'
@@ -1446,7 +1446,7 @@ export default function Dashboard() {
                       <div style={{ fontSize: '0.75em', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.05em', color: '#6c757d', marginBottom: '0.6em', display: 'flex', alignItems: 'center', gap: '0.4em' }}>
                         <i className="fa-solid fa-building" style={{ color: '#495057' }}></i> {t('form.sectionAgent')}
                       </div>
-                      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '0.75em' }}>
+                      <div className="agent-grid agent-grid-3">
                         <div>
                           <label className="form-label">{t('form.agentName')}</label>
                           <input type="text" name="agent_name" value={agentEditForm.agent_name} onChange={handleAgentEditChange} placeholder="My AI Agent" className="form-input form-input-sm" />
@@ -1469,7 +1469,7 @@ export default function Dashboard() {
                       <div style={{ fontSize: '0.75em', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.05em', color: '#6c757d', marginBottom: '0.6em', display: 'flex', alignItems: 'center', gap: '0.4em' }}>
                         <i className="fa-solid fa-address-book" style={{ color: '#495057' }}></i> {t('form.sectionContact')}
                       </div>
-                      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '0.75em', alignItems: 'end' }}>
+                      <div className="agent-grid agent-grid-4" style={{ alignItems: 'end' }}>
                         <div>
                           <label className="form-label">{t('form.contactEmail')}</label>
                           <input type="email" name="contact_email" value={agentEditForm.contact_email} onChange={handleAgentEditChange} placeholder="contact@example.com" className="form-input form-input-sm" />
@@ -1502,7 +1502,7 @@ export default function Dashboard() {
                           <input type="text" name="office_address" value={agentEditForm.office_address} onChange={handleAgentEditChange} placeholder="123 Main St, City, State 12345" className="form-input form-input-sm" />
                         </div>
                       </div>
-                      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '0.75em' }}>
+                      <div className="agent-grid agent-grid-3">
                         <div>
                           <label className="form-label">{t('form.latitude')}</label>
                           <input type="number" step="any" name="office_lat" value={agentEditForm.office_lat} onChange={handleAgentEditChange} placeholder="40.7128" className="form-input form-input-sm" />
@@ -1560,7 +1560,7 @@ export default function Dashboard() {
                           <div style={{ fontSize: '0.75em', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.05em', color: '#6c757d', marginBottom: '0.6em', display: 'flex', alignItems: 'center', gap: '0.4em' }}>
                             <i className="fa-solid fa-key" style={{ color: '#495057' }}></i> API Tokens
                           </div>
-                          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '0.75em' }}>
+                          <div className="agent-grid agent-grid-2">
                             <div>
                               <label className="form-label">EasyBroker API Key</label>
                               <input
@@ -1588,7 +1588,7 @@ export default function Dashboard() {
                               />
                             </div>
                           </div>
-                          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '0.75em', marginTop: '0.75em' }}>
+                          <div className="agent-grid agent-grid-2" style={{ marginTop: '0.75em' }}>
                             <div>
                               <label className="form-label">EasyBroker Office ID</label>
                               <input type="text" name="office_id" value={agentEditForm.office_id || ''} onChange={handleAgentEditChange} placeholder="Enter EasyBroker Office ID" className="form-input form-input-sm" />
@@ -1653,7 +1653,7 @@ export default function Dashboard() {
                 ) : (
                   /* Read-only view - two column layout */
                   <>
-                    <div style={{ display: 'flex', gap: '0.75em', marginTop: '0.25em' }}>
+                    <div className="agent-summary" style={{ display: 'flex', gap: '0.75em', marginTop: '0.25em' }}>
                       {/* Left column: Agent & Company */}
                       <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '0.75em' }}>
                         {agentEditForm.agent_name && (
@@ -1668,13 +1668,13 @@ export default function Dashboard() {
                             <i className="fa-solid fa-building" style={{ color: '#495057', fontSize: '1.1em', marginBottom: '0.3em', display: 'block' }}></i>
                             <div style={{ fontSize: '0.65em', textTransform: 'uppercase', letterSpacing: '0.05em', color: '#868e96', fontWeight: 600, marginBottom: '0.2em' }}>{t('dashboard:summary.company')}</div>
                             {agentEditForm.company && <div style={{ fontSize: '0.9em', fontWeight: 500, color: '#212529' }}>{agentEditForm.company}</div>}
-                            {agentEditForm.office_address && <div style={{ fontSize: '0.8em', color: '#495057', marginTop: '0.2em' }}>{agentEditForm.office_lat && agentEditForm.office_long ? <a href={`https://www.google.com/maps?q=${agentEditForm.office_lat},${agentEditForm.office_long}`} target="_blank" rel="noopener noreferrer" style={{ color: '#007bff', textDecoration: 'none' }}>{agentEditForm.office_address} <i className="fa-solid fa-arrow-up-right-from-square" style={{ fontSize: '0.75em' }}></i></a> : agentEditForm.office_address}</div>}
+                            {agentEditForm.office_address && <div style={{ fontSize: '0.8em', color: '#495057', marginTop: '0.2em' }}>{agentEditForm.office_lat && agentEditForm.office_long ? <a href={`https://www.google.com/maps?q=${agentEditForm.office_lat},${agentEditForm.office_long}`} target="_blank" rel="noopener noreferrer" style={{ color: 'var(--hv3-brand, #007bff)', textDecoration: 'none' }}>{agentEditForm.office_address} <i className="fa-solid fa-arrow-up-right-from-square" style={{ fontSize: '0.75em' }}></i></a> : agentEditForm.office_address}</div>}
                           </div>
                         )}
                       </div>
                       {/* Right column: Contact & Settings */}
                       <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '0.75em' }}>
-                        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75em' }}>
+                        <div className="agent-grid agent-grid-2">
                           {agentEditForm.contact_phone && (
                             <div style={{ padding: '0.75em', backgroundColor: '#f8f9fa', borderRadius: '8px', border: '1px solid #e9ecef', textAlign: 'center' }}>
                               <i className="fa-solid fa-phone" style={{ color: '#495057', fontSize: '1.1em', marginBottom: '0.3em', display: 'block' }}></i>
@@ -1771,7 +1771,7 @@ export default function Dashboard() {
 
           {/* Tabs - Navigation for different dashboard sections */}
           {/* Training tab: RAG embeddings, Add-Ons tab: selectable decorators/integrations */}
-          <div className="flex flex-center flex-wrap" style={{ borderBottom: '2px solid #ddd', backgroundColor: '#e9ecef' }}>
+          <div className="dashboard-tabbar flex flex-center flex-wrap">
             <button className={`dashboard-tab ${activeTab === 'configurations' ? 'dashboard-tab-active' : ''}`} onClick={() => setActiveTab('configurations')}>⚙ {t('common:navigation.configurations')}</button>
 
             <button className={`dashboard-tab ${activeTab === 'integrations' ? 'dashboard-tab-active' : ''}`} onClick={() => setActiveTab('integrations')}>⇄ {t('common:navigation.integrations')}</button>

@@ -50,6 +50,13 @@ button:active {
   color: #007bff;
 }
 
+/* Tab strip behind the tabs (was an inline style in Dashboard.jsx; a class lets
+   DashboardV3.css restyle it) */
+.dashboard-tabbar {
+  border-bottom: 2px solid #ddd;
+  background-color: #e9ecef;
+}
+
 .tab-badge-green,
 .tab-badge-blue {
   font-size: 0.7em;
@@ -391,6 +398,61 @@ button:active {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
   gap: 1em;
+}
+
+/* ==========================================
+   AGENT SETTINGS GRIDS
+   ========================================== */
+/* Same columns as before on desktop; on narrow screens they collapse instead of
+   running off the card. Was inline styles in Dashboard.jsx. */
+.agent-grid {
+  display: grid;
+  gap: 0.75em;
+}
+
+.agent-grid > * {
+  min-width: 0;
+}
+
+.agent-grid-2 {
+  grid-template-columns: repeat(2, 1fr);
+}
+
+.agent-grid-3 {
+  grid-template-columns: repeat(3, 1fr);
+}
+
+.agent-grid-4 {
+  grid-template-columns: repeat(4, 1fr);
+}
+
+/* Read-only summary: agent and company on the left, contact cards on the right.
+   Long emails and domains wrap rather than widen the card. */
+.agent-summary {
+  overflow-wrap: anywhere;
+}
+
+.agent-summary > * {
+  min-width: 0;
+}
+
+@media (max-width: 768px) {
+  .agent-summary {
+    flex-direction: column;
+  }
+
+  .agent-grid-3,
+  .agent-grid-4 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 480px) {
+  .agent-grid-2,
+  .agent-grid-3,
+  .agent-grid-4 {
+    grid-template-columns: 1fr;
+  }
 }
 
 /* ==========================================
