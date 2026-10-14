@@ -367,6 +367,43 @@ export default function ConversationsTab({ clientId, user, expandAllLive: expand
     }
   };
 
+  // Send a human agent reply to a WhatsApp user. No Facebook Login: the dashboard
+  // session authorizes it. The backend explains failures in data.error (e.g. the
+  // WhatsApp 24-hour rule).
+  const handleWhatsAppReply = async (userId) => {
+    const text = (replyText[userId] || '').trim();
+    if (!text) return;
+
+    setReplyLoading(prev => ({ ...prev, [userId]: true }));
+    setReplyResult(prev => ({ ...prev, [userId]: null }));
+
+    try {
+      const apiBaseUrl = getApiUrl();
+      const res = await fetch(`${apiBaseUrl}/api/clients/${clientId}/whatsapp-send`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify({
+          to: userId,
+          message: text
+        })
+      });
+
+      const data = await res.json();
+      if (!res.ok || data.success === false) throw new Error(data.error || t('reply.error'));
+
+      setReplyResult(prev => ({ ...prev, [userId]: { type: 'success', message: t('reply.success') } }));
+      setReplyText(prev => ({ ...prev, [userId]: '' }));
+      setTimeout(() => setReplyResult(prev => ({ ...prev, [userId]: null })), 5000);
+      // Reload so the sent message shows up in the thread
+      fetchConversations();
+    } catch (err) {
+      setReplyResult(prev => ({ ...prev, [userId]: { type: 'error', message: err.message } }));
+    } finally {
+      setReplyLoading(prev => ({ ...prev, [userId]: false }));
+    }
+  };
+
   // Filter conversations based on search and live status
   const filteredConversations = conversations
     .map(conv => {
@@ -755,6 +792,91 @@ export default function ConversationsTab({ clientId, user, expandAllLive: expand
                                                       </p>
                                                     )}
                                                   </>
+                                                )}
+                                              </div>
+                                            )}
+                                          </div>
+                                        )}
+
+                                        {/* Human agent reply for WhatsApp conversations (same UI as Instagram, no Facebook Login gate) */}
+                                        {channel.channel.toLowerCase().includes('whatsapp') && (
+                                          <div style={{
+                                            marginTop: "0.75em",
+                                            borderRadius: "4px",
+                                            border: "1px solid #e9ecef",
+                                            overflow: "hidden"
+                                          }}>
+                                            {/* Collapsible header */}
+                                            <div
+                                              onClick={() => setReplyCollapsed(prev => !prev)}
+                                              style={{
+                                                display: "flex",
+                                                alignItems: "center",
+                                                justifyContent: "space-between",
+                                                padding: "0.5em 0.75em",
+                                                backgroundColor: "#f0f0f0",
+                                                cursor: "pointer",
+                                                userSelect: "none"
+                                              }}
+                                            >
+                                              <span style={{ fontSize: "0.8em", fontWeight: "600", color: "#555" }}>
+                                                <i className="fa-solid fa-headset" style={{ marginRight: "0.4em" }}></i>
+                                                {t('reply.title')}
+                                              </span>
+                                              <i className={`fa-solid fa-chevron-${replyCollapsed ? 'down' : 'up'}`} style={{ fontSize: "0.7em", color: "#888" }}></i>
+                                            </div>
+
+                                            {/* Collapsible body */}
+                                            {!replyCollapsed && (
+                                              <div style={{ padding: "0.75em", backgroundColor: "#f8f9fa" }}>
+                                                <p style={{ fontSize: "0.75em", color: "#888", margin: "0 0 0.5em 0" }}>
+                                                  {t('reply.whatsappAgentNote')}
+                                                </p>
+                                                <div style={{ display: "flex", gap: "0.5em", alignItems: "flex-end" }}>
+                                                  <textarea
+                                                    value={replyText[userConv.userid] || ''}
+                                                    onChange={(e) => setReplyText(prev => ({ ...prev, [userConv.userid]: e.target.value }))}
+                                                    placeholder={t('reply.placeholder')}
+                                                    rows={2}
+                                                    style={{
+                                                      flex: 1,
+                                                      padding: "0.5em 0.75em",
+                                                      border: "1px solid #ccc",
+                                                      borderRadius: "4px",
+                                                      fontSize: "0.85em",
+                                                      resize: "vertical",
+                                                      boxSizing: "border-box"
+                                                    }}
+                                                  />
+                                                  <button
+                                                    onClick={() => handleWhatsAppReply(userConv.userid)}
+                                                    disabled={replyLoading[userConv.userid] || !(replyText[userConv.userid] || '').trim()}
+                                                    style={{
+                                                      padding: "0.5em 1em",
+                                                      backgroundColor: (replyLoading[userConv.userid] || !(replyText[userConv.userid] || '').trim()) ? "#ccc" : "#25D366",
+                                                      color: "white",
+                                                      border: "none",
+                                                      borderRadius: "4px",
+                                                      cursor: (replyLoading[userConv.userid] || !(replyText[userConv.userid] || '').trim()) ? "default" : "pointer",
+                                                      fontSize: "0.85em",
+                                                      fontWeight: "600",
+                                                      whiteSpace: "nowrap"
+                                                    }}
+                                                  >
+                                                    <i className="fa-solid fa-paper-plane" style={{ marginRight: "0.4em" }}></i>
+                                                    {replyLoading[userConv.userid] ? t('reply.sending') : t('reply.send')}
+                                                  </button>
+                                                </div>
+                                                {replyResult[userConv.userid] && (
+                                                  <p style={{
+                                                    fontSize: "0.8em",
+                                                    fontWeight: "600",
+                                                    marginTop: "0.4em",
+                                                    marginBottom: 0,
+                                                    color: replyResult[userConv.userid].type === 'success' ? '#28a745' : '#dc3545'
+                                                  }}>
+                                                    {replyResult[userConv.userid].message}
+                                                  </p>
                                                 )}
                                               </div>
                                             )}
