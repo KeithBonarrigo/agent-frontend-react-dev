@@ -581,18 +581,19 @@ body:has(.hv3-page) div[style*="z-index: 99999"]{display:none!important}
 .hv3-bw-signup .signup-submit-container{margin-top:24px}
 
 /* Slider section: full width, sizes taken from the live Home.css
-   (.home-section-title, .home-slider-container/-item/-image/-text). */
-.hv3-bw-slider-sec{padding:0 0 60px;scroll-margin-top:68px;
+   (.home-section-title, .home-slider-container/-item/-image/-text).
+   The carousel itself sits on a white band under the dark title band. */
+.hv3-bw-slider-sec{padding:0;scroll-margin-top:68px;
   border-top:1px solid var(--hv3-line);border-bottom:1px solid var(--hv3-line)}
 .hv3-bw-slider-sec .hv3-bw-band{margin:0;padding:2.5rem 20px;font-size:2.5rem;line-height:1.2;
   text-align:center;background:linear-gradient(135deg,var(--hv3-bg-3) 0%,var(--hv3-bg-2) 55%,var(--hv3-bg) 100%);
   border-bottom:1px solid var(--hv3-line)}
-.hv3-slider{display:flex;gap:2rem;overflow-x:auto;padding:calc(60px + 2rem) 20px 2rem;scrollbar-width:none}
+.hv3-slider{display:flex;gap:2rem;overflow-x:auto;padding:calc(60px + 2rem) 20px;background:#fff;scrollbar-width:none}
 .hv3-slider::-webkit-scrollbar{display:none}
 .hv3-slide{flex:0 0 300px;min-width:450px;max-width:350px;display:flex;flex-direction:column;
   align-items:center;text-align:center}
 .hv3-slide img{width:100px;height:100px;object-fit:contain;margin-bottom:10px}
-.hv3-slide p{font-size:16px;font-weight:700;color:#fff}
+.hv3-slide p{font-size:16px;font-weight:700;color:var(--hv3-bg)}
 @media(max-width:1400px){.hv3-slide{flex:0 0 280px;min-width:230px}}
 @media(max-width:1200px){.hv3-slide{flex:0 0 260px;min-width:220px}}
 @media(max-width:992px){.hv3-slide{flex:0 0 240px;min-width:200px}}
