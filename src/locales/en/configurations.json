@@ -182,5 +182,112 @@
       "tip": "Tip: Start with 1-2 lines of history. This gives good context without significantly increasing costs. Only increase if your bot needs more conversational memory.",
       "close": "Got it"
     }
+  },
+  "storeconnect": {
+    "title": "Connect your StoreConnect store",
+    "intro": "Your assistant answers from your store once it's connected to your Salesforce org. Three steps, about 10 minutes, done by your Salesforce admin.",
+    "loading": "Checking your StoreConnect connection...",
+    "loadError": "Could not load the StoreConnect status.",
+    "retry": "Retry",
+    "steps": {
+      "app": "Your Salesforce app",
+      "connect": "Connect your StoreConnect store",
+      "store": "Choose the store"
+    },
+    "app": {
+      "saved": "Saved app: {{hint}} · {{environment}}",
+      "edit": "Edit",
+      "cancel": "Cancel",
+      "instructions": {
+        "intro": "In Salesforce: Setup → External Client App Manager → New External Client App. Distribution State: Local. Enable OAuth with this Callback URL:",
+        "scopes": "Scopes: Manage user data via APIs (api), Perform requests at any time (refresh_token, offline_access). Security: Require secret for Web Server Flow, Require secret for Refresh Token Flow, Require PKCE.",
+        "policies": "Policies: Permitted Users = All users can self-authorize; IP Relaxation = Relax IP restrictions; Refresh Token Policy = Expire if not used for a specific time (longest allowed); leave Single Logout and High Assurance off.",
+        "keys": "Then Settings → OAuth Settings → Consumer Key and Secret."
+      },
+      "copy": "Copy",
+      "copied": "Copied!",
+      "copyFallback": "Copy this URL:",
+      "consumerKey": "Consumer Key",
+      "consumerSecret": "Consumer Secret",
+      "secretKeepHint": "Leave blank to keep the saved secret (same Consumer Key only).",
+      "orgType": "Org type",
+      "production": "Production",
+      "sandbox": "Sandbox",
+      "custom": "Custom login URL",
+      "loginUrl": "Login URL",
+      "loginUrlPlaceholder": "https://yourcompany.my.salesforce.com",
+      "save": "Save app",
+      "saving": "Saving...",
+      "savedMessage": "Salesforce app saved.",
+      "reconnectNeeded": "Your app changed — connect again."
+    },
+    "connect": {
+      "needsApp": "Save your Salesforce app first.",
+      "ready": "Sign in to Salesforce and allow access. Botwerx then finds your StoreConnect stores.",
+      "button": "Connect your StoreConnect store",
+      "reconnectNotice": "Salesforce access was revoked or expired. Connect again to resume syncing.",
+      "reconnect": "Reconnect",
+      "connecting": "Opening Salesforce...",
+      "connectedAs": "Connected as {{username}}",
+      "connectedOn": "Connected {{date}}"
+    },
+    "store": {
+      "pending": "Botwerx finds your stores when you connect; you only choose if the org has more than one.",
+      "pick": "Your org has more than one store. Pick the one this assistant should answer for:",
+      "loading": "Reading stores from Salesforce...",
+      "none": "No storefront was found in this org.",
+      "noUrl": "This store has no web address in Salesforce. Enter its storefront URL:",
+      "use": "Use this store",
+      "saving": "Saving...",
+      "change": "Change store",
+      "cancel": "Cancel",
+      "saved": "Store saved. The first sync has started."
+    },
+    "ready": {
+      "connected": "Connected",
+      "store": "Store",
+      "lastSync": "Last sync",
+      "never": "not yet",
+      "running": "Syncing...",
+      "status": {
+        "ok": "completed",
+        "error": "failed",
+        "running": "running"
+      },
+      "productsLabel": "Products",
+      "products": "{{n}} active",
+      "bookable": "{{n}} bookable",
+      "content": "Content",
+      "contentNone": "no website content yet",
+      "sources": {
+        "page": "pages",
+        "article": "articles",
+        "sitemap": "sitemap pages"
+      },
+      "syncError": "Last sync error: {{error}}",
+      "syncNow": "Sync now",
+      "syncStarted": "Sync started. This can take a few minutes.",
+      "disconnect": "Disconnect",
+      "disconnecting": "Disconnecting...",
+      "confirmDisconnect": "Disconnect this store? Botwerx revokes its Salesforce access and stops syncing. Your saved Salesforce app is kept, so you can connect again with one click.",
+      "disconnected": "Store disconnected."
+    },
+    "messages": {
+      "connected": "Salesforce connected. Your store is syncing.",
+      "chooseStore": "Salesforce connected. Choose your store to finish.",
+      "connectFailed": "The connection could not be completed."
+    },
+    "errors": {
+      "client_id_required": "Enter the Consumer Key.",
+      "client_secret_required": "Enter the Consumer Secret.",
+      "invalid_credentials_format": "The key or secret has spaces or is too long. Copy them exactly from Salesforce.",
+      "login_url_required": "Enter the login URL.",
+      "app_required": "Save your Salesforce app first.",
+      "not_connected": "Connect your Salesforce org first.",
+      "store_not_found": "That store was not found in your org. Reload the list and try again.",
+      "storefront_url_required": "Enter the storefront URL.",
+      "not_ready": "Choose a store before syncing.",
+      "generic": "Something went wrong ({{status}}). Please try again."
+    }
   }
 }

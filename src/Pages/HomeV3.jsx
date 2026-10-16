@@ -290,7 +290,7 @@ function BotwerxBotContent({ t }) {
 
           {/* The live signup component, unchanged: email check, account
               creation and Stripe checkout all run against getApiUrl(). */}
-          <div className="hv3-bw-signup">
+          <div className="hv3-bw-signup" id="hv3-signup">
             <SignupForm isOpen={true} onClose={() => {}} />
           </div>
         </div>
@@ -889,6 +889,14 @@ export default function HomeV3() {
   const { t, i18n } = useTranslation('homev3');
   const lang = i18n.language?.split('-')[0] || 'en';
   useFavicon(FAVICON);
+
+  // Links like the login page's "Create Account" arrive as /?tab=botwerx#hv3-signup.
+  // The browser doesn't scroll to a hash on client-side navigation, so do it once here.
+  useEffect(() => {
+    const id = window.location.hash.slice(1);
+    const el = id && document.getElementById(id);
+    if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }, []);
 
   // The active tab lives in ?tab= so a refresh or a shared link keeps it.
   // BidConnect is the default; anything unrecognised falls back to it.
