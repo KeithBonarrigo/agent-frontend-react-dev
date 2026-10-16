@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { useUser } from '../contexts/UserContext';
 import { getApiUrl } from '../utils/getApiUrl';
@@ -12,13 +12,36 @@ import LeadsTab from '../components/LeadsTab';
 import StylingTab from '../components/StylingTab';
 import AudienceInsightsTab from '../components/AudienceInsightsTab';
 import IncomeReportTab from '../components/IncomeReportTab';
+import StoreConnectSetup from '../components/StoreConnectSetup';
+import { isStoreConnectAgent, RETURN_SELECTION_KEY } from '../utils/storeconnect';
 import "../styles/Dashboard.css";
+
+const TAB_IDS = ['configurations', 'integrations', 'conversations', 'leads', 'audienceinsights', 'incomereport'];
+
+// After Salesforce sends a StoreConnect merchant back to /dashboard, reopen the
+// agent they were connecting. StoreConnectSetup stores it before redirecting,
+// because the backend's return URL carries no query of its own.
+function readReturnSelection(searchParams) {
+  if (searchParams.get('provider') !== 'storeconnect') return null;
+  try {
+    const raw = sessionStorage.getItem(RETURN_SELECTION_KEY);
+    sessionStorage.removeItem(RETURN_SELECTION_KEY);
+    return raw ? JSON.parse(raw) : null;
+  } catch {
+    return null;
+  }
+}
+
+const hasId = (list, key, id) => id != null && (list || []).some((item) => String(item[key]) === String(id));
 
 export default function Dashboard() {
   const navigate = useNavigate();
   const { t } = useTranslation('dashboard');
   const { user, isLoggedIn, isLoading, logout } = useUser();
-  const [activeTab, setActiveTab] = useState('configurations');
+  const [searchParams] = useSearchParams();
+  // ?tab= opens a tab directly (the OAuth callback page sends tab=integrations)
+  const [activeTab, setActiveTab] = useState(() => TAB_IDS.includes(searchParams.get('tab')) ? searchParams.get('tab') : 'configurations');
+  const [returnSelection] = useState(() => readReturnSelection(searchParams));
   const [expandShare, setExpandShare] = useState(false);
   const [expandAllLive, setExpandAllLive] = useState(false);
   const [expandCollaborations, setExpandCollaborations] = useState(false);
@@ -31,8 +54,8 @@ export default function Dashboard() {
   // Subscriptions and agents
   const [subscriptions, setSubscriptions] = useState([]);
   const [clients, setClients] = useState([]);
-  const [selectedSubscriptionId, setSelectedSubscriptionId] = useState(null);
-  const [selectedClientId, setSelectedClientId] = useState(null);
+  const [selectedSubscriptionId, setSelectedSubscriptionId] = useState(returnSelection?.subscriptionId ?? null);
+  const [selectedClientId, setSelectedClientId] = useState(returnSelection?.clientId ?? null);
   const [loadingData, setLoadingData] = useState(true);
 
   // Modals
@@ -167,12 +190,13 @@ export default function Dashboard() {
         // Set initial selections
         if (data.subscriptions?.length > 0) {
           const firstSub = data.subscriptions[0];
-          setSelectedSubscriptionId(prev => prev || firstSub.subscriptionid);
+          // Keep a selection that exists (e.g. the one restored after the StoreConnect redirect); otherwise the first
+          setSelectedSubscriptionId(prev => hasId(data.subscriptions, 'subscriptionid', prev) ? prev : firstSub.subscriptionid);
           
           // Find first agent in this subscription - use String() for type-safe comparison
           const firstAgent = data.clients?.find(c => String(c.subscriptionid) === String(firstSub.subscriptionid));
           if (firstAgent) {
-            setSelectedClientId(prev => prev || firstAgent.clientid);
+            setSelectedClientId(prev => hasId(data.clients, 'clientid', prev) ? prev : firstAgent.clientid);
           }
         }
       } catch (error) {
@@ -1108,6 +1132,7 @@ export default function Dashboard() {
       pro: 'var(--hv3-brand, #007bff)',
       basic: '#28a745',
       easybroker: '#fd7e14',
+      storeconnect: '#2a9d9f',
       free: '#6c757d'
     };
     return colors[level?.toLowerCase()] || '#6c757d';
@@ -1787,6 +1812,8 @@ export default function Dashboard() {
           ) : (
             <>
           {activeTab === 'configurations' && <div className="tab-container">
+            {/* StoreConnect plan: the store connection comes first, like the MLS / EasyBroker keys for those plans */}
+            {isStoreConnectAgent(selectedClient) && <StoreConnectSetup clientId={selectedClientId} agent={selectedClient} />}
             <StylingTab user={selectedClient} clientId={selectedClientId} onNavigateToIntegrations={() => setActiveTab('integrations')} />
             <ConfigurationsTab user={selectedClient} clientId={selectedClientId} onClientUpdate={handleClientUpdate} />
           </div>}

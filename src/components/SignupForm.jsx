@@ -134,7 +134,14 @@ export default function SignupForm({ isOpen, allowedLevels }) {
     easybroker: { amount: 7900, name: "Real Estate Agent (EasyBroker)" },
     mls: { amount: 7900, name: "Real Estate Agent (MLS)" },
     calendar_assistant: { amount: 0, name: "Calendar Assistant" },
+    storeconnect: { amount: 0, name: "StoreConnect Store Assistant" },
   };
+
+  // $0 plans: no Stripe checkout, "Start Free Trial". When Botwerx sets a Stripe
+  // price for StoreConnect (STRIPE_PRICE_STORECONNECT), move it out of this list
+  // and the form takes the paid path; /api/create-subscription accepts the level.
+  const FREE_PLANS = ["free", "calendar_assistant", "storeconnect"];
+  const isFreePlan = FREE_PLANS.includes(agentForm.level);
 
   useEffect(() => {
     const wrapper = agentFormWrapperRef.current;
@@ -361,7 +368,7 @@ export default function SignupForm({ isOpen, allowedLevels }) {
     setValidatedFormData(payload);
 
     // If free tier, skip payment and create user directly
-    if (agentForm.level === "free" || agentForm.level === "calendar_assistant") {
+    if (isFreePlan) {
       await createUser(payload, null);
       return;
     }
@@ -912,12 +919,21 @@ export default function SignupForm({ isOpen, allowedLevels }) {
                       {(!allowedLevels || allowedLevels.includes('easybroker')) && <option value="easybroker">{t('plans.easybroker')}</option>}
                       {(!allowedLevels || allowedLevels.includes('mls')) && <option value="mls">{t('plans.mls')}</option>}
                       {(!allowedLevels || allowedLevels.includes('calendar_assistant')) && <option value="calendar_assistant">{t('plans.calendarAssistant')}</option>}
+                      {(!allowedLevels || allowedLevels.includes('storeconnect')) && <option value="storeconnect">{t('plans.storeconnect')}</option>}
                     </select>
                   </div>
                 </div>
 
+                {/* StoreConnect: the Salesforce connection is set up in the dashboard after sign-up */}
+                {agentForm.level === 'storeconnect' && (
+                  <div className="signup-branding-notice">
+                    <i className="fa-solid fa-store"></i>
+                    <span>{t('plans.storeconnectHint')}</span>
+                  </div>
+                )}
+
                 {/* Branding notice for free and basic plans */}
-                {(agentForm.level === 'free' || agentForm.level === 'basic' || agentForm.level === 'calendar_assistant') && (
+                {(isFreePlan || agentForm.level === 'basic') && (
                   <div className="signup-branding-notice">
                     <i className="fa-solid fa-info-circle"></i>
                     <span>{t('plans.brandingNotice')}</span>
@@ -1053,7 +1069,7 @@ export default function SignupForm({ isOpen, allowedLevels }) {
                     disabled={emailExists || checkingEmail}
                   >
                     {/* Free ($0) plans start a free trial; paid plans go on to checkout */}
-                    {(agentForm.level === "free" || agentForm.level === "calendar_assistant") ? t('buttons.startFreeTrial') : t('buttons.letsGo')}
+                    {isFreePlan ? t('buttons.startFreeTrial') : t('buttons.letsGo')}
                   </button>
                 </div>
               </div>

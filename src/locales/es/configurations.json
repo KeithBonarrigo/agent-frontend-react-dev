@@ -182,5 +182,112 @@
       "tip": "Consejo: Comienza con 1-2 lineas de historial. Esto da buen contexto sin aumentar significativamente los costos. Solo aumenta si tu bot necesita mas memoria conversacional.",
       "close": "Entendido"
     }
+  },
+  "storeconnect": {
+    "title": "Conecta tu tienda StoreConnect",
+    "intro": "Tu asistente responde con la información de tu tienda una vez conectada a tu org de Salesforce. Son tres pasos, unos 10 minutos, a cargo de tu administrador de Salesforce.",
+    "loading": "Comprobando la conexión con StoreConnect...",
+    "loadError": "No se pudo cargar el estado de StoreConnect.",
+    "retry": "Reintentar",
+    "steps": {
+      "app": "Tu aplicación de Salesforce",
+      "connect": "Conecta tu tienda StoreConnect",
+      "store": "Elige la tienda"
+    },
+    "app": {
+      "saved": "Aplicación guardada: {{hint}} · {{environment}}",
+      "edit": "Editar",
+      "cancel": "Cancelar",
+      "instructions": {
+        "intro": "En Salesforce: Setup → External Client App Manager → New External Client App. Distribution State: Local. Activa OAuth con esta Callback URL:",
+        "scopes": "Scopes: Manage user data via APIs (api), Perform requests at any time (refresh_token, offline_access). Seguridad: Require secret for Web Server Flow, Require secret for Refresh Token Flow, Require PKCE.",
+        "policies": "Policies: Permitted Users = All users can self-authorize; IP Relaxation = Relax IP restrictions; Refresh Token Policy = Expire if not used for a specific time (el plazo más largo permitido); deja Single Logout y High Assurance desactivados.",
+        "keys": "Luego Settings → OAuth Settings → Consumer Key and Secret."
+      },
+      "copy": "Copiar",
+      "copied": "¡Copiado!",
+      "copyFallback": "Copia esta URL:",
+      "consumerKey": "Consumer Key",
+      "consumerSecret": "Consumer Secret",
+      "secretKeepHint": "Déjalo vacío para conservar el secret guardado (solo con el mismo Consumer Key).",
+      "orgType": "Tipo de org",
+      "production": "Producción",
+      "sandbox": "Sandbox",
+      "custom": "URL de inicio de sesión personalizada",
+      "loginUrl": "URL de inicio de sesión",
+      "loginUrlPlaceholder": "https://tuempresa.my.salesforce.com",
+      "save": "Guardar aplicación",
+      "saving": "Guardando...",
+      "savedMessage": "Aplicación de Salesforce guardada.",
+      "reconnectNeeded": "Tu aplicación cambió: vuelve a conectar."
+    },
+    "connect": {
+      "needsApp": "Primero guarda tu aplicación de Salesforce.",
+      "ready": "Inicia sesión en Salesforce y permite el acceso. Botwerx encontrará tus tiendas StoreConnect.",
+      "button": "Conectar tu tienda StoreConnect",
+      "reconnectNotice": "El acceso a Salesforce se revocó o expiró. Vuelve a conectar para reanudar la sincronización.",
+      "reconnect": "Volver a conectar",
+      "connecting": "Abriendo Salesforce...",
+      "connectedAs": "Conectado como {{username}}",
+      "connectedOn": "Conectado el {{date}}"
+    },
+    "store": {
+      "pending": "Botwerx encuentra tus tiendas al conectar; solo eliges si la org tiene más de una.",
+      "pick": "Tu org tiene más de una tienda. Elige para cuál responderá este asistente:",
+      "loading": "Leyendo las tiendas de Salesforce...",
+      "none": "No se encontró ninguna tienda en esta org.",
+      "noUrl": "Esta tienda no tiene dirección web en Salesforce. Escribe la URL de su tienda en línea:",
+      "use": "Usar esta tienda",
+      "saving": "Guardando...",
+      "change": "Cambiar de tienda",
+      "cancel": "Cancelar",
+      "saved": "Tienda guardada. La primera sincronización ya empezó."
+    },
+    "ready": {
+      "connected": "Conectada",
+      "store": "Tienda",
+      "lastSync": "Última sincronización",
+      "never": "todavía no",
+      "running": "Sincronizando...",
+      "status": {
+        "ok": "completada",
+        "error": "falló",
+        "running": "en curso"
+      },
+      "productsLabel": "Productos",
+      "products": "{{n}} activos",
+      "bookable": "{{n}} reservables",
+      "content": "Contenido",
+      "contentNone": "aún sin contenido del sitio",
+      "sources": {
+        "page": "páginas",
+        "article": "artículos",
+        "sitemap": "páginas del sitemap"
+      },
+      "syncError": "Error de la última sincronización: {{error}}",
+      "syncNow": "Sincronizar ahora",
+      "syncStarted": "Sincronización iniciada. Puede tardar unos minutos.",
+      "disconnect": "Desconectar",
+      "disconnecting": "Desconectando...",
+      "confirmDisconnect": "¿Desconectar esta tienda? Botwerx revocará su acceso a Salesforce y dejará de sincronizar. Tu aplicación de Salesforce guardada se conserva, así que puedes volver a conectar con un clic.",
+      "disconnected": "Tienda desconectada."
+    },
+    "messages": {
+      "connected": "Salesforce conectado. Tu tienda se está sincronizando.",
+      "chooseStore": "Salesforce conectado. Elige tu tienda para terminar.",
+      "connectFailed": "No se pudo completar la conexión."
+    },
+    "errors": {
+      "client_id_required": "Escribe el Consumer Key.",
+      "client_secret_required": "Escribe el Consumer Secret.",
+      "invalid_credentials_format": "El key o el secret tiene espacios o es demasiado largo. Cópialos tal cual desde Salesforce.",
+      "login_url_required": "Escribe la URL de inicio de sesión.",
+      "app_required": "Primero guarda tu aplicación de Salesforce.",
+      "not_connected": "Primero conecta tu org de Salesforce.",
+      "store_not_found": "Esa tienda no se encontró en tu org. Vuelve a cargar la lista e inténtalo de nuevo.",
+      "storefront_url_required": "Escribe la URL de la tienda.",
+      "not_ready": "Elige una tienda antes de sincronizar.",
+      "generic": "Algo salió mal ({{status}}). Inténtalo de nuevo."
+    }
   }
 }

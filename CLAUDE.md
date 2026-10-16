@@ -28,6 +28,20 @@ Plans, handoff notes and similar working documents go in `plans/`, named
   `backup/pre-dashboard-v3-2026-10-12`. Every change, with before → after values:
   `plans/2026-10-12-dashboard-v3-style.md`.
 
+## StoreConnect plan (2026-10-15)
+
+- "StoreConnect Store Assistant" (`level: storeconnect`) is a specialty plan chosen
+  on the home page sign-up form, like EasyBroker and MLS; it signs up as a free
+  trial until the backend has a Stripe price (`FREE_PLANS` in `SignupForm.jsx`).
+- Its Salesforce store connection is `src/components/StoreConnectSetup.jsx`, shown
+  at the top of the Configurations tab for storeconnect agents only
+  (`isStoreConnectAgent` in `src/utils/storeconnect.js`). It is not an add-on:
+  the dashboard has no Add-Ons tab (`AddOnsTab.jsx` is unused since March 2026).
+- Text: `storeconnect.*` in `configurations.json` (en/es).
+- `/login`'s "Create Account" goes to the home sign-up form (`/?tab=botwerx#hv3-signup`);
+  the old in-page box posted to a route that never existed.
+- Log with before → after values and rollback: `plans/2026-10-15-storeconnect-plan-panel.md`.
+
 ## Status: V3 is going live (2026-09-13)
 
 - On BotWerx domains, `/` serves `HomeV3` and `/login` serves `LoginV3`.

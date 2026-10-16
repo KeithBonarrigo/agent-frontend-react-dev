@@ -3,13 +3,14 @@ import { Link, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { Helmet } from "react-helmet-async";
 import { useUser } from "../contexts/UserContext";
-import { getApiUrl } from "../utils/getApiUrl";
 import "../styles/HomeV3.css";  // shares the V3 home page's styles
 
 // Login page in the V3 home page's style, served at /login on BotWerx domains
-// (the pre-V3 Login.jsx stays at /legacy/login). Same behaviour as Login.jsx:
-// UserContext.login() then /dashboard, /api/signup for new accounts, and the
-// live password-reset route. Text lives under `login` in the homev3 namespace.
+// (the pre-V3 Login.jsx stays at /legacy/login). UserContext.login() then
+// /dashboard, and the live password-reset route. "Create Account" goes to the
+// home page's sign-up form, where accounts are created with a plan (the old
+// in-page box posted to /api/signup, which the backend never had). Text lives
+// under `login` in the homev3 namespace.
 
 const FAVICON = '/img/favicon-botwerx-blue-rounded.png?v=2';
 
@@ -18,7 +19,8 @@ const LANGUAGES = [
   { code: 'es', flagCode: 'es', fullName: 'Español' },
 ];
 
-const EMPTY_SIGNUP = { email: "", password: "", confirmPassword: "", firstName: "", lastName: "" };
+// The home page's sign-up form (Botwerx Bot tab); HomeV3 scrolls to the hash.
+const SIGNUP_URL = '/?tab=botwerx#hv3-signup';
 
 // Same approach as HomeV3: DomainContext rewrites the favicon after mount, so
 // hold our icon while this page is open and restore the links on unmount.
@@ -64,9 +66,6 @@ export default function LoginV3() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
-  const [showSignup, setShowSignup] = useState(false);
-  const [signupData, setSignupData] = useState(EMPTY_SIGNUP);
-  const [signupSuccess, setSignupSuccess] = useState(false);
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -78,56 +77,6 @@ export default function LoginV3() {
       console.error("Login error:", err);
       setError(err.message || l('errors.serverError'));
     }
-  };
-
-  const handleSignupChange = (e) => {
-    setSignupData({ ...signupData, [e.target.name]: e.target.value });
-  };
-
-  const handleSignup = async (e) => {
-    e.preventDefault();
-    setError("");
-
-    if (signupData.password !== signupData.confirmPassword) {
-      setError(l('errors.passwordMismatch'));
-      return;
-    }
-
-    try {
-      const res = await fetch(`${getApiUrl()}/api/signup`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          email: signupData.email,
-          password: signupData.password,
-          first_name: signupData.firstName,
-          last_name: signupData.lastName,
-        }),
-        credentials: "include",
-      });
-      const data = await res.json();
-
-      if (!res.ok) {
-        setError(data.error || l('errors.signupFailed'));
-        return;
-      }
-
-      setSignupSuccess(true);
-      setTimeout(() => {
-        setShowSignup(false);
-        setSignupSuccess(false);
-        setSignupData(EMPTY_SIGNUP);
-      }, 2000);
-    } catch (err) {
-      console.error("Signup error:", err);
-      setError(l('errors.serverError'));
-    }
-  };
-
-  const toggleSignup = () => {
-    setShowSignup(!showSignup);
-    setError("");
-    setSignupSuccess(false);
   };
 
   return (
@@ -166,61 +115,31 @@ export default function LoginV3() {
       {/* ---------------- Login / create account card ---------------- */}
       <main className="hv3-auth">
         <div className="hv3-auth-card">
-          <h1>{showSignup ? l('pageTitle.createAccount') : l('pageTitle.login')}</h1>
+          <h1>{l('pageTitle.login')}</h1>
 
-          {!showSignup && (
-            <form onSubmit={handleLogin} className="hv3-auth-form">
-              <Field id="hv3-login-email" label={l('placeholders.email')} type="email" name="email"
-                autoComplete="email" required value={email} onChange={(e) => setEmail(e.target.value)} />
-              <Field id="hv3-login-password" label={l('placeholders.password')} type="password" name="password"
-                autoComplete="current-password" required value={password} onChange={(e) => setPassword(e.target.value)} />
+          <form onSubmit={handleLogin} className="hv3-auth-form">
+            <Field id="hv3-login-email" label={l('placeholders.email')} type="email" name="email"
+              autoComplete="email" required value={email} onChange={(e) => setEmail(e.target.value)} />
+            <Field id="hv3-login-password" label={l('placeholders.password')} type="password" name="password"
+              autoComplete="current-password" required value={password} onChange={(e) => setPassword(e.target.value)} />
 
-              <div className="hv3-auth-forgot">
-                <a href="/password-reset/request">{l('links.forgotPassword')}</a>
-              </div>
-
-              {error && <p className="hv3-cform-msg hv3-cform-err" role="alert">{error}</p>}
-
-              <button type="submit" className="hv3-btn hv3-btn-p hv3-btn-lg hv3-auth-submit">
-                <img src="/img/botwerx-icon.png" alt="" className="hv3-btn-icon" />
-                {l('buttons.logIn')}
-              </button>
-            </form>
-          )}
-
-          {showSignup && (signupSuccess ? (
-            <div className="hv3-auth-success" role="status">
-              <h2>{l('success.accountCreated')}</h2>
-              <p>{l('success.switchingToLogin')}</p>
+            <div className="hv3-auth-forgot">
+              <a href="/password-reset/request">{l('links.forgotPassword')}</a>
             </div>
-          ) : (
-            <form onSubmit={handleSignup} className="hv3-auth-form">
-              <div className="hv3-cform-row">
-                <Field id="hv3-signup-first" label={l('placeholders.firstName')} type="text" name="firstName"
-                  autoComplete="given-name" required value={signupData.firstName} onChange={handleSignupChange} />
-                <Field id="hv3-signup-last" label={l('placeholders.lastName')} type="text" name="lastName"
-                  autoComplete="family-name" required value={signupData.lastName} onChange={handleSignupChange} />
-              </div>
-              <Field id="hv3-signup-email" label={l('placeholders.email')} type="email" name="email"
-                autoComplete="email" required value={signupData.email} onChange={handleSignupChange} />
-              <Field id="hv3-signup-password" label={l('placeholders.password')} type="password" name="password"
-                autoComplete="new-password" required value={signupData.password} onChange={handleSignupChange} />
-              <Field id="hv3-signup-confirm" label={l('placeholders.confirmPassword')} type="password" name="confirmPassword"
-                autoComplete="new-password" required value={signupData.confirmPassword} onChange={handleSignupChange} />
 
-              {error && <p className="hv3-cform-msg hv3-cform-err" role="alert">{error}</p>}
+            {error && <p className="hv3-cform-msg hv3-cform-err" role="alert">{error}</p>}
 
-              <button type="submit" className="hv3-btn hv3-btn-p hv3-btn-lg hv3-auth-submit">
-                <img src="/img/botwerx-icon.png" alt="" className="hv3-btn-icon" />
-                {l('buttons.createAccount')}
-              </button>
-            </form>
-          ))}
+            <button type="submit" className="hv3-btn hv3-btn-p hv3-btn-lg hv3-auth-submit">
+              <img src="/img/botwerx-icon.png" alt="" className="hv3-btn-icon" />
+              {l('buttons.logIn')}
+            </button>
+          </form>
 
+          {/* Accounts are created on the home page's sign-up form, with a plan */}
           <p className="hv3-auth-toggle">
-            {showSignup ? l('prompts.hasAccount') : l('prompts.noAccount')}{' '}
-            <button type="button" onClick={toggleSignup}>
-              {showSignup ? l('buttons.logIn') : l('buttons.createAccount')}
+            {l('prompts.noAccount')}{' '}
+            <button type="button" onClick={() => navigate(SIGNUP_URL)}>
+              {l('buttons.createAccount')}
             </button>
           </p>
         </div>
