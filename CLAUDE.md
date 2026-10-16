@@ -30,9 +30,10 @@ Plans, handoff notes and similar working documents go in `plans/`, named
 
 ## StoreConnect plan (2026-10-15)
 
-- "StoreConnect Store Assistant" (`level: storeconnect`) is a specialty plan chosen
-  on the home page sign-up form, like EasyBroker and MLS; it signs up as a free
-  trial until the backend has a Stripe price (`FREE_PLANS` in `SignupForm.jsx`).
+- "StoreConnect Store Assistant" (`level: storeconnect`, $199/month) is a paid
+  specialty plan chosen on the home page sign-up form, like EasyBroker and MLS:
+  Stripe checkout with the backend's 30-day trial. The backend needs
+  `STRIPE_PRICE_STORECONNECT` set, or its sign-up fails with "No price configured".
 - Its Salesforce store connection is `src/components/StoreConnectSetup.jsx`, shown
   at the top of the Configurations tab for storeconnect agents only
   (`isStoreConnectAgent` in `src/utils/storeconnect.js`). It is not an add-on:

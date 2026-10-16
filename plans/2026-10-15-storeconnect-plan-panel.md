@@ -1,9 +1,9 @@
 # StoreConnect plan: sign-up, store connection panel, login fix — change and rollback log
 
 Date: 2026-10-15. Frontend for the backend's "StoreConnect Store Assistant" plan
-(`mercedes` `6a96df0`, live on chat.botwerx.ai). StoreConnect is a specialty plan
-chosen at sign-up, like EasyBroker and MLS; the Salesforce store connection is part
-of that plan's agent setup, not an add-on. (The dashboard's Add-Ons tab was removed
+(`mercedes` `6a96df0`, live on chat.botwerx.ai). StoreConnect is a paid specialty
+plan ($199/month, Stripe 30-day trial) chosen at sign-up, like EasyBroker and MLS;
+the Salesforce store connection is part of that plan's agent setup, not an add-on. (The dashboard's Add-Ons tab was removed
 in March 2026, `bb44cee`; `AddOnsTab.jsx` is unused and untouched here.)
 
 | What | Where |
@@ -20,9 +20,9 @@ in March 2026, `bb44cee`; `AddOnsTab.jsx` is unused and untouched here.)
 
 | Before | After |
 | --- | --- |
-| Service Level options end at Calendar Assistant | New `<option value="storeconnect">` after it, guarded by `allowedLevels` like the others. Label `plans.storeconnect`: en "StoreConnect Store Assistant - Free trial", es "Asistente de Tienda StoreConnect - Prueba gratis". |
-| `pricingMap` has no storeconnect | `storeconnect: { amount: 0, name: "StoreConnect Store Assistant" }` |
-| Free-plan checks repeated `level === "free" \|\| level === "calendar_assistant"` in three places | `FREE_PLANS = ["free", "calendar_assistant", "storeconnect"]` and `isFreePlan`, used by the submit branch (`createUser(payload, null)`, no Stripe), the Start Free Trial button label, and the branding notice (`isFreePlan \|\| level === 'basic'`). Moving storeconnect out of the list later switches it to the paid path. |
+| Service Level options end at Calendar Assistant | New `<option value="storeconnect">` after it, guarded by `allowedLevels` like the others. Label `plans.storeconnect`: en "StoreConnect Store Assistant - $199/month", es "Asistente de Tienda StoreConnect - $199/mes". |
+| `pricingMap` has no storeconnect | `storeconnect: { amount: 19900, name: "StoreConnect Store Assistant" }`: the paid path (`/api/create-subscription` → Stripe checkout with the backend's 30-day trial, card at sign-up), like EasyBroker and MLS. The backend must have `STRIPE_PRICE_STORECONNECT` set first, or sign-up answers "Invalid level: storeconnect. No price configured." |
+| Free-plan checks repeated `level === "free" \|\| level === "calendar_assistant"` in three places | `FREE_PLANS = ["free", "calendar_assistant"]` and `isFreePlan`, used by the submit branch, the Start Free Trial / Let's Go! button label, and the branding notice (`isFreePlan \|\| level === 'basic'`). Same behaviour as before for every existing plan. |
 | — | Hint under the select when storeconnect is chosen (`plans.storeconnectHint`): en "After signing up, connect your Salesforce org from your dashboard (takes about 10 minutes).", es "Después de registrarte, conecta tu org de Salesforce desde tu panel (unos 10 minutos)." Same `signup-branding-notice` style, store icon. |
 
 No MLS/EasyBroker acknowledgment for this level; the domain field stays.
@@ -104,8 +104,8 @@ texts) stay in `homev3.json`.
   - three stores → "Choose your store to finish", chooser with three radios, store
     without URL asks for the storefront URL, saved, synced; Change store / Cancel.
   - pro agent: no panel, badge "pro".
-  - sign-up form: option present, hint + branding notice, "Start Free Trial", no MLS
-    acknowledgment; MLS still shows the acknowledgment and "Let's Go!".
+  - sign-up form: option present with the price, hint, no branding notice, "Let's
+    Go!" (paid path), no MLS acknowledgment; MLS still shows its acknowledgment.
   - login: no sign-up fields; Create Account lands on `/?tab=botwerx#hv3-signup`
     with the form in view.
 - **Still to do by the user (live):** sign up a fresh account with the StoreConnect

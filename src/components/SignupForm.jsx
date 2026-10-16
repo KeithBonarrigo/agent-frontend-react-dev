@@ -134,13 +134,13 @@ export default function SignupForm({ isOpen, allowedLevels }) {
     easybroker: { amount: 7900, name: "Real Estate Agent (EasyBroker)" },
     mls: { amount: 7900, name: "Real Estate Agent (MLS)" },
     calendar_assistant: { amount: 0, name: "Calendar Assistant" },
-    storeconnect: { amount: 0, name: "StoreConnect Store Assistant" },
+    storeconnect: { amount: 19900, name: "StoreConnect Store Assistant" },
   };
 
-  // $0 plans: no Stripe checkout, "Start Free Trial". When Botwerx sets a Stripe
-  // price for StoreConnect (STRIPE_PRICE_STORECONNECT), move it out of this list
-  // and the form takes the paid path; /api/create-subscription accepts the level.
-  const FREE_PLANS = ["free", "calendar_assistant", "storeconnect"];
+  // $0 plans: no Stripe checkout, "Start Free Trial". Paid plans (including the
+  // specialty ones: EasyBroker, MLS, StoreConnect) go through
+  // /api/create-subscription, which starts the Stripe trial.
+  const FREE_PLANS = ["free", "calendar_assistant"];
   const isFreePlan = FREE_PLANS.includes(agentForm.level);
 
   useEffect(() => {
