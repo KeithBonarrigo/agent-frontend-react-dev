@@ -405,8 +405,11 @@ const BIDCONNECT_FEATURE_ICONS = ['fa-solid fa-gavel', 'fa-brands fa-salesforce'
 // people to the sign-in box on bidconnect.app's home page, which asks for it.
 const BIDCONNECT_SIGNIN_URL = 'https://bidconnect.app/#signin';
 
-const BIDCONNECT_DEMO_VIDEO = '/media/bidconnect-demo.mp4';
-const BIDCONNECT_DEMO_POSTER = '/img/bidconnect-demo-poster.jpg';
+// A recording of the live demo's kiosk loop (tryme.bidconnect.app, 3 minutes). The hero
+// video and its Try It! button both open the live demo.
+const BIDCONNECT_DEMO_VIDEO = '/media/bidconnect-kiosk-demo.mp4';
+const BIDCONNECT_DEMO_POSTER = '/img/bidconnect-kiosk-poster.jpg';
+const BIDCONNECT_TRYME_URL = 'https://tryme.bidconnect.app/';
 const REDUCED_MOTION_QUERY = '(prefers-reduced-motion: reduce)';
 
 // Tracks the OS/browser "reduce motion" setting, including changes while open.
@@ -428,7 +431,7 @@ function BidConnectDemoVideo({ label }) {
   const reducedMotion = usePrefersReducedMotion();
 
   if (reducedMotion) {
-    return <img src={BIDCONNECT_DEMO_POSTER} alt={label} width="1920" height="1080" className="hv3-bc-demo" />;
+    return <img src={BIDCONNECT_DEMO_POSTER} alt={label} width="1280" height="720" className="hv3-bc-demo" />;
   }
 
   return (
@@ -441,8 +444,8 @@ function BidConnectDemoVideo({ label }) {
       loop
       playsInline
       preload="metadata"
-      width="1920"
-      height="1080"
+      width="1280"
+      height="720"
       aria-label={label}
       // React does not always write the muted attribute, and Safari will not
       // autoplay without it. defaultMuted adds the attribute; muted sets the property.
@@ -472,18 +475,22 @@ function BidConnectContent({ t }) {
               <a href="https://storeconnect.com/" target="_blank" rel="noopener noreferrer">{b('hero.storeLink')}</a>
               {b('hero.storePost')}
             </p>
-            <div className="hv3-hero-cta hv3-indent">
+            <div className="hv3-hero-cta hv3-indent hv3-bc-hero-cta">
               <a href={BIDCONNECT_SIGNUP_URL} className="hv3-btn hv3-btn-p hv3-btn-lg">
                 <img src="/img/botwerx-icon.png" alt="" className="hv3-btn-icon" />
                 {b('hero.ctaPrimary')}
               </a>
+              <a href={BIDCONNECT_TRYME_URL} target="_blank" rel="noopener noreferrer" className="hv3-btn hv3-btn-s hv3-btn-lg">{b('hero.ctaTry')}</a>
               <a href={BIDCONNECT_SIGNIN_URL} className="hv3-btn hv3-btn-s hv3-btn-lg">{b('hero.ctaSecondary')}</a>
             </div>
           </div>
 
-          {/* Animated product demo (muted loop); poster only for reduced motion */}
+          {/* The live demo's kiosk loop (muted); poster only for reduced motion.
+              Opens the live demo, like the Try It! button. */}
           <div className="hv3-hero-vis">
-            <BidConnectDemoVideo label={b('demoVideoLabel')} />
+            <a href={BIDCONNECT_TRYME_URL} target="_blank" rel="noopener noreferrer" className="hv3-hero-vis-link" aria-label={b('hero.tryLabel')}>
+              <BidConnectDemoVideo label={b('demoVideoLabel')} />
+            </a>
           </div>
         </div>
       </section>
