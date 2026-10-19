@@ -259,6 +259,110 @@ function useAutoScroll(sliderRef) {
   }, [sliderRef]);
 }
 
+// StoreConnect Store Assistant: what the bot on the "storeconnect" plan does.
+// Text lives under `botwerx.storeAssistant`.
+const STORE_ASSISTANT_FEATURES = [
+  { key: 'catalog', icon: 'fa-boxes-stacked' },
+  { key: 'website', icon: 'fa-globe' },
+  { key: 'search', icon: 'fa-magnifying-glass' },
+  { key: 'cart', icon: 'fa-cart-shopping' },
+  { key: 'orders', icon: 'fa-truck-fast' },
+  { key: 'bookings', icon: 'fa-calendar-check' },
+  { key: 'deals', icon: 'fa-tags' },
+  { key: 'locations', icon: 'fa-location-dot' },
+  { key: 'channels', icon: 'fa-comments' },
+];
+
+// Picks a plan in the hero's SignupForm, then scrolls to it. SignupForm isn't
+// edited: its plan <select> is a controlled input, so the value goes in through
+// the native setter plus a change event, the same path as a visitor choosing
+// it. Once the form is past the plan step there is no select, and this only scrolls.
+function chooseSignupPlan(level) {
+  const select = document.querySelector('#hv3-signup select[name="level"]');
+  if (select && [...select.options].some((o) => o.value === level)) {
+    Object.getOwnPropertyDescriptor(HTMLSelectElement.prototype, 'value').set.call(select, level);
+    select.dispatchEvent(new Event('change', { bubbles: true }));
+  }
+  document.getElementById('hv3-signup')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+function StoreAssistantSection({ t }) {
+  const sa = (key, opts) => t(`botwerx.storeAssistant.${key}`, opts);
+  const list = (key) => {
+    const items = sa(`${key}.items`, { returnObjects: true });
+    return Array.isArray(items) ? items : [];
+  };
+
+  return (
+    <section className="hv3-sec" id="hv3-store-assistant">
+      <div className="hv3-wrap">
+        <div className="hv3-sec-head hv3-sa-head">
+          <span className="hv3-lab">{sa('label')}</span>
+          <h2>{sa('title')}</h2>
+          <p className="hv3-sa-lead">{sa('lead')}</p>
+          <p>{sa('intro')}</p>
+        </div>
+
+        <div className="hv3-bw-cards">
+          {STORE_ASSISTANT_FEATURES.map(({ key, icon }) => (
+            <div className="hv3-bw-card" key={key}>
+              <div className="hv3-bw-card-head">
+                <i className={`fa-solid ${icon} hv3-bw-icon`} aria-hidden="true"></i>
+                <h3>{sa(`features.${key}.title`)}</h3>
+              </div>
+              <p>{sa(`features.${key}.description`)}</p>
+            </div>
+          ))}
+          {/* Setup closes the grid, with the way in */}
+          <div className="hv3-bw-card hv3-sa-setup">
+            <div>
+              <div className="hv3-bw-card-head">
+                <i className="fa-solid fa-plug hv3-bw-icon" aria-hidden="true"></i>
+                <h3>{sa('features.setup.title')}</h3>
+              </div>
+              <p>{sa('features.setup.description')}</p>
+            </div>
+            <a
+              href="#hv3-signup"
+              className="hv3-btn hv3-btn-p"
+              onClick={(e) => {
+                e.preventDefault();
+                chooseSignupPlan('storeconnect');
+              }}
+            >
+              {sa('cta')}
+            </a>
+          </div>
+        </div>
+
+        <div className="hv3-sa-cols">
+          {['customers', 'storeAware'].map((group) => (
+            <div className="hv3-sa-panel" key={group}>
+              <h3>{sa(`${group}.title`)}</h3>
+              <ul className="hv3-sa-list">
+                {list(group).map(({ title, text }) => (
+                  <li key={title}>
+                    <i className="fa-solid fa-check" aria-hidden="true"></i>
+                    <span><strong>{title}</strong>{text && ` ${text}`}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
+        </div>
+
+        {/* Not available yet: dashed and muted so it never reads as a current feature */}
+        <div className="hv3-sa-soon">
+          <h3><i className="fa-regular fa-clock" aria-hidden="true"></i>{sa('comingSoon.label')}</h3>
+          <ul>
+            {list('comingSoon').map((text) => <li key={text}>{text}</li>)}
+          </ul>
+        </div>
+      </div>
+    </section>
+  );
+}
+
 function BotwerxBotContent({ t }) {
   const b = (key, opts) => t(`botwerx.${key}`, opts);
   const sliderRef = useRef(null);
@@ -337,6 +441,9 @@ function BotwerxBotContent({ t }) {
           </div>
         </div>
       </section>
+
+      {/* ---------------- StoreConnect Store Assistant ---------------- */}
+      <StoreAssistantSection t={t} />
 
       {/* ---------------- FAQ ---------------- */}
       <section className="hv3-sec" id="hv3-faq">
