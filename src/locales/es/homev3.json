@@ -383,6 +383,10 @@
           "text": "crédito a favor, puntos de lealtad (incluidos los que vencen pronto) y saldos de tarjetas de regalo."
         },
         {
+          "title": "Los clientes nuevos pueden registrarse en el chat:",
+          "text": "verifican un correo electrónico, dan su nombre y la cuenta queda creada en StoreConnect (para tiendas con clave de API)."
+        },
+        {
           "title": "Seguro por diseño:",
           "text": "los clientes se verifican con un código de un solo uso enviado a su correo (o con su número de WhatsApp verificado); el asistente nunca pide contraseñas, números de tarjeta ni el PIN de una tarjeta de regalo, y a cada cliente solo le muestra sus propios registros."
         }

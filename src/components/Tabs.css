@@ -420,6 +420,40 @@
 }
 
 /* -----------------------------------------
+   StoreConnect panel (StoreConnectSetup.jsx)
+   ----------------------------------------- */
+.sc-setup .sc-box {
+  padding: 1em;
+}
+
+/* Phones: the dashboard's nested padding left the panel's boxes about 166px of
+   content on a 390px screen, so "Sync now" wrapped onto two lines and the buttons
+   spilled out of their box. Tighter padding, and the action buttons stack at full width. */
+@media (max-width: 600px) {
+  .sc-setup.section {
+    padding: 1em;
+  }
+
+  .sc-setup .section-title {
+    flex-wrap: wrap;
+  }
+
+  .sc-setup .sc-box {
+    padding: 0.75em;
+  }
+
+  .sc-setup .sc-actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .sc-setup .sc-actions .btn {
+    justify-content: center;
+    text-align: center;
+  }
+}
+
+/* -----------------------------------------
    Add-On Card
    ----------------------------------------- */
 .addon-card {

@@ -13,7 +13,9 @@ import "./Tabs.css";
 //
 // Backend: endpointRoutes/storeConnect.js in the API. Every call sends the
 // login session (credentials: 'include'); the routes reject requests without it.
-//   GET    /api/clients/:id/storeconnect/status   → status, app, callback_url, salesforce, store, sync
+//   GET    /api/clients/:id/storeconnect/status   → status, app, callback_url, salesforce, store, sync,
+//            in_chat_payment (the store's API key is saved), api_base_url (never the key),
+//            share_coupon_codes, api_checkout_physical
 //   PUT    /api/clients/:id/storeconnect/app      step 1: the merchant's own External Client App
 //   GET    /api/clients/:id/storeconnect/connect  step 2: { url } → Salesforce consent. Salesforce
 //            returns to /dashboard?oauth=success|error&provider=storeconnect
@@ -23,12 +25,19 @@ import "./Tabs.css";
 //   POST   /api/clients/:id/storeconnect/store
 //   POST   /api/clients/:id/storeconnect/sync     ready: re-sync now (202), then poll the status
 //   DELETE /api/clients/:id/storeconnect          ready: revoke access; the saved app is kept
+//   PUT    /api/clients/:id/storeconnect/settings ready: { share_coupon_codes } or { api_checkout_physical }
+//            → { success, settings }; the physical-goods switch shows only when in_chat_payment is true
+//   PUT    /api/clients/:id/storeconnect/api-key  ready: { api_key, api_base_url? } → { success, in_chat_payment,
+//            api_store, api_base_url }. Without a base URL the backend detects it; api_key "" removes the key
 // Shown only when utils/storeconnect.js's isStoreConnectAgent(agent) is true.
 
 const LOGO = '/img/add-ons/storeconnect-logo.webp';
 const POLL_MS = 10000;
 const OAUTH_PARAMS = ['oauth', 'provider', 'message', 'storeconnect', 'reason', 'tab'];
 const EMPTY_APP_FORM = { client_id: '', client_secret: '', environment: 'production', login_url: '' };
+const EMPTY_KEY_FORM = { api_key: '', api_base_url: '' };
+// Saved-setting banners: storeconnect.ready.<name>On / <name>Off
+const SETTING_MESSAGES = { share_coupon_codes: 'coupons', api_checkout_physical: 'physical' };
 
 async function api(path, { method = 'GET', body } = {}) {
   const res = await apiFetch(`${getApiUrl()}${path}`, {
@@ -79,7 +88,33 @@ function Step({ n, state, title, children }) {
 const labelStyle = { display: 'block', fontWeight: 600, color: '#333', fontSize: '0.85em', marginBottom: '0.25em' };
 const inputStyle = { width: '100%', boxSizing: 'border-box' };
 const mutedStyle = { color: '#666', fontSize: '0.9em', margin: 0 };
-const gridStyle = { display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '0.75em' };
+// min(220px, 100%): on phones the single column fits the box instead of overflowing it
+const gridStyle = { display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(220px, 100%), 1fr))', gap: '0.75em' };
+const errorStyle = { color: '#dc3545', fontSize: '0.85em', fontWeight: 600, margin: '0.5em 0 0' };
+// White boxes under the steps; their padding is in Tabs.css (.sc-box) so phones can tighten it
+const boxStyle = { marginTop: '0.75em', backgroundColor: '#fff', border: '1px solid #e2e8f0', borderRadius: 8 };
+const ruleStyle = { marginTop: '1em', paddingTop: '1em', borderTop: '1px solid #e2e8f0' };
+const pillStyle = (on) => ({ display: 'inline-block', padding: '0.1em 0.6em', borderRadius: 999, fontSize: '0.8em', fontWeight: 600,
+  color: on ? '#1e7e34' : '#555', backgroundColor: on ? '#e6f4ea' : '#eef0f2' });
+
+// A labelled on/off switch (Tabs.css .toggle-switch)
+function SettingSwitch({ id, checked, saving, label, help, onToggle }) {
+  return (
+    <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.6em 0.9em', alignItems: 'flex-start' }}>
+      <button type="button" id={id} role="switch" aria-checked={checked} aria-describedby={`${id}-help`}
+        className={`toggle-switch ${checked ? 'active' : 'inactive'}`} onClick={onToggle} disabled={saving}>
+        <span className={`toggle-knob ${checked ? 'active' : 'inactive'}`}>
+          {saving && <i className="fa-solid fa-spinner fa-spin" style={{ fontSize: '0.7em', color: '#999' }}></i>}
+        </span>
+      </button>
+      {/* 220px basis: on phones the text drops below the switch instead of a narrow column */}
+      <div style={{ flex: '1 1 220px', minWidth: 0 }}>
+        <label htmlFor={id} style={{ fontWeight: 600, color: '#333', cursor: 'pointer' }}>{label}</label>
+        <p id={`${id}-help`} style={{ ...mutedStyle, fontSize: '0.85em', marginTop: '0.2em' }}>{help}</p>
+      </div>
+    </div>
+  );
+}
 
 export default function StoreConnectSetup({ clientId, agent }) {
   const { t } = useTranslation('configurations');
@@ -115,6 +150,13 @@ export default function StoreConnectSetup({ clientId, agent }) {
   const [syncing, setSyncing] = useState(false);
   const [disconnecting, setDisconnecting] = useState(false);
 
+  // Assistant settings: the setting being saved, and the store's Commerce API key
+  const [settingSaving, setSettingSaving] = useState(null);
+  const [keyFormOpen, setKeyFormOpen] = useState(false);
+  const [keyForm, setKeyForm] = useState(EMPTY_KEY_FORM);
+  const [keySaving, setKeySaving] = useState(false);
+  const [keyError, setKeyError] = useState(null);
+
   const showBanner = (type, text, ms = 6000) => {
     clearTimeout(bannerTimer.current);
     setBanner({ type, text });
@@ -146,6 +188,9 @@ export default function StoreConnectSetup({ clientId, agent }) {
     setEditingApp(false);
     setChooserOpen(false);
     setStores(null);
+    setKeyFormOpen(false);
+    setKeyForm(EMPTY_KEY_FORM);
+    setKeyError(null);
     loadStatus();
   }, [loadStatus]);
 
@@ -323,6 +368,78 @@ export default function StoreConnectSetup({ clientId, agent }) {
     loadStatus({ silent: true });
   };
 
+  // ---------------- Assistant settings ----------------
+  // share_coupon_codes: may the assistant quote promotion coupon codes (default no).
+  // api_checkout_physical: the store's API doesn't price shipping, so the backend keeps
+  // chat orders to digital/virtual products unless this is on.
+  const saveSetting = async (key, value) => {
+    setSettingSaving(key);
+    const res = await api(`/api/clients/${clientId}/storeconnect/settings`, { method: 'PUT', body: { [key]: value } });
+    setSettingSaving(null);
+    if (!res.ok) {
+      showBanner('error', errorText(t, res), 10000);
+      return;
+    }
+    const settings = res.data.settings || { [key]: value };
+    setStatus((prev) => (prev ? { ...prev, ...settings } : prev));
+    showBanner('success', sc(`ready.${SETTING_MESSAGES[key]}${settings[key] ? 'On' : 'Off'}`));
+  };
+
+  // The store's Commerce API key turns on in-chat ordering. The merchant creates it as the
+  // api.auth_key store variable on their Store record; the backend adds the store id itself.
+  const openKeyForm = () => {
+    setKeyForm(EMPTY_KEY_FORM);
+    setKeyError(null);
+    setKeyFormOpen(true);
+  };
+
+  // A failed check lists the API addresses the backend tried
+  const keyErrorText = (res) => {
+    const tried = Array.isArray(res.data?.tried) ? res.data.tried.filter(Boolean) : [];
+    return tried.length ? `${errorText(t, res)} ${sc('ordering.tried', { urls: tried.join(', ') })}` : errorText(t, res);
+  };
+
+  const saveKey = async (e) => {
+    e.preventDefault();
+    const apiKey = keyForm.api_key.trim();
+    // An empty key would remove the saved one; removing has its own button
+    if (!apiKey) {
+      setKeyError(sc('errors.api_key_required'));
+      return;
+    }
+    setKeyError(null);
+    setKeySaving(true);
+    const body = { api_key: apiKey };
+    if (keyForm.api_base_url.trim()) body.api_base_url = keyForm.api_base_url.trim();
+    const res = await api(`/api/clients/${clientId}/storeconnect/api-key`, { method: 'PUT', body });
+    setKeySaving(false);
+    if (!res.ok) {
+      setKeyError(keyErrorText(res));
+      return;
+    }
+    setKeyFormOpen(false);
+    setKeyForm(EMPTY_KEY_FORM);
+    setStatus((prev) => (prev ? { ...prev, in_chat_payment: !!res.data.in_chat_payment, api_base_url: res.data.api_base_url ?? prev.api_base_url } : prev));
+    const store = res.data.api_store?.name;
+    showBanner('success', store ? sc('ordering.savedFor', { store }) : sc('ordering.saved'));
+    loadStatus({ silent: true });
+  };
+
+  const removeKey = async () => {
+    if (!window.confirm(sc('ordering.confirmRemove'))) return;
+    setKeySaving(true);
+    const res = await api(`/api/clients/${clientId}/storeconnect/api-key`, { method: 'PUT', body: { api_key: '' } });
+    setKeySaving(false);
+    if (!res.ok) {
+      showBanner('error', errorText(t, res), 10000);
+      return;
+    }
+    setKeyFormOpen(false);
+    setStatus((prev) => (prev ? { ...prev, in_chat_payment: false } : prev));
+    showBanner('success', sc('ordering.removed'));
+    loadStatus({ silent: true });
+  };
+
   if (!clientId) return null;
 
   const s = status?.status;
@@ -334,7 +451,7 @@ export default function StoreConnectSetup({ clientId, agent }) {
   const busy = (label) => <><i className="fa-solid fa-spinner fa-spin" style={{ marginRight: '0.4em' }}></i>{label}</>;
 
   return (
-    <div className="section" style={{ marginBottom: '1.5em' }}>
+    <div className="section sc-setup" style={{ marginBottom: '1.5em' }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '1em', flexWrap: 'wrap' }}>
         <h2 className="section-title">
           <img src={LOGO} alt="StoreConnect" style={{ height: '28px', width: 'auto' }} onError={(e) => { e.target.style.display = 'none'; }} />
@@ -532,8 +649,8 @@ export default function StoreConnectSetup({ clientId, agent }) {
           </ol>
 
           {/* ---------------- Ready: store, sync, actions ---------------- */}
-          {s === 'ready' && (
-            <div style={{ marginTop: '0.5em', padding: '1em', backgroundColor: '#fff', border: '1px solid #e2e8f0', borderRadius: 8 }}>
+          {s === 'ready' && (<>
+            <div className="sc-box" style={{ ...boxStyle, marginTop: '0.5em' }}>
               <div style={gridStyle}>
                 <div>
                   <div style={labelStyle}>{sc('ready.store')}</div>
@@ -570,7 +687,7 @@ export default function StoreConnectSetup({ clientId, agent }) {
                   <i className="fa-solid fa-exclamation-triangle" style={{ marginRight: '0.5em' }}></i>{sc('ready.syncError', { error: lastRun.error })}
                 </div>
               )}
-              <div style={{ display: 'flex', gap: '0.5em', marginTop: '0.9em', flexWrap: 'wrap' }}>
+              <div className="sc-actions" style={{ display: 'flex', gap: '0.5em', marginTop: '0.9em', flexWrap: 'wrap' }}>
                 <button type="button" className="btn btn-primary" onClick={syncNow} disabled={running || syncing}>
                   {running || syncing ? busy(sc('ready.running')) : <><i className="fa-solid fa-rotate"></i> {sc('ready.syncNow')}</>}
                 </button>
@@ -579,7 +696,80 @@ export default function StoreConnectSetup({ clientId, agent }) {
                 </button>
               </div>
             </div>
-          )}
+
+            {/* ---------------- Ready: assistant settings ---------------- */}
+            <div className="sc-box" style={boxStyle}>
+              <div style={{ ...labelStyle, fontSize: '0.95em', marginBottom: '0.75em' }}>{sc('ready.settings')}</div>
+              <SettingSwitch id="sc-coupons" checked={!!status.share_coupon_codes} saving={settingSaving === 'share_coupon_codes'}
+                label={sc('ready.coupons')} help={sc('ready.couponsHelp')}
+                onToggle={() => saveSetting('share_coupon_codes', !status.share_coupon_codes)} />
+
+              {/* In-chat ordering: on once the store's Commerce API key is saved */}
+              <div style={ruleStyle}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5em', flexWrap: 'wrap' }}>
+                  <span style={{ fontWeight: 600, color: '#333' }}>{sc('ordering.title')}</span>
+                  <span style={pillStyle(status.in_chat_payment)}>{status.in_chat_payment ? sc('ordering.on') : sc('ordering.off')}</span>
+                </div>
+                <p style={{ ...mutedStyle, fontSize: '0.85em', marginTop: '0.3em' }}>{sc('ordering.help')}</p>
+
+                {keyFormOpen ? (
+                  <form onSubmit={saveKey} style={{ marginTop: '0.75em' }}>
+                    <div style={gridStyle}>
+                      <div>
+                        <label htmlFor="sc-api-key" style={labelStyle}>{sc('ordering.key')}</label>
+                        <input id="sc-api-key" className="input" style={inputStyle} type="password" autoComplete="new-password" spellCheck="false"
+                          value={keyForm.api_key} onChange={(e) => setKeyForm((f) => ({ ...f, api_key: e.target.value }))} />
+                      </div>
+                      <div>
+                        <label htmlFor="sc-api-url" style={labelStyle}>{sc('ordering.baseUrl')}</label>
+                        <input id="sc-api-url" className="input" style={inputStyle} type="url" placeholder={sc('ordering.baseUrlPlaceholder')}
+                          value={keyForm.api_base_url} onChange={(e) => setKeyForm((f) => ({ ...f, api_base_url: e.target.value }))} />
+                        {status.in_chat_payment && status.api_base_url && (
+                          <div style={{ ...mutedStyle, fontSize: '0.8em', marginTop: '0.25em', overflowWrap: 'anywhere' }}>{sc('ordering.inUse', { url: status.api_base_url })}</div>
+                        )}
+                      </div>
+                    </div>
+                    {keyError && <p style={errorStyle}>{keyError}</p>}
+                    <div className="sc-actions" style={{ display: 'flex', gap: '0.5em', marginTop: '0.75em', flexWrap: 'wrap' }}>
+                      <button type="submit" className="btn btn-primary" disabled={keySaving}>
+                        {keySaving ? busy(sc('ordering.saving')) : sc('ordering.save')}
+                      </button>
+                      <button type="button" className="btn btn-secondary" onClick={() => setKeyFormOpen(false)} disabled={keySaving}>
+                        {sc('ordering.cancel')}
+                      </button>
+                    </div>
+                  </form>
+                ) : status.in_chat_payment ? (
+                  <div style={{ marginTop: '0.6em' }}>
+                    {status.api_base_url && (
+                      <p style={{ ...mutedStyle, overflowWrap: 'anywhere' }}>{sc('ordering.apiUrl')} <code style={{ fontSize: '0.9em' }}>{status.api_base_url}</code></p>
+                    )}
+                    {/* .btn-link is display:flex, so the two links share a row here */}
+                    <div style={{ display: 'flex', gap: '1.25em', flexWrap: 'wrap', marginTop: '0.4em' }}>
+                      <button type="button" className="btn-link" onClick={openKeyForm} disabled={keySaving}>{sc('ordering.replace')}</button>
+                      <button type="button" className="btn-link" onClick={removeKey} disabled={keySaving}>
+                        {keySaving ? busy(sc('ordering.removing')) : sc('ordering.remove')}
+                      </button>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="sc-actions" style={{ display: 'flex', marginTop: '0.75em' }}>
+                    <button type="button" className="btn btn-secondary" onClick={openKeyForm}>
+                      <i className="fa-solid fa-key"></i> {sc('ordering.add')}
+                    </button>
+                  </div>
+                )}
+
+                {status.in_chat_payment && (
+                  <div style={{ marginTop: '1em' }}>
+                    <SettingSwitch id="sc-physical" checked={!!status.api_checkout_physical} saving={settingSaving === 'api_checkout_physical'}
+                      label={sc('ready.physical')} help={sc('ready.physicalHelp')}
+                      onToggle={() => saveSetting('api_checkout_physical', !status.api_checkout_physical)} />
+                  </div>
+                )}
+              </div>
+            </div>
+          </>)}
         </>
       )}
     </div>
