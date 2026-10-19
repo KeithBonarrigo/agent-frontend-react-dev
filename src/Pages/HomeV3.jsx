@@ -13,7 +13,7 @@ import "../styles/HomeV3.css";  // this page's own styles - edit this one
 // getApiUrl() (http://localhost:3000 locally via VITE_API_URL, chat.botwerx.ai
 // on www.botwerx.ai), and site links are the app's own routes.
 
-const TABS = ['bidconnect', 'storeconnect', 'botwerx'];
+const TABS = ['bidconnect', 'storeconnect', 'storeconnect-bot', 'botwerx'];
 
 const LANGUAGES = [
   { code: 'en', flagCode: 'us', fullName: 'English' },
@@ -60,6 +60,11 @@ const NAV_ITEMS = {
     { id: 'hv3-top', label: 'nav.home' },
     { id: 'hv3-sc-why', label: 'nav.whyUs' },
     { id: 'hv3-sc-offerings', label: 'nav.offerings' },
+  ],
+  'storeconnect-bot': [
+    { id: 'hv3-top', label: 'nav.home' },
+    { id: 'hv3-scb-features', label: 'nav.whatItDoes' },
+    { id: 'hv3-scb-customers', label: 'nav.forCustomers' },
   ],
   botwerx: [
     { id: 'hv3-top', label: 'nav.home' },
@@ -259,111 +264,12 @@ function useAutoScroll(sliderRef) {
   }, [sliderRef]);
 }
 
-// StoreConnect Store Assistant: what the bot on the "storeconnect" plan does.
-// Text lives under `botwerx.storeAssistant`.
-const STORE_ASSISTANT_FEATURES = [
-  { key: 'catalog', icon: 'fa-boxes-stacked' },
-  { key: 'website', icon: 'fa-globe' },
-  { key: 'search', icon: 'fa-magnifying-glass' },
-  { key: 'cart', icon: 'fa-cart-shopping' },
-  { key: 'orders', icon: 'fa-truck-fast' },
-  { key: 'bookings', icon: 'fa-calendar-check' },
-  { key: 'deals', icon: 'fa-tags' },
-  { key: 'locations', icon: 'fa-location-dot' },
-  { key: 'channels', icon: 'fa-comments' },
-];
+// StoreConnect's logo is blue on transparent, and its dark "store" disappears on
+// the navy page, so it always sits on a white chip (.hv3-scb-logo). Used by the
+// Botwerx tab's pointer banner and the StoreConnect Bot tab.
+const STORECONNECT_LOGO = '/img/add-ons/storeconnect-logo.webp';
 
-// Picks a plan in the hero's SignupForm, then scrolls to it. SignupForm isn't
-// edited: its plan <select> is a controlled input, so the value goes in through
-// the native setter plus a change event, the same path as a visitor choosing
-// it. Once the form is past the plan step there is no select, and this only scrolls.
-function chooseSignupPlan(level) {
-  const select = document.querySelector('#hv3-signup select[name="level"]');
-  if (select && [...select.options].some((o) => o.value === level)) {
-    Object.getOwnPropertyDescriptor(HTMLSelectElement.prototype, 'value').set.call(select, level);
-    select.dispatchEvent(new Event('change', { bubbles: true }));
-  }
-  document.getElementById('hv3-signup')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-}
-
-function StoreAssistantSection({ t }) {
-  const sa = (key, opts) => t(`botwerx.storeAssistant.${key}`, opts);
-  const list = (key) => {
-    const items = sa(`${key}.items`, { returnObjects: true });
-    return Array.isArray(items) ? items : [];
-  };
-
-  return (
-    <section className="hv3-sec" id="hv3-store-assistant">
-      <div className="hv3-wrap">
-        <div className="hv3-sec-head hv3-sa-head">
-          <span className="hv3-lab">{sa('label')}</span>
-          <h2>{sa('title')}</h2>
-          <p className="hv3-sa-lead">{sa('lead')}</p>
-          <p>{sa('intro')}</p>
-        </div>
-
-        <div className="hv3-bw-cards">
-          {STORE_ASSISTANT_FEATURES.map(({ key, icon }) => (
-            <div className="hv3-bw-card" key={key}>
-              <div className="hv3-bw-card-head">
-                <i className={`fa-solid ${icon} hv3-bw-icon`} aria-hidden="true"></i>
-                <h3>{sa(`features.${key}.title`)}</h3>
-              </div>
-              <p>{sa(`features.${key}.description`)}</p>
-            </div>
-          ))}
-          {/* Setup closes the grid, with the way in */}
-          <div className="hv3-bw-card hv3-sa-setup">
-            <div>
-              <div className="hv3-bw-card-head">
-                <i className="fa-solid fa-plug hv3-bw-icon" aria-hidden="true"></i>
-                <h3>{sa('features.setup.title')}</h3>
-              </div>
-              <p>{sa('features.setup.description')}</p>
-            </div>
-            <a
-              href="#hv3-signup"
-              className="hv3-btn hv3-btn-p"
-              onClick={(e) => {
-                e.preventDefault();
-                chooseSignupPlan('storeconnect');
-              }}
-            >
-              {sa('cta')}
-            </a>
-          </div>
-        </div>
-
-        <div className="hv3-sa-cols">
-          {['customers', 'storeAware'].map((group) => (
-            <div className="hv3-sa-panel" key={group}>
-              <h3>{sa(`${group}.title`)}</h3>
-              <ul className="hv3-sa-list">
-                {list(group).map(({ title, text }) => (
-                  <li key={title}>
-                    <i className="fa-solid fa-check" aria-hidden="true"></i>
-                    <span><strong>{title}</strong>{text && ` ${text}`}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          ))}
-        </div>
-
-        {/* Not available yet: dashed and muted so it never reads as a current feature */}
-        <div className="hv3-sa-soon">
-          <h3><i className="fa-regular fa-clock" aria-hidden="true"></i>{sa('comingSoon.label')}</h3>
-          <ul>
-            {list('comingSoon').map((text) => <li key={text}>{text}</li>)}
-          </ul>
-        </div>
-      </div>
-    </section>
-  );
-}
-
-function BotwerxBotContent({ t }) {
+function BotwerxBotContent({ t, onSelectTab }) {
   const b = (key, opts) => t(`botwerx.${key}`, opts);
   const sliderRef = useRef(null);
   useAutoScroll(sliderRef);
@@ -416,8 +322,29 @@ function BotwerxBotContent({ t }) {
         </div>
       </section>
 
-      {/* ---------------- StoreConnect Store Assistant ---------------- */}
-      <StoreAssistantSection t={t} />
+      {/* ---------------- StoreConnect Bot: pointer to its own tab ---------------- */}
+      <section className="hv3-scb-promo-sec">
+        <div className="hv3-wrap">
+          <a
+            href="/?tab=storeconnect-bot"
+            className="hv3-scb-promo"
+            onClick={(e) => {
+              e.preventDefault();
+              onSelectTab('storeconnect-bot');
+              window.scrollTo({ top: 0, behavior: 'smooth' });
+            }}
+          >
+            <span className="hv3-scb-logo"><img src={STORECONNECT_LOGO} alt="StoreConnect" /></span>
+            <span className="hv3-scb-promo-text">
+              <strong>{t('storeconnectBot.hero.label')}</strong>
+              <span>{t('storeconnectBot.hero.title')} {t('storeconnectBot.hero.titleEm')}</span>
+            </span>
+            <span className="hv3-scb-promo-link">
+              {t('storeconnectBot.promo.link')} <i className="fa-solid fa-arrow-right" aria-hidden="true"></i>
+            </span>
+          </a>
+        </div>
+      </section>
 
       {/* ---------------- Services ---------------- */}
       <section className="hv3-sec hv3-pricing" id="hv3-services">
@@ -850,6 +777,124 @@ function StoreConnectContent({ t }) {
 }
 
 // ---------------------------------------------------------------------------
+// StoreConnect Bot tab: the StoreConnect Store Assistant (the "storeconnect"
+// plan) as its own campaign. Text lives under `storeconnectBot`.
+// ---------------------------------------------------------------------------
+const STORECONNECT_BOT_FEATURES = [
+  { key: 'catalog', icon: 'fa-boxes-stacked' },
+  { key: 'website', icon: 'fa-globe' },
+  { key: 'search', icon: 'fa-magnifying-glass' },
+  { key: 'cart', icon: 'fa-cart-shopping' },
+  { key: 'orders', icon: 'fa-truck-fast' },
+  { key: 'bookings', icon: 'fa-calendar-check' },
+  { key: 'deals', icon: 'fa-tags' },
+  { key: 'locations', icon: 'fa-location-dot' },
+  { key: 'channels', icon: 'fa-comments' },
+];
+
+function StoreConnectBotContent({ t }) {
+  const s = (key, opts) => t(`storeconnectBot.${key}`, opts);
+  const list = (key) => {
+    const items = s(`${key}.items`, { returnObjects: true });
+    return Array.isArray(items) ? items : [];
+  };
+
+  return (
+    <>
+      {/* ---------------- Hero: what it is + signup form ---------------- */}
+      <section className="hv3-bw-hero">
+        <div className="hv3-wrap hv3-bw-hero-grid">
+          <div>
+            <div className="hv3-scb-brand">
+              <span className="hv3-scb-logo"><img src={STORECONNECT_LOGO} alt="StoreConnect" /></span>
+              <span className="hv3-lab">{s('hero.label')}</span>
+            </div>
+            <h1>
+              {s('hero.title')} <em>{s('hero.titleEm')}</em>
+            </h1>
+            <p className="hv3-hero-sub">{s('hero.intro')}</p>
+            <ul className="hv3-sa-list hv3-scb-checks">
+              {STORECONNECT_BOT_FEATURES.map(({ key }) => (
+                <li key={key}>
+                  <i className="fa-solid fa-check" aria-hidden="true"></i>
+                  <span>{s(`features.items.${key}.title`)}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* The live SignupForm, offering only the StoreConnect plan (the MLS
+              agent page limits it the same way) */}
+          <div className="hv3-bw-signup" id="hv3-signup">
+            <SignupForm isOpen={true} onClose={() => {}} allowedLevels={['storeconnect']} />
+          </div>
+        </div>
+      </section>
+
+      {/* ---------------- What it does ---------------- */}
+      <section className="hv3-sec" id="hv3-scb-features">
+        <div className="hv3-wrap">
+          <div className="hv3-sec-head">
+            <h2>{s('features.title')}</h2>
+          </div>
+          <div className="hv3-bw-cards">
+            {STORECONNECT_BOT_FEATURES.map(({ key, icon }) => (
+              <div className="hv3-bw-card" key={key}>
+                <div className="hv3-bw-card-head">
+                  <i className={`fa-solid ${icon} hv3-bw-icon`} aria-hidden="true"></i>
+                  <h3>{s(`features.items.${key}.title`)}</h3>
+                </div>
+                <p>{s(`features.items.${key}.description`)}</p>
+              </div>
+            ))}
+            {/* Setup closes the grid, with the way in */}
+            <div className="hv3-bw-card hv3-sa-setup">
+              <div>
+                <div className="hv3-bw-card-head">
+                  <i className="fa-solid fa-plug hv3-bw-icon" aria-hidden="true"></i>
+                  <h3>{s('features.items.setup.title')}</h3>
+                </div>
+                <p>{s('features.items.setup.description')}</p>
+              </div>
+              <ScrollLink to="hv3-signup" className="hv3-btn hv3-btn-p">{s('features.cta')}</ScrollLink>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ---------------- For your customers / it understands your store ---------------- */}
+      <section className="hv3-sec hv3-pricing" id="hv3-scb-customers">
+        <div className="hv3-wrap">
+          <div className="hv3-sa-cols">
+            {['customers', 'storeAware'].map((group) => (
+              <div className="hv3-sa-panel" key={group}>
+                <h3>{s(`${group}.title`)}</h3>
+                <ul className="hv3-sa-list">
+                  {list(group).map(({ title, text }) => (
+                    <li key={title}>
+                      <i className="fa-solid fa-check" aria-hidden="true"></i>
+                      <span><strong>{title}</strong>{text && ` ${text}`}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))}
+          </div>
+
+          {/* Not available yet: dashed and muted so it never reads as a current feature */}
+          <div className="hv3-sa-soon">
+            <h3><i className="fa-regular fa-clock" aria-hidden="true"></i>{s('comingSoon.label')}</h3>
+            <ul>
+              {list('comingSoon').map((text) => <li key={text}>{text}</li>)}
+            </ul>
+          </div>
+        </div>
+      </section>
+    </>
+  );
+}
+
+// ---------------------------------------------------------------------------
 // Contact form, shared by all tabs: the live home page's form and endpoint.
 // ---------------------------------------------------------------------------
 const EMPTY_CONTACT = { name: "", email: "", phone: "", company: "", website: "", comments: "" };
@@ -1069,7 +1114,8 @@ export default function HomeV3() {
       <div id="hv3-tabpanel" role="tabpanel" aria-labelledby={`hv3-tab-${tab}`}>
         {tab === 'bidconnect' ? <BidConnectContent t={t} />
           : tab === 'storeconnect' ? <StoreConnectContent t={t} />
-          : <BotwerxBotContent t={t} />}
+          : tab === 'storeconnect-bot' ? <StoreConnectBotContent t={t} />
+          : <BotwerxBotContent t={t} onSelectTab={selectTab} />}
       </div>
 
       <ContactSection t={t} />

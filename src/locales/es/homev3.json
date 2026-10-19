@@ -15,12 +15,15 @@
     "how": "Cómo funciona",
     "pricing": "Precios",
     "whyUs": "¿Por qué nosotros?",
-    "offerings": "Qué hacemos"
+    "offerings": "Qué hacemos",
+    "whatItDoes": "Qué hace",
+    "forCustomers": "Para tus clientes"
   },
   "tabs": {
     "bidconnect": "BidConnect",
-    "storeconnect": "StoreConnect",
-    "botwerx": "BotwerxBot",
+    "storeconnect": "Servicios StoreConnect",
+    "storeconnect-bot": "StoreConnect Bot",
+    "botwerx": "BotWerx Bot",
     "heading": "Nuestros productos y servicios:"
   },
   "bidconnect": {
@@ -295,6 +298,117 @@
       ]
     }
   },
+  "storeconnectBot": {
+    "hero": {
+      "label": "Asistente de Tienda",
+      "title": "Tu tienda StoreConnect,",
+      "titleEm": "atendida 24/7.",
+      "intro": "Un asistente de compras que conoce tu catálogo, los pedidos de tus clientes y tu tienda — en vivo desde Salesforce."
+    },
+    "features": {
+      "title": "Qué hace",
+      "cta": "Comenzar",
+      "items": {
+        "catalog": {
+          "title": "Conoce todo tu catálogo",
+          "description": "Productos, opciones y variantes, precios normales y de oferta, inventario, imágenes, categorías y marcas — sincronizados directamente desde Salesforce, así que el asistente nunca muestra un producto o un precio que tu tienda no tenga."
+        },
+        "website": {
+          "title": "Responde con la información de tu sitio",
+          "description": "Envíos, devoluciones, políticas, preguntas frecuentes, artículos y pestañas de producto (características, especificaciones, garantía, soporte) — con un enlace a la página de donde salió la respuesta. Si la respuesta no está en tu sitio, lo dice en lugar de adivinar."
+        },
+        "search": {
+          "title": "Encuentra el producto indicado",
+          "description": "Búsqueda en lenguaje natural (\"algo abrigador para senderismo por menos de $100\", \"una tarjeta de regalo\", \"clases el sábado\") con filtros por categoría, marca, condición y productos en oferta. Las tarjetas de producto con imágenes y precios aparecen directamente en el chat."
+        },
+        "cart": {
+          "title": "Arma el carrito y lo lleva a tu página de pago",
+          "description": "Los clientes agregan artículos en el chat y reciben un solo enlace que abre la página de pago de tu tienda StoreConnect con el carrito ya listo — con el código promocional incluido si tienen uno. El pago se hace en tu propia página de pago segura."
+        },
+        "orders": {
+          "title": "Muestra a cada cliente sus propios pedidos",
+          "description": "Tras una verificación rápida por correo electrónico (o automáticamente en WhatsApp), los clientes pueden ver el estado del pedido, los enlaces de rastreo del envío, el lugar y la hora de recogida, lo que ya está pagado y cualquier saldo pendiente — con un enlace para pagar al momento."
+        },
+        "bookings": {
+          "title": "Servicios con reserva",
+          "description": "Disponibilidad en vivo de clases, citas y eventos, en la zona horaria de cada ubicación, y luego un enlace directo para reservar."
+        },
+        "deals": {
+          "title": "Ofertas vigentes",
+          "description": "Las promociones activas explicadas con palabras sencillas (qué obtienes, condiciones, fecha de término), y las tarjetas de producto indican en qué oferta está cada producto. Los códigos de cupón solo se comparten si tú lo decides."
+        },
+        "locations": {
+          "title": "Tus sucursales y horarios",
+          "description": "Direcciones, teléfonos, horarios de atención, si estás abierto en este momento, puntos de recogida y el más cercano al cliente."
+        },
+        "channels": {
+          "title": "Donde estén tus clientes",
+          "description": "Tu sitio web, WhatsApp, Facebook Messenger e Instagram, en el idioma de cada cliente."
+        },
+        "setup": {
+          "title": "Listo en unos 10 minutos, sin desarrolladores",
+          "description": "Conecta tu org de Salesforce desde el panel, elige tu tienda, pega una línea en StoreConnect y listo. Se actualiza con un clic cada vez que cambia tu catálogo."
+        }
+      }
+    },
+    "customers": {
+      "title": "Para tus clientes",
+      "items": [
+        {
+          "title": "Historial y detalle de pedidos:",
+          "text": "estado, artículos, totales, envíos con enlaces de rastreo de la paquetería, detalles de recogida en tienda, saldo pendiente y enlace para pagar al momento."
+        },
+        {
+          "title": "Próximas reservas.",
+          "text": ""
+        },
+        {
+          "title": "Suscripciones:",
+          "text": "estado, precio, periodo, y fechas del próximo cobro y de renovación."
+        },
+        {
+          "title": "Saldos:",
+          "text": "crédito a favor, puntos de lealtad (incluidos los que vencen pronto) y saldos de tarjetas de regalo."
+        },
+        {
+          "title": "Seguro por diseño:",
+          "text": "los clientes se verifican con un código de un solo uso enviado a su correo (o con su número de WhatsApp verificado); el asistente nunca pide contraseñas, números de tarjeta ni el PIN de una tarjeta de regalo, y a cada cliente solo le muestra sus propios registros."
+        }
+      ]
+    },
+    "storeAware": {
+      "title": "Entiende tu tienda",
+      "items": [
+        {
+          "title": "Respeta tus reglas de precios:",
+          "text": "precios de oferta como \"antes/ahora\", precios ocultos con tu propio texto, donaciones de \"elige tu monto\", límites de cantidad, depósitos, precios en puntos de lealtad y restricciones solo para miembros."
+        },
+        {
+          "title": "Conoce los datos de tu tienda:",
+          "text": "si los precios incluyen impuestos, si haces envíos, puntos de lealtad, cotizaciones y enlaces a tus términos."
+        },
+        {
+          "title": "Entiende los tipos de producto:",
+          "text": "variantes y opciones, rentas, tarjetas de regalo, preventas, servicios con reserva con datos de los asistentes, productos relacionados y accesorios."
+        },
+        {
+          "title": "Usa las palabras clave de búsqueda de StoreConnect,",
+          "text": "así el asistente entiende las palabras de tus clientes, sus errores de ortografía y los códigos de modelo."
+        }
+      ]
+    },
+    "comingSoon": {
+      "label": "Próximamente",
+      "items": [
+        "Pagar en el chat (con tarjeta o un método de pago guardado) para tiendas con una clave de API de StoreConnect Commerce.",
+        "Reservar una cita sin salir del chat.",
+        "Cambiar de plan o cancelar una suscripción en el chat (la cancelación ya está disponible para tiendas con clave de API)."
+      ]
+    },
+    "promo": {
+      "link": "Conoce el StoreConnect Bot"
+    }
+  },
   "botwerx": {
     "hero": {
       "title": "Captura Más Leads con Agentes de IA Avanzados",
@@ -357,109 +471,6 @@
           "title": "Interacción Escalable con Clientes",
           "description": "<strong>Maneja miles de conversaciones simultáneas sin esfuerzo.</strong> A diferencia de los equipos humanos que requieren contratación y capacitación para escalar, los agentes de IA pueden <strong>acomodar instantáneamente picos de tráfico, aumentos estacionales o crecimiento rápido del negocio.</strong> Ya sea que manejes 10 o 10,000 conversaciones, <strong>mantén la misma experiencia de alta calidad para cada cliente</strong> sin costos o retrasos adicionales."
         }
-      }
-    },
-    "storeAssistant": {
-      "label": "Para tiendas StoreConnect",
-      "title": "Asistente de Tienda StoreConnect",
-      "lead": "Tu tienda StoreConnect, atendida 24/7.",
-      "intro": "Un asistente de compras que conoce tu catálogo, los pedidos de tus clientes y tu tienda — en vivo desde Salesforce.",
-      "cta": "Comenzar",
-      "features": {
-        "catalog": {
-          "title": "Conoce todo tu catálogo",
-          "description": "Productos, opciones y variantes, precios normales y de oferta, inventario, imágenes, categorías y marcas — sincronizados directamente desde Salesforce, así que el asistente nunca muestra un producto o un precio que tu tienda no tenga."
-        },
-        "website": {
-          "title": "Responde con la información de tu sitio",
-          "description": "Envíos, devoluciones, políticas, preguntas frecuentes, artículos y pestañas de producto (características, especificaciones, garantía, soporte) — con un enlace a la página de donde salió la respuesta. Si la respuesta no está en tu sitio, lo dice en lugar de adivinar."
-        },
-        "search": {
-          "title": "Encuentra el producto indicado",
-          "description": "Búsqueda en lenguaje natural (\"algo abrigador para senderismo por menos de $100\", \"una tarjeta de regalo\", \"clases el sábado\") con filtros por categoría, marca, condición y productos en oferta. Las tarjetas de producto con imágenes y precios aparecen directamente en el chat."
-        },
-        "cart": {
-          "title": "Arma el carrito y lo lleva a tu página de pago",
-          "description": "Los clientes agregan artículos en el chat y reciben un solo enlace que abre la página de pago de tu tienda StoreConnect con el carrito ya listo — con el código promocional incluido si tienen uno. El pago se hace en tu propia página de pago segura."
-        },
-        "orders": {
-          "title": "Muestra a cada cliente sus propios pedidos",
-          "description": "Tras una verificación rápida por correo electrónico (o automáticamente en WhatsApp), los clientes pueden ver el estado del pedido, los enlaces de rastreo del envío, el lugar y la hora de recogida, lo que ya está pagado y cualquier saldo pendiente — con un enlace para pagar al momento."
-        },
-        "bookings": {
-          "title": "Servicios con reserva",
-          "description": "Disponibilidad en vivo de clases, citas y eventos, en la zona horaria de cada ubicación, y luego un enlace directo para reservar."
-        },
-        "deals": {
-          "title": "Ofertas vigentes",
-          "description": "Las promociones activas explicadas con palabras sencillas (qué obtienes, condiciones, fecha de término), y las tarjetas de producto indican en qué oferta está cada producto. Los códigos de cupón solo se comparten si tú lo decides."
-        },
-        "locations": {
-          "title": "Tus sucursales y horarios",
-          "description": "Direcciones, teléfonos, horarios de atención, si estás abierto en este momento, puntos de recogida y el más cercano al cliente."
-        },
-        "channels": {
-          "title": "Donde estén tus clientes",
-          "description": "Tu sitio web, WhatsApp, Facebook Messenger e Instagram, en el idioma de cada cliente."
-        },
-        "setup": {
-          "title": "Listo en unos 10 minutos, sin desarrolladores",
-          "description": "Conecta tu org de Salesforce desde el panel, elige tu tienda, pega una línea en StoreConnect y listo. Se actualiza con un clic cada vez que cambia tu catálogo."
-        }
-      },
-      "customers": {
-        "title": "Para tus clientes",
-        "items": [
-          {
-            "title": "Historial y detalle de pedidos:",
-            "text": "estado, artículos, totales, envíos con enlaces de rastreo de la paquetería, detalles de recogida en tienda, saldo pendiente y enlace para pagar al momento."
-          },
-          {
-            "title": "Próximas reservas.",
-            "text": ""
-          },
-          {
-            "title": "Suscripciones:",
-            "text": "estado, precio, periodo, y fechas del próximo cobro y de renovación."
-          },
-          {
-            "title": "Saldos:",
-            "text": "crédito a favor, puntos de lealtad (incluidos los que vencen pronto) y saldos de tarjetas de regalo."
-          },
-          {
-            "title": "Seguro por diseño:",
-            "text": "los clientes se verifican con un código de un solo uso enviado a su correo (o con su número de WhatsApp verificado); el asistente nunca pide contraseñas, números de tarjeta ni el PIN de una tarjeta de regalo, y a cada cliente solo le muestra sus propios registros."
-          }
-        ]
-      },
-      "storeAware": {
-        "title": "Entiende tu tienda",
-        "items": [
-          {
-            "title": "Respeta tus reglas de precios:",
-            "text": "precios de oferta como \"antes/ahora\", precios ocultos con tu propio texto, donaciones de \"elige tu monto\", límites de cantidad, depósitos, precios en puntos de lealtad y restricciones solo para miembros."
-          },
-          {
-            "title": "Conoce los datos de tu tienda:",
-            "text": "si los precios incluyen impuestos, si haces envíos, puntos de lealtad, cotizaciones y enlaces a tus términos."
-          },
-          {
-            "title": "Entiende los tipos de producto:",
-            "text": "variantes y opciones, rentas, tarjetas de regalo, preventas, servicios con reserva con datos de los asistentes, productos relacionados y accesorios."
-          },
-          {
-            "title": "Usa las palabras clave de búsqueda de StoreConnect,",
-            "text": "así el asistente entiende las palabras de tus clientes, sus errores de ortografía y los códigos de modelo."
-          }
-        ]
-      },
-      "comingSoon": {
-        "label": "Próximamente",
-        "items": [
-          "Pagar en el chat (con tarjeta o un método de pago guardado) para tiendas con una clave de API de StoreConnect Commerce.",
-          "Reservar una cita sin salir del chat.",
-          "Cambiar de plan o cancelar una suscripción en el chat (la cancelación ya está disponible para tiendas con clave de API)."
-        ]
       }
     },
     "faq": {
