@@ -207,6 +207,7 @@
   },
   "storeconnect": {
     "hero": {
+      "label": "Servicios",
       "titleLead": "Gestiona todo tu negocio con",
       "titleEm": "StoreConnect + Salesforce",
       "subtitle": "StoreConnect pone tu tienda dentro de Salesforce: una sola plataforma segura para tus clientes, tus pedidos y tu operación, con las tareas repetitivas automatizadas.",

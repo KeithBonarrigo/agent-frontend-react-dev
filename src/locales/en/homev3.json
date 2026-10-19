@@ -207,6 +207,7 @@
   },
   "storeconnect": {
     "hero": {
+      "label": "Services",
       "titleLead": "Run your whole business on",
       "titleEm": "StoreConnect + Salesforce",
       "subtitle": "StoreConnect puts your storefront inside Salesforce: one secure platform for your customers, your orders and your operations, with the busywork automated.",

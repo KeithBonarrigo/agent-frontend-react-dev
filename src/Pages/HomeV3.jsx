@@ -466,13 +466,13 @@ function BidConnectContent({ t }) {
             <h1>
               {b('hero.titleLead')} <em>{b('hero.titleEm')}</em>
             </h1>
-            <p className="hv3-hero-sub">
+            <p className="hv3-hero-sub hv3-indent">
               {b('hero.subtitle')}{' '}
               {b('hero.storePre')}
               <a href="https://storeconnect.com/" target="_blank" rel="noopener noreferrer">{b('hero.storeLink')}</a>
               {b('hero.storePost')}
             </p>
-            <div className="hv3-hero-cta">
+            <div className="hv3-hero-cta hv3-indent">
               <a href={BIDCONNECT_SIGNUP_URL} className="hv3-btn hv3-btn-p hv3-btn-lg">
                 <img src="/img/botwerx-icon.png" alt="" className="hv3-btn-icon" />
                 {b('hero.ctaPrimary')}
@@ -693,11 +693,16 @@ function StoreConnectContent({ t }) {
       <section className="hv3-hero">
         <div className="hv3-wrap hv3-hero-grid">
           <div>
+            {/* StoreConnect logo + "Services", like the StoreConnect Bot tab's hero */}
+            <div className="hv3-scb-brand">
+              <span className="hv3-scb-logo"><img src={STORECONNECT_LOGO} alt="StoreConnect" /></span>
+              <span className="hv3-lab">{s('hero.label')}</span>
+            </div>
             <h1>
               {s('hero.titleLead')} <em>{s('hero.titleEm')}</em>
             </h1>
             <p className="hv3-hero-sub">{linkStoreConnect(s('hero.subtitle'))}</p>
-            <div className="hv3-hero-cta">{getToWork}</div>
+            <div className="hv3-hero-cta hv3-indent">{getToWork}</div>
           </div>
           <div className="hv3-sc-callouts">
             {[1, 2].map((n) => (
