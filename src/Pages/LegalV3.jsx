@@ -8,7 +8,7 @@ import "../styles/HomeV3.css";  // the V3 look; legal-page rules are at the end 
 // text still lives only in them and legal.json — and HomeV3.css restyles their
 // shared policy-* markup under .hv3-legal. Used from App.jsx on BotWerx domains.
 
-const FAVICON = '/img/favicon-botwerx-blue-rounded.png?v=2';
+const FAVICON = '/img/favicon-botwerx-black-round.png?v=1';
 
 const LANGUAGES = [
   { code: 'en', flagCode: 'us', fullName: 'English' },
