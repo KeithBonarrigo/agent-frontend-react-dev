@@ -603,6 +603,10 @@ export default function ConversationsTab({ clientId, user, expandAllLive: expand
                                         {contact?.name && (
                                           <span className="contact-name">— {contact.name}</span>
                                         )}
+                                        {/* session-contacts marks customers verified through this agent's StoreConnect store */}
+                                        {contact?.storeconnect && (
+                                          <span className="contact-sc-badge" title={t('storeconnectCustomerHint')}>{t('storeconnectCustomer')}</span>
+                                        )}
                                         {activeSessions[userConv.userid] && (
                                           <span className="status-dot status-dot-online status-dot-lg" title="User is currently online" />
                                         )}

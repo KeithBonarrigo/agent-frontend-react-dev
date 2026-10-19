@@ -16,6 +16,8 @@
   "online": "en línea",
   "channel": "Canal:",
   "user": "Usuario:",
+  "storeconnectCustomer": "Cliente StoreConnect",
+  "storeconnectCustomerHint": "Verificado en el chat como cliente de esta tienda StoreConnect",
   "channels": "canal",
   "channels_plural": "canales",
   "users": "usuario",
