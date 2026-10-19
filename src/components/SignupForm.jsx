@@ -7,7 +7,8 @@ import { useDomain } from "../contexts/DomainContext";
 import { getApiUrl } from "../utils/getApiUrl";
 import "../styles/SignupForm.css";
 
-export default function SignupForm({ isOpen, allowedLevels }) {
+// title: optional heading in place of signup.json's (the StoreConnect Bot tab names its agent)
+export default function SignupForm({ isOpen, allowedLevels, title }) {
   const { t } = useTranslation('signup');
   // Get domain information from context
   const { domainInfo } = useDomain();
@@ -730,7 +731,7 @@ export default function SignupForm({ isOpen, allowedLevels }) {
           className="home-form signup-form-container"
         >
           <div className="signup-form-header">
-            <h2>{t('title')}</h2>
+            <h2>{title || t('title')}</h2>
           </div>
 
           <div className="signup-form-subtitle">
