@@ -274,7 +274,35 @@
       "physical": "Permitir productos físicos en los pedidos por chat",
       "physicalHelp": "La API de la tienda no calcula el envío, así que los pedidos por chat normalmente solo incluyen productos digitales o virtuales. Actívalo si el envío es gratis, de tarifa fija o con recogida en tienda.",
       "physicalOn": "Guardado. Los pedidos por chat ahora pueden incluir productos físicos.",
-      "physicalOff": "Guardado. Los pedidos por chat solo incluyen productos digitales o virtuales."
+      "physicalOff": "Guardado. Los pedidos por chat solo incluyen productos digitales o virtuales.",
+      "settings": "Ajustes del asistente",
+      "coupons": "Compartir códigos de cupón en el chat",
+      "couponsHelp": "Desactivado: el asistente solo menciona las ofertas automáticas. Activado: puede dar los códigos de cupón de tus promociones.",
+      "couponsOn": "Guardado. El asistente puede dar los códigos de cupón de tus promociones.",
+      "couponsOff": "Guardado. El asistente solo menciona las ofertas automáticas."
+    },
+    "ordering": {
+      "title": "Pedidos en el chat",
+      "on": "Activados",
+      "off": "Desactivados",
+      "help": "Con la clave de la API Commerce de tu tienda, los clientes pueden hacer pedidos en el chat. La clave la creas tú, sin pedírsela al soporte de StoreConnect: en Salesforce, abre el registro de tu tienda (Store), agrega una variable de tienda (Store Variable) llamada api.auth_key con un valor largo y aleatorio, y pega ese valor aquí.",
+      "add": "Agregar clave de API",
+      "key": "Clave de API (el valor de api.auth_key)",
+      "baseUrl": "URL base de la API (opcional)",
+      "baseUrlPlaceholder": "Se detecta automáticamente. Llénalo solo si la API de tu tienda está en otra dirección.",
+      "inUse": "En uso ahora: {{url}}",
+      "save": "Guardar clave",
+      "saving": "Verificando la clave...",
+      "cancel": "Cancelar",
+      "apiUrl": "API de la tienda:",
+      "replace": "Reemplazar clave",
+      "remove": "Quitar clave",
+      "removing": "Quitando...",
+      "confirmRemove": "¿Quitar la clave de API? Los clientes no podrán hacer pedidos en el chat hasta que agregues una de nuevo.",
+      "saved": "Clave de API guardada. Los pedidos en el chat están activados.",
+      "savedFor": "Clave de API guardada para {{store}}. Los pedidos en el chat están activados.",
+      "removed": "Clave de API quitada. Los pedidos en el chat están desactivados.",
+      "tried": "Direcciones probadas: {{urls}}"
     },
     "messages": {
       "connected": "Salesforce conectado. Tu tienda se está sincronizando.",
@@ -291,7 +319,11 @@
       "store_not_found": "Esa tienda no se encontró en tu org. Vuelve a cargar la lista e inténtalo de nuevo.",
       "storefront_url_required": "Escribe la URL de la tienda.",
       "not_ready": "Elige una tienda antes de sincronizar.",
-      "generic": "Algo salió mal ({{status}}). Inténtalo de nuevo."
+      "generic": "Algo salió mal ({{status}}). Inténtalo de nuevo.",
+      "api_key_required": "Escribe la clave de API.",
+      "invalid_key": "La tienda no aceptó esa clave. Revisa la variable de tienda api.auth_key en el registro de tu tienda y vuelve a copiar su valor.",
+      "api_unreachable": "No se pudo conectar con la API de tu tienda. Si está en otra dirección, escribe su URL base.",
+      "choose_store_first": "Primero elige tu tienda."
     }
   }
 }

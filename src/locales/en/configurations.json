@@ -274,7 +274,35 @@
       "physical": "Allow physical goods in chat orders",
       "physicalHelp": "The store's API doesn't price shipping, so chat orders normally cover digital/virtual products only. Turn this on if shipping is free, flat-rate or pickup.",
       "physicalOn": "Saved. Chat orders can now include physical goods.",
-      "physicalOff": "Saved. Chat orders cover digital and virtual products only."
+      "physicalOff": "Saved. Chat orders cover digital and virtual products only.",
+      "settings": "Assistant settings",
+      "coupons": "Share coupon codes in chat",
+      "couponsHelp": "Off: the assistant mentions automatic deals only. On: it may quote coupon codes from your promotions.",
+      "couponsOn": "Saved. The assistant may quote coupon codes from your promotions.",
+      "couponsOff": "Saved. The assistant mentions automatic deals only."
+    },
+    "ordering": {
+      "title": "In-chat ordering",
+      "on": "On",
+      "off": "Off",
+      "help": "With your store's Commerce API key, customers can place orders in the chat. You create the key yourself, no StoreConnect support needed: in Salesforce, open your Store record, add a Store Variable named api.auth_key with a long random value, then paste that value here.",
+      "add": "Add API key",
+      "key": "API key (the value of api.auth_key)",
+      "baseUrl": "API base URL (optional)",
+      "baseUrlPlaceholder": "Detected automatically. Fill in only if your store's API lives elsewhere.",
+      "inUse": "In use now: {{url}}",
+      "save": "Save key",
+      "saving": "Checking the key...",
+      "cancel": "Cancel",
+      "apiUrl": "Store API:",
+      "replace": "Replace key",
+      "remove": "Remove key",
+      "removing": "Removing...",
+      "confirmRemove": "Remove the API key? Customers won't be able to place orders in the chat until you add one again.",
+      "saved": "API key saved. In-chat ordering is on.",
+      "savedFor": "API key saved for {{store}}. In-chat ordering is on.",
+      "removed": "API key removed. In-chat ordering is off.",
+      "tried": "Tried: {{urls}}"
     },
     "messages": {
       "connected": "Salesforce connected. Your store is syncing.",
@@ -291,7 +319,11 @@
       "store_not_found": "That store was not found in your org. Reload the list and try again.",
       "storefront_url_required": "Enter the storefront URL.",
       "not_ready": "Choose a store before syncing.",
-      "generic": "Something went wrong ({{status}}). Please try again."
+      "generic": "Something went wrong ({{status}}). Please try again.",
+      "api_key_required": "Enter the API key.",
+      "invalid_key": "The store didn't accept that key. Check the api.auth_key store variable on your Store record and copy its value again.",
+      "api_unreachable": "Couldn't reach your store's API. If it lives at another address, enter its base URL.",
+      "choose_store_first": "Choose your store first."
     }
   }
 }
