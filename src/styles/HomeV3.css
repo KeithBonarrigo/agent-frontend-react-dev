@@ -142,6 +142,10 @@ body:has(.hv3-page) div[style*="z-index: 99999"]{display:none!important}
 @media(min-width:1001px){.hv3-hero .hv3-hero-cta{margin-bottom:40px}}
 .hv3-hero-sub a{color:var(--hv3-brand-lt);text-decoration:underline;text-underline-offset:2px}
 .hv3-hero-sub a:hover{color:#fff}
+/* Hero paragraph and buttons indented a little from the headline (BidConnect and StoreConnect
+   Services heroes). Buttons are full width on phones, so they drop the indent there. */
+.hv3-page .hv3-indent{margin-left:16px}
+@media(max-width:640px){.hv3-page .hv3-hero-cta.hv3-indent{margin-left:0}}
 .hv3-hero-fine{margin-top:18px;font-size:.86rem;color:var(--hv3-txt-3)}
 .hv3-hero-vis{position:relative}
 /* BidConnect demo video (or its poster for reduced motion): full container width,
@@ -395,7 +399,7 @@ body:has(.hv3-page) div[style*="z-index: 99999"]{display:none!important}
 .hv3-tabbar{background:var(--hv3-bg);border-bottom:1px solid var(--hv3-line);padding:28px 0}
 .hv3-tabbar .hv3-wrap{display:flex;flex-direction:column;align-items:center}
 .hv3-tabs-heading{margin:0 0 14px;text-align:center;font-size:1.05rem;font-weight:600;
-  letter-spacing:.01em;color:var(--hv3-txt-2)}
+  letter-spacing:.01em;color:var(--hv3-txt)}
 .hv3-tabs{display:flex;width:100%;max-width:1000px;gap:6px;padding:6px;
   background:var(--hv3-bg-2);border:1px solid var(--hv3-line-2);border-radius:14px}
 /* app.css gives every <button> a margin and a drop shadow; clear both on this
@@ -573,9 +577,10 @@ body:has(.hv3-page) div[style*="z-index: 99999"]{display:none!important}
 .hv3-page .hv3-bw-icon{flex:none;width:34px;height:34px;border-radius:7px;display:grid;place-items:center;
   text-align:center;line-height:34px;
   background:var(--hv3-brand-soft);color:var(--hv3-brand-lt);font-size:.9rem}
-/* BotWerx Bot tab (hero benefits, Additional Benefits): icons in the teal accent, the colour of
-   the StoreConnect Bot checklist's check marks */
-.hv3-page .hv3-bw-hero .hv3-bw-icon,.hv3-page #hv3-services .hv3-bw-icon{background:var(--hv3-accent-soft);color:var(--hv3-accent)}
+/* Icons in the teal accent, the colour of the StoreConnect Bot checklist's check marks:
+   BotWerx Bot tab (hero benefits, Additional Benefits) and StoreConnect Bot tab (What it does) */
+.hv3-page .hv3-bw-hero .hv3-bw-icon,.hv3-page #hv3-services .hv3-bw-icon,
+.hv3-page #hv3-scb-features .hv3-bw-icon{background:var(--hv3-accent-soft);color:var(--hv3-accent)}
 .hv3-bw-benefit-row p,.hv3-bw-card p{font-size:.93rem;color:var(--hv3-txt-2)}
 .hv3-bw-benefit-row strong,.hv3-bw-card strong,.hv3-fitem strong{color:var(--hv3-txt);font-weight:600}
 .hv3-bw-signup{min-width:0;color:#0C1420}

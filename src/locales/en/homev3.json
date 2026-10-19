@@ -207,6 +207,7 @@
   },
   "storeconnect": {
     "hero": {
+      "label": "Services",
       "titleLead": "Run your whole business on",
       "titleEm": "StoreConnect + Salesforce",
       "subtitle": "StoreConnect puts your storefront inside Salesforce: one secure platform for your customers, your orders and your operations, with the busywork automated.",
@@ -304,7 +305,7 @@
       "title": "Your StoreConnect store,",
       "titleEm": "answered 24/7.",
       "intro": "A shopping assistant that knows your catalog, your customers' orders and your store — live from Salesforce.",
-      "signupTitle": "Start an Account and Build Your StoreConnect Agent in 30 Seconds"
+      "signupTitle": "Start an Account and Build Your StoreConnect Agent in 3 Minutes or Less"
     },
     "features": {
       "title": "What it does",

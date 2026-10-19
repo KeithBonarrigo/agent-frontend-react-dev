@@ -82,10 +82,25 @@ How #6 works:
 - Only the StoreConnect Bot tab passes one, from `storeconnectBot.hero.signupTitle`.
 - Every other sign-up form, the BotWerx Bot tab's included, keeps `signup.json`'s title.
 
+### #8 Sign-up heading: "3 Minutes or Less" (follow-up PR, with the teal icons)
+
+| What | Where |
+| --- | --- |
+| Branch | `feat/scbot-teal-icons`, from `main` at `eda2216` |
+| Backup tag | `backup/pre-scbot-teal-icons-2026-10-18` → `eda2216` |
+
+| | en | es |
+| --- | --- | --- |
+| Before | Start an Account and Build Your StoreConnect Agent in 30 Seconds | Crea una Cuenta y Construye tu Agente StoreConnect en 30 Segundos |
+| After | Start an Account and Build Your StoreConnect Agent in 3 Minutes or Less | Crea una Cuenta y Construye tu Agente StoreConnect en 3 Minutos o Menos |
+
+Only `storeconnectBot.hero.signupTitle` changes. The BotWerx Bot tab's form keeps "in 30 Seconds".
+
 ## Rollback
 
 | Undo | How |
 | --- | --- |
+| #8 only | Put the "Before" text back in `storeconnectBot.hero.signupTitle` (en and es). |
 | #6 and #7 only | Revert the follow-up PR's merge. Or remove the `title` prop in `StoreConnectBotContent` and the `padding-left`. |
 | Everything, after merge | `git revert -m 1 <merge-commit>` through a PR. Railway redeploys. |
 | Everything, from the tag | `git checkout backup/pre-storeconnect-bot-tab-2026-10-18 -- src/Pages/HomeV3.jsx src/styles/HomeV3.css src/locales/en/homev3.json src/locales/es/homev3.json` |
