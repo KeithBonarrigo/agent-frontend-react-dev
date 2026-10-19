@@ -763,6 +763,46 @@
   font-size: 12px;
 }
 
+/* Phones: the fixed columns above (150px + 80px + 150px plus gaps) left the message itself
+   almost no width, so it broke after every letter. The sender, tokens and time share the
+   first line and the message gets the full width below. */
+@media (max-width: 600px) {
+  .message-row {
+    grid-template-columns: 1fr auto auto;
+    grid-template-areas:
+      "sender tokens time"
+      "content content content";
+    gap: 4px 10px;
+    align-items: baseline;
+  }
+
+  .message-sender { grid-area: sender; }
+  .message-content { grid-area: content; }
+  .message-tokens { grid-area: tokens; font-size: 11px; }
+  .message-time { grid-area: time; font-size: 11px; }
+
+  /* First / Last / Duration: one per line */
+  .user-meta {
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  /* Agent and channel headers wrap instead of splitting "1 online" or "2 users" */
+  .accordion-header,
+  .channel-header,
+  .accordion-header > span,
+  .channel-header > span {
+    flex-wrap: wrap;
+    row-gap: 4px;
+  }
+
+  .badge-online,
+  .accordion-header > .text-xs,
+  .channel-header > .text-xs {
+    white-space: nowrap;
+  }
+}
+
 /* -----------------------------------------
    Tables
    ----------------------------------------- */
