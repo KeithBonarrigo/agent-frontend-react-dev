@@ -1,5 +1,8 @@
 # Botwerx Bot tab: StoreConnect Store Assistant section, change and rollback log
 
+> Superseded the same day: the section moved to its own StoreConnect Bot tab. See
+> `plans/2026-10-18-storeconnect-bot-tab.md`.
+
 Date: 2026-10-18. Home page, Botwerx Bot tab (`/?tab=botwerx`). The section first went between
 "Additional Benefits" and the FAQ (PR #17). #4 below moved it above "Additional Benefits".
 

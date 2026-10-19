@@ -396,18 +396,22 @@ body:has(.hv3-page) div[style*="z-index: 99999"]{display:none!important}
 .hv3-tabbar .hv3-wrap{display:flex;flex-direction:column;align-items:center}
 .hv3-tabs-heading{margin:0 0 14px;text-align:center;font-size:1.05rem;font-weight:600;
   letter-spacing:.01em;color:var(--hv3-txt-2)}
-.hv3-tabs{display:flex;width:100%;max-width:760px;gap:6px;padding:6px;
+.hv3-tabs{display:flex;width:100%;max-width:1000px;gap:6px;padding:6px;
   background:var(--hv3-bg-2);border:1px solid var(--hv3-line-2);border-radius:14px}
 /* app.css gives every <button> a margin and a drop shadow; clear both on this
    page's own buttons (the shared SignupForm keeps its styles). */
 .hv3-tab,.hv3-lang button,.hv3-menu-btn,.hv3-nav-a,.hv3-cform button{margin:0;box-shadow:none}
-.hv3-tab{flex:1;appearance:none;background:none;border:0;border-radius:10px;padding:18px 28px;
+.hv3-tab{flex:1 1 auto;appearance:none;background:none;border:0;border-radius:10px;padding:18px 22px;
   font-family:inherit;font-size:1.2rem;font-weight:600;letter-spacing:.04em;line-height:1.3;
   color:var(--hv3-txt-2);cursor:pointer;transition:.15s ease;white-space:nowrap}
 .hv3-tab:hover{color:#fff;background:rgba(255,255,255,.05)}
 /* Selected tab: the brand blue at the top easing to a slightly lighter blue at the bottom */
 .hv3-tab[aria-selected="true"]{background:linear-gradient(180deg,var(--hv3-brand) 0%,#4F86FF 100%);color:#fff}
 .hv3-tab:focus-visible{outline:2px solid var(--hv3-brand-lt);outline-offset:2px}
+/* Four tabs: two rows of two once they stop fitting on one line. On phones the
+   longer labels ("StoreConnect Services") wrap inside their tab. */
+@media(max-width:1000px){.hv3-tabs{flex-wrap:wrap}.hv3-tab{flex:1 1 calc(50% - 3px)}}
+@media(max-width:640px){.hv3-tab{white-space:normal}}
 
 /* stand-in for visuals the BidConnect tab doesn't have yet */
 .hv3-ph{display:grid;place-items:center;min-height:320px;padding:24px;text-align:center;
@@ -611,17 +615,30 @@ body:has(.hv3-page) div[style*="z-index: 99999"]{display:none!important}
 .hv3-bw-card-head{display:flex;gap:12px;align-items:center;margin-bottom:14px}
 .hv3-bw-cta{margin-top:36px;display:flex;justify-content:center}   /* Learn More centred under the cards */
 
-/* ---------------- StoreConnect Store Assistant (Botwerx tab) ---------------- */
-.hv3-sa-head{max-width:760px}
-.hv3-sa-head .hv3-sa-lead{color:var(--hv3-txt);font-size:1.25rem;font-weight:500}
-.hv3-sa-head .hv3-sa-lead + p{margin-top:8px}
+/* ---------------- StoreConnect Bot tab, and its pointer on the Botwerx tab ---------------- */
+/* StoreConnect's logo on a white chip: its dark "store" disappears on navy */
+.hv3-scb-logo{display:inline-flex;align-items:center;flex:none;background:#fff;border-radius:8px;padding:8px 12px}
+.hv3-scb-logo img{display:block;height:22px;width:auto}
+.hv3-scb-brand{display:flex;align-items:center;flex-wrap:wrap;gap:12px 16px;margin-bottom:26px}
+/* Two classes, so these win over the shared .hv3-sa-list rules further down */
+.hv3-sa-list.hv3-scb-checks{margin-top:30px;gap:14px}
+.hv3-sa-list.hv3-scb-checks li{font-size:1rem;color:var(--hv3-txt)}
+/* Botwerx tab: one-line pointer to the StoreConnect Bot tab */
+.hv3-scb-promo-sec{padding:56px 0}
+.hv3-page a.hv3-scb-promo{display:flex;align-items:center;flex-wrap:wrap;gap:16px 24px;padding:22px 26px;
+  background:var(--hv3-bg-card);border:1px solid rgba(47,107,255,.4);border-radius:11px;transition:.15s ease}
+.hv3-page a.hv3-scb-promo:hover{border-color:var(--hv3-brand-lt);background:var(--hv3-bg-3)}
+.hv3-scb-promo-text{flex:1 1 260px;display:flex;flex-direction:column;gap:2px}
+.hv3-scb-promo-text strong{color:#fff;font-weight:600;font-size:1.05rem}
+.hv3-scb-promo-text span{color:var(--hv3-txt-2);font-size:.95rem}
+.hv3-scb-promo-link{display:inline-flex;align-items:center;gap:8px;color:var(--hv3-brand-lt);font-weight:600;white-space:nowrap}
 /* Setup closes the card grid: full width, with the Get started button on the right */
 .hv3-sa-setup{grid-column:1 / -1;display:flex;align-items:center;justify-content:space-between;gap:20px 40px;
   border-color:rgba(47,107,255,.4);background:linear-gradient(120deg,var(--hv3-brand-soft),var(--hv3-bg-card) 65%)}
 .hv3-sa-setup .hv3-bw-card-head{margin-bottom:10px}
 .hv3-sa-setup p{max-width:760px}
-.hv3-sa-cols{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:18px}
-.hv3-sa-panel{background:var(--hv3-bg-2);border:1px solid var(--hv3-line);border-radius:11px;padding:28px 30px}
+.hv3-sa-cols{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.hv3-sa-panel{background:var(--hv3-bg-card);border:1px solid var(--hv3-line-2);border-radius:11px;padding:28px 30px}
 .hv3-sa-panel h3{margin-bottom:18px}
 .hv3-sa-list{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:13px}
 .hv3-sa-list li{display:flex;gap:12px;align-items:baseline;font-size:.93rem;color:var(--hv3-txt-2)}
