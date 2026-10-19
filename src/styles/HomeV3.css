@@ -456,6 +456,11 @@ body:has(.hv3-page) div[style*="z-index: 99999"]{display:none!important}
 .hv3-sc-center{margin-left:auto;margin-right:auto;text-align:center}
 .hv3-sc-center h2{text-align:center}
 .hv3-sc-lead{color:var(--hv3-txt);font-size:1.12rem;margin-bottom:14px}
+/* "Why work with us?": less space above the heading (was 112px padding + the h2's 20px
+   margin, which is there for a label this section doesn't have) */
+#hv3-sc-why{padding-top:64px}
+#hv3-sc-why .hv3-sec-head h2{margin-top:0}
+@media(max-width:640px){#hv3-sc-why{padding-top:48px}}
 /* Certification badges: an endless left scroll (the list is doubled and the
    track moves by half its width). Pauses on hover; static for reduced motion. */
 .hv3-sc-marquee{position:relative;margin-top:44px;overflow:hidden;background:#fff;padding:32px 0;
@@ -559,7 +564,7 @@ body:has(.hv3-page) div[style*="z-index: 99999"]{display:none!important}
 .hv3-bw-benefit{padding:22px 0;border-top:1px solid var(--hv3-line)}
 .hv3-bw-benefit:last-child{border-bottom:1px solid var(--hv3-line)}
 .hv3-bw-benefit h3{margin-bottom:10px;padding-left:12px}
-.hv3-bw-benefit-row{display:flex;gap:14px;align-items:flex-start}
+.hv3-bw-benefit-row{display:flex;gap:14px;align-items:flex-start;padding-left:12px}   /* icons line up with the headings */
 /* Icon square with the glyph centred, so it lines up with the headline beside it.
    Font Awesome's .fa-solid{display:inline-block} has the same specificity as a single
    class, so whichever stylesheet loads last would win and push the glyph to the top-left;
@@ -568,6 +573,9 @@ body:has(.hv3-page) div[style*="z-index: 99999"]{display:none!important}
 .hv3-page .hv3-bw-icon{flex:none;width:34px;height:34px;border-radius:7px;display:grid;place-items:center;
   text-align:center;line-height:34px;
   background:var(--hv3-brand-soft);color:var(--hv3-brand-lt);font-size:.9rem}
+/* BotWerx Bot tab (hero benefits, Additional Benefits): icons in the teal accent, the colour of
+   the StoreConnect Bot checklist's check marks */
+.hv3-page .hv3-bw-hero .hv3-bw-icon,.hv3-page #hv3-services .hv3-bw-icon{background:var(--hv3-accent-soft);color:var(--hv3-accent)}
 .hv3-bw-benefit-row p,.hv3-bw-card p{font-size:.93rem;color:var(--hv3-txt-2)}
 .hv3-bw-benefit-row strong,.hv3-bw-card strong,.hv3-fitem strong{color:var(--hv3-txt);font-weight:600}
 .hv3-bw-signup{min-width:0;color:#0C1420}
