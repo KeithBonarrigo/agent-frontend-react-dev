@@ -2,6 +2,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { getApiUrl } from "../utils/getApiUrl";
+import { apiFetch } from "../utils/apiFetch";
 import { RETURN_SELECTION_KEY } from "../utils/storeconnect";
 import "./Tabs.css";
 
@@ -30,7 +31,7 @@ const OAUTH_PARAMS = ['oauth', 'provider', 'message', 'storeconnect', 'reason', 
 const EMPTY_APP_FORM = { client_id: '', client_secret: '', environment: 'production', login_url: '' };
 
 async function api(path, { method = 'GET', body } = {}) {
-  const res = await fetch(`${getApiUrl()}${path}`, {
+  const res = await apiFetch(`${getApiUrl()}${path}`, {
     method,
     credentials: 'include',
     headers: body ? { 'Content-Type': 'application/json' } : undefined,

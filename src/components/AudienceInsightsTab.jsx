@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { getApiUrl } from "../utils/getApiUrl";
+import { apiFetch } from "../utils/apiFetch";
 import "./Tabs.css";
 
 export default function AudienceInsightsTab({ user, clientId }) {
@@ -32,7 +33,7 @@ export default function AudienceInsightsTab({ user, clientId }) {
   const fetchPastReports = async () => {
     setPastLoading(true);
     try {
-      const response = await fetch(`${apiBaseUrl}/api/audience-insights/reports?clientId=${clientId}&limit=10`, {
+      const response = await apiFetch(`${apiBaseUrl}/api/audience-insights/reports?clientId=${clientId}&limit=10`, {
         credentials: 'include'
       });
       const data = await response.json();
@@ -51,7 +52,7 @@ export default function AudienceInsightsTab({ user, clientId }) {
     setError(null);
     setRateLimitMsg(null);
     try {
-      const response = await fetch(`${apiBaseUrl}/api/audience-insights/generate`, {
+      const response = await apiFetch(`${apiBaseUrl}/api/audience-insights/generate`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ clientId, days }),

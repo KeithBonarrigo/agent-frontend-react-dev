@@ -3,6 +3,8 @@ import { useTranslation } from "react-i18next";
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import "./Tabs.css";
+import { getApiUrl } from "../utils/getApiUrl";
+import { apiFetch } from "../utils/apiFetch";
 
 // Tiny non-interactive Leaflet map thumbnail
 function MiniMap({ lat, lng, width = 80, height = 56 }) {
@@ -35,7 +37,7 @@ function MiniMap({ lat, lng, width = 80, height = 56 }) {
 
 export default function IncomeReportTab({ user, clientId }) {
   const { t } = useTranslation('incomereport');
-  const apiBaseUrl = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+  const apiBaseUrl = getApiUrl();
 
   const [propertyId, setPropertyId] = useState('');
   const [propertySource, setPropertySource] = useState('mls');
@@ -58,7 +60,7 @@ export default function IncomeReportTab({ user, clientId }) {
   const fetchPastReports = async () => {
     setPastLoading(true);
     try {
-      const response = await fetch(`${apiBaseUrl}/api/str-report/reports?clientId=${clientId}&limit=20`, {
+      const response = await apiFetch(`${apiBaseUrl}/api/str-report/reports?clientId=${clientId}&limit=20`, {
         credentials: 'include'
       });
       const data = await response.json();
@@ -75,7 +77,7 @@ export default function IncomeReportTab({ user, clientId }) {
     setError(null);
     setSuccess(false);
     try {
-      const response = await fetch(`${apiBaseUrl}/api/str-report/generate`, {
+      const response = await apiFetch(`${apiBaseUrl}/api/str-report/generate`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ clientId, propertyId: propertyId.trim(), source: propertySource }),

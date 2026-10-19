@@ -2,6 +2,7 @@ import { useState, useRef, useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { getApiUrl } from "../utils/getApiUrl";
+import { apiFetch } from "../utils/apiFetch";
 import { loadFacebookSdk } from "../utils/loadFacebookSdk";
 import "./Tabs.css";
 
@@ -128,7 +129,7 @@ export default function IntegrationsTab({ user, clientId, onClientUpdate }) {
       const apiBaseUrl = getApiUrl();
       const url = `${apiBaseUrl}/api/integrations/google-calendar/status/${clientId}`;
       console.log('[GCal] Status URL:', url);
-      const res = await fetch(url, { credentials: 'include' });
+      const res = await apiFetch(url, { credentials: 'include' });
       console.log('[GCal] Status response:', res.status, res.statusText);
       if (res.ok) {
         const data = await res.json();
@@ -154,7 +155,7 @@ export default function IntegrationsTab({ user, clientId, onClientUpdate }) {
     setGcalError('');
     try {
       const apiBaseUrl = getApiUrl();
-      const res = await fetch(`${apiBaseUrl}/api/integrations/google-calendar/oauth-url?clientId=${clientId}&origin=${encodeURIComponent(window.location.origin)}`, {
+      const res = await apiFetch(`${apiBaseUrl}/api/integrations/google-calendar/oauth-url?clientId=${clientId}&origin=${encodeURIComponent(window.location.origin)}`, {
         credentials: 'include'
       });
       if (!res.ok) throw new Error('Failed to get OAuth URL');
@@ -180,7 +181,7 @@ export default function IntegrationsTab({ user, clientId, onClientUpdate }) {
       const url = `${apiBaseUrl}/api/clients/${clientId}/decorators/googleAvailabilityDecorator`;
       console.log('[GCal] Disconnect URL:', url);
       console.log('[GCal] Disconnect method: DELETE');
-      const res = await fetch(url, {
+      const res = await apiFetch(url, {
         method: 'DELETE',
         credentials: 'include'
       });
@@ -214,7 +215,7 @@ export default function IntegrationsTab({ user, clientId, onClientUpdate }) {
 
     try {
       const apiBaseUrl = getApiUrl();
-      const res = await fetch(`${apiBaseUrl}/api/clients/${clientId}/whatsapp-register`, {
+      const res = await apiFetch(`${apiBaseUrl}/api/clients/${clientId}/whatsapp-register`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',
@@ -242,7 +243,7 @@ export default function IntegrationsTab({ user, clientId, onClientUpdate }) {
 
     try {
       const apiBaseUrl = getApiUrl();
-      const res = await fetch(`${apiBaseUrl}/api/clients/${clientId}/whatsapp-verify`, {
+      const res = await apiFetch(`${apiBaseUrl}/api/clients/${clientId}/whatsapp-verify`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',
@@ -312,7 +313,7 @@ export default function IntegrationsTab({ user, clientId, onClientUpdate }) {
 
         // Send to backend for token exchange and webhook subscription
         const apiBaseUrl = getApiUrl();
-        fetch(`${apiBaseUrl}/api/clients/${clientId}/whatsapp-embedded-signup`, {
+        apiFetch(`${apiBaseUrl}/api/clients/${clientId}/whatsapp-embedded-signup`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           credentials: 'include',
@@ -362,7 +363,7 @@ export default function IntegrationsTab({ user, clientId, onClientUpdate }) {
 
     try {
       const apiBaseUrl = getApiUrl();
-      const res = await fetch(`${apiBaseUrl}/api/clients/${clientId}/whatsapp-register`, {
+      const res = await apiFetch(`${apiBaseUrl}/api/clients/${clientId}/whatsapp-register`, {
         method: 'DELETE',
         credentials: 'include'
       });
@@ -437,7 +438,7 @@ export default function IntegrationsTab({ user, clientId, onClientUpdate }) {
 
     try {
       const apiBaseUrl = getApiUrl();
-      const res = await fetch(`${apiBaseUrl}/api/clients/${clientId}/messenger-connect`, {
+      const res = await apiFetch(`${apiBaseUrl}/api/clients/${clientId}/messenger-connect`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',
@@ -508,7 +509,7 @@ export default function IntegrationsTab({ user, clientId, onClientUpdate }) {
   const handleInstagramSubmit = async (userAccessToken) => {
     try {
       const apiBaseUrl = getApiUrl();
-      const res = await fetch(`${apiBaseUrl}/api/clients/${clientId}/instagram-connect`, {
+      const res = await apiFetch(`${apiBaseUrl}/api/clients/${clientId}/instagram-connect`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',
@@ -540,7 +541,7 @@ export default function IntegrationsTab({ user, clientId, onClientUpdate }) {
 
     try {
       const apiBaseUrl = getApiUrl();
-      const res = await fetch(`${apiBaseUrl}/api/clients/${clientId}/instagram-connect`, {
+      const res = await apiFetch(`${apiBaseUrl}/api/clients/${clientId}/instagram-connect`, {
         method: 'DELETE',
         credentials: 'include'
       });
@@ -567,7 +568,7 @@ export default function IntegrationsTab({ user, clientId, onClientUpdate }) {
 
     try {
       const apiBaseUrl = getApiUrl();
-      const res = await fetch(`${apiBaseUrl}/api/clients/${clientId}/instagram-send`, {
+      const res = await apiFetch(`${apiBaseUrl}/api/clients/${clientId}/instagram-send`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',
@@ -598,7 +599,7 @@ export default function IntegrationsTab({ user, clientId, onClientUpdate }) {
 
     try {
       const apiBaseUrl = getApiUrl();
-      const res = await fetch(`${apiBaseUrl}/api/clients/${clientId}/messenger-connect`, {
+      const res = await apiFetch(`${apiBaseUrl}/api/clients/${clientId}/messenger-connect`, {
         method: 'DELETE',
         credentials: 'include'
       });
@@ -662,7 +663,7 @@ export default function IntegrationsTab({ user, clientId, onClientUpdate }) {
 
     try {
       const apiBaseUrl = getApiUrl();
-      const cssResponse = await fetch(`${apiBaseUrl}/api/client-styling/${clientId}`, {
+      const cssResponse = await apiFetch(`${apiBaseUrl}/api/client-styling/${clientId}`, {
         credentials: 'include'
       });
 

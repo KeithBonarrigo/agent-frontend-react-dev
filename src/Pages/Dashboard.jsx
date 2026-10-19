@@ -3,6 +3,7 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { useUser } from '../contexts/UserContext';
 import { getApiUrl } from '../utils/getApiUrl';
+import { apiFetch } from '../utils/apiFetch';
 import ConfigurationsTab from '../components/ConfigurationsTab';
 import IntegrationsTab from '../components/IntegrationsTab';
 
@@ -159,7 +160,7 @@ export default function Dashboard() {
       setLoadingData(true);
       try {
         const apiBaseUrl = getApiUrl();
-        const response = await fetch(`${apiBaseUrl}/api/account/${user.account_id}/clients`, {
+        const response = await apiFetch(`${apiBaseUrl}/api/account/${user.account_id}/clients`, {
           credentials: 'include'
         });
 
@@ -214,7 +215,7 @@ export default function Dashboard() {
     const fetchTokenLimits = async () => {
       try {
         const apiBaseUrl = getApiUrl();
-        const response = await fetch(`${apiBaseUrl}/api/token/limits`, { credentials: 'include' });
+        const response = await apiFetch(`${apiBaseUrl}/api/token/limits`, { credentials: 'include' });
         if (response.ok) {
           const data = await response.json();
           setTokenLimits(data.limits);
@@ -287,7 +288,7 @@ export default function Dashboard() {
     const level = (selectedClient?.level || selectedClient?.subscription_level || '').toLowerCase();
     if (selectedClientId && level === 'easybroker') {
       const apiBaseUrl = getApiUrl();
-      fetch(`${apiBaseUrl}/api/leads/${selectedClientId}/collaborations`, {
+      apiFetch(`${apiBaseUrl}/api/leads/${selectedClientId}/collaborations`, {
         headers: { 'Authorization': `Bearer ${import.meta.env.VITE_CREATE_USER_TOKEN}` }
       })
         .then(res => res.ok ? res.json() : Promise.reject())
@@ -302,7 +303,7 @@ export default function Dashboard() {
   useEffect(() => {
     if (selectedClientId) {
       const apiBaseUrl = getApiUrl();
-      fetch(`${apiBaseUrl}/api/leads?clientId=${selectedClientId}`, {
+      apiFetch(`${apiBaseUrl}/api/leads?clientId=${selectedClientId}`, {
         headers: { 'Authorization': `Bearer ${import.meta.env.VITE_CREATE_USER_TOKEN}` }
       })
         .then(res => res.ok ? res.json() : Promise.reject())
@@ -344,7 +345,7 @@ export default function Dashboard() {
     const checkLiveUsers = async () => {
       try {
         const apiBaseUrl = getApiUrl();
-        const response = await fetch(`${apiBaseUrl}/admin/active-sessions`, {
+        const response = await apiFetch(`${apiBaseUrl}/admin/active-sessions`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           credentials: 'include',
@@ -533,7 +534,7 @@ export default function Dashboard() {
       formData.append('clientId', selectedClientId);
       formData.append('type', 'file');
 
-      const response = await fetch(`${apiBaseUrl}/api/embeddings/create-from-file`, {
+      const response = await apiFetch(`${apiBaseUrl}/api/embeddings/create-from-file`, {
         method: 'POST',
         body: formData,
         credentials: 'include'
@@ -603,7 +604,7 @@ export default function Dashboard() {
       const apiBaseUrl = getApiUrl();
       const endpoint = immediate ? '/api/cancel-subscription-now' : '/api/cancel-subscription';
 
-      const response = await fetch(`${apiBaseUrl}${endpoint}`, {
+      const response = await apiFetch(`${apiBaseUrl}${endpoint}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -649,7 +650,7 @@ export default function Dashboard() {
       const token = import.meta.env.VITE_CREATE_USER_TOKEN;
       const apiBaseUrl = getApiUrl();
 
-      const response = await fetch(`${apiBaseUrl}/api/update-subscription-level`, {
+      const response = await apiFetch(`${apiBaseUrl}/api/update-subscription-level`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -691,7 +692,7 @@ export default function Dashboard() {
 
     try {
       const apiBaseUrl = getApiUrl();
-      const response = await fetch(
+      const response = await apiFetch(
         `${apiBaseUrl}/api/account/${user.account_id}/subscriptions/${selectedSubscriptionId}/clients`,
         {
           method: 'POST',
@@ -750,7 +751,7 @@ export default function Dashboard() {
 
     try {
       const apiBaseUrl = getApiUrl();
-      const response = await fetch(
+      const response = await apiFetch(
         `${apiBaseUrl}/api/clients/${selectedClientId}`,
         {
           method: 'PUT',
@@ -846,7 +847,7 @@ export default function Dashboard() {
 
     try {
       const apiBaseUrl = getApiUrl();
-      const response = await fetch(
+      const response = await apiFetch(
         `${apiBaseUrl}/api/embeddings/create-from-url`,
         {
           method: 'POST',
@@ -901,7 +902,7 @@ export default function Dashboard() {
       const url = `${apiBaseUrl}/api/embeddings/client/${selectedClientId}`;
       console.log('📡 Fetch URL:', url);
 
-      const response = await fetch(url, {
+      const response = await apiFetch(url, {
         method: 'GET',
         credentials: 'include'
       });
@@ -963,7 +964,7 @@ export default function Dashboard() {
       const url = `${apiBaseUrl}/api/embeddings/client/${selectedClientId}`;
       console.log('📄 Fetch URL:', url);
 
-      const response = await fetch(url, {
+      const response = await apiFetch(url, {
         method: 'GET',
         credentials: 'include'
       });
@@ -1031,7 +1032,7 @@ export default function Dashboard() {
       formData.append('clientId', selectedClientId);
       formData.append('type', 'file'); // Flag to differentiate from URL embeddings
 
-      const response = await fetch(
+      const response = await apiFetch(
         `${apiBaseUrl}/api/embeddings/create-from-file`,
         {
           method: 'POST',
@@ -1079,7 +1080,7 @@ export default function Dashboard() {
 
     try {
       const apiBaseUrl = getApiUrl();
-      const response = await fetch(
+      const response = await apiFetch(
         `${apiBaseUrl}/api/embeddings/${embeddingId}`,
         {
           method: 'DELETE',

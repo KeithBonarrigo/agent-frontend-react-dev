@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { getApiUrl } from "../utils/getApiUrl";
+import { apiFetch } from "../utils/apiFetch";
 import "./Tabs.css";
 
 export default function MetricsTab({ clientId, subscription, tokensUsed, user, onNavigateToConversations, onNavigateToActiveUsers, onNavigateToLeads, onNavigateToCollaborations }) {
@@ -53,7 +54,7 @@ export default function MetricsTab({ clientId, subscription, tokensUsed, user, o
 
     try {
       const apiBaseUrl = getApiUrl();
-      const response = await fetch(`${apiBaseUrl}/admin/metrics?clientId=${clientId}`, {
+      const response = await apiFetch(`${apiBaseUrl}/admin/metrics?clientId=${clientId}`, {
         credentials: 'include'
       });
 
@@ -76,7 +77,7 @@ export default function MetricsTab({ clientId, subscription, tokensUsed, user, o
 
     try {
       const apiBaseUrl = getApiUrl();
-      const response = await fetch(`${apiBaseUrl}/api/leads?clientId=${clientId}`, {
+      const response = await apiFetch(`${apiBaseUrl}/api/leads?clientId=${clientId}`, {
         headers: {
           'Authorization': `Bearer ${import.meta.env.VITE_CREATE_USER_TOKEN}`
         }
@@ -97,7 +98,7 @@ export default function MetricsTab({ clientId, subscription, tokensUsed, user, o
 
     try {
       const apiBaseUrl = getApiUrl();
-      const response = await fetch(`${apiBaseUrl}/admin/session-contacts`, {
+      const response = await apiFetch(`${apiBaseUrl}/admin/session-contacts`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',
@@ -135,7 +136,7 @@ export default function MetricsTab({ clientId, subscription, tokensUsed, user, o
     if (!clientId) return;
     try {
       const apiBaseUrl = getApiUrl();
-      const response = await fetch(`${apiBaseUrl}/api/leads/${clientId}/collaborations`, {
+      const response = await apiFetch(`${apiBaseUrl}/api/leads/${clientId}/collaborations`, {
         headers: {
           'Authorization': `Bearer ${import.meta.env.VITE_CREATE_USER_TOKEN}`
         }

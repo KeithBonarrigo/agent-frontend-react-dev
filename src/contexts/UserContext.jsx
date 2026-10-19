@@ -3,8 +3,15 @@
 
 import { createContext, useContext, useState, useEffect } from 'react';
 import { getApiUrl } from '../utils/getApiUrl';
+import { SESSION_EXPIRED_EVENT } from '../utils/apiFetch';
 
 const UserContext = createContext(null);
+
+// The server has no session for the stored user: forget them on this device
+function forgetStoredUser() {
+  localStorage.removeItem('user');
+  localStorage.removeItem('client_id');
+}
 
 export const UserProvider = ({ children }) => {
   // Initialize from localStorage if available
@@ -28,6 +35,17 @@ export const UserProvider = ({ children }) => {
       localStorage.removeItem('user');
     }
   }, [user]);
+
+  // Our API answered 401 (utils/apiFetch.js): the session ended, so drop the cached
+  // user too. App.jsx sends the visitor to /login.
+  useEffect(() => {
+    const onExpired = () => {
+      setUser(null);
+      forgetStoredUser();
+    };
+    window.addEventListener(SESSION_EXPIRED_EVENT, onExpired);
+    return () => window.removeEventListener(SESSION_EXPIRED_EVENT, onExpired);
+  }, []);
 
   // Check if user is still logged in on server
   const checkSession = async () => {
@@ -56,11 +74,14 @@ export const UserProvider = ({ children }) => {
           ...parsedStoredUser,
           ...data.user
         });
+      } else if (res.ok && data.isAuthenticated === false) {
+        // No server session (it expired, or this login predates server sessions):
+        // forget the cached user so the visitor logs in again
+        console.log('No server session, clearing the stored user');
+        setUser(null);
+        forgetStoredUser();
       } else {
-        // Server says not authenticated, but we have localStorage data
-        // Keep the localStorage data - user might have a valid session that just expired
-        // They'll get a 401 on their next API call if truly logged out
-        console.log('Server session expired, keeping localStorage user data');
+        // Unexpected answer: keep the cached user, as on network errors
         setUser(JSON.parse(storedUser));
       }
     } catch (error) {

@@ -1,5 +1,7 @@
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { useEffect } from "react";
+import { BrowserRouter, Routes, Route, Navigate, useNavigate } from "react-router-dom";
 import { HelmetProvider } from "react-helmet-async";
+import { SESSION_EXPIRED_EVENT } from "./utils/apiFetch";
 import HomeLayout from "./components/HomeLayout";
 import Layout from "./components/Layout"; // Make sure the path is correct
 import LanguageSelector from "./components/LanguageSelector";
@@ -72,12 +74,25 @@ function AppRoutes() {
   );
 }
 
+// A call to our API answered 401 (utils/apiFetch.js): UserContext has forgotten the
+// user, so take them to the login page
+function SessionExpiredRedirect() {
+  const navigate = useNavigate();
+  useEffect(() => {
+    const toLogin = () => navigate('/login', { replace: true });
+    window.addEventListener(SESSION_EXPIRED_EVENT, toLogin);
+    return () => window.removeEventListener(SESSION_EXPIRED_EVENT, toLogin);
+  }, [navigate]);
+  return null;
+}
+
 function App() {
   return (
     <HelmetProvider>
       <DomainProvider>
         <UserProvider>
           <BrowserRouter>
+            <SessionExpiredRedirect />
             <AppRoutes />
           </BrowserRouter>
         </UserProvider>
