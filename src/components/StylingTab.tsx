@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { getApiUrl } from "../utils/getApiUrl";
+import { apiFetch } from "../utils/apiFetch";
 import "./Tabs.css";
 
 type ImageType = 'logo' | 'user-avatar' | 'bot-avatar';
@@ -292,7 +293,7 @@ export default function StylingTab({ user, clientId, onNavigateToIntegrations }:
 
     try {
       const apiBaseUrl = getApiUrl();
-      const response = await fetch(`${apiBaseUrl}/api/color-analysis/${clientId}`, {
+      const response = await apiFetch(`${apiBaseUrl}/api/color-analysis/${clientId}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -330,7 +331,7 @@ export default function StylingTab({ user, clientId, onNavigateToIntegrations }:
 
       try {
         const apiBaseUrl = getApiUrl();
-        const response = await fetch(`${apiBaseUrl}/api/client-styling/${clientId}`, {
+        const response = await apiFetch(`${apiBaseUrl}/api/client-styling/${clientId}`, {
           credentials: 'include'
         });
 
@@ -418,7 +419,7 @@ export default function StylingTab({ user, clientId, onNavigateToIntegrations }:
       const formData = new FormData();
       formData.append('image', file);
 
-      const response = await fetch(`${apiBaseUrl}/api/branding-images/${clientId}/${imageType}`, {
+      const response = await apiFetch(`${apiBaseUrl}/api/branding-images/${clientId}/${imageType}`, {
         method: 'POST',
         body: formData,
         credentials: 'include'
@@ -535,7 +536,7 @@ export default function StylingTab({ user, clientId, onNavigateToIntegrations }:
       const formData = new FormData();
       formData.append('image', file);
 
-      const response = await fetch(`${apiBaseUrl}/api/branding-images/${clientId}/${imageType}`, {
+      const response = await apiFetch(`${apiBaseUrl}/api/branding-images/${clientId}/${imageType}`, {
         method: 'POST',
         body: formData,
         credentials: 'include'
@@ -585,7 +586,7 @@ export default function StylingTab({ user, clientId, onNavigateToIntegrations }:
 
     try {
       const apiBaseUrl = getApiUrl();
-      const response = await fetch(`${apiBaseUrl}/api/client-styling/${clientId}`, {
+      const response = await apiFetch(`${apiBaseUrl}/api/client-styling/${clientId}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json'
@@ -615,7 +616,7 @@ export default function StylingTab({ user, clientId, onNavigateToIntegrations }:
 
     try {
       const apiBaseUrl = getApiUrl();
-      const response = await fetch(`${apiBaseUrl}/api/client-styling/${clientId}`, {
+      const response = await apiFetch(`${apiBaseUrl}/api/client-styling/${clientId}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json'

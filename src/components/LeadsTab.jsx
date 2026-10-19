@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { getApiUrl } from "../utils/getApiUrl";
+import { apiFetch } from "../utils/apiFetch";
 import { useUser } from "../contexts/UserContext";
 import "./Tabs.css";
 
@@ -87,7 +88,7 @@ export default function LeadsTab({ user, clientId, expandShare, onShareExpanded,
 
     try {
       const apiBaseUrl = getApiUrl();
-      const response = await fetch(`${apiBaseUrl}/api/leads/${clientId}/collaborations`, {
+      const response = await apiFetch(`${apiBaseUrl}/api/leads/${clientId}/collaborations`, {
         headers: {
           'Authorization': `Bearer ${import.meta.env.VITE_CREATE_USER_TOKEN}`
         }
@@ -132,7 +133,7 @@ export default function LeadsTab({ user, clientId, expandShare, onShareExpanded,
 
     try {
       const apiBaseUrl = getApiUrl();
-      await fetch(`${apiBaseUrl}/api/leads/${clientId}/collaborations/bulk-active`, {
+      await apiFetch(`${apiBaseUrl}/api/leads/${clientId}/collaborations/bulk-active`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -177,7 +178,7 @@ export default function LeadsTab({ user, clientId, expandShare, onShareExpanded,
 
     try {
       const apiBaseUrl = getApiUrl();
-      const response = await fetch(`${apiBaseUrl}/api/leads?clientId=${clientId}`, {
+      const response = await apiFetch(`${apiBaseUrl}/api/leads?clientId=${clientId}`, {
         headers: {
           'Authorization': `Bearer ${import.meta.env.VITE_CREATE_USER_TOKEN}`
         }
@@ -218,7 +219,7 @@ export default function LeadsTab({ user, clientId, expandShare, onShareExpanded,
 
     try {
       const apiBaseUrl = getApiUrl();
-      const res = await fetch(`${apiBaseUrl}/api/clients/${clientId}/share-invite`, {
+      const res = await apiFetch(`${apiBaseUrl}/api/clients/${clientId}/share-invite`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',
@@ -250,7 +251,7 @@ export default function LeadsTab({ user, clientId, expandShare, onShareExpanded,
 
     try {
       const apiBaseUrl = getApiUrl();
-      const res = await fetch(`${apiBaseUrl}/api/clients/${clientId}/share-invite-whatsapp`, {
+      const res = await apiFetch(`${apiBaseUrl}/api/clients/${clientId}/share-invite-whatsapp`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',
@@ -284,7 +285,7 @@ export default function LeadsTab({ user, clientId, expandShare, onShareExpanded,
     setSearchesLoading(true);
     try {
       const apiBaseUrl = getApiUrl();
-      const response = await fetch(`${apiBaseUrl}/api/leads/${clientId}/searches?ebcId=${leadid}`, {
+      const response = await apiFetch(`${apiBaseUrl}/api/leads/${clientId}/searches?ebcId=${leadid}`, {
         headers: { 'Authorization': `Bearer ${import.meta.env.VITE_CREATE_USER_TOKEN}` }
       });
       if (response.ok) {
@@ -343,7 +344,7 @@ export default function LeadsTab({ user, clientId, expandShare, onShareExpanded,
     setRepeatSaving(searchId);
     try {
       const apiBaseUrl = getApiUrl();
-      await fetch(`${apiBaseUrl}/api/leads/${clientId}/searches/${searchId}/repeat`, {
+      await apiFetch(`${apiBaseUrl}/api/leads/${clientId}/searches/${searchId}/repeat`, {
         method: 'PUT',
         headers: {
           'Authorization': `Bearer ${import.meta.env.VITE_CREATE_USER_TOKEN}`,

@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { getApiUrl } from "../utils/getApiUrl";
+import { apiFetch } from "../utils/apiFetch";
 import "./Tabs.css";
 
 // TypeScript interfaces
@@ -149,7 +150,7 @@ export default function ConfigurationsTab({ user, clientId, onClientUpdate }: Co
     const fetchMlsTerms = async () => {
       try {
         const apiBaseUrl = getApiUrl();
-        const response = await fetch(`${apiBaseUrl}/api/clients/${clientId}/mls-terms`, {
+        const response = await apiFetch(`${apiBaseUrl}/api/clients/${clientId}/mls-terms`, {
           method: 'GET',
           credentials: 'include'
         });
@@ -175,7 +176,7 @@ export default function ConfigurationsTab({ user, clientId, onClientUpdate }: Co
 
       try {
         const apiBaseUrl = getApiUrl();
-        const response = await fetch(`${apiBaseUrl}/api/client-instructions/${clientId}`, {
+        const response = await apiFetch(`${apiBaseUrl}/api/client-instructions/${clientId}`, {
           credentials: 'include'
         });
 
@@ -256,7 +257,7 @@ export default function ConfigurationsTab({ user, clientId, onClientUpdate }: Co
 
     try {
       const apiBaseUrl = getApiUrl();
-      const response = await fetch(`${apiBaseUrl}/api/clients/${clientId}`, {
+      const response = await apiFetch(`${apiBaseUrl}/api/clients/${clientId}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -271,7 +272,7 @@ export default function ConfigurationsTab({ user, clientId, onClientUpdate }: Co
 
       // Record terms acceptance after successful token save
       if (mlsDisclaimerAccepted) {
-        const termsRes = await fetch(`${apiBaseUrl}/api/clients/${clientId}/mls-terms`, {
+        const termsRes = await apiFetch(`${apiBaseUrl}/api/clients/${clientId}/mls-terms`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ version: 1 }),
@@ -283,7 +284,7 @@ export default function ConfigurationsTab({ user, clientId, onClientUpdate }: Co
             setMlsTermsRecord(termsData);
           } else {
             // Re-fetch to get the record with timestamp/IP
-            const refetch = await fetch(`${apiBaseUrl}/api/clients/${clientId}/mls-terms`, {
+            const refetch = await apiFetch(`${apiBaseUrl}/api/clients/${clientId}/mls-terms`, {
               method: 'GET', credentials: 'include'
             });
             if (refetch.ok) {
@@ -315,7 +316,7 @@ export default function ConfigurationsTab({ user, clientId, onClientUpdate }: Co
     try {
       const apiBaseUrl = getApiUrl();
       const payload = { company_flex_url: companyFlexUrl.trim() };
-      const res = await fetch(`${apiBaseUrl}/api/clients/${clientId}`, {
+      const res = await apiFetch(`${apiBaseUrl}/api/clients/${clientId}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -411,7 +412,7 @@ export default function ConfigurationsTab({ user, clientId, onClientUpdate }: Co
       };
 
       const apiBaseUrl = getApiUrl();
-      const response = await fetch(`${apiBaseUrl}/api/client-instructions/${clientId}`, {
+      const response = await apiFetch(`${apiBaseUrl}/api/client-instructions/${clientId}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json'
@@ -441,7 +442,7 @@ export default function ConfigurationsTab({ user, clientId, onClientUpdate }: Co
     setEmbeddingsLoading(true);
     try {
       const apiBaseUrl = getApiUrl();
-      const response = await fetch(`${apiBaseUrl}/api/embeddings/client/${clientId}`, {
+      const response = await apiFetch(`${apiBaseUrl}/api/embeddings/client/${clientId}`, {
         method: 'GET',
         credentials: 'include'
       });
@@ -473,7 +474,7 @@ export default function ConfigurationsTab({ user, clientId, onClientUpdate }: Co
     setFileEmbeddingsLoading(true);
     try {
       const apiBaseUrl = getApiUrl();
-      const response = await fetch(`${apiBaseUrl}/api/embeddings/client/${clientId}`, {
+      const response = await apiFetch(`${apiBaseUrl}/api/embeddings/client/${clientId}`, {
         method: 'GET',
         credentials: 'include'
       });
@@ -520,7 +521,7 @@ export default function ConfigurationsTab({ user, clientId, onClientUpdate }: Co
 
     try {
       const apiBaseUrl = getApiUrl();
-      const response = await fetch(`${apiBaseUrl}/api/embeddings/create-from-url`, {
+      const response = await apiFetch(`${apiBaseUrl}/api/embeddings/create-from-url`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -567,7 +568,7 @@ export default function ConfigurationsTab({ user, clientId, onClientUpdate }: Co
       formData.append('clientId', String(clientId));
       formData.append('type', 'file');
 
-      const response = await fetch(`${apiBaseUrl}/api/embeddings/create-from-file`, {
+      const response = await apiFetch(`${apiBaseUrl}/api/embeddings/create-from-file`, {
         method: 'POST',
         body: formData,
         credentials: 'include'
@@ -601,7 +602,7 @@ export default function ConfigurationsTab({ user, clientId, onClientUpdate }: Co
 
     try {
       const apiBaseUrl = getApiUrl();
-      const response = await fetch(`${apiBaseUrl}/api/embeddings/${embeddingId}`, {
+      const response = await apiFetch(`${apiBaseUrl}/api/embeddings/${embeddingId}`, {
         method: 'DELETE',
         credentials: 'include'
       });
@@ -737,7 +738,7 @@ export default function ConfigurationsTab({ user, clientId, onClientUpdate }: Co
       formData.append('clientId', String(clientId));
       formData.append('type', 'file');
 
-      const response = await fetch(`${apiBaseUrl}/api/embeddings/create-from-file`, {
+      const response = await apiFetch(`${apiBaseUrl}/api/embeddings/create-from-file`, {
         method: 'POST',
         body: formData,
         credentials: 'include'
@@ -771,7 +772,7 @@ export default function ConfigurationsTab({ user, clientId, onClientUpdate }: Co
 
     try {
       const apiBaseUrl = getApiUrl();
-      const response = await fetch(`${apiBaseUrl}/api/model/${clientId}`, {
+      const response = await apiFetch(`${apiBaseUrl}/api/model/${clientId}`, {
         credentials: 'include'
       });
 
@@ -816,7 +817,7 @@ export default function ConfigurationsTab({ user, clientId, onClientUpdate }: Co
 
     try {
       const apiBaseUrl = getApiUrl();
-      const response = await fetch(`${apiBaseUrl}/api/model`, {
+      const response = await apiFetch(`${apiBaseUrl}/api/model`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -872,7 +873,7 @@ export default function ConfigurationsTab({ user, clientId, onClientUpdate }: Co
     setHistoryMessage('');
     try {
       const apiBaseUrl = getApiUrl();
-      const res = await fetch(`${apiBaseUrl}/api/clients/${clientId}/history-lines`, {
+      const res = await apiFetch(`${apiBaseUrl}/api/clients/${clientId}/history-lines`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',

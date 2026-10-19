@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { getApiUrl } from "../utils/getApiUrl";
+import { apiFetch } from "../utils/apiFetch";
 import { loadFacebookSdk } from "../utils/loadFacebookSdk";
 import LiveMap from "./LiveMap";
 import "./Tabs.css";
@@ -112,7 +113,7 @@ export default function ConversationsTab({ clientId, user, expandAllLive: expand
 
     try {
       const apiBaseUrl = getApiUrl();
-      const response = await fetch(`${apiBaseUrl}/admin/session-contacts`, {
+      const response = await apiFetch(`${apiBaseUrl}/admin/session-contacts`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',
@@ -134,7 +135,7 @@ export default function ConversationsTab({ clientId, user, expandAllLive: expand
 
     try {
       const apiBaseUrl = getApiUrl();
-      const response = await fetch(`${apiBaseUrl}/admin/active-sessions`, {
+      const response = await apiFetch(`${apiBaseUrl}/admin/active-sessions`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',
@@ -190,7 +191,7 @@ export default function ConversationsTab({ clientId, user, expandAllLive: expand
       console.log('📡 Fetching conversations for client:', clientId);
       console.log('API URL:', url.toString());
 
-      const response = await fetch(url.toString(), {
+      const response = await apiFetch(url.toString(), {
         credentials: 'include'
       });
 
@@ -343,7 +344,7 @@ export default function ConversationsTab({ clientId, user, expandAllLive: expand
 
     try {
       const apiBaseUrl = getApiUrl();
-      const res = await fetch(`${apiBaseUrl}/api/clients/${clientId}/instagram-send`, {
+      const res = await apiFetch(`${apiBaseUrl}/api/clients/${clientId}/instagram-send`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',
@@ -379,7 +380,7 @@ export default function ConversationsTab({ clientId, user, expandAllLive: expand
 
     try {
       const apiBaseUrl = getApiUrl();
-      const res = await fetch(`${apiBaseUrl}/api/clients/${clientId}/whatsapp-send`, {
+      const res = await apiFetch(`${apiBaseUrl}/api/clients/${clientId}/whatsapp-send`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',
