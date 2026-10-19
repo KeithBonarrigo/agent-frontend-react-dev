@@ -270,7 +270,11 @@
       "disconnect": "Desconectar",
       "disconnecting": "Desconectando...",
       "confirmDisconnect": "¿Desconectar esta tienda? Botwerx revocará su acceso a Salesforce y dejará de sincronizar. Tu aplicación de Salesforce guardada se conserva, así que puedes volver a conectar con un clic.",
-      "disconnected": "Tienda desconectada."
+      "disconnected": "Tienda desconectada.",
+      "physical": "Permitir productos físicos en los pedidos por chat",
+      "physicalHelp": "La API de la tienda no calcula el envío, así que los pedidos por chat normalmente solo incluyen productos digitales o virtuales. Actívalo si el envío es gratis, de tarifa fija o con recogida en tienda.",
+      "physicalOn": "Guardado. Los pedidos por chat ahora pueden incluir productos físicos.",
+      "physicalOff": "Guardado. Los pedidos por chat solo incluyen productos digitales o virtuales."
     },
     "messages": {
       "connected": "Salesforce conectado. Tu tienda se está sincronizando.",

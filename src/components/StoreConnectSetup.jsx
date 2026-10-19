@@ -12,7 +12,8 @@ import "./Tabs.css";
 //
 // Backend: endpointRoutes/storeConnect.js in the API. Every call sends the
 // login session (credentials: 'include'); the routes reject requests without it.
-//   GET    /api/clients/:id/storeconnect/status   → status, app, callback_url, salesforce, store, sync
+//   GET    /api/clients/:id/storeconnect/status   → status, app, callback_url, salesforce, store, sync,
+//            in_chat_payment (the store's API key is saved), share_coupon_codes, api_checkout_physical
 //   PUT    /api/clients/:id/storeconnect/app      step 1: the merchant's own External Client App
 //   GET    /api/clients/:id/storeconnect/connect  step 2: { url } → Salesforce consent. Salesforce
 //            returns to /dashboard?oauth=success|error&provider=storeconnect
@@ -22,6 +23,8 @@ import "./Tabs.css";
 //   POST   /api/clients/:id/storeconnect/store
 //   POST   /api/clients/:id/storeconnect/sync     ready: re-sync now (202), then poll the status
 //   DELETE /api/clients/:id/storeconnect          ready: revoke access; the saved app is kept
+//   PUT    /api/clients/:id/storeconnect/settings ready: { api_checkout_physical } → { success, settings };
+//            the toggle shows only when in_chat_payment is true
 // Shown only when utils/storeconnect.js's isStoreConnectAgent(agent) is true.
 
 const LOGO = '/img/add-ons/storeconnect-logo.webp';
@@ -113,6 +116,7 @@ export default function StoreConnectSetup({ clientId, agent }) {
   // Ready
   const [syncing, setSyncing] = useState(false);
   const [disconnecting, setDisconnecting] = useState(false);
+  const [physicalSaving, setPhysicalSaving] = useState(false);
 
   const showBanner = (type, text, ms = 6000) => {
     clearTimeout(bannerTimer.current);
@@ -320,6 +324,21 @@ export default function StoreConnectSetup({ clientId, agent }) {
     setSyncing(false);
     showBanner('success', sc('ready.disconnected'));
     loadStatus({ silent: true });
+  };
+
+  // Physical goods in chat orders. The store's API doesn't price shipping, so the
+  // backend keeps chat orders to digital/virtual products unless this is on.
+  const savePhysical = async (allow) => {
+    setPhysicalSaving(true);
+    const res = await api(`/api/clients/${clientId}/storeconnect/settings`, { method: 'PUT', body: { api_checkout_physical: allow } });
+    setPhysicalSaving(false);
+    if (!res.ok) {
+      showBanner('error', errorText(t, res), 10000);
+      return;
+    }
+    const settings = res.data.settings || { api_checkout_physical: allow };
+    setStatus((prev) => (prev ? { ...prev, ...settings } : prev));
+    showBanner('success', sc(settings.api_checkout_physical ? 'ready.physicalOn' : 'ready.physicalOff'));
   };
 
   if (!clientId) return null;
@@ -577,6 +596,22 @@ export default function StoreConnectSetup({ clientId, agent }) {
                   {disconnecting ? busy(sc('ready.disconnecting')) : <><i className="fa-solid fa-unlink"></i> {sc('ready.disconnect')}</>}
                 </button>
               </div>
+              {status.in_chat_payment && (
+                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.6em 0.9em', alignItems: 'flex-start', marginTop: '1em', paddingTop: '1em', borderTop: '1px solid #e2e8f0' }}>
+                  <button type="button" id="sc-physical" role="switch" aria-checked={!!status.api_checkout_physical} aria-describedby="sc-physical-help"
+                    className={`toggle-switch ${status.api_checkout_physical ? 'active' : 'inactive'}`}
+                    onClick={() => savePhysical(!status.api_checkout_physical)} disabled={physicalSaving}>
+                    <span className={`toggle-knob ${status.api_checkout_physical ? 'active' : 'inactive'}`}>
+                      {physicalSaving && <i className="fa-solid fa-spinner fa-spin" style={{ fontSize: '0.7em', color: '#999' }}></i>}
+                    </span>
+                  </button>
+                  {/* 220px basis: on phones the text drops below the switch instead of a narrow column */}
+                  <div style={{ flex: '1 1 220px', minWidth: 0 }}>
+                    <label htmlFor="sc-physical" style={{ fontWeight: 600, color: '#333', cursor: 'pointer' }}>{sc('ready.physical')}</label>
+                    <p id="sc-physical-help" style={{ ...mutedStyle, fontSize: '0.85em', marginTop: '0.2em' }}>{sc('ready.physicalHelp')}</p>
+                  </div>
+                </div>
+              )}
             </div>
           )}
         </>

@@ -383,6 +383,10 @@
           "text": "account credit, loyalty points (including points expiring soon) and gift-card balances."
         },
         {
+          "title": "New customers can sign up in the chat:",
+          "text": "verify an email, give a name, and the account exists in StoreConnect (for stores with an API key)."
+        },
+        {
           "title": "Secure by design:",
           "text": "customers verify with a one-time email code (or their verified WhatsApp number); the assistant never asks for passwords, card numbers or gift-card PINs, and only ever shows a customer their own records."
         }

@@ -270,7 +270,11 @@
       "disconnect": "Disconnect",
       "disconnecting": "Disconnecting...",
       "confirmDisconnect": "Disconnect this store? Botwerx revokes its Salesforce access and stops syncing. Your saved Salesforce app is kept, so you can connect again with one click.",
-      "disconnected": "Store disconnected."
+      "disconnected": "Store disconnected.",
+      "physical": "Allow physical goods in chat orders",
+      "physicalHelp": "The store's API doesn't price shipping, so chat orders normally cover digital/virtual products only. Turn this on if shipping is free, flat-rate or pickup.",
+      "physicalOn": "Saved. Chat orders can now include physical goods.",
+      "physicalOff": "Saved. Chat orders cover digital and virtual products only."
     },
     "messages": {
       "connected": "Salesforce connected. Your store is syncing.",
