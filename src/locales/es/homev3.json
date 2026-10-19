@@ -35,7 +35,9 @@
       "storeLink": "StoreConnect",
       "storePost": " se encarga del catálogo y el pago, con un solo carrito y enlace de pago por ganador.",
       "ctaPrimary": "Crea tu subasta",
-      "ctaSecondary": "Iniciar sesión"
+      "ctaTry": "¡Pruébalo!",
+      "ctaSecondary": "Iniciar sesión",
+      "tryLabel": "Abrir la demo en vivo de BidConnect en una pestaña nueva"
     },
     "demoVideoLabel": "Demostración animada de BidConnect: desde las pujas en vivo hasta Salesforce",
     "features": {

@@ -35,7 +35,9 @@
       "storeLink": "StoreConnect",
       "storePost": " runs the catalogue and checkout, with one cart and payment link per winner.",
       "ctaPrimary": "Create Your Auction",
-      "ctaSecondary": "Sign In"
+      "ctaTry": "Try It!",
+      "ctaSecondary": "Sign In",
+      "tryLabel": "Open the live BidConnect demo in a new tab"
     },
     "demoVideoLabel": "Animated demo of BidConnect: live bidding through to Salesforce",
     "features": {

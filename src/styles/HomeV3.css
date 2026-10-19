@@ -148,6 +148,11 @@ body:has(.hv3-page) div[style*="z-index: 99999"]{display:none!important}
 @media(max-width:640px){.hv3-page .hv3-hero-cta.hv3-indent{margin-left:0}}
 .hv3-hero-fine{margin-top:18px;font-size:.86rem;color:var(--hv3-txt-3)}
 .hv3-hero-vis{position:relative}
+/* BidConnect hero video: a link to the live demo */
+.hv3-hero-vis-link{display:block;border-radius:11px}
+.hv3-hero-vis-link:focus-visible{outline:2px solid var(--hv3-brand-lt);outline-offset:3px}
+/* Three buttons in the BidConnect hero: slimmer sides (as on phones) so they share one line */
+.hv3-page .hv3-bc-hero-cta .hv3-btn-lg{padding-left:20px;padding-right:20px}
 /* BidConnect demo video (or its poster for reduced motion): full container width,
    natural 16:9 height, never stretched or cropped. */
 .hv3-bc-demo{display:block;width:100%;max-width:100%;height:auto;aspect-ratio:16/9;border-radius:11px;
