@@ -573,9 +573,10 @@ body:has(.hv3-page) div[style*="z-index: 99999"]{display:none!important}
 .hv3-page .hv3-bw-icon{flex:none;width:34px;height:34px;border-radius:7px;display:grid;place-items:center;
   text-align:center;line-height:34px;
   background:var(--hv3-brand-soft);color:var(--hv3-brand-lt);font-size:.9rem}
-/* BotWerx Bot tab (hero benefits, Additional Benefits): icons in the teal accent, the colour of
-   the StoreConnect Bot checklist's check marks */
-.hv3-page .hv3-bw-hero .hv3-bw-icon,.hv3-page #hv3-services .hv3-bw-icon{background:var(--hv3-accent-soft);color:var(--hv3-accent)}
+/* Icons in the teal accent, the colour of the StoreConnect Bot checklist's check marks:
+   BotWerx Bot tab (hero benefits, Additional Benefits) and StoreConnect Bot tab (What it does) */
+.hv3-page .hv3-bw-hero .hv3-bw-icon,.hv3-page #hv3-services .hv3-bw-icon,
+.hv3-page #hv3-scb-features .hv3-bw-icon{background:var(--hv3-accent-soft);color:var(--hv3-accent)}
 .hv3-bw-benefit-row p,.hv3-bw-card p{font-size:.93rem;color:var(--hv3-txt-2)}
 .hv3-bw-benefit-row strong,.hv3-bw-card strong,.hv3-fitem strong{color:var(--hv3-txt);font-weight:600}
 .hv3-bw-signup{min-width:0;color:#0C1420}

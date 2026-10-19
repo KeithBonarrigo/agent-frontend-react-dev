@@ -20,10 +20,22 @@ Not changed:
 - The arrow in the BotWerx Bot tab's StoreConnect banner, which takes the link's blue.
 - The icons inside the white sign-up form.
 
+### #4 Teal icons on the StoreConnect Bot tab too (follow-up PR)
+
+| What | Where |
+| --- | --- |
+| Branch | `feat/scbot-teal-icons`, from `main` at `eda2216` |
+| Backup tag | `backup/pre-scbot-teal-icons-2026-10-18` → `eda2216` |
+
+- The teal icon rule (#3) now also covers `#hv3-scb-features .hv3-bw-icon`: the nine "What it does" icons and the setup card's plug.
+- The StoreConnect Services tab's icons stay blue, and the "Coming soon" clock stays amber.
+- The same PR changes the StoreConnect Bot sign-up heading; see #8 in `plans/2026-10-18-storeconnect-bot-tab.md`.
+
 ## Rollback
 
 | Undo | How |
 | --- | --- |
+| #4 only | Remove `.hv3-page #hv3-scb-features .hv3-bw-icon` from the teal icon rule. |
 | Everything | `git revert -m 1 <merge-commit>` through a PR. Railway redeploys. |
 | One change | Delete its rule: the `#hv3-sc-why` block (#1), `padding-left:12px` on `.hv3-bw-benefit-row` (#2), or the teal icon rule after `.hv3-page .hv3-bw-icon` (#3). |
 
