@@ -95,10 +95,14 @@ export default function LiveMap({ sessions, activeSessions, onUserClick }) {
         scrollWheelZoom={true}
         className="live-map"
       >
+        {/* OpenStreetMap's own tiles, no key needed. CARTO's basemaps (used until October 2026)
+            now need an API key and draw "API KEY REQUIRED" without one. .live-map-tiles greys
+            them to keep the old light look; the markers sit in another pane and keep their colour. */}
         <TileLayer
-          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>, &copy; <a href="https://carto.com/attributions">CartoDB</a>'
-          url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"
+          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+          url="https://tile.openstreetmap.org/{z}/{x}/{y}.png"
           maxZoom={19}
+          className="live-map-tiles"
         />
 
         <FitBounds locations={locations} />

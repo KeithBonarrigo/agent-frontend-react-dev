@@ -18,6 +18,12 @@
   z-index: 1;
 }
 
+/* OpenStreetMap tiles, greyed and lightened to stay close to the light basemap the map
+   used before, so the online/offline markers stand out */
+.live-map-tiles {
+  filter: grayscale(1) brightness(1.08) contrast(0.85);
+}
+
 /* Empty state */
 .live-map-empty {
   display: flex;
