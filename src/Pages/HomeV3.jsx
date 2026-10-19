@@ -416,6 +416,9 @@ function BotwerxBotContent({ t }) {
         </div>
       </section>
 
+      {/* ---------------- StoreConnect Store Assistant ---------------- */}
+      <StoreAssistantSection t={t} />
+
       {/* ---------------- Services ---------------- */}
       <section className="hv3-sec hv3-pricing" id="hv3-services">
         <div className="hv3-wrap">
@@ -441,9 +444,6 @@ function BotwerxBotContent({ t }) {
           </div>
         </div>
       </section>
-
-      {/* ---------------- StoreConnect Store Assistant ---------------- */}
-      <StoreAssistantSection t={t} />
 
       {/* ---------------- FAQ ---------------- */}
       <section className="hv3-sec" id="hv3-faq">

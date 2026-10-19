@@ -1,7 +1,7 @@
 # Botwerx Bot tab: StoreConnect Store Assistant section, change and rollback log
 
-Date: 2026-10-18. Home page, Botwerx Bot tab (`/?tab=botwerx`). The new section sits between
-"Additional Benefits" and the FAQ.
+Date: 2026-10-18. Home page, Botwerx Bot tab (`/?tab=botwerx`). The section first went between
+"Additional Benefits" and the FAQ (PR #17). #4 below moved it above "Additional Benefits".
 
 | What | Where |
 | --- | --- |
@@ -49,10 +49,25 @@ A new `botwerx.storeAssistant` block between `botwerx.services` and `botwerx.faq
   StoreConnect", "org de Salesforce", "panel".
 - The en and es keys match.
 
+### #4 Moved above "Additional Benefits" (follow-up PR)
+
+| What | Where |
+| --- | --- |
+| Branch | `feat/store-assistant-above-benefits`, from `main` at `5e2cd87` |
+| Backup tag | `backup/pre-store-assistant-move-2026-10-18` → `5e2cd87` |
+
+One line moved in `BotwerxBotContent` (`src/Pages/HomeV3.jsx`). Nothing else changed.
+
+| | Order of the Botwerx tab's sections |
+| --- | --- |
+| Before | Hero and sign-up, carousel, Additional Benefits, **Store Assistant**, FAQ |
+| After | Hero and sign-up, carousel, **Store Assistant**, Additional Benefits, FAQ |
+
 ## Rollback
 
 | Undo | How |
 | --- | --- |
+| Only the move (#4) | Put `<StoreAssistantSection t={t} />` back after the Services section, or revert #4's merge. |
 | Hide the section | Delete `<StoreAssistantSection t={t} />` in `BotwerxBotContent`. The rest goes unused. |
 | Everything, after merge | `git revert -m 1 <merge-commit>` through a PR. Railway redeploys. |
 | Everything, from the tag | `git checkout backup/pre-store-assistant-2026-10-18 -- src/Pages/HomeV3.jsx src/styles/HomeV3.css src/locales/en/homev3.json src/locales/es/homev3.json` |
