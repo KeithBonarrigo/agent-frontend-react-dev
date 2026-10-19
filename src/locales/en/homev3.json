@@ -89,8 +89,16 @@
           "desc": "Everything you need to run your live auction.",
           "features": [
             "Real-time and proxy bidding",
+            "Guests bid from their own phones",
             "Instant outbid alerts by email (text optional)",
+            "A leader board for the big screen at your event",
+            "Organizer dashboard: money raised, busiest items, top bidders",
+            "AI summaries of how the auction is going",
+            "Every bid kept, not just the winners",
             "Contacts, items and bids synced to Salesforce",
+            "One click opens a bidder's record in Salesforce",
+            "Salesforce reports and dashboards on every bid",
+            "Share any item to Facebook, Instagram and X",
             "One cart and payment link per winner via StoreConnect"
           ],
           "cta": "Create Your Auction"

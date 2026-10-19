@@ -89,8 +89,16 @@
           "desc": "Todo lo que necesitas para realizar tu subasta en vivo.",
           "features": [
             "Pujas en tiempo real y pujas automáticas",
+            "Los invitados pujan desde su propio teléfono",
             "Avisos instantáneos de puja superada por correo (mensajes de texto opcionales)",
+            "Un tablero con las pujas más altas para la pantalla grande de tu evento",
+            "Panel para organizadores: dinero recaudado, artículos más disputados y principales postores",
+            "Resúmenes con IA de cómo va la subasta",
+            "Se guarda cada puja, no solo las ganadoras",
             "Contactos, artículos y pujas sincronizados con Salesforce",
+            "Un clic abre el registro del postor en Salesforce",
+            "Reportes y tableros de Salesforce con cada puja",
+            "Comparte cualquier artículo en Facebook, Instagram y X",
             "Un carrito y un enlace de pago por ganador con StoreConnect"
           ],
           "cta": "Crea tu subasta"
