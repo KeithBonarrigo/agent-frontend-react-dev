@@ -72,7 +72,7 @@ export const DomainProvider = ({ children }) => {
     }
 
     // Update favicon and title based on domain type
-    const faviconPath = domainType === 'botwerx' ? '/favicon-botwerx.png' : '/favicon-ai-fav.png';
+    const faviconPath = domainType === 'botwerx' ? '/img/favicon-botwerx-black-round.png?v=1' : '/favicon-ai-fav.png';
     const pageTitle = domainType === 'botwerx' ? 'BotWerx - Agent Driven Engagement' : 'AIBridge - Agent Driven Engagement';
     const description = domainType === 'botwerx'
       ? 'BotWerx delivers intelligent agent-driven solutions to transform your business engagement and customer experience.'

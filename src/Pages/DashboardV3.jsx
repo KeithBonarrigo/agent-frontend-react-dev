@@ -14,7 +14,7 @@ import "../styles/DashboardV3.css";   // the dashboard's own V3 frame; every rul
 // Rollback: point the /dashboard route back at <Dashboard />
 // (see plans/2026-10-12-dashboard-v3-style.md).
 
-const FAVICON = '/img/favicon-botwerx-blue-rounded.png?v=2';
+const FAVICON = '/img/favicon-botwerx-black-round.png?v=1';
 
 const LANGUAGES = [
   { code: 'en', flagCode: 'us', fullName: 'English' },

@@ -12,7 +12,7 @@ import "../styles/HomeV3.css";  // shares the V3 home page's styles
 // in-page box posted to /api/signup, which the backend never had). Text lives
 // under `login` in the homev3 namespace.
 
-const FAVICON = '/img/favicon-botwerx-blue-rounded.png?v=2';
+const FAVICON = '/img/favicon-botwerx-black-round.png?v=1';
 
 const LANGUAGES = [
   { code: 'en', flagCode: 'us', fullName: 'English' },

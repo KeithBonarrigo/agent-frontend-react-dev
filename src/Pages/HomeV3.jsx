@@ -25,7 +25,7 @@ const LANGUAGES = [
 // this page is open, point every icon link at our favicon and re-apply it if
 // anything changes it; on unmount put back whatever the links held.
 // ?v= busts the browser's favicon cache; bump it whenever the image file changes.
-const FAVICON = '/img/favicon-botwerx-blue-rounded.png?v=2';
+const FAVICON = '/img/favicon-botwerx-black-round.png?v=1';
 
 function useFavicon(href) {
   useEffect(() => {

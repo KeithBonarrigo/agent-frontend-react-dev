@@ -161,8 +161,9 @@ CSS rules that start with `.hv3-bw-signup` and target the form's own
 those rules can't reach the live page; never write such a class without it.
 
 **Favicon.** `DomainContext` sets the site favicon per domain. `useFavicon` in
-`HomeV3.jsx` points the icon links at `/img/favicon-botwerx-blue-rounded.png` while this
-page is mounted and restores them on unmount. `index.html` is not changed.
+`HomeV3.jsx` points the icon links at `/img/favicon-botwerx-black-round.png` while this
+page is mounted and restores them on unmount (LoginV3, LegalV3 and DashboardV3 do the same).
+`index.html` uses the same icon as the default until the app starts.
 
 ## Known quirks, not bugs
 
