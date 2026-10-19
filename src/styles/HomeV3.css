@@ -611,6 +611,39 @@ body:has(.hv3-page) div[style*="z-index: 99999"]{display:none!important}
 .hv3-bw-card-head{display:flex;gap:12px;align-items:center;margin-bottom:14px}
 .hv3-bw-cta{margin-top:36px;display:flex;justify-content:center}   /* Learn More centred under the cards */
 
+/* ---------------- StoreConnect Store Assistant (Botwerx tab) ---------------- */
+.hv3-sa-head{max-width:760px}
+.hv3-sa-head .hv3-sa-lead{color:var(--hv3-txt);font-size:1.25rem;font-weight:500}
+.hv3-sa-head .hv3-sa-lead + p{margin-top:8px}
+/* Setup closes the card grid: full width, with the Get started button on the right */
+.hv3-sa-setup{grid-column:1 / -1;display:flex;align-items:center;justify-content:space-between;gap:20px 40px;
+  border-color:rgba(47,107,255,.4);background:linear-gradient(120deg,var(--hv3-brand-soft),var(--hv3-bg-card) 65%)}
+.hv3-sa-setup .hv3-bw-card-head{margin-bottom:10px}
+.hv3-sa-setup p{max-width:760px}
+.hv3-sa-cols{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:18px}
+.hv3-sa-panel{background:var(--hv3-bg-2);border:1px solid var(--hv3-line);border-radius:11px;padding:28px 30px}
+.hv3-sa-panel h3{margin-bottom:18px}
+.hv3-sa-list{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:13px}
+.hv3-sa-list li{display:flex;gap:12px;align-items:baseline;font-size:.93rem;color:var(--hv3-txt-2)}
+.hv3-sa-list i{flex:none;color:var(--hv3-accent);font-size:.8rem}
+.hv3-sa-list strong{color:var(--hv3-txt);font-weight:600}
+/* Coming soon: dashed box, muted text and an amber tag, so it never reads as available today */
+.hv3-sa-soon{margin-top:18px;border:1px dashed var(--hv3-line-2);border-radius:11px;padding:20px 26px;
+  display:flex;flex-wrap:wrap;align-items:flex-start;gap:12px 28px}
+.hv3-page .hv3-sa-soon h3{display:inline-flex;align-items:center;gap:7px;flex:none;padding:4px 11px;
+  border:1px solid rgba(245,158,11,.45);border-radius:999px;color:var(--hv3-amber);
+  font-family:'IBM Plex Mono',monospace;font-size:.7rem;font-weight:500;letter-spacing:.13em;text-transform:uppercase;line-height:1.6}
+.hv3-sa-soon ul{flex:1 1 320px;margin:0;padding-left:18px;color:var(--hv3-txt-3);font-size:.9rem;
+  display:flex;flex-direction:column;gap:5px}
+@media(max-width:1000px){
+  .hv3-sa-setup{grid-column:auto;flex-direction:column;align-items:flex-start}
+  .hv3-sa-cols{grid-template-columns:1fr}
+}
+@media(max-width:640px){
+  .hv3-sa-panel{padding:22px}
+  .hv3-sa-soon{padding:18px 20px}
+}
+
 /* ---------------- contact form (both tabs) ---------------- */
 .hv3-contact{padding:96px 0;background:var(--hv3-bg-3);border-top:1px solid var(--hv3-line);scroll-margin-top:68px}
 /* Centred: title, form block, messages and submit button. Field labels stay

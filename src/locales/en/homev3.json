@@ -359,6 +359,109 @@
         }
       }
     },
+    "storeAssistant": {
+      "label": "For StoreConnect stores",
+      "title": "StoreConnect Store Assistant",
+      "lead": "Your StoreConnect store, answered 24/7.",
+      "intro": "A shopping assistant that knows your catalog, your customers' orders and your store — live from Salesforce.",
+      "cta": "Get started",
+      "features": {
+        "catalog": {
+          "title": "Knows your whole catalog",
+          "description": "Products, options and variants, prices and sale prices, stock, images, categories, brands — synced straight from Salesforce, so the assistant never shows a product or price your store doesn't."
+        },
+        "website": {
+          "title": "Answers from your website",
+          "description": "Shipping, returns, policies, FAQs, articles and product tabs (features, specs, warranty, support) — with a link to the page the answer came from. If the answer isn't on your site, it says so instead of guessing."
+        },
+        "search": {
+          "title": "Finds the right product",
+          "description": "Natural-language search (\"something warm for hiking under $100\", \"a gift card\", \"classes on Saturday\") with filters for category, brand, condition and what's on sale. Product cards with images and prices appear right in the chat."
+        },
+        "cart": {
+          "title": "Builds the cart and hands off to your checkout",
+          "description": "Customers add items in chat and get one link that opens your StoreConnect checkout with the cart already filled in — promo code included if they have one. Payment stays on your own secure checkout."
+        },
+        "orders": {
+          "title": "Shows customers their own orders",
+          "description": "After a quick email verification (or automatically on WhatsApp), customers can see order status, shipment tracking links, pickup place and time, what's paid and any balance due — with a pay-now link."
+        },
+        "bookings": {
+          "title": "Bookable services",
+          "description": "Live availability for classes, appointments and events, in the location's time zone, then a direct link to book."
+        },
+        "deals": {
+          "title": "Current deals",
+          "description": "Active promotions explained in plain words (what you get, conditions, end date), and product cards flag which deal a product is in. Coupon codes are only shared if you choose."
+        },
+        "locations": {
+          "title": "Your locations and hours",
+          "description": "Addresses, phone numbers, opening hours, whether you're open right now, pickup points and the nearest one to the customer."
+        },
+        "channels": {
+          "title": "Everywhere your customers are",
+          "description": "Your website, WhatsApp, Facebook Messenger and Instagram, in the customer's own language."
+        },
+        "setup": {
+          "title": "Set up in about 10 minutes, no developer needed",
+          "description": "Connect your Salesforce org from the dashboard, pick your store, paste one line into StoreConnect — done. Updates with one click whenever your catalog changes."
+        }
+      },
+      "customers": {
+        "title": "For your customers",
+        "items": [
+          {
+            "title": "Order history and details:",
+            "text": "status, items, totals, shipments with carrier tracking links, click-and-collect details, outstanding balance and pay-now link."
+          },
+          {
+            "title": "Upcoming bookings.",
+            "text": ""
+          },
+          {
+            "title": "Subscriptions:",
+            "text": "status, price, period, next billing and renewal dates."
+          },
+          {
+            "title": "Balances:",
+            "text": "account credit, loyalty points (including points expiring soon) and gift-card balances."
+          },
+          {
+            "title": "Secure by design:",
+            "text": "customers verify with a one-time email code (or their verified WhatsApp number); the assistant never asks for passwords, card numbers or gift-card PINs, and only ever shows a customer their own records."
+          }
+        ]
+      },
+      "storeAware": {
+        "title": "It understands your store",
+        "items": [
+          {
+            "title": "Respects your pricing rules:",
+            "text": "sale prices shown as \"was/now\", hidden prices shown with your wording, \"choose your amount\" donations, quantity limits, deposits, loyalty-points pricing, member-only restrictions."
+          },
+          {
+            "title": "Knows store facts:",
+            "text": "whether prices include tax, whether you ship, loyalty points, quotes, and links to your terms."
+          },
+          {
+            "title": "Understands product types:",
+            "text": "variants and options, rentals, gift cards, pre-orders, bookable services with attendee details, related products and accessories."
+          },
+          {
+            "title": "Uses StoreConnect's own search keywords,",
+            "text": "so the assistant understands your customers' words, misspellings and model codes."
+          }
+        ]
+      },
+      "comingSoon": {
+        "label": "Coming soon",
+        "items": [
+          "Pay in chat (card or saved payment method) for stores with a StoreConnect Commerce API key.",
+          "Book an appointment without leaving the chat.",
+          "Change plan or cancel a subscription in chat (cancellation is already available for stores with an API key)."
+        ]
+      }
+    },
     "faq": {
       "title": "Frequently Asked Questions",
       "items": [
