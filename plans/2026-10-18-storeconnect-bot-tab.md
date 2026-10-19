@@ -65,10 +65,28 @@ The existing tabs keep their URLs, so old links still work.
 | `.hv3-sa-panel` | `--hv3-bg-2` background, `--hv3-line` border | `--hv3-bg-card` background, `--hv3-line-2` border (they now sit on the band) |
 | New `hv3-scb-*` rules | none | Logo chip, hero brand row and checklist, and the BotWerx Bot banner |
 
+### #6 and #7 Sign-up heading and checklist indent (follow-up PR)
+
+| What | Where |
+| --- | --- |
+| Branch | `feat/storeconnect-signup-title`, from `main` at `5de1682` |
+| Backup tag | `backup/pre-storeconnect-signup-title-2026-10-18` → `5de1682` |
+
+| # | Change | Before | After |
+| --- | --- | --- | --- |
+| 6 | Sign-up form heading on the StoreConnect Bot tab | "Start an Account and Build Your AI Agent in 30 Seconds" (es: "Crea una Cuenta y Construye tu Agente de IA en 30 Segundos") | "Start an Account and Build Your StoreConnect Agent in 30 Seconds" (es: "Crea una Cuenta y Construye tu Agente StoreConnect en 30 Segundos") |
+| 7 | Hero checklist (`.hv3-sa-list.hv3-scb-checks`) | Flush with the intro | `padding-left:16px` |
+
+How #6 works:
+- `SignupForm` takes an optional `title` prop: `<h2>{title || t('title')}</h2>`.
+- Only the StoreConnect Bot tab passes one, from `storeconnectBot.hero.signupTitle`.
+- Every other sign-up form, the BotWerx Bot tab's included, keeps `signup.json`'s title.
+
 ## Rollback
 
 | Undo | How |
 | --- | --- |
+| #6 and #7 only | Revert the follow-up PR's merge. Or remove the `title` prop in `StoreConnectBotContent` and the `padding-left`. |
 | Everything, after merge | `git revert -m 1 <merge-commit>` through a PR. Railway redeploys. |
 | Everything, from the tag | `git checkout backup/pre-storeconnect-bot-tab-2026-10-18 -- src/Pages/HomeV3.jsx src/styles/HomeV3.css src/locales/en/homev3.json src/locales/es/homev3.json` |
 | Tab names only | Edit `tabs` in both `homev3.json` files |

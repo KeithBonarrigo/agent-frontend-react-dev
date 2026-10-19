@@ -826,7 +826,7 @@ function StoreConnectBotContent({ t }) {
           {/* The live SignupForm, offering only the StoreConnect plan (the MLS
               agent page limits it the same way) */}
           <div className="hv3-bw-signup" id="hv3-signup">
-            <SignupForm isOpen={true} onClose={() => {}} allowedLevels={['storeconnect']} />
+            <SignupForm isOpen={true} onClose={() => {}} allowedLevels={['storeconnect']} title={s('hero.signupTitle')} />
           </div>
         </div>
       </section>

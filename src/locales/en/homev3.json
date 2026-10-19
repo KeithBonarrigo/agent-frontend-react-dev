@@ -303,7 +303,8 @@
       "label": "Store Assistant",
       "title": "Your StoreConnect store,",
       "titleEm": "answered 24/7.",
-      "intro": "A shopping assistant that knows your catalog, your customers' orders and your store — live from Salesforce."
+      "intro": "A shopping assistant that knows your catalog, your customers' orders and your store — live from Salesforce.",
+      "signupTitle": "Start an Account and Build Your StoreConnect Agent in 30 Seconds"
     },
     "features": {
       "title": "What it does",

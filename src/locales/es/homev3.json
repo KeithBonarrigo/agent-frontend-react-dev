@@ -303,7 +303,8 @@
       "label": "Asistente de Tienda",
       "title": "Tu tienda StoreConnect,",
       "titleEm": "atendida 24/7.",
-      "intro": "Un asistente de compras que conoce tu catálogo, los pedidos de tus clientes y tu tienda — en vivo desde Salesforce."
+      "intro": "Un asistente de compras que conoce tu catálogo, los pedidos de tus clientes y tu tienda — en vivo desde Salesforce.",
+      "signupTitle": "Crea una Cuenta y Construye tu Agente StoreConnect en 30 Segundos"
     },
     "features": {
       "title": "Qué hace",
