@@ -70,8 +70,28 @@ export default function IntegrationsTab({ user, clientId, onClientUpdate }) {
   const [wspSuccess, setWspSuccess] = useState('');
   // Embedded Signup answered 409 pin_required: the number is connected but has a
   // two-step verification PIN, which the merchant enters before it's registered
-  const [wspPinNeeded, setWspPinNeeded] = useState(null); // { phone_number } | null
+  const [wspPinNeeded, setWspPinNeeded] = useState(null); // { phone_number, retry } | null
   const [wspPin, setWspPin] = useState('');
+
+  // The agent list carries wsp_status, so a signup interrupted by a reload resumes
+  // where it stopped: pin_required → the PIN step; registration_failed → a retry
+  // (the backend registers again with the PIN it stored; a mismatch falls back to
+  // the PIN field). Server status wins over the localStorage copy above.
+  useEffect(() => {
+    const status = user?.wsp_status;
+    const phone = user?.office_wsp_phone || '';
+    if (status === 'pin_required' || status === 'registration_failed') {
+      setWspStatus(null);
+      setWspPinNeeded({ phone_number: phone, retry: status === 'registration_failed' });
+      setWspPin('');
+    } else {
+      setWspPinNeeded(null);
+      if (status === 'active' && phone) {
+        setWspStatus('active');
+        setSavedWspPhone(phone);
+      }
+    }
+  }, [clientId, user?.wsp_status, user?.office_wsp_phone]);
 
   // Messenger state
   const [msgStatus, setMsgStatus] = useState(user?.messenger_status || null);
@@ -318,6 +338,29 @@ export default function IntegrationsTab({ user, clientId, onClientUpdate }) {
     }
   };
 
+  // After registration_failed: the backend retries with the PIN it generated and
+  // stored. If that fails too, the merchant enters the number's own PIN.
+  const handleRetryRegistration = async () => {
+    setWspLoading(true);
+    setWspError('');
+    try {
+      const res = await apiFetch(`${getApiUrl()}/api/clients/${clientId}/whatsapp-register-pin`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify({})
+      });
+      const { data } = await readJson(res);
+      if (!res.ok) throw new Error(data?.error || t('whatsapp.signupFailed', { status: res.status }));
+      markWhatsAppConnected(data.phone_number || wspPinNeeded?.phone_number);
+    } catch (err) {
+      setWspError(err.message);
+      setWspPinNeeded((prev) => (prev ? { ...prev, retry: false } : prev));
+    } finally {
+      setWspLoading(false);
+    }
+  };
+
   const cancelPinStep = () => {
     setWspPinNeeded(null);
     setWspPin('');
@@ -379,9 +422,11 @@ export default function IntegrationsTab({ user, clientId, onClientUpdate }) {
           .then(readJson)
           .then(({ res, data }) => {
             if (res.status === 409 && data?.error === 'pin_required') {
-              // Connected, but the number has a two-step verification PIN
-              setWspPinNeeded({ phone_number: data.phone_number || '' });
+              // Connected, but the number has a two-step verification PIN. The agent
+              // list gets the same status, so a reload comes back to this step.
+              setWspPinNeeded({ phone_number: data.phone_number || '', retry: false });
               setWspPin('');
+              onClientUpdate?.({ wsp_status: 'pin_required', office_wsp_phone: data.phone_number || '' });
               return;
             }
             if (!res.ok) throw new Error(data?.error || t('whatsapp.signupFailed', { status: res.status }));
@@ -920,10 +965,43 @@ export default function IntegrationsTab({ user, clientId, onClientUpdate }) {
             ) : wspPinNeeded ? (
               /* Connected, but the number has a two-step verification PIN */
               <form onSubmit={handleRegisterPin} style={{ marginTop: "1em", paddingTop: "0.75em", borderTop: "1px solid #eee", fontSize: "0.9em" }}>
-                <p style={{ margin: "0 0 0.25em", fontWeight: "600", color: "#333" }}>{t('whatsapp.pinRequiredTitle')}</p>
+                <p style={{ margin: "0 0 0.25em", fontWeight: "600", color: "#333" }}>{t(wspPinNeeded.retry ? 'whatsapp.regFailedTitle' : 'whatsapp.pinRequiredTitle')}</p>
                 {wspPinNeeded.phone_number && (
                   <p style={{ margin: "0 0 0.75em", color: "#666" }}>{t('whatsapp.pinRequiredNumber', { number: wspPinNeeded.phone_number })}</p>
                 )}
+                {wspPinNeeded.retry ? (
+                  <>
+                    <p style={{ margin: "0 0 0.75em", color: "#666", fontSize: "0.85em" }}>{t('whatsapp.regFailedHelper')}</p>
+                    <div style={{ display: "flex", alignItems: "center", gap: "1em", flexWrap: "wrap" }}>
+                      <button
+                        type="button"
+                        onClick={handleRetryRegistration}
+                        disabled={wspLoading}
+                        style={{
+                          padding: "0.6em 1.3em",
+                          backgroundColor: wspLoading ? "#ccc" : "#25D366",
+                          color: "white",
+                          border: "none",
+                          borderRadius: "6px",
+                          cursor: wspLoading ? "not-allowed" : "pointer",
+                          fontSize: "0.95em",
+                          fontWeight: "600",
+                          display: "flex",
+                          alignItems: "center",
+                          gap: "0.5em"
+                        }}
+                      >
+                        {wspLoading ? (
+                          <><i className="fa-solid fa-spinner fa-spin"></i> {t('whatsapp.regRetrying')}</>
+                        ) : (
+                          <><i className="fa-solid fa-rotate"></i> {t('whatsapp.regRetry')}</>
+                        )}
+                      </button>
+                      <button type="button" className="btn-link" onClick={() => setWspPinNeeded((prev) => ({ ...prev, retry: false }))} disabled={wspLoading}>{t('whatsapp.regEnterPin')}</button>
+                      <button type="button" className="btn-link" onClick={cancelPinStep} disabled={wspLoading}>{t('whatsapp.pinStartOver')}</button>
+                    </div>
+                  </>
+                ) : (<>
                 <label htmlFor="wsp-two-step-pin" style={{ display: "block", fontWeight: "600", color: "#333", fontSize: "0.9em", marginBottom: "0.25em" }}>
                   {t('whatsapp.pinRequiredLabel')}
                 </label>
@@ -966,6 +1044,7 @@ export default function IntegrationsTab({ user, clientId, onClientUpdate }) {
                   </button>
                   <button type="button" className="btn-link" onClick={cancelPinStep} disabled={wspLoading}>{t('whatsapp.pinStartOver')}</button>
                 </div>
+                </>)}
               </form>
             ) : (
               /* Not connected: Embedded Signup button */
