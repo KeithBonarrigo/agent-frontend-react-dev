@@ -45,7 +45,16 @@
     "notConnected": "No conectado",
     "connectButton": "Conectar WhatsApp",
     "connecting": "Conectando...",
-    "connectError": "Error al conectar WhatsApp. Por favor intenta de nuevo."
+    "connectError": "Error al conectar WhatsApp. Por favor intenta de nuevo.",
+    "pinRequiredTitle": "Casi listo: este número tiene verificación en dos pasos",
+    "pinRequiredNumber": "Número conectado: {{number}}",
+    "pinRequiredLabel": "PIN de verificación en dos pasos",
+    "pinRequiredHelper": "Escribe el PIN de verificación en dos pasos configurado para este número en WhatsApp Manager.",
+    "pinRequiredInvalid": "Escribe el PIN de 6 dígitos.",
+    "pinRegister": "Registrar número",
+    "pinRegistering": "Registrando...",
+    "pinStartOver": "Empezar de nuevo",
+    "signupFailed": "No se pudo completar el registro de WhatsApp (HTTP {{status}})."
   },
   "messenger": {
     "title": "Messenger",

@@ -68,6 +68,10 @@ export default function IntegrationsTab({ user, clientId, onClientUpdate }) {
   const [wspLoading, setWspLoading] = useState(false);
   const [wspError, setWspError] = useState('');
   const [wspSuccess, setWspSuccess] = useState('');
+  // Embedded Signup answered 409 pin_required: the number is connected but has a
+  // two-step verification PIN, which the merchant enters before it's registered
+  const [wspPinNeeded, setWspPinNeeded] = useState(null); // { phone_number } | null
+  const [wspPin, setWspPin] = useState('');
 
   // Messenger state
   const [msgStatus, setMsgStatus] = useState(user?.messenger_status || null);
@@ -272,6 +276,54 @@ export default function IntegrationsTab({ user, clientId, onClientUpdate }) {
   */
   // --- End old handlers ---
 
+  // The backend's JSON body, or null for a non-JSON one (a proxy's 502 page)
+  const readJson = (res) => res.json().then((data) => ({ res, data }), () => ({ res, data: null }));
+
+  const markWhatsAppConnected = (phoneNumber) => {
+    const phone = phoneNumber || '';
+    setWspPinNeeded(null);
+    setWspPin('');
+    setWspStatus('active');
+    setSavedWspPhone(phone);
+    setWspSuccess(t('whatsapp.success'));
+    onClientUpdate?.({ wsp_status: 'active', office_wsp_phone: phone });
+    saveIntegrationState({ wspStatus: 'active', wspPhone: phone });
+    setTimeout(() => setWspSuccess(''), 5000);
+  };
+
+  // After a 409 pin_required: register the connected number with its two-step PIN
+  const handleRegisterPin = async (e) => {
+    e.preventDefault();
+    const pin = wspPin.trim();
+    if (!/^\d{6}$/.test(pin)) {
+      setWspError(t('whatsapp.pinRequiredInvalid'));
+      return;
+    }
+    setWspLoading(true);
+    setWspError('');
+    try {
+      const res = await apiFetch(`${getApiUrl()}/api/clients/${clientId}/whatsapp-register-pin`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify({ pin })
+      });
+      const { data } = await readJson(res);
+      if (!res.ok) throw new Error(data?.error || t('whatsapp.signupFailed', { status: res.status }));
+      markWhatsAppConnected(data.phone_number || wspPinNeeded?.phone_number);
+    } catch (err) {
+      setWspError(err.message);
+    } finally {
+      setWspLoading(false);
+    }
+  };
+
+  const cancelPinStep = () => {
+    setWspPinNeeded(null);
+    setWspPin('');
+    setWspError('');
+  };
+
   // WhatsApp Embedded Signup: opens Meta popup for business to connect their WABA
   const handleWhatsAppEmbeddedSignup = async () => {
     setWspLoading(true);
@@ -305,34 +357,35 @@ export default function IntegrationsTab({ user, clientId, onClientUpdate }) {
 
         const code = response.authResponse.code;
 
-        if (!code || !sessionInfo?.phone_number_id || !sessionInfo?.waba_id) {
-          setWspError('Embedded signup incomplete — missing session info. Please try again.');
+        if (!code) {
+          setWspError(t('whatsapp.connectError'));
           setWspLoading(false);
           return;
         }
 
-        // Send to backend for token exchange and webhook subscription
+        // Send to backend for token exchange, webhook subscription and registration.
+        // phone_number_id / waba_id are hints only: the backend finds both from the
+        // code, so the signup goes ahead even if the popup's message never arrived.
+        const body = { code };
+        if (sessionInfo?.phone_number_id) body.phone_number_id = sessionInfo.phone_number_id;
+        if (sessionInfo?.waba_id) body.waba_id = sessionInfo.waba_id;
         const apiBaseUrl = getApiUrl();
         apiFetch(`${apiBaseUrl}/api/clients/${clientId}/whatsapp-embedded-signup`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           credentials: 'include',
-          body: JSON.stringify({
-            code,
-            phone_number_id: sessionInfo.phone_number_id,
-            waba_id: sessionInfo.waba_id
-          })
+          body: JSON.stringify(body)
         })
-          .then(res => res.json().then(data => ({ ok: res.ok, data })))
-          .then(({ ok, data }) => {
-            if (!ok) throw new Error(data.error || 'Failed to complete WhatsApp signup');
-
-            setWspStatus('active');
-            setSavedWspPhone(data.phone_number || '');
-            setWspSuccess(t('whatsapp.success'));
-            onClientUpdate?.({ wsp_status: 'active', office_wsp_phone: data.phone_number || '' });
-            saveIntegrationState({ wspStatus: 'active', wspPhone: data.phone_number || '' });
-            setTimeout(() => setWspSuccess(''), 5000);
+          .then(readJson)
+          .then(({ res, data }) => {
+            if (res.status === 409 && data?.error === 'pin_required') {
+              // Connected, but the number has a two-step verification PIN
+              setWspPinNeeded({ phone_number: data.phone_number || '' });
+              setWspPin('');
+              return;
+            }
+            if (!res.ok) throw new Error(data?.error || t('whatsapp.signupFailed', { status: res.status }));
+            markWhatsAppConnected(data.phone_number);
           })
           .catch(err => setWspError(err.message))
           .finally(() => setWspLoading(false));
@@ -864,6 +917,56 @@ export default function IntegrationsTab({ user, clientId, onClientUpdate }) {
                   </button>
                 </div>
               </div>
+            ) : wspPinNeeded ? (
+              /* Connected, but the number has a two-step verification PIN */
+              <form onSubmit={handleRegisterPin} style={{ marginTop: "1em", paddingTop: "0.75em", borderTop: "1px solid #eee", fontSize: "0.9em" }}>
+                <p style={{ margin: "0 0 0.25em", fontWeight: "600", color: "#333" }}>{t('whatsapp.pinRequiredTitle')}</p>
+                {wspPinNeeded.phone_number && (
+                  <p style={{ margin: "0 0 0.75em", color: "#666" }}>{t('whatsapp.pinRequiredNumber', { number: wspPinNeeded.phone_number })}</p>
+                )}
+                <label htmlFor="wsp-two-step-pin" style={{ display: "block", fontWeight: "600", color: "#333", fontSize: "0.9em", marginBottom: "0.25em" }}>
+                  {t('whatsapp.pinRequiredLabel')}
+                </label>
+                <input
+                  id="wsp-two-step-pin"
+                  className="input"
+                  type="password"
+                  inputMode="numeric"
+                  autoComplete="one-time-code"
+                  maxLength={6}
+                  value={wspPin}
+                  onChange={(e) => setWspPin(e.target.value.replace(/\D/g, ''))}
+                  disabled={wspLoading}
+                  style={{ width: "100%", boxSizing: "border-box", letterSpacing: "0.3em" }}
+                />
+                <p style={{ margin: "0.35em 0 0.75em", color: "#666", fontSize: "0.85em" }}>{t('whatsapp.pinRequiredHelper')}</p>
+                <div style={{ display: "flex", alignItems: "center", gap: "1em", flexWrap: "wrap" }}>
+                  <button
+                    type="submit"
+                    disabled={wspLoading}
+                    style={{
+                      padding: "0.6em 1.3em",
+                      backgroundColor: wspLoading ? "#ccc" : "#25D366",
+                      color: "white",
+                      border: "none",
+                      borderRadius: "6px",
+                      cursor: wspLoading ? "not-allowed" : "pointer",
+                      fontSize: "0.95em",
+                      fontWeight: "600",
+                      display: "flex",
+                      alignItems: "center",
+                      gap: "0.5em"
+                    }}
+                  >
+                    {wspLoading ? (
+                      <><i className="fa-solid fa-spinner fa-spin"></i> {t('whatsapp.pinRegistering')}</>
+                    ) : (
+                      <><i className="fa-solid fa-key"></i> {t('whatsapp.pinRegister')}</>
+                    )}
+                  </button>
+                  <button type="button" className="btn-link" onClick={cancelPinStep} disabled={wspLoading}>{t('whatsapp.pinStartOver')}</button>
+                </div>
+              </form>
             ) : (
               /* Not connected: Embedded Signup button */
               <div style={{ marginTop: "1em", paddingTop: "0.75em", borderTop: "1px solid #eee" }}>
