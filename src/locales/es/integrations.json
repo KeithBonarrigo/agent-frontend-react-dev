@@ -54,7 +54,12 @@
     "pinRegister": "Registrar número",
     "pinRegistering": "Registrando...",
     "pinStartOver": "Empezar de nuevo",
-    "signupFailed": "No se pudo completar el registro de WhatsApp (HTTP {{status}})."
+    "signupFailed": "No se pudo completar el registro de WhatsApp (HTTP {{status}}).",
+    "regFailedTitle": "El registro no terminó",
+    "regFailedHelper": "El número está conectado, pero no se pudo registrar para mensajería. Reintenta, o escribe el PIN de verificación en dos pasos del número si tiene uno.",
+    "regRetry": "Reintentar registro",
+    "regRetrying": "Reintentando...",
+    "regEnterPin": "Escribir el PIN"
   },
   "messenger": {
     "title": "Messenger",

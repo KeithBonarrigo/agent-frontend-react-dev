@@ -76,4 +76,36 @@ Headless Chrome on the dev server (`VITE_API_URL=http://localhost:3999`) against
 
 ESLint on `IntegrationsTab.jsx`: 5 errors and 2 warnings, the same as on `main` (unused variables and hook deps that predate this). A production build into a scratch folder succeeds.
 
+## Follow-up: resume after a reload (same day, second PR)
+
+| What | Where |
+| --- | --- |
+| Branch | `feat/wa-signup-resume`, from `main` at `2bdd6f3` (after PR #31) |
+| Backup tag | `backup/pre-wa-signup-resume-2026-10-29` → `2bdd6f3` |
+
+The backend session confirmed that `GET /api/account/:id/clients` carries each agent's `wsp_status` during a signup: `registering` → `active`, or it stops at `pin_required` or `registration_failed`. The backend's PIN route has been live since 2026-10-29 19:01 UTC (`7d54e23`).
+
+| # | Change | Detail |
+| --- | --- | --- |
+| 5 | Resume from `wsp_status` | A new effect on `user.wsp_status` / `user.office_wsp_phone`: `pin_required` → the PIN step with the number; `registration_failed` → the retry step; `active` + number → connected; anything else clears the PIN step. The server status wins over the localStorage copy. |
+| 6 | Retry step | Title "Registration didn't finish", the number, helper text, **Retry registration** (POSTs `{}` to `whatsapp-register-pin`; the backend retries with the PIN it stored), **Enter the PIN instead** (switches to the PIN field) and **Start over**. If the retry fails, its error shows and the PIN field appears. |
+| 7 | 409 keeps the agent list in step | After `pin_required`, `onClientUpdate({ wsp_status: 'pin_required', office_wsp_phone })`, so the Dashboard's copy of the agent matches and a tab switch comes back to the PIN step. |
+| 8 | Strings (`whatsapp.*`, en/es) | `regFailedTitle`, `regFailedHelper`, `regRetry`, `regRetrying`, `regEnterPin` |
+
+Rollback of the follow-up alone: `git checkout backup/pre-wa-signup-resume-2026-10-29 -- src/components/IntegrationsTab.jsx src/locales/en/integrations.json src/locales/es/integrations.json`.
+
+Verification (mock-backed dev server, headless Chrome; the mock sets `wsp_status` on the agent row and answers an empty-body retry with success or the PIN-mismatch text):
+
+| Case | Result |
+| --- | --- |
+| Load with `pin_required` | PIN step with "+5216121234567"; the right PIN → connected (`{ pin }` sent) |
+| Load with `registration_failed`, retry succeeds | Retry step; `{}` sent; connected |
+| Retry answers the mismatch text | Error shown, PIN field appears; the right PIN → connected |
+| Enter the PIN instead / Start over | PIN field / Connect WhatsApp |
+| No status, `active` | Connect WhatsApp / Connected, as before |
+| Spanish | "El registro no terminó", "Reintentar registro", "Escribir el PIN", "Empezar de nuevo" |
+| First PR's checks, rerun | All still pass |
+
+ESLint unchanged from `main`; production build succeeds.
+
 **Still to do, by Keith, with the real SIM:** Integrations → Connect WhatsApp → Meta's popup → either Connected or the PIN step → send a WhatsApp message to the number and get a reply. Then Disconnect and confirm the `wsp_*` columns clear.
