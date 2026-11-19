@@ -417,10 +417,14 @@ body:has(.hv3-page) div[style*="z-index: 99999"]{display:none!important}
 /* Selected tab: the brand blue at the top easing to a slightly lighter blue at the bottom */
 .hv3-tab[aria-selected="true"]{background:linear-gradient(180deg,var(--hv3-brand) 0%,#4F86FF 100%);color:#fff}
 .hv3-tab:focus-visible{outline:2px solid var(--hv3-brand-lt);outline-offset:2px}
-/* Four tabs: two rows of two once they stop fitting on one line. On phones the
-   longer labels ("StoreConnect Services") wrap inside their tab. */
-@media(max-width:1000px){.hv3-tabs{flex-wrap:wrap}.hv3-tab{flex:1 1 calc(50% - 3px)}}
+/* Four tabs: two rows of two once they stop fitting on one line. Three tabs (the
+   StoreConnect Bot tab hidden) stay on one row. On phones the longer labels
+   ("StoreConnect Services") wrap inside their tab. */
+@media(max-width:1000px){.hv3-tabs:has(>.hv3-tab:nth-child(4)){flex-wrap:wrap}.hv3-tabs:has(>.hv3-tab:nth-child(4))>.hv3-tab{flex:1 1 calc(50% - 3px)}}
 @media(max-width:640px){.hv3-tab{white-space:normal}}
+/* Three tabs need about 390px on one row, more than most phones have: two rows,
+   the third tab spanning the second */
+@media(max-width:480px){.hv3-tabs{flex-wrap:wrap}.hv3-tab{flex:1 1 calc(50% - 3px)}}
 
 /* stand-in for visuals the BidConnect tab doesn't have yet */
 .hv3-ph{display:grid;place-items:center;min-height:320px;padding:24px;text-align:center;

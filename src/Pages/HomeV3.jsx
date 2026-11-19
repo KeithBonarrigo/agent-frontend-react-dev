@@ -13,7 +13,11 @@ import "../styles/HomeV3.css";  // this page's own styles - edit this one
 // getApiUrl() (http://localhost:3000 locally via VITE_API_URL, chat.botwerx.ai
 // on www.botwerx.ai), and site links are the app's own routes.
 
-const TABS = ['bidconnect', 'storeconnect', 'storeconnect-bot', 'botwerx'];
+// StoreConnect Bot tab hidden for now (2026-11-19). true brings back the tab and the
+// BotWerx Agent tab's banner pointing to it; its content below is kept unchanged.
+const SHOW_STORECONNECT_BOT_TAB = false;
+
+const TABS = ['bidconnect', 'storeconnect', ...(SHOW_STORECONNECT_BOT_TAB ? ['storeconnect-bot'] : []), 'botwerx'];
 
 const LANGUAGES = [
   { code: 'en', flagCode: 'us', fullName: 'English' },
@@ -323,6 +327,7 @@ function BotwerxBotContent({ t, onSelectTab }) {
       </section>
 
       {/* ---------------- StoreConnect Bot: pointer to its own tab ---------------- */}
+      {SHOW_STORECONNECT_BOT_TAB && (
       <section className="hv3-scb-promo-sec">
         <div className="hv3-wrap">
           <a
@@ -345,6 +350,7 @@ function BotwerxBotContent({ t, onSelectTab }) {
           </a>
         </div>
       </section>
+      )}
 
       {/* ---------------- Services ---------------- */}
       <section className="hv3-sec hv3-pricing" id="hv3-services">
@@ -1063,9 +1069,12 @@ export default function HomeV3() {
   }, []);
 
   // The active tab lives in ?tab= so a refresh or a shared link keeps it.
-  // BidConnect is the default; anything unrecognised falls back to it.
+  // BidConnect is the default; anything unrecognised falls back to it. While the
+  // StoreConnect Bot tab is hidden, its old links open BotWerx Agent, whose sign-up
+  // form still offers the StoreConnect plan.
   const [searchParams, setSearchParams] = useSearchParams();
-  const tab = TABS.includes(searchParams.get('tab')) ? searchParams.get('tab') : TABS[0];
+  const requestedTab = searchParams.get('tab') === 'storeconnect-bot' && !SHOW_STORECONNECT_BOT_TAB ? 'botwerx' : searchParams.get('tab');
+  const tab = TABS.includes(requestedTab) ? requestedTab : TABS[0];
   const tabRefs = useRef({});
 
   const selectTab = (next) => {
