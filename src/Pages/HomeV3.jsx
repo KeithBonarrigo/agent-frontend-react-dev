@@ -17,7 +17,21 @@ import "../styles/HomeV3.css";  // this page's own styles - edit this one
 // BotWerx Agent tab's banner pointing to it; its content below is kept unchanged.
 const SHOW_STORECONNECT_BOT_TAB = false;
 
-const TABS = ['bidconnect', 'storeconnect', ...(SHOW_STORECONNECT_BOT_TAB ? ['storeconnect-bot'] : []), 'botwerx'];
+// BotWerx Agent tab hidden from the tab bar for now (2026-11-19). Its page holds the
+// only BotWerx account sign-up form, so it stays reachable by link: the login page's
+// "Create Account" (/?tab=botwerx#hv3-signup) and old links still open it, and its tab
+// shows in the bar only while it's the open one. true lists it again for everyone.
+const SHOW_BOTWERX_AGENT_TAB = false;
+
+// Tabs listed in the tab bar, in order.
+const TABS = [
+  'bidconnect',
+  'storeconnect',
+  ...(SHOW_STORECONNECT_BOT_TAB ? ['storeconnect-bot'] : []),
+  ...(SHOW_BOTWERX_AGENT_TAB ? ['botwerx'] : []),
+];
+// Tabs a ?tab= link can open: the listed ones plus the unlisted BotWerx Agent page.
+const LINKABLE_TABS = TABS.includes('botwerx') ? TABS : [...TABS, 'botwerx'];
 
 const LANGUAGES = [
   { code: 'en', flagCode: 'us', fullName: 'English' },
@@ -1084,10 +1098,12 @@ export default function HomeV3() {
   // The active tab lives in ?tab= so a refresh or a shared link keeps it.
   // BidConnect is the default; anything unrecognised falls back to it. While the
   // StoreConnect Bot tab is hidden, its old links open BotWerx Agent, whose sign-up
-  // form still offers the StoreConnect plan.
+  // form still offers the StoreConnect plan. An unlisted tab that is open joins the
+  // bar at the end, so the open page always has a selected tab.
   const [searchParams, setSearchParams] = useSearchParams();
   const requestedTab = searchParams.get('tab') === 'storeconnect-bot' && !SHOW_STORECONNECT_BOT_TAB ? 'botwerx' : searchParams.get('tab');
-  const tab = TABS.includes(requestedTab) ? requestedTab : TABS[0];
+  const tab = LINKABLE_TABS.includes(requestedTab) ? requestedTab : TABS[0];
+  const barTabs = TABS.includes(tab) ? TABS : [...TABS, tab];
   const tabRefs = useRef({});
 
   const selectTab = (next) => {
@@ -1103,7 +1119,7 @@ export default function HomeV3() {
     if (e.key !== 'ArrowRight' && e.key !== 'ArrowLeft') return;
     e.preventDefault();
     const step = e.key === 'ArrowRight' ? 1 : -1;
-    const next = TABS[(TABS.indexOf(tab) + step + TABS.length) % TABS.length];
+    const next = barTabs[(barTabs.indexOf(tab) + step + barTabs.length) % barTabs.length];
     selectTab(next);
     tabRefs.current[next]?.focus();
   };
@@ -1124,7 +1140,7 @@ export default function HomeV3() {
         <div className="hv3-wrap">
           <p className="hv3-tabs-heading" id="hv3-tabs-heading">{t('tabs.heading')}</p>
           <div className="hv3-tabs" role="tablist" aria-labelledby="hv3-tabs-heading">
-            {TABS.map((id) => (
+            {barTabs.map((id) => (
               <button
                 key={id}
                 ref={(el) => { tabRefs.current[id] = el; }}
