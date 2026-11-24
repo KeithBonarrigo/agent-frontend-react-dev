@@ -17,11 +17,11 @@ import "../styles/HomeV3.css";  // this page's own styles - edit this one
 // BotWerx Agent tab's banner pointing to it; its content below is kept unchanged.
 const SHOW_STORECONNECT_BOT_TAB = false;
 
-// BotWerx Agent tab hidden from the tab bar for now (2026-11-19). Its page holds the
-// only BotWerx account sign-up form, so it stays reachable by link: the login page's
-// "Create Account" (/?tab=botwerx#hv3-signup) and old links still open it, and its tab
-// shows in the bar only while it's the open one. true lists it again for everyone.
-const SHOW_BOTWERX_AGENT_TAB = false;
+// BotWerx Agent tab: listed in the tab bar (back on since 2026-11-24, after being
+// hidden 2026-11-19 to 2026-11-24). false takes it out of the bar again; its page holds
+// the only BotWerx account sign-up form, so it then stays reachable by link (the login
+// page's "Create Account", /?tab=botwerx#hv3-signup) and its tab shows only while open.
+const SHOW_BOTWERX_AGENT_TAB = true;
 
 // Tabs listed in the tab bar, in order.
 const TABS = [
