@@ -34,6 +34,11 @@
       "storePre": "Los contactos, los artículos y las pujas ganadoras se sincronizan directamente con Salesforce, y ",
       "storeLink": "StoreConnect",
       "storePost": " se encarga del catálogo y el pago, con un solo carrito y enlace de pago por ganador.",
+      "trialTitle": "Tu primera subasta, gratis.",
+      "trialText": "Solo pídenos una prueba.",
+      "trialLink": "Solicitar una prueba",
+      "supportTitle": "Soporte en vivo durante toda tu subasta.",
+      "supportText": "Nuestro equipo te acompaña desde la primera puja hasta el cierre.",
       "ctaPrimary": "Crea tu subasta",
       "ctaTry": "¡Pruébalo!",
       "ctaSecondary": "Iniciar sesión",
@@ -70,13 +75,13 @@
     },
     "pricing": {
       "title": "Paga por la subasta, no por la temporada baja.",
-      "intro": "Solo pagas por BidConnect cuando lo necesitas. Empieza con una prueba gratis, pasa a Activo cuando llegue tu evento y cambia a Inactivo entre eventos para conservar todo por una fracción del costo.",
+      "intro": "Solo pagas por BidConnect cuando lo necesitas. Organiza tu primera subasta gratis con una prueba, pasa a Activo para los eventos siguientes y cambia a Inactivo entre eventos para conservar todo por una fracción del costo.",
       "plans": [
         {
           "name": "Prueba",
           "price": "Gratis",
           "period": "",
-          "desc": "Prueba BidConnect antes de tu evento. Cuéntanos sobre tu subasta y te enviaremos un código de prueba.",
+          "desc": "Organiza tu primera subasta gratis. Cuéntanos sobre tu subasta y te enviaremos un código de prueba.",
           "features": [
             "Solicítala desde el formulario de contacto",
             "Te enviamos un código de prueba",

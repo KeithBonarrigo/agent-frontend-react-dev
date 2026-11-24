@@ -34,6 +34,11 @@
       "storePre": "Contacts, items and winning bids sync straight into Salesforce, and ",
       "storeLink": "StoreConnect",
       "storePost": " runs the catalogue and checkout, with one cart and payment link per winner.",
+      "trialTitle": "Run your first auction free.",
+      "trialText": "Just ask us for a trial.",
+      "trialLink": "Request a trial",
+      "supportTitle": "Live support throughout your auction.",
+      "supportText": "Our team is on hand from the opening bid to the final bell.",
       "ctaPrimary": "Create Your Auction",
       "ctaTry": "Try It!",
       "ctaSecondary": "Sign In",
@@ -70,13 +75,13 @@
     },
     "pricing": {
       "title": "Pay for the auction, not the off-season.",
-      "intro": "You only pay for BidConnect when you need it. Start with a free trial, go Active when your event comes around, and switch to Dormant between events to keep everything for a fraction of the cost.",
+      "intro": "You only pay for BidConnect when you need it. Run your first auction free on a trial, go Active for the events after that, and switch to Dormant between events to keep everything for a fraction of the cost.",
       "plans": [
         {
           "name": "Trial",
           "price": "Free",
           "period": "",
-          "desc": "Try BidConnect before your event. Tell us about your auction and we'll send you a trial code.",
+          "desc": "Run your first auction free. Tell us about your auction and we'll send you a trial code.",
           "features": [
             "Request it through the contact form",
             "We send you a trial code",

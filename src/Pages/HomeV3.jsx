@@ -501,6 +501,25 @@ function BidConnectContent({ t }) {
               <a href="https://storeconnect.com/" target="_blank" rel="noopener noreferrer">{b('hero.storeLink')}</a>
               {b('hero.storePost')}
             </p>
+            {/* Offer box: free first auction on a trial (the link goes to the contact form,
+                like the Trial plan's button) and live support during the auction. */}
+            <ul className="hv3-bc-perks hv3-indent">
+              <li>
+                <i className="fa-solid fa-gift hv3-bc-perk-icon" aria-hidden="true"></i>
+                <span>
+                  <strong>{b('hero.trialTitle')}</strong> {b('hero.trialText')}{' '}
+                  <ScrollLink to="hv3-contact" className="hv3-bc-perk-link">
+                    {b('hero.trialLink')} <i className="fa-solid fa-arrow-right" aria-hidden="true"></i>
+                  </ScrollLink>
+                </span>
+              </li>
+              <li>
+                <i className="fa-solid fa-headset hv3-bc-perk-icon" aria-hidden="true"></i>
+                <span>
+                  <strong>{b('hero.supportTitle')}</strong> {b('hero.supportText')}
+                </span>
+              </li>
+            </ul>
             {/* hv3-bc-hero-cta narrows the buttons so three fit on one line */}
             <div className={`hv3-hero-cta hv3-indent${BIDCONNECT_SIMULATION_OPEN ? ' hv3-bc-hero-cta' : ''}`}>
               <a href={BIDCONNECT_SIGNUP_URL} className="hv3-btn hv3-btn-p hv3-btn-lg">
