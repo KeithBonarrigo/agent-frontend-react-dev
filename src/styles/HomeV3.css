@@ -147,6 +147,17 @@ body:has(.hv3-page) div[style*="z-index: 99999"]{display:none!important}
 .hv3-page .hv3-indent{margin-left:16px}
 @media(max-width:640px){.hv3-page .hv3-hero-cta.hv3-indent{margin-left:0}}
 .hv3-hero-fine{margin-top:18px;font-size:.86rem;color:var(--hv3-txt-3)}
+/* BidConnect hero offer box: free first auction on a trial, live support */
+.hv3-bc-perks{list-style:none;margin:24px 0 0;padding:14px 18px;max-width:470px;display:grid;gap:12px;
+  background:var(--hv3-accent-soft);border:1px solid rgba(45,212,191,.3);border-radius:12px}
+.hv3-bc-perks li{display:flex;gap:12px;align-items:flex-start;margin:0;padding:0;font-size:1rem;line-height:1.5;color:var(--hv3-txt)}
+.hv3-bc-perks strong{color:#fff;font-weight:600}
+.hv3-bc-perk-icon{flex:0 0 20px;margin-top:4px;text-align:center;color:var(--hv3-accent)}
+.hv3-bc-perks a.hv3-bc-perk-link{color:var(--hv3-accent-lt);font-weight:600;text-decoration:underline;text-underline-offset:2px;white-space:nowrap}
+.hv3-bc-perks a.hv3-bc-perk-link:hover{color:#fff}
+.hv3-bc-perk-link i{font-size:.8em;margin-left:2px}
+/* Hero buttons sit a little closer under the box */
+.hv3-bc-perks + .hv3-hero-cta{margin-top:26px}
 .hv3-hero-vis{position:relative}
 /* BidConnect hero video: a link to the live demo */
 .hv3-hero-vis-link{display:block;border-radius:11px}
