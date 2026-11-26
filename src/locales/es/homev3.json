@@ -565,6 +565,8 @@
     "terms": "Términos y condiciones",
     "cookies": "Política de cookies",
     "dataDeletion": "Eliminación de datos",
+    "smsTerms": "Términos de SMS",
+    "smsPrivacy": "Privacidad de SMS",
     "allRightsReserved": "Todos los Derechos Reservados",
     "poweredByPre": "Esta aplicación funciona con",
     "poweredByLink": "la API Claude de Anthropic"

@@ -20,6 +20,9 @@ const LEGAL_LINKS = [
   { to: '/terms-and-conditions', label: 'footer.terms' },
   { to: '/cookies', label: 'footer.cookies' },
   { to: '/data-deletion', label: 'footer.dataDeletion' },
+  // Static pages built by scripts/build-sms-pages.mjs, outside the React app: plain links.
+  { href: '/sms-terms', label: 'footer.smsTerms' },
+  { href: '/sms-privacy', label: 'footer.smsPrivacy' },
 ];
 
 // Same approach as HomeV3/LoginV3: DomainContext rewrites the favicon after
@@ -88,8 +91,9 @@ export default function LegalV3({ children }) {
           <div className="hv3-fbot">
             <span>© {new Date().getFullYear()}. {t('footer.allRightsReserved')}.</span>
             <span className="hv3-auth-legal">
-              {LEGAL_LINKS.map(({ to, label }) => (
-                <Link key={to} to={to} aria-current={pathname === to ? 'page' : undefined}>{t(label)}</Link>
+              {LEGAL_LINKS.map(({ to, href, label }) => (href
+                ? <a key={href} href={href}>{t(label)}</a>
+                : <Link key={to} to={to} aria-current={pathname === to ? 'page' : undefined}>{t(label)}</Link>
               ))}
             </span>
           </div>

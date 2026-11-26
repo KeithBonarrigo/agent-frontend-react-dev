@@ -155,6 +155,9 @@ export default function LoginV3() {
               <Link to="/terms-and-conditions">{t('footer.terms')}</Link>
               <Link to="/cookies">{t('footer.cookies')}</Link>
               <Link to="/data-deletion">{t('footer.dataDeletion')}</Link>
+              {/* Static pages (scripts/build-sms-pages.mjs), outside the React app: plain links */}
+              <a href="/sms-terms">{t('footer.smsTerms')}</a>
+              <a href="/sms-privacy">{t('footer.smsPrivacy')}</a>
             </span>
           </div>
         </div>

@@ -8,8 +8,8 @@
   },
   "scripts": {
     "dev": "vite --mode development",
-    "build": "vite build --mode production",
-    "start": "serve -s dist",
+    "build": "vite build --mode production && node scripts/build-sms-pages.mjs",
+    "start": "serve dist",
     "build:dev": "vite build --mode development",
     "preview": "vite preview",
     "heroku-postbuild": "npm run build"

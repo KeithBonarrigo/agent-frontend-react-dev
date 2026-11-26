@@ -1,0 +1,6 @@
+{
+  "rewrites": [
+    { "source": "/!(sms-terms|sms-privacy)", "destination": "/index.html" },
+    { "source": "/!(sms-terms|sms-privacy)/**", "destination": "/index.html" }
+  ]
+}

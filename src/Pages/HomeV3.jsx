@@ -1067,6 +1067,9 @@ function SiteFooter({ t, tab }) {
       { route: '/terms-and-conditions', label: 'footer.terms' },
       { route: '/cookies', label: 'footer.cookies' },
       { route: '/data-deletion', label: 'footer.dataDeletion' },
+      // Static pages (scripts/build-sms-pages.mjs), outside the React app: plain links.
+      { href: '/sms-terms', text: t('footer.smsTerms') },
+      { href: '/sms-privacy', text: t('footer.smsPrivacy') },
     ] },
     { title: 'footer.col2Title', links: [
       { to: 'hv3-contact', label: 'footer.contact' },
