@@ -1,1 +1,1 @@
-web: serve -s dist -l $PORT
+web: serve dist -l $PORT
